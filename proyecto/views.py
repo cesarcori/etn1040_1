@@ -12,4 +12,6 @@ def perfilUsuarios(request):
     return render(request, 'proyecto/perfil.html')
 def busquedaProyectos(request):
     return render(request, 'proyecto/busqueda.html')
+def compartirTodos(request):
+        return render(request, 'proyecto/compartir_todos.html')
 
