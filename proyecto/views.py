@@ -29,6 +29,7 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
+@login_required(login_url='login')
 @admin_only
 def home(request):
     return render(request, 'proyecto/home.html')

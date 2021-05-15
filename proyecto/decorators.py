@@ -34,8 +34,8 @@ def admin_only(view_func):
             return redirect('tutor')
         if group == 'estudiante':
             return redirect('estudiante')
-        if group == 'admin':
-            return view_func(request, *args, **kwargs )
+        #if group == 'admin':
+        #    return view_func(request, *args, **kwargs )
     return wrapper_function
 
 
