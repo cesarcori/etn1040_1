@@ -28,8 +28,12 @@ def admin_only(view_func):
         group = None
         if request.user.groups.exists():
             group = request.user.groups.all()[0].name
-        if group == 'customer':
-            return redirect('user-page')
+        if group == 'docente':
+            return redirect('docente')
+        if group == 'tutor':
+            return redirect('tutor')
+        if group == 'estudiante':
+            return redirect('estudiante')
         if group == 'admin':
             return view_func(request, *args, **kwargs )
     return wrapper_function

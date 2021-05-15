@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 
 from .decorators import unauthenticated_user, allowed_users, admin_only
 
@@ -19,13 +21,17 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.info(request, 'Username OR password is incorrect')
+            messages.info(request, 'El Usuario o Contraseña es Incorrecto')
     context = {}
     return render(request, 'proyecto/login.html', context)
 
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+@admin_only
+def home(request):
+    return render(request, 'proyecto/home.html')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
