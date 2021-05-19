@@ -14,5 +14,8 @@ urlpatterns = [
     path('perfil/', views.perfilUsuarios, name='perfil'),
     path('busqueda/', views.busquedaProyectos, name='busqueda'),
     path('comp-todos/', views.compartirTodos, name='compartir_con_todos'),
+    path('comp-personal/', views.compartirPersonal, name='compartir_personal'),
+
+    path('info-est/', views.enlaceEstudiante, name='enlace_estudiante'),
 
 ]

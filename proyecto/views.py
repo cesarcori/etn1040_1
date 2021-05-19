@@ -67,8 +67,18 @@ def busquedaProyectos(request):
     return render(request, 'proyecto/busqueda.html', context)
 
 def compartirTodos(request):
-    grupo = str(request.user.groups.get())
+    grupo = request.user.groups.all()[0].name # es lo mismo que arriba
     context = {'grupo': grupo}
     return render(request, 'proyecto/compartir_todos.html', context)
+
+def compartirPersonal(request):
+    grupo = str(request.user.groups.get())
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/compartir_personal.html', context)
+
+def enlaceEstudiante(request):
+    grupo = str(request.user.groups.get())
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/enlace_estudiante.html', context)
 
 

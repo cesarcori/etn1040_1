@@ -36,11 +36,22 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'compartir_personal' %}">
+            Compartir Docente</a>
+      </li>
         {% endif %}
     </ul>
   </div>
-  <span class="hello-msg">Hola, {{ request.user }} </span>
+
+    {% if grupo == 'docente' or grupo == 'tutor' %}
+  <span class="hello-msg">Hola, Ing. {{ request.user }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
+    {% else %}
+  <span class="hello-msg">Hola, Futuro Ing. {{ request.user }} </span>
+  <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
+    {% endif %}
+
 
 </nav>
 
