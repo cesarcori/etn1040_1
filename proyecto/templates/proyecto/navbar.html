@@ -13,6 +13,7 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
+        {% if grupo == 'docente' or grupo == tutor%}
       <li class="nav-item">
         <a class="nav-link" href="/">Inicio</a>
       </li>
@@ -25,6 +26,17 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'compartir_con_todos' %}">Compartir</a>
       </li>
+        {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
+      </li>
+        {% endif %}
     </ul>
   </div>
   <span class="hello-msg">Hola, {{ request.user }} </span>

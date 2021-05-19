@@ -37,17 +37,23 @@ def home(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
 def docente(request):
-    return render(request, 'proyecto/docente.html')
+    grupo = 'docente'
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/docente.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor'])
 def tutor(request):
-    return render(request, 'proyecto/tutor.html')
+    grupo = 'tutor'
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/tutor.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 def estudiante(request):
-    return render(request, 'proyecto/estudiante.html')
+    grupo = 'estudiante'
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/estudiante.html', context)
 
 def perfilUsuarios(request):
     return render(request, 'proyecto/perfil.html')
