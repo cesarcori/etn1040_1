@@ -55,27 +55,33 @@ def estudiante(request):
     context = {'grupo': grupo}
     return render(request, 'proyecto/estudiante.html', context)
 
+@login_required(login_url='login')
 def perfilUsuarios(request):
     grupo = str(request.user.groups.get())
     context = {'grupo': grupo}
-    return render(request, 'proyecto/estudiante.html', context)
-    return render(request, 'proyecto/perfil.html')
+    return render(request, 'proyecto/perfil.html', context)
 
+@login_required(login_url='login')
 def busquedaProyectos(request):
     grupo = str(request.user.groups.get())
     context = {'grupo': grupo}
     return render(request, 'proyecto/busqueda.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
 def compartirTodos(request):
     grupo = request.user.groups.all()[0].name # es lo mismo que arriba
     context = {'grupo': grupo}
     return render(request, 'proyecto/compartir_todos.html', context)
 
+@login_required(login_url='login')
 def compartirPersonal(request):
     grupo = str(request.user.groups.get())
     context = {'grupo': grupo}
     return render(request, 'proyecto/compartir_personal.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
 def enlaceEstudiante(request):
     grupo = str(request.user.groups.get())
     context = {'grupo': grupo}
