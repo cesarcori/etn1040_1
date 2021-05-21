@@ -32,7 +32,9 @@ def logoutUser(request):
 @login_required(login_url='login')
 @admin_only
 def home(request):
-    return render(request, 'proyecto/home.html')
+    grupo = 'administrador'
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/home.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
@@ -75,6 +77,7 @@ def compartirTodos(request):
     return render(request, 'proyecto/compartir_todos.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','estudiante'])
 def compartirPersonal(request):
     grupo = str(request.user.groups.get())
     context = {'grupo': grupo}
@@ -87,4 +90,17 @@ def enlaceEstudiante(request):
     context = {'grupo': grupo}
     return render(request, 'proyecto/enlace_estudiante.html', context)
 
+@login_required(login_url='login')
+@admin_only
+def enlaceDocente(request):
+    grupo = str(request.user.groups.get())
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/enlace_docente.html', context)
+
+@login_required(login_url='login')
+@admin_only
+def registroEstudiante(request):
+    grupo = str(request.user.groups.get())
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/registro_estudiante.html', context)
 

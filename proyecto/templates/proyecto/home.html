@@ -1,1 +1,31 @@
-home
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h2>Bienvenido Administrador</h2>
+<h5>Lista de estudiantes:</h5>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Nº</th>
+      <th scope="col">Grupo</th>
+      <th scope="col">Docente</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>A</td>
+      <td><a href="{% url 'enlace_docente'%}">Jorge León</a></td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>B</td>
+      <td><a href="#">Campero</a></td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>C</td>
+      <td><a href="#">Nava</a></td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

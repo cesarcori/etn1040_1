@@ -26,7 +26,7 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'compartir_con_todos' %}">Compartir</a>
       </li>
-        {% else %}
+        {% elif grupo == 'estudiante'%}
       <li class="nav-item">
         <a class="nav-link" href="/">Inicio</a>
       </li>
@@ -40,6 +40,19 @@
         <a class="nav-link" href="{% url 'compartir_personal' %}">
             Compartir Docente</a>
       </li>
+        {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'registro_estudiante' %}">Registro Estudiante</a>
+      </li>
         {% endif %}
     </ul>
   </div>
@@ -47,9 +60,13 @@
     {% if grupo == 'docente' or grupo == 'tutor' %}
   <span class="hello-msg">Hola, Ing. {{ request.user }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
-    {% else %}
+    {% elif grupo == 'estudiante'%}
   <span class="hello-msg">Hola, Futuro Ing. {{ request.user }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
+    {% else %}
+  <span class="hello-msg">Hola, Don {{ request.user }} </span>
+  <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
+
     {% endif %}
 
 

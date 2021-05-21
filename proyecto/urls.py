@@ -17,5 +17,7 @@ urlpatterns = [
     path('comp-personal/', views.compartirPersonal, name='compartir_personal'),
 
     path('info-est/', views.enlaceEstudiante, name='enlace_estudiante'),
+    path('info-doc/', views.enlaceDocente, name='enlace_docente'),
+    path('registro-est/', views.registroEstudiante, name='registro_estudiante'),
 
 ]
