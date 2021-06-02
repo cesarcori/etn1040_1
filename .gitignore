@@ -1,9 +1,12 @@
 *.pyc
 *.pyo
+*~
 __pycache__/
 db.sqlite3
+myvenv
 /migrations/
 /bin
 /lib
 pyvenv.cfg
 /account/migrations
+.DS_Store
