@@ -112,9 +112,17 @@
                 {% for message in messages %}
                     <p id="messages">{{ message }}</p>
                 {% endfor %}
+				<div class="mt-4">
+					<div class="d-flex justify-content-center links">
+						No tiene cuenta? <a href="{% url 'registro' %}"
+                            class="ml-2">Registrarse</a>
+					</div>
+			
+				</div>
 			</div>
 		</div>
 	</div>
+
 </body>
 
 </html>

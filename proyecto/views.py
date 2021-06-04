@@ -9,6 +9,27 @@ from .decorators import unauthenticated_user, allowed_users, admin_only
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
+@unauthenticated_user
+def registerPage(request):
+    #form = CreateUserForm()
+    #if request.method == 'POST':
+    #    form = CreateUserForm(request.POST)
+    #    if form.is_valid():
+    #        user = form.save()
+    #        username = form.cleaned_data.get('username')
+    #        
+    #        group = Group.objects.get(name='customer')
+    #        user.groups.add(group)
+    #        Customer.objects.create(
+    #                user=user,
+    #                name=user.username,
+    #                )
+
+    #        messages.success(request, 'Account was created for '+ username)
+    #        return redirect('login')
+    #context = {'form':form}
+    context = {}
+    return render(request, 'proyecto/registro_estudiante.html', context)
 
 @unauthenticated_user
 def loginPage(request):
