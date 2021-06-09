@@ -19,6 +19,7 @@ urlpatterns = [
 
     path('info-est/', views.enlaceEstudiante, name='enlace_estudiante'),
     path('info-doc/', views.enlaceDocente, name='enlace_docente'),
-    path('registro-est/', views.registroEstudiante, name='registro_estudiante'),
+    path('habilitar-est/', views.habilitarEstudiante, name='habilitar_est')
+    #path('registro-est/', views.registroEstudiante, name='registro_estudiante'),
 
 ]

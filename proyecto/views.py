@@ -125,3 +125,8 @@ def registroEstudiante(request):
     context = {'grupo': grupo}
     return render(request, 'proyecto/registro_estudiante.html', context)
 
+@login_required(login_url='login')
+@admin_only
+def habilitarEstudiante(request):
+    context = {}
+    return render(request, 'proyecto/habilitar.html', context)
