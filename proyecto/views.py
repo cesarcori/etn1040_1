@@ -127,6 +127,12 @@ def registroEstudiante(request):
 
 @login_required(login_url='login')
 @admin_only
-def habilitarEstudiante(request):
+def listaEstudiantes(request):
     context = {}
-    return render(request, 'proyecto/habilitar.html', context)
+    return render(request, 'proyecto/lista_estudiante.html', context)
+
+@login_required(login_url='login')
+@admin_only
+def listaDocentes(request):
+    context = {}
+    return render(request, 'proyecto/lista_docente.html', context)

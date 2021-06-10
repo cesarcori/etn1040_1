@@ -1,25 +1,29 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h5>Solicitud de estudiantes:</h5>
+<h5>Lista de docentes:</h5>
 <table class="table table-striped">
   <thead>
     <tr>
       <th scope="col">Nº</th>
-      <th scope="col">Estudiante Solicitante</th>
+      <th scope="col">Grupo</th>
+      <th scope="col">Docente</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th scope="row">1</th>
-      <td><a href="{% url 'enlace_estudiante'%}">Alfredo Mamani</a></td>
+      <td>A</td>
+      <td><a href="{% url 'enlace_docente'%}">Jorge León</a></td>
     </tr>
     <tr>
       <th scope="row">2</th>
-      <td><a href="#">Francisco Limachi</a></td>
+      <td>B</td>
+      <td><a href="#">Campero</a></td>
     </tr>
     <tr>
       <th scope="row">3</th>
-      <td><a href="#">Alvaro Limachi</a></td>
+      <td>C</td>
+      <td><a href="#">Nava</a></td>
     </tr>
   </tbody>
 </table>
