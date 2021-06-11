@@ -85,8 +85,44 @@ def logoutUser(request):
 def home(request):
     form = Habilitar
     grupo = 'administrador'
+    info = 'No se realizo ninguna accion'
+    if request.method == 'POST':
+        usuario_habi = request.POST.get('habilitar')
+        usuario_elim = request.POST.get('eliminar') 
+        if usuario_habi != None:
+            info_usuario = SolicitudInvitado.objects.get(pk=usuario_habi)
+            info = 'Se habilito al estudiante: ' + info_usuario.apellido + ' ' \
+            + info_usuario.nombre
+            # creacion de datos del usuario
+            DatosEstudiante.objects.create(
+                    usuario = info_usuario.usuario,
+                    correo = info_usuario.correo,
+                    nombre = info_usuario.nombre,
+                    apellido = info_usuario.apellido,
+                    carnet = info_usuario.carnet,
+                    registro_uni = info_usuario.registro_uni,
+                    celular = info_usuario.celular,
+                    mencion = info_usuario.mencion,
+                    )
+            # creacion del usuario
+            User.objects.create(
+                    username = info_usuario.usuario,
+                    email = info_usuario.correo,
+                    first_name = info_usuario.nombre,
+                    last_name = info_usuario.apellido,
+                    password = info_usuario.password,
+                    )
+            SolicitudInvitado.objects.get(pk=usuario_habi).delete()
+
+        elif usuario_elim != None:
+            info_usuario = SolicitudInvitado.objects.get(pk=usuario_elim)
+            info = 'Se eliminó al estudiante: ' + info_usuario.apellido + ' ' \
+            + info_usuario.nombre
+            SolicitudInvitado.objects.get(pk=usuario_elim).delete()
     solicitudes = SolicitudInvitado.objects.all()
-    context = {'grupo': grupo, 'solicitudes':solicitudes,'form':form}
+    aviso = 'Tiene: ' + str(solicitudes.count()) + ' solicitudes'
+    context = {'grupo': grupo, 'solicitudes':solicitudes,
+            'form':form, 'info':info, 'aviso':aviso}
     return render(request, 'proyecto/home.html', context)
 
 @login_required(login_url='login')
@@ -168,3 +204,15 @@ def listaEstudiantes(request):
 def listaDocentes(request):
     context = {}
     return render(request, 'proyecto/lista_docente.html', context)
+
+@login_required(login_url='login')
+@admin_only
+def habilitarSolicitud(request):
+    
+    return redirect('home')
+
+@login_required(login_url='login')
+@admin_only
+def eliminarSolicitud(request):
+    
+    return redirect('home')

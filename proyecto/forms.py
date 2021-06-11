@@ -6,7 +6,7 @@ from django.core.validators import RegexValidator
 
 class CreateUserForm(UserCreationForm):
     solo_carnet = RegexValidator(r'^[0-9]{7,8}$', 'Ingresar solo numero')
-    solo_letra= RegexValidator(r'^[a-zA-Z]*$', 'Ingresar solo letras')
+    solo_letra= RegexValidator(r'^[a-zA-Z a-zA-Z]*$', 'Ingresar solo letras')
     solo_ru = RegexValidator(r'^[0-9]{7}$', 'Ingresar un R.U. de 7 dígitos')
     solo_celular = RegexValidator(r'^[6|7][0-9]{7}$', 
             'Ingresar un numero de celular')
