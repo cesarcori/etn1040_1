@@ -21,7 +21,6 @@ urlpatterns = [
     path('info-doc/', views.enlaceDocente, name='enlace_docente'),
     path('lista_est/', views.listaEstudiantes, name='lista_estudiantes'),
     path('lista_doc/', views.listaDocentes, name='lista_docentes'),
-    #path('registro-est/', views.registroEstudiante, name='registro_estudiante'),
-    path('habilitar-sol/', views.habilitarSolicitud, name='habilitar_sol'),
-    path('eliminar-sol/', views.eliminarSolicitud, name='eliminar_sol'),
+
+    path('agregar-doc/', views.agregarDocente, name='agregar_docente')
 ]

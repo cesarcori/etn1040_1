@@ -35,19 +35,15 @@
     <tr>
         <td scope="row">{{solicitud.pk}}</td>
       <td><a href="{% url 'enlace_estudiante'%}">
-              {{solicitud.apellido}} {{solicitud.nombre}}</a></td>
-        <td>
-            {% comment %}<input type="radio" class="btn-check"{% endcomment %}
-{% comment %}name="options-outlined{{solicitud.pk}}" id="success-outlined{{solicitud.pk}}" autocomplete="off">{% endcomment %}
-{% comment %}<label class="btn btn-outline-success" for="success-outlined{{solicitud.pk}}">Habilitar</label>{% endcomment %}
+              {{solicitud.apellido}}, {{solicitud.nombre}}</a>
+      </td>
 <form action='' method='POST'>
     {% csrf_token %}
+        <td>
        <button type="submit" name='habilitar' class="btn btn-outline-success"
             value={{solicitud.pk}}>Habilitar</button>
         </td>
         <td> 
-{% comment %}<input type="radio" class="btn-check" name="options-outlined{{solicitud.pk}}" id="danger-outlined{{solicitud.pk}}" autocomplete="off">{% endcomment %}
-{% comment %}<label class="btn btn-outline-danger" for="danger-outlined{{solicitud.pk}}">Eliminar</label>{% endcomment %}
         <button type="submit" name='eliminar' class="btn btn-outline-danger"
             value={{solicitud.pk}}>Eliminar</button>
         </td>

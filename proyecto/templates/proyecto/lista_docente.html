@@ -1,6 +1,9 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h5>Lista de docentes:</h5>
+<a class="btn btn-sm btn-info" href="{% url 'agregar_docente' %}">Agregar
+    Docente</a><p>
+
 <table class="table table-striped">
   <thead>
     <tr>

@@ -213,12 +213,8 @@ def listaDocentes(request):
 
 @login_required(login_url='login')
 @admin_only
-def habilitarSolicitud(request):
+def agregarDocente(request):
     
-    return redirect('home')
+    context = {}
+    return render(request, 'proyecto/agregar_docente.html', context)
 
-@login_required(login_url='login')
-@admin_only
-def eliminarSolicitud(request):
-    
-    return redirect('home')
