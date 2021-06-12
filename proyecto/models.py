@@ -9,6 +9,7 @@ class SolicitudInvitado(models.Model):
     registro_uni = models.CharField(max_length=50, null=True, unique=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
+    password = models.CharField(max_length=50, null=True)
     fecha_solicitud = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

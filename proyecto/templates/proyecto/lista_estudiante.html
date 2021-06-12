@@ -4,23 +4,17 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Nº</th>
+      <th scope="col">R.U.</th>
       <th scope="col">Estudiante Solicitante</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th scope="row">1</th>
-      <td><a href="{% url 'enlace_estudiante'%}">Alfredo Mamani</a></td>
+{%for est in datos_est %}
+<th scope="row">{{est.registro_uni}}</th>
+      <td><a href="{% url 'enlace_estudiante'%}">{{est.apellido}}, {{est.nombre}}</a></td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td><a href="#">Francisco Limachi</a></td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td><a href="#">Alvaro Limachi</a></td>
-    </tr>
+{% endfor %}
   </tbody>
 </table>
 {% endblock %}

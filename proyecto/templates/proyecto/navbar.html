@@ -61,13 +61,13 @@
   </div>
 
     {% if grupo == 'docente' or grupo == 'tutor' %}
-  <span class="hello-msg">Bienvenido, Ing. {{ request.user }} </span>
+  <span class="hello-msg">Bienvenido, Ing. {{ request.user.first_name }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
     {% elif grupo == 'estudiante'%}
-  <span class="hello-msg">Bienvenido, Futuro Ing. {{ request.user }} </span>
+  <span class="hello-msg">Bienvenido, Futuro(a) Ing. {{ request.user.first_name }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
     {% else %}
-  <span class="hello-msg">Bienvenido, Don {{ request.user }} </span>
+  <span class="hello-msg">Bienvenido, Don {{ request.user.first_name }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
 
     {% endif %}

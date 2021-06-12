@@ -3,8 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User, Group
 
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from .forms import *
@@ -21,6 +20,7 @@ def registerPage(request):
         if form.is_valid():
             usuario = form.cleaned_data.get('username')
             correo = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password1')
             nombre = form.cleaned_data.get('nombre')
             apellido = form.cleaned_data.get('apellido')
             carnet = form.cleaned_data.get('carnet')
@@ -56,8 +56,9 @@ def registerPage(request):
                         registro_uni = registro_uni,
                         celular = celular,
                         mencion = mencion,
+                        password = password
                         )
-                messages.success(request, 'La solicitud de envio con exito!!!')
+                messages.success(request, 'La solicitud se envió con exito!!!')
     context = {'usuarios':usuarios, 'form':form}
     return render(request, 'proyecto/registro_estudiante.html', context)
 
@@ -85,7 +86,7 @@ def logoutUser(request):
 def home(request):
     form = Habilitar
     grupo = 'administrador'
-    info = 'No se realizo ninguna accion'
+    info = 'No se realizó ninguna acción'
     if request.method == 'POST':
         usuario_habi = request.POST.get('habilitar')
         usuario_elim = request.POST.get('eliminar') 
@@ -105,13 +106,17 @@ def home(request):
                     mencion = info_usuario.mencion,
                     )
             # creacion del usuario
-            User.objects.create(
+            User.objects.create_user(
                     username = info_usuario.usuario,
                     email = info_usuario.correo,
                     first_name = info_usuario.nombre,
                     last_name = info_usuario.apellido,
                     password = info_usuario.password,
                     )
+            group = Group.objects.get(name='estudiante')
+            user = User.objects.get(username=info_usuario.usuario)
+            user.groups.add(group)
+            
             SolicitudInvitado.objects.get(pk=usuario_habi).delete()
 
         elif usuario_elim != None:
@@ -196,7 +201,8 @@ def registroEstudiante(request):
 @login_required(login_url='login')
 @admin_only
 def listaEstudiantes(request):
-    context = {}
+    datos_est = DatosEstudiante.objects.all()
+    context = {'datos_est':datos_est}
     return render(request, 'proyecto/lista_estudiante.html', context)
 
 @login_required(login_url='login')
