@@ -36,7 +36,7 @@ class DatosDocente(models.Model):
     apellido = models.CharField(max_length=50, null=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
-    grupo = models.CharField(max_length=50, null=True)
+    grupo = models.CharField(max_length=50, null=True, unique=True)
     fecha_solicitud = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

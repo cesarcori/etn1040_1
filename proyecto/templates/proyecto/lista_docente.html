@@ -1,33 +1,26 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h5>Lista de docentes:</h5>
-<a class="btn btn-sm btn-info" href="{% url 'agregar_docente' %}">Agregar
-    Docente</a><p>
 
+<h5>Lista de docentes:</h5>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Nº</th>
       <th scope="col">Grupo</th>
       <th scope="col">Docente</th>
     </tr>
   </thead>
   <tbody>
+    {% for docente in docentes %}
     <tr>
-      <th scope="row">1</th>
-      <td>A</td>
-      <td><a href="{% url 'enlace_docente'%}">Jorge León</a></td>
+        <td>{{docente.grupo}}</td>
+      <td><a href="{% url 'enlace_docente'%}">{{docente.apellido}},
+              {{docente.nombre}}</a></td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>B</td>
-      <td><a href="#">Campero</a></td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>C</td>
-      <td><a href="#">Nava</a></td>
-    </tr>
+    {% endfor %}
   </tbody>
 </table>
+
+<p><p><p>
+<a class="btn btn-sm btn-info" href="{% url 'agregar_docente' %}">Agregar
+    Docente</a><p>
 {% endblock %}

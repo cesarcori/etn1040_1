@@ -208,13 +208,59 @@ def listaEstudiantes(request):
 @login_required(login_url='login')
 @admin_only
 def listaDocentes(request):
-    context = {}
+    docentes = DatosDocente.objects.all()
+    context = {'docentes':docentes}
     return render(request, 'proyecto/lista_docente.html', context)
 
 @login_required(login_url='login')
 @admin_only
 def agregarDocente(request):
-    
-    context = {}
+    form = FormDocente
+    if request.method == 'POST':
+        form = FormDocente(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data.get('nombre')
+            apellido = form.cleaned_data.get('apellido')
+            grupo = form.cleaned_data.get('grupo')
+            mencion = form.cleaned_data.get('mencion')
+            primer_apellido= apellido.split()[0].lower()
+            usuario = primer_apellido+'_docente'
+            correo = primer_apellido+'_docente@gmail.com'
+            password = primer_apellido+'_docente'
+            if User.objects.filter(username=usuario).exists():
+                messages.info(request, 
+            'No se agregó al docente, un docente usa este nombre de usuario')
+            elif User.objects.filter(email=correo).exists():
+                messages.info(request,
+            'No se agregó al docente, un docente usa este mismo correo\
+            electrónico')
+            elif DatosDocente.objects.filter(grupo=grupo).exists():
+                messages.info(request, 
+            'No se agregó al docente, otro docente ya se asigno a este grupo')
+            else:                 
+                DatosDocente.objects.create(
+                        usuario = usuario,
+                        correo = correo,
+                        nombre = nombre,
+                        apellido = apellido,
+                        celular = 'llenar',
+                        grupo = grupo,
+                        mencion = mencion,
+                        )
+                # creacion del usuario
+                User.objects.create_user(
+                        username = usuario,
+                        email = correo,
+                        first_name = nombre,
+                        last_name = apellido,
+                        password = password,
+                        )
+                group = Group.objects.get(name='docente')
+                user = User.objects.get(username=usuario)
+                user.groups.add(group)
+
+                messages.success(request, 'La solicitud se envió con exito!!!')
+    context = {'form':form}
     return render(request, 'proyecto/agregar_docente.html', context)
+    #return redirect('agregar-doc')
 
