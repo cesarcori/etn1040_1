@@ -1,6 +1,22 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 
-<h3>Se muestra lista de estudiantes del docente</h3>
+<h3>Enlace Docente</h3>
+<h3>Lista de Estudiantes</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Estudiante</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+{%for est in estudiantes %}
+      <td><a href="{% url 'enlace_estudiante'%}">{{est.apellido}}, {{est.nombre}}</a></td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
+
 
 {% endblock %}

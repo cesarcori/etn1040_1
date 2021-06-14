@@ -9,6 +9,8 @@ from .decorators import unauthenticated_user, allowed_users, admin_only
 from .forms import *
 from .models import *
 
+from random import randint
+
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
 @unauthenticated_user
@@ -45,6 +47,19 @@ def registerPage(request):
             elif SolicitudInvitado.objects.filter(registro_uni=registro_uni).exists():
                 messages.info(request, 
             'No se envió la solicitud, un solicitante usa este mismo número de \
+            registro universitario')
+            elif DatosEstudiante.objects.filter(usuario=usuario).exists():
+                messages.info(request, 
+            'No se envió la solicitud, un estudiante usa este mismo nombre de usuario')
+            elif DatosEstudiante.objects.filter(correo=correo).exists():
+                messages.info(request, 
+            'No se envió la solicitud, un estudiante usa este mismo correo electrónico')
+            elif DatosEstudiante.objects.filter(carnet=carnet).exists():
+                messages.info(request, 
+            'No se envió la solicitud, un estudiante usa este mismo número de carnet')
+            elif DatosEstudiante.objects.filter(registro_uni=registro_uni).exists():
+                messages.info(request, 
+            'No se envió la solicitud, un estudiante usa este mismo número de \
             registro universitario')
             else:
                 SolicitudInvitado.objects.create(
@@ -94,6 +109,20 @@ def home(request):
             info_usuario = SolicitudInvitado.objects.get(pk=usuario_habi)
             info = 'Se habilito al estudiante: ' + info_usuario.apellido + ' ' \
             + info_usuario.nombre
+            # sorteo de grupo_docente
+            mencion = info_usuario.mencion
+            doc_mencion = DatosDocente.objects.filter(mencion=mencion)
+            cantidad_est1 = doc_mencion[0].datosestudiante_set.count()
+            cantidad_est2 = doc_mencion[1].datosestudiante_set.count()
+            if cantidad_est1 == cantidad_est2:
+                sorteo = randint(0,1)
+                docente_asignado = doc_mencion[sorteo]
+            elif cantidad_est1 < cantidad_est2:
+                docente_asignado = doc_mencion[0]
+            else:
+                docente_asignado = doc_mencion[1]
+
+            docente = doc_mencion[0]                   
             # creacion de datos del usuario
             DatosEstudiante.objects.create(
                     usuario = info_usuario.usuario,
@@ -104,6 +133,7 @@ def home(request):
                     registro_uni = info_usuario.registro_uni,
                     celular = info_usuario.celular,
                     mencion = info_usuario.mencion,
+                    grupo_doc = docente_asignado
                     )
             # creacion del usuario
             User.objects.create_user(
@@ -188,7 +218,10 @@ def enlaceEstudiante(request):
 @admin_only
 def enlaceDocente(request):
     grupo = str(request.user.groups.get())
-    context = {'grupo': grupo}
+    usuario = 'nava_docente'
+    docente = DatosDocente.objects.get(usuario=usuario)
+    estudiantes = docente.datosestudiante_set.all()
+    context = {'grupo': grupo, 'estudiantes':estudiantes}
     return render(request, 'proyecto/enlace_docente.html', context)
 
 @login_required(login_url='login')

@@ -7,6 +7,7 @@
     <tr>
       <th scope="col">Grupo</th>
       <th scope="col">Docente</th>
+      <th scope="col">Mención</th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,7 @@
         <td>{{docente.grupo}}</td>
       <td><a href="{% url 'enlace_docente'%}">{{docente.apellido}},
               {{docente.nombre}}</a></td>
+        <td>{{docente.mencion}}</td>
     </tr>
     {% endfor %}
   </tbody>
