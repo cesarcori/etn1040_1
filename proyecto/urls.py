@@ -17,8 +17,8 @@ urlpatterns = [
     path('comp-todos/', views.compartirTodos, name='compartir_con_todos'),
     path('comp-personal/', views.compartirPersonal, name='compartir_personal'),
 
-    path('info-est/', views.enlaceEstudiante, name='enlace_estudiante'),
-    path('info-doc/', views.enlaceDocente, name='enlace_docente'),
+    path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
+    path('info-doc/<int:pk_doc>/', views.enlaceDocente, name='enlace_docente'),
     path('lista_est/', views.listaEstudiantes, name='lista_estudiantes'),
     path('lista_doc/', views.listaDocentes, name='lista_docentes'),
 

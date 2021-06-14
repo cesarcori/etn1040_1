@@ -2,6 +2,14 @@
 {% block content %}
 
 <h3>Enlace Docente</h3>
+<h3>Información del Docente</h3>
+<p>
+Nombre: {{docente.nombre}} <p>
+Apellido: {{docente.apellido}} <p>
+Celular: {{docente.celular}} <p>
+Correo Electrónico: {{docente.celular}} <p>
+Grupo: {{docente.grupo}} <p>
+Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
 <h3>Lista de Estudiantes</h3>
 <table class="table table-striped">
   <thead>
@@ -12,7 +20,7 @@
   <tbody>
     <tr>
 {%for est in estudiantes %}
-      <td><a href="{% url 'enlace_estudiante'%}">{{est.apellido}}, {{est.nombre}}</a></td>
+      <td><a href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
     </tr>
 {% endfor %}
   </tbody>

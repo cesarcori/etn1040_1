@@ -184,6 +184,33 @@ def estudiante(request):
 @login_required(login_url='login')
 def perfilUsuarios(request):
     grupo = str(request.user.groups.get())
+    # id_usuario = request.user.id
+    # # switch-case
+    # def perfil_admi():
+        # usuario = User.objects.get(id=id_usuario)
+        # info = usuario.datosadministrador
+        # return info
+    # def perfil_estudiante():
+        # info = DatosEstudiante.objects.all()
+        # return info
+    # def perfil_docente():
+        # info = DatosDocente.objects.all()
+        # return info
+    # def perfil_tutor():
+        # info = DatosTutor.objects.all()
+        # return info
+    # def perfil_usuario(grupo):
+        # grupo_pertenece = {
+                # 'administrador': perfil_admi,
+                # 'estudiante': perfil_estudiante,
+                # 'docente': perfil_docente,
+                # 'tutor': perfil_tutor,
+                # }
+        # func = grupo_pertenece.get(grupo)
+        # return func
+    # llamando datos del usuario segun grupo que pertenece
+    # info_usuario = perfil_usuario(grupo)
+    # print(perfil_usuario(grupo))
     context = {'grupo': grupo}
     return render(request, 'proyecto/perfil.html', context)
 
@@ -209,19 +236,20 @@ def compartirPersonal(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','administrador'])
-def enlaceEstudiante(request):
+def enlaceEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
-    context = {'grupo': grupo}
+    estudiante = DatosEstudiante.objects.get(id=pk_est)
+    context = {'grupo': grupo,'estudiante':estudiante}
     return render(request, 'proyecto/enlace_estudiante.html', context)
 
 @login_required(login_url='login')
 @admin_only
-def enlaceDocente(request):
+def enlaceDocente(request, pk_doc):
     grupo = str(request.user.groups.get())
     usuario = 'nava_docente'
-    docente = DatosDocente.objects.get(usuario=usuario)
+    docente = DatosDocente.objects.get(id=pk_doc)
     estudiantes = docente.datosestudiante_set.all()
-    context = {'grupo': grupo, 'estudiantes':estudiantes}
+    context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
     return render(request, 'proyecto/enlace_docente.html', context)
 
 @login_required(login_url='login')

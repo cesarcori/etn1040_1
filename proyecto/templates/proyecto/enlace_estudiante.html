@@ -1,6 +1,18 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 
-<h3>Se muestra info del estudiante y todo lo necesario</h3>
+<H3>información del estudiante</h3>
+<p>
+Nombre: {{estudiante.nombre}} <p>
+Apellido: {{estudiante.apellido}} <p>
+Registro Universitario: {{estudiante.registro_uni}} <p>
+Mención: {{estudiante.mencion}} <p>
+Cédula de Identidad: {{estudiante.carnet}} <p>
+Correo Electrónico: {{estudiante.correo}} <p>
+Número de Celular: {{estudiante.celular}} <p>
+Grupo: {{estudiante.grupo_doc.grupo}} <p>
+Docente: {{estudiante.grupo_doc.nombre}} {{estudiante.grupo_doc.apellido}}<p>
+Fecha de Inscripción: {{estudiante.fecha_inscripcion}}
+
 
 {% endblock %}
