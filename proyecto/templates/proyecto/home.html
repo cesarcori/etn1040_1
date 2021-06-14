@@ -24,7 +24,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Nº</th>
+      <th scope="col">R.U.</th>
       <th scope="col">Estudiante Solicitante</th>
       <th scope="col">Habilitar</th>
       <th scope="col">Eliminar</th>
@@ -33,7 +33,7 @@
   <tbody>
 {% for solicitud in solicitudes %}
     <tr>
-        <td scope="row">{{solicitud.pk}}</td>
+        <th scope="row">{{solicitud.registro_uni}}</th>
       <td><a href="{% url 'enlace_estudiante'%}">
               {{solicitud.apellido}}, {{solicitud.nombre}}</a>
       </td>

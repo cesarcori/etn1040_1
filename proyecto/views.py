@@ -201,14 +201,14 @@ def registroEstudiante(request):
 @login_required(login_url='login')
 @admin_only
 def listaEstudiantes(request):
-    datos_est = DatosEstudiante.objects.all()
+    datos_est = DatosEstudiante.objects.all().order_by('apellido')
     context = {'datos_est':datos_est}
     return render(request, 'proyecto/lista_estudiante.html', context)
 
 @login_required(login_url='login')
 @admin_only
 def listaDocentes(request):
-    docentes = DatosDocente.objects.all()
+    docentes = DatosDocente.objects.all().order_by('grupo')
     context = {'docentes':docentes}
     return render(request, 'proyecto/lista_docente.html', context)
 
