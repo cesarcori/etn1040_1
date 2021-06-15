@@ -20,12 +20,25 @@
     Docente: <a href="{% url 'enlace_docente' request.user.datosestudiante.grupo_doc.id %}">
         {{ request.user.datosestudiante.grupo_doc.nombre}} 
         {{request.user.datosestudiante.grupo_doc.apellido}}</a><p>
-            {{request.user.datosestudiante.grupo_doc.id}}
 
 
 {%elif grupo == 'docente' %}
+    <p>
+    Nombre: {{ request.user.datosdocente.nombre }}<p>
+    Apellido: {{ request.user.datosdocente.apellido }}<p>
+    Celular: {{ request.user.datosdocente.celular }}<p>
+    Correo Electrónico: {{ request.user.datosdocente.correo}}<p>
+    Mención: {{ request.user.datosdocente.mencion}}<p>
+    Cantidad de Estudiantes: {{ request.user.datosdocente.datosestudiante_set.count}}<p>
         
 {%elif grupo == 'tutor' %}
+    <p>
+    Nombre: {{ request.user.datostutor.nombre }}<p>
+    Apellido: {{ request.user.datostutor.apellido }}<p>
+    Celular: {{ request.user.datostutor.celular }}<p>
+    Correo Electrónico: {{ request.user.datostutor.correo}}<p>
+    Mención: {{ request.user.datostutor.mencion}}<p>
+    Cantidad de Estudiantes: {{ request.user.datostutor.datosestudiante_set.count}}<p>
 {%endif%}
 
 {% endblock %}

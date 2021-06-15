@@ -166,7 +166,8 @@ def home(request):
 @allowed_users(allowed_roles=['docente'])
 def docente(request):
     grupo = 'docente'
-    context = {'grupo': grupo}
+    datos_est = request.user.datosdocente.datosestudiante_set.all().order_by('apellido')
+    context = {'datos_est':datos_est,'grupo':grupo}
     return render(request, 'proyecto/docente.html', context)
 
 @login_required(login_url='login')
@@ -253,9 +254,10 @@ def enlaceEstudiante(request, pk_est):
     return render(request, 'proyecto/enlace_estudiante.html', context)
 
 @login_required(login_url='login')
-@admin_only
+#@admin_only
+@allowed_users(allowed_roles=['estudiante','tutor','administrador'])
 def enlaceDocente(request, pk_doc):
-    grupo = str(request.user.groups.get())
+    grupo = request.user.groups.get().name
     usuario = 'nava_docente'
     docente = DatosDocente.objects.get(id=pk_doc)
     estudiantes = docente.datosestudiante_set.all()

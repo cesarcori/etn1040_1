@@ -32,7 +32,6 @@ class DatosDocente(models.Model):
         return self.nombre_completo
 
 class DatosEstudiante(models.Model):
-    #usuario = models.CharField(max_length=50, null=True, unique=True)
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)

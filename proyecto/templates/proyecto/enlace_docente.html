@@ -10,6 +10,7 @@ Celular: {{docente.celular}} <p>
 Correo Electrónico: {{docente.celular}} <p>
 Grupo: {{docente.grupo}} <p>
 Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
+{%if grupo == 'administrador' %}
 <h3>Lista de Estudiantes</h3>
 <table class="table table-striped">
   <thead>
@@ -25,6 +26,6 @@ Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
 {% endfor %}
   </tbody>
 </table>
-
+{%endif%}
 
 {% endblock %}
