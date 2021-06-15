@@ -174,7 +174,8 @@ def docente(request):
 @allowed_users(allowed_roles=['tutor'])
 def tutor(request):
     grupo = 'tutor'
-    context = {'grupo': grupo}
+    datos_est = request.user.datostutor.datosestudiante_set.all().order_by('apellido')
+    context = {'datos_est':datos_est,'grupo':grupo}
     return render(request, 'proyecto/tutor.html', context)
 
 @login_required(login_url='login')
