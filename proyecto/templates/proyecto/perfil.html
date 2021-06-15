@@ -6,9 +6,26 @@
     Apellido: {{ request.user.datosadministrador.apellido }}<p>
     Celular: {{ request.user.datosadministrador.celular }}<p>
     Correo Electrónico: {{ request.user.datosadministrador.correo}}<p>
-{%elif group == 'estudiante' %}
-{%elif group == 'docente' %}
-{%elif group == 'tutor' %}
+{%elif grupo == 'estudiante' %}
+    <p>
+    Nombre: {{ request.user.datosestudiante.nombre }}<p>
+    Apellido: {{ request.user.datosestudiante.apellido }}<p>
+    Celular: {{ request.user.datosestudiante.celular }}<p>
+    Usuario: {{ request.user.datosestudiante.usuario }}<p>
+    Correo Electrónico: {{ request.user.datosestudiante.correo}}<p>
+    Cédula de Identidad: {{ request.user.datosestudiante.carnet}}<p>
+    Registro Universitario: {{ request.user.datosestudiante.registro_uni}}<p>
+    Mención: {{ request.user.datosestudiante.mencion}}<p>
+    Grupo: {{ request.user.datosestudiante.grupo_doc.grupo}}<p>
+    Docente: <a href="{% url 'enlace_docente' request.user.datosestudiante.grupo_doc.id %}">
+        {{ request.user.datosestudiante.grupo_doc.nombre}} 
+        {{request.user.datosestudiante.grupo_doc.apellido}}</a><p>
+            {{request.user.datosestudiante.grupo_doc.id}}
+
+
+{%elif grupo == 'docente' %}
+        
+{%elif grupo == 'tutor' %}
 {%endif%}
 
 {% endblock %}

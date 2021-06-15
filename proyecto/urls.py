@@ -18,6 +18,8 @@ urlpatterns = [
     path('comp-personal/', views.compartirPersonal, name='compartir_personal'),
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
+    path('info-solicitante/<int:pk_sol>', views.enlaceSolicitante,
+        name='enlace_solicitante'),
     path('info-doc/<int:pk_doc>/', views.enlaceDocente, name='enlace_docente'),
     path('lista_est/', views.listaEstudiantes, name='lista_estudiantes'),
     path('lista_doc/', views.listaDocentes, name='lista_docentes'),

@@ -48,9 +48,9 @@ def registerPage(request):
                 messages.info(request, 
             'No se envió la solicitud, un solicitante usa este mismo número de \
             registro universitario')
-            elif DatosEstudiante.objects.filter(usuario=usuario).exists():
-                messages.info(request, 
-            'No se envió la solicitud, un estudiante usa este mismo nombre de usuario')
+            # elif DatosEstudiante.objects.filter(usuario=usuario).exists():
+                # messages.info(request, 
+            # 'No se envió la solicitud, un estudiante usa este mismo nombre de usuario')
             elif DatosEstudiante.objects.filter(correo=correo).exists():
                 messages.info(request, 
             'No se envió la solicitud, un estudiante usa este mismo correo electrónico')
@@ -123,9 +123,19 @@ def home(request):
                 docente_asignado = doc_mencion[1]
 
             docente = doc_mencion[0]                   
+
+            # creacion del usuario
+            User.objects.create_user(
+                    username = info_usuario.usuario,
+                    email = info_usuario.correo,
+                    first_name = info_usuario.nombre,
+                    last_name = info_usuario.apellido,
+                    password = info_usuario.password,
+                    )
+
             # creacion de datos del usuario
             DatosEstudiante.objects.create(
-                    usuario = info_usuario.usuario,
+                    usuario = User.objects.get(username=info_usuario.usuario),
                     correo = info_usuario.correo,
                     nombre = info_usuario.nombre,
                     apellido = info_usuario.apellido,
@@ -134,14 +144,6 @@ def home(request):
                     celular = info_usuario.celular,
                     mencion = info_usuario.mencion,
                     grupo_doc = docente_asignado
-                    )
-            # creacion del usuario
-            User.objects.create_user(
-                    username = info_usuario.usuario,
-                    email = info_usuario.correo,
-                    first_name = info_usuario.nombre,
-                    last_name = info_usuario.apellido,
-                    password = info_usuario.password,
                     )
             group = Group.objects.get(name='estudiante')
             user = User.objects.get(username=info_usuario.usuario)
@@ -236,6 +238,14 @@ def compartirPersonal(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','administrador'])
+def enlaceSolicitante(request, pk_sol):
+    grupo = str(request.user.groups.get())
+    estudiante = SolicitudInvitado.objects.get(id=pk_sol)
+    context = {'grupo': grupo,'estudiante':estudiante}
+    return render(request, 'proyecto/enlace_solicitante.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','administrador'])
 def enlaceEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
@@ -299,15 +309,6 @@ def agregarDocente(request):
                 messages.info(request, 
             'No se agregó al docente, otro docente ya se asigno a este grupo')
             else:                 
-                DatosDocente.objects.create(
-                        usuario = usuario,
-                        correo = correo,
-                        nombre = nombre,
-                        apellido = apellido,
-                        celular = 'llenar',
-                        grupo = grupo,
-                        mencion = mencion,
-                        )
                 # creacion del usuario
                 User.objects.create_user(
                         username = usuario,
@@ -319,6 +320,16 @@ def agregarDocente(request):
                 group = Group.objects.get(name='docente')
                 user = User.objects.get(username=usuario)
                 user.groups.add(group)
+                # creacion de datos
+                DatosDocente.objects.create(
+                        usuario = User.objects.get(username=usuario),
+                        correo = correo,
+                        nombre = nombre,
+                        apellido = apellido,
+                        celular = 'llenar',
+                        grupo = grupo,
+                        mencion = mencion,
+                        )
 
                 messages.success(request, 'La solicitud se envió con exito!!!')
     context = {'form':form}

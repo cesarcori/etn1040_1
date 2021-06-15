@@ -34,8 +34,9 @@
 {% for solicitud in solicitudes %}
     <tr>
         <th scope="row">{{solicitud.registro_uni}}</th>
-      <td><a href="{% url 'enlace_estudiante'%}">
+      <td><a href="{% url 'enlace_solicitante' solicitud.pk %}">
               {{solicitud.apellido}}, {{solicitud.nombre}}</a>
+      {% comment %}<td><a href="#">{{solicitud.apellido}}, {{solicitud.nombre}}</a>{% endcomment %}
       </td>
 <form action='' method='POST'>
     {% csrf_token %}
