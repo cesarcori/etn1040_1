@@ -51,20 +51,23 @@
         <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'registro_estudiante' %}">Registro Estudiante</a>
+        <a class="nav-link" href="{% url 'lista_estudiantes' %}">Estudiantes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'lista_docentes' %}">Docentes</a>
       </li>
         {% endif %}
     </ul>
   </div>
 
     {% if grupo == 'docente' or grupo == 'tutor' %}
-  <span class="hello-msg">Hola, Ing. {{ request.user }} </span>
+  <span class="hello-msg">Bienvenido, Ing. {{ request.user.first_name }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
     {% elif grupo == 'estudiante'%}
-  <span class="hello-msg">Hola, Futuro Ing. {{ request.user }} </span>
+  <span class="hello-msg">Bienvenido, Futuro(a) Ing. {{ request.user.first_name }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
     {% else %}
-  <span class="hello-msg">Hola, Don {{ request.user }} </span>
+  <span class="hello-msg">Bienvenido, Don {{ request.user.first_name }} </span>
   <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
 
     {% endif %}

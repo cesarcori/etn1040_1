@@ -1,0 +1,20 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h5>Lista de estudiantes ETN-1040, Proyecto de Grado:</h5>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">R.U.</th>
+      <th scope="col">Estudiante Solicitante</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+{%for est in datos_est %}
+<th scope="row">{{est.registro_uni}}</th>
+      <td><a href="{% url 'enlace_estudiante'%}">{{est.apellido}}, {{est.nombre}}</a></td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
+{% endblock %}
