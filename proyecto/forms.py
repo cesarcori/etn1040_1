@@ -54,3 +54,9 @@ class FormDocente(forms.Form):
     apellido = forms.CharField(max_length = 50, validators=[solo_letra])
     grupo = forms.CharField(max_length = 50, validators=[solo_grupo])
     mencion = forms.ChoiceField(choices=MENCION)
+
+class ComunicadoForm(forms.ModelForm):
+    class Meta:
+        model = Comunicado
+        fields = ('tema', 'texto',)
+

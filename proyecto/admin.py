@@ -6,4 +6,5 @@ admin.site.register(DatosEstudiante)
 admin.site.register(DatosDocente)
 admin.site.register(DatosTutor)
 admin.site.register(DatosAdministrador)
+admin.site.register(Comunicado)
 

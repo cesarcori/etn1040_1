@@ -62,7 +62,7 @@ class DatosEstudiante(models.Model):
 
 
 class DatosAdministrador(models.Model):
-    usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
@@ -72,4 +72,13 @@ class DatosAdministrador(models.Model):
     def __str__(self):
         self.nombre_completo = self.nombre + ' ' + self.apellido
         return self.nombre_completo
+
+class Comunicado(models.Model):
+    autor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    tema = models.CharField(max_length=200)
+    texto = models.TextField(blank=True, null=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return self.tema
 

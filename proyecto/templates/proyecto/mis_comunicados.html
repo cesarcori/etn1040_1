@@ -1,0 +1,19 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+<h3>Todos los comunicados que creaste</h3>
+{%for comunicado in comunicados %}
+**********************************
+<p>
+Tema:
+{{comunicado.tema}}<p>
+Contenido:
+{{comunicado.texto}}<p>
+Fecha de publicación:
+{{comunicado.fecha_creacion}}<p>
+**********************************
+
+{%endfor%}
+
+<a class="nav-link" href="{% url 'crear_comunicado' %}">Crear Comunicado</a>
+{% endblock %}

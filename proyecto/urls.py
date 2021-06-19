@@ -14,7 +14,10 @@ urlpatterns = [
 
     path('perfil/', views.perfilUsuarios, name='perfil'),
     path('busqueda/', views.busquedaProyectos, name='busqueda'),
-    path('comp-todos/', views.compartirTodos, name='compartir_con_todos'),
+    path('mis_comun/', views.misComunicados, name='mis_comunicados'),
+    path('crear-comun/', views.crearComunicado, name='crear_comunicado'),
+    path('comun-doc-est/', views.comunicadosDocEst, name='comunicados_doc_est'),
+    path('comun-tut-est/', views.comunicadosTutEst, name='comunicados_tut_est'),
     path('comp-personal/', views.compartirPersonal, name='compartir_personal'),
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),

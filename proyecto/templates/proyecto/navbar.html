@@ -13,6 +13,7 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
+
         {% if grupo == 'docente' or grupo == 'tutor' %}
       <li class="nav-item">
         <a class="nav-link" href="/">Inicio</a>
@@ -24,8 +25,9 @@
         <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'compartir_con_todos' %}">Compartir</a>
+        <a class="nav-link" href="{% url 'mis_comunicados' %}">Mis Comunicados</a>
       </li>
+
         {% elif grupo == 'estudiante'%}
       <li class="nav-item">
         <a class="nav-link" href="/">Inicio</a>
@@ -39,6 +41,14 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'compartir_personal' %}">
             Compartir Docente</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'comunicados_doc_est' %}">
+            Comunicados Doc</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'comunicados_tut_est' %}">
+            Comunicados Tut</a>
       </li>
         {% else %}
       <li class="nav-item">

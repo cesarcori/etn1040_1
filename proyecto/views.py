@@ -226,10 +226,51 @@ def busquedaProyectos(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
-def compartirTodos(request):
+def misComunicados(request):
+    grupo = str(request.user.groups.get())
+    docente = User.objects.get(id=request.user.id)
+    comunicados = docente.comunicado_set.all().order_by('-fecha_creacion')
+    context = {'grupo': grupo, 'comunicados':comunicados}
+
+    return render(request, 'proyecto/mis_comunicados.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
+def crearComunicado(request):
     grupo = request.user.groups.all()[0].name # es lo mismo que arriba
-    context = {'grupo': grupo}
-    return render(request, 'proyecto/compartir_todos.html', context)
+    if request.method == "POST":
+        form = ComunicadoForm(request.POST)
+        if form.is_valid():
+            comunicado = form.save(commit=False)
+            comunicado.autor= request.user
+            comunicado.save()
+            return redirect('mis_comunicados')
+    else:
+        form = ComunicadoForm()
+    context = {'grupo': grupo, 'form':form}
+    return render(request, 'proyecto/crear_comunicado.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def comunicadosDocEst(request):
+    grupo = str(request.user.groups.get())
+    id_docente = request.user.datosestudiante.grupo_doc.usuario_id
+    docente = User.objects.get(id=id_docente)
+    comunicados = docente.comunicado_set.all().order_by('-fecha_creacion')
+    valor = 'docente'
+    context = {'grupo': grupo, 'comunicados':comunicados, 'valor':valor}
+    return render(request, 'proyecto/comunicado_estudiantes.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def comunicadosTutEst(request):
+    grupo = str(request.user.groups.get())
+    id_tutor= request.user.datosestudiante.tutor.usuario_id
+    tutor = User.objects.get(id=id_tutor)
+    comunicados = tutor.comunicado_set.all().order_by('-fecha_creacion')
+    valor = 'tutor'
+    context = {'grupo': grupo, 'comunicados':comunicados, 'valor':valor}
+    return render(request, 'proyecto/comunicado_estudiantes.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','estudiante'])
