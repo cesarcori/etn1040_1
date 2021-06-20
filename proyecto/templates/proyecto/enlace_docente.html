@@ -1,16 +1,16 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-
+{% comment %}Solo ingresa se ve al docente que se tiene aca{% endcomment %}
 <h3>Enlace Docente</h3>
 <h3>Información del Docente</h3>
 <p>
+{%if grupo == 'administrador' %}
 Nombre: {{docente.nombre}} <p>
 Apellido: {{docente.apellido}} <p>
 Celular: {{docente.celular}} <p>
 Correo Electrónico: {{docente.celular}} <p>
 Grupo: {{docente.grupo}} <p>
 Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
-{%if grupo == 'administrador' %}
 <h3>Lista de Estudiantes</h3>
 <table class="table table-striped">
   <thead>
@@ -26,6 +26,28 @@ Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
 {% endfor %}
   </tbody>
 </table>
+{%endif%}
+
+{%if grupo == 'estudiante'%}
+{% comment %}{%if request.user.datosestudiante.grupo_doc.id == docente.id%}{% endcomment %}
+Nombre: {{docente.nombre}} <p>
+Apellido: {{docente.apellido}} <p>
+Celular: {{docente.celular}} <p>
+Correo Electrónico: {{docente.celular}} <p>
+Grupo: {{docente.grupo}} <p>
+Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
+{% comment %}{%else%}{% endcomment %}
+{% comment %}No tiene acceso a este lugar{% endcomment %}
+{% comment %}{%endif%}{% endcomment %}
+{%endif%}
+
+{%if grupo == 'tutor'%}
+Nombre: {{docente.nombre}} <p>
+Apellido: {{docente.apellido}} <p>
+Celular: {{docente.celular}} <p>
+Correo Electrónico: {{docente.celular}} <p>
+Grupo: {{docente.grupo}} <p>
+Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
 {%endif%}
 
 {% endblock %}

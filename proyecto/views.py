@@ -224,8 +224,9 @@ def busquedaProyectos(request):
     context = {'grupo': grupo}
     return render(request, 'proyecto/busqueda.html', context)
 
+# Comunicados, docentes, tutores, y vista estudiantes
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor'])
+@allowed_users(allowed_roles=['docente','tutor','estudiante'])
 def misComunicados(request):
     grupo = str(request.user.groups.get())
     docente = User.objects.get(id=request.user.id)
@@ -235,7 +236,7 @@ def misComunicados(request):
     return render(request, 'proyecto/mis_comunicados.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor'])
+@allowed_users(allowed_roles=['docente','tutor','estudiante'])
 def crearComunicado(request):
     grupo = request.user.groups.all()[0].name # es lo mismo que arriba
     if request.method == "POST":
@@ -272,6 +273,7 @@ def comunicadosTutEst(request):
     context = {'grupo': grupo, 'comunicados':comunicados, 'valor':valor}
     return render(request, 'proyecto/comunicado_estudiantes.html', context)
 
+# Compartir, mensajeria entre estudiantes y docentes y tutores
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','estudiante'])
 def compartirPersonal(request):
@@ -279,6 +281,7 @@ def compartirPersonal(request):
     context = {'grupo': grupo}
     return render(request, 'proyecto/compartir_personal.html', context)
 
+# enlaces solicitantes, estudiantes, docentes y tutores
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','administrador'])
 def enlaceSolicitante(request, pk_sol):
@@ -292,19 +295,79 @@ def enlaceSolicitante(request, pk_sol):
 def enlaceEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
-    context = {'grupo': grupo,'estudiante':estudiante}
-    return render(request, 'proyecto/enlace_estudiante.html', context)
+    if grupo=='administrador':
+        context = {'grupo': grupo,'estudiante':estudiante,}
+        return render(request, 'proyecto/enlace_estudiante.html', context)
+    elif grupo == 'docente':
+        # evita que se un docente consulte otros estudiantes
+        existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
+        if existe_est:
+            context = {'grupo': grupo,'estudiante':estudiante,}
+            return render(request, 'proyecto/enlace_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
+    else:
+        existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
+        if existe_est:
+            context = {'grupo': grupo,'estudiante':estudiante,}
+            return render(request, 'proyecto/enlace_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
 
 @login_required(login_url='login')
-#@admin_only
 @allowed_users(allowed_roles=['estudiante','tutor','administrador'])
 def enlaceDocente(request, pk_doc):
     grupo = request.user.groups.get().name
-    usuario = 'nava_docente'
     docente = DatosDocente.objects.get(id=pk_doc)
-    estudiantes = docente.datosestudiante_set.all()
-    context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-    return render(request, 'proyecto/enlace_docente.html', context)
+    if grupo == 'administrador':
+        estudiantes = docente.datosestudiante_set.all()
+        context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+        return render(request, 'proyecto/enlace_docente.html', context)
+    elif grupo == 'estudiante':
+        existe_doc = request.user.datosestudiante.grupo_doc.id
+        if existe_doc == docente.id:
+            estudiantes = {}
+            context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+            return render(request, 'proyecto/enlace_docente.html', context)
+        else:
+            return redirect('error_pagina')
+    elif grupo == 'tutor':
+        objeto_tutor_estu = request.user.datostutor.datosestudiante_set
+        existe_doc = objeto_tutor_estu.filter(grupo_doc_id=pk_doc).exists()
+        if existe_doc:
+            estudiantes = {}
+            context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+            return render(request, 'proyecto/enlace_docente.html', context)
+        else:
+            return redirect('error_pagina')
+    # estudiantes = docente.datosestudiante_set.all()
+    # context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+    # return render(request, 'proyecto/enlace_docente.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','administrador','estudiante'])
+def enlaceTutor(request, pk_tutor):
+    grupo = str(request.user.groups.get())
+    tutor = DatosTutor.objects.get(id=pk_tutor)
+    if grupo == 'docente':
+        objeto_tutor_estu = request.user.datosdocente.datosestudiante_set
+        existe_doc = objeto_tutor_estu.filter(tutor_id=pk_tutor).exists()
+        if existe_doc:
+            context = {'grupo': grupo, 'tutor':tutor}
+            return render(request, 'proyecto/enlace_tutor.html', context)
+        else:
+            return redirect('error_pagina')
+    elif grupo == 'administrador':
+        context = {'grupo': grupo, 'tutor':tutor}
+        return render(request, 'proyecto/enlace_tutor.html', context)
+    elif grupo == 'estudiante':
+        id_tutor = request.user.datosestudiante.tutor.id
+        if id_tutor == pk_tutor:
+            context = {'grupo': grupo, 'tutor':tutor}
+            return render(request, 'proyecto/enlace_tutor.html', context)
+        else:
+            return redirect('error_pagina')
+        
 
 @login_required(login_url='login')
 @admin_only
@@ -313,6 +376,7 @@ def registroEstudiante(request):
     context = {'grupo': grupo}
     return render(request, 'proyecto/registro_estudiante.html', context)
 
+# Lista estudiantes, docentes, estudiantes, tutores
 @login_required(login_url='login')
 @admin_only
 def listaEstudiantes(request):
@@ -327,6 +391,7 @@ def listaDocentes(request):
     context = {'docentes':docentes}
     return render(request, 'proyecto/lista_docente.html', context)
 
+# Agregar docentes, tutores al sistema
 @login_required(login_url='login')
 @admin_only
 def agregarDocente(request):
@@ -378,5 +443,6 @@ def agregarDocente(request):
                 messages.success(request, 'La solicitud se envió con exito!!!')
     context = {'form':form}
     return render(request, 'proyecto/agregar_docente.html', context)
-    #return redirect('agregar-doc')
 
+def error(request):
+    return render(request, 'proyecto/error_pagina.html')

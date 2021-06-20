@@ -24,8 +24,11 @@ urlpatterns = [
     path('info-solicitante/<int:pk_sol>', views.enlaceSolicitante,
         name='enlace_solicitante'),
     path('info-doc/<int:pk_doc>/', views.enlaceDocente, name='enlace_docente'),
+    path('info-tut/<int:pk_tutor>/', views.enlaceTutor, name='enlace_tutor'),
     path('lista_est/', views.listaEstudiantes, name='lista_estudiantes'),
     path('lista_doc/', views.listaDocentes, name='lista_docentes'),
 
-    path('agregar-doc/', views.agregarDocente, name='agregar_docente')
+    path('agregar-doc/', views.agregarDocente, name='agregar_docente'),
+
+    path('error/', views.error , name='error_pagina'),
 ]
