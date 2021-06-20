@@ -26,7 +26,7 @@
 <th scope="row">{{est.grupo_doc.apellido}}</th>
 {%endif%}
 <th scope="row">{{est.celular}}</th>
-<th scope="row">{{est.correo}}</th>
+<th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
     </tr>
 {% endfor %}
   </tbody>

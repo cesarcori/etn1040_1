@@ -3,12 +3,13 @@
 
 <H3>información del estudiante</h3>
 <p>
+<a href="{% url 'mensaje_personal'%}">Mensajes</a><p>
 Nombre: {{estudiante.nombre}} <p>
 Apellido: {{estudiante.apellido}} <p>
 Registro Universitario: {{estudiante.registro_uni}} <p>
 Mención: {{estudiante.mencion}} <p>
 Cédula de Identidad: {{estudiante.carnet}} <p>
-Correo Electrónico: <a href="mailto:{{estudiante.correo}}?Subject=Asunto">{{estudiante.correo}}</a><p>
+Correo Electrónico: <a href="mailto:{{estudiante.correo}}?Subject=">{{estudiante.correo}}</a><p>
 Número de Celular: {{estudiante.celular}} <p>
 Grupo: {{estudiante.grupo_doc.grupo}} <p>
 Docente: <a href="{% url 'enlace_docente' estudiante.grupo_doc.id %}">

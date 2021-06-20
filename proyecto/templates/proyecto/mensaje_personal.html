@@ -1,0 +1,20 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+<h3>Mensajes con:</h3>
+{%for mensaje in mensaje_estudiantes %}
+**********************************
+<p>
+Tema:
+{{mensaje.tema}}<p>
+Contenido:
+{{mensaje.texto}}<p>
+Fecha de publicación:
+{{mensaje.fecha_creacion}}<p>
+**********************************
+
+{%endfor%}
+
+<a class="nav-link" href="{% url 'crear_mensaje_personal' %}">Crear Nuevo</a>
+
+{% endblock %}

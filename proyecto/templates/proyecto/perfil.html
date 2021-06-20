@@ -30,6 +30,7 @@
     Celular: {{ request.user.datosdocente.celular }}<p>
     Correo Electrónico: {{ request.user.datosdocente.correo}}<p>
     Mención: {{ request.user.datosdocente.mencion}}<p>
+    Grupo : {{ request.user.datosdocente.grupo}}<p>
     Cantidad de Estudiantes: {{ request.user.datosdocente.datosestudiante_set.count}}<p>
         
 {%elif grupo == 'tutor' %}

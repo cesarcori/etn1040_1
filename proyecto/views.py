@@ -182,7 +182,8 @@ def tutor(request):
 @allowed_users(allowed_roles=['estudiante'])
 def estudiante(request):
     grupo = 'estudiante'
-    context = {'grupo': grupo}
+    progreso = str(50)
+    context = {'grupo': grupo,'progreso':progreso}
     return render(request, 'proyecto/estudiante.html', context)
 
 @login_required(login_url='login')
@@ -250,6 +251,31 @@ def crearComunicado(request):
         form = ComunicadoForm()
     context = {'grupo': grupo, 'form':form}
     return render(request, 'proyecto/crear_comunicado.html', context)
+
+@login_required(login_url='login')
+# hay que aumentar si o si un valor mas del enlace del estudiante o usuario
+# pensar seriamente en elaborar 6 tablas para comunicacion entre usuarios
+def mensajePersonal(request):
+    grupo = str(request.user.groups.get())
+    usuario = request.user
+    mensaje_estudiantes = {} 
+    context = {'grupo': grupo,'mensaje_estudiantes':mensaje_estudiantes}
+    return render(request, 'proyecto/mensaje_personal.html', context)
+
+@login_required(login_url='login')
+def crearMensajePersonal(request):
+    grupo = str(request.user.groups.get())
+    if request.method == "POST":
+        form = MensajeForm(request.POST)
+        if form.is_valid():
+            mensaje = form.save(commit=False)
+            mensaje.autor= request.user
+            mensaje.save()
+            return redirect('mensaje_personal')
+    else:
+        form = MensajeForm()
+    context = {'grupo': grupo, 'form':form}
+    return render(request, 'proyecto/crear_mensaje_personal.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

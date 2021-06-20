@@ -60,3 +60,7 @@ class ComunicadoForm(forms.ModelForm):
         model = Comunicado
         fields = ('tema', 'texto',)
 
+class MensajeForm(forms.ModelForm):
+    class Meta:
+        model = MensajePersonal
+        fields = ('destino', 'tema', 'texto',)
