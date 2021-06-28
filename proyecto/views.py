@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -13,6 +14,7 @@ from random import randint
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
+
 @unauthenticated_user
 def registerPage(request):
     form = CreateUserForm
@@ -134,6 +136,7 @@ def home(request):
                     )
 
             # creacion de datos del usuario
+            sin_tutor = User.objects.get(username='sin_tutor')
             DatosEstudiante.objects.create(
                     usuario = User.objects.get(username=info_usuario.usuario),
                     correo = info_usuario.correo,
@@ -143,8 +146,15 @@ def home(request):
                     registro_uni = info_usuario.registro_uni,
                     celular = info_usuario.celular,
                     mencion = info_usuario.mencion,
-                    grupo_doc = docente_asignado
+                    grupo_doc = docente_asignado,
+                    tutor = DatosTutor.objects.get(nombre='sin_tutor')
                     )
+            # creacion de salas docente-estudiante
+            id_docente = str(DatosEstudiante.objects.last().grupo_doc.usuario_id)
+            id_estudiante = str(DatosEstudiante.objects.last().usuario_id)
+            nombre_sala = id_docente + id_estudiante
+            Sala.objects.create(nombre_sala = nombre_sala)
+            # creacion de grupo
             group = Group.objects.get(name='estudiante')
             user = User.objects.get(username=info_usuario.usuario)
             user.groups.add(group)
@@ -183,7 +193,8 @@ def tutor(request):
 def estudiante(request):
     grupo = 'estudiante'
     progreso = str(50)
-    context = {'grupo': grupo,'progreso':progreso}
+    estudiante = request.user.datosestudiante
+    context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante}
     return render(request, 'proyecto/estudiante.html', context)
 
 @login_required(login_url='login')
@@ -252,30 +263,41 @@ def crearComunicado(request):
     context = {'grupo': grupo, 'form':form}
     return render(request, 'proyecto/crear_comunicado.html', context)
 
+# Esta sera la bandeja de entrada
 @login_required(login_url='login')
-# hay que aumentar si o si un valor mas del enlace del estudiante o usuario
-# pensar seriamente en elaborar 6 tablas para comunicacion entre usuarios
-def mensajePersonal(request):
-    grupo = str(request.user.groups.get())
+def mensajePersonal(request, pk_doc_tut_est):
+    grupo = request.user.groups.get().name
     usuario = request.user
-    mensaje_estudiantes = {} 
-    context = {'grupo': grupo,'mensaje_estudiantes':mensaje_estudiantes}
-    return render(request, 'proyecto/mensaje_personal.html', context)
-
-@login_required(login_url='login')
-def crearMensajePersonal(request):
-    grupo = str(request.user.groups.get())
+    id_user = request.user.id.__str__()
+    id_link = pk_doc_tut_est.__str__()
     if request.method == "POST":
         form = MensajeForm(request.POST)
         if form.is_valid():
-            mensaje = form.save(commit=False)
-            mensaje.autor= request.user
-            mensaje.save()
-            return redirect('mensaje_personal')
+            mensajes = form
+            mensaje= form.cleaned_data.get('texto')
+            # guardando mensaje
+            if grupo == 'tutor':
+                nombre_sala = id_user + id_link
+            elif grupo == 'estudiante':
+                nombre_sala = id_link + id_user
+            elif grupo == 'docente':
+                nombre_sala = id_user + id_link
+            sala = Sala.objects.get(nombre_sala=nombre_sala)
+            guardar_mensaje = MensajeSala.objects.create(usuario=usuario, texto=mensaje, sala=sala)
+            context = {'grupo': grupo,'form':form}
+            return redirect('mensaje_personal', pk_doc_tut_est=pk_doc_tut_est)
     else:
         form = MensajeForm()
-    context = {'grupo': grupo, 'form':form}
-    return render(request, 'proyecto/crear_mensaje_personal.html', context)
+        if grupo == 'estudiante':
+            nombre_sala = id_link + id_user
+        elif grupo == 'tutor':
+            nombre_sala = id_user + id_link
+        elif grupo == 'docente':
+            nombre_sala = id_user + id_link
+        sala = Sala.objects.get(nombre_sala=nombre_sala)
+        mensajes = sala.mensajesala_set.all().order_by('-fecha_creacion')
+        context = {'grupo': grupo,'mensajes':mensajes,'form':form}
+        return render(request, 'proyecto/mensaje_personal.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

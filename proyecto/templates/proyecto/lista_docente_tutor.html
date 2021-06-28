@@ -1,0 +1,18 @@
+<table class="table table-striped">
+  <tbody>
+    <tr>
+        <td>Docente: Ing. {{estudiante.grupo_doc.apellido}}</td>
+        <td><a href="{% url 'mensaje_personal' estudiante.grupo_doc.usuario.pk %}">Mensajes</a></td>
+        <td><a href="{% url 'enlace_docente' estudiante.grupo_doc.id %}">Info</a></td>
+    </tr>
+    <tr>
+        <td>Tutor: Ing. {{estudiante.tutor.apellido}}</td>
+        <td><a href="{% url 'mensaje_personal' estudiante.tutor.usuario.pk %}">Mensajes</a></td>
+        <td><a href="{% url 'enlace_tutor' estudiante.tutor.id %}">Info</a></td>
+    </tr>
+  </tbody>
+</table>
+
+{% comment %}<p><p><p>{% endcomment %}
+{% comment %}<a class="btn btn-sm btn-info" href="{% url 'agregar_docente' %}">Agregar{% endcomment %}
+    {% comment %}Docente</a><p>{% endcomment %}

@@ -60,7 +60,17 @@ class ComunicadoForm(forms.ModelForm):
         model = Comunicado
         fields = ('tema', 'texto',)
 
-class MensajeForm(forms.ModelForm):
-    class Meta:
-        model = MensajePersonal
-        fields = ('destino', 'tema', 'texto',)
+class MensajeEstudianteForm(forms.Form):
+    d = 'Docente'
+    t = 'Tutor'
+    PARA = [
+           (d, d),
+           (t, t),
+            ]
+    texto = forms.CharField(widget=forms.Textarea)
+    para = forms.ChoiceField(choices=PARA)
+
+class MensajeForm(forms.Form):
+    # texto = forms.CharField(widget=forms.Textarea)
+    texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2, 'cols':25}))
+

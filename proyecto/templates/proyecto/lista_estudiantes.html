@@ -10,6 +10,7 @@
       <th scope="col">Grupo</th>
       <th scope="col">Docente</th>
     {%endif%}
+      <th scope="col">Mensajes</th>
       <th scope="col">Celular</th>
       <th scope="col">Correo Electrónico</th>
     </tr>
@@ -25,6 +26,7 @@
 <th scope="row">{{est.grupo_doc.grupo}}</th>
 <th scope="row">{{est.grupo_doc.apellido}}</th>
 {%endif%}
+<td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
 <th scope="row">{{est.celular}}</th>
 <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
     </tr>

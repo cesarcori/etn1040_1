@@ -1,11 +1,7 @@
-{% extends 'proyecto/main.html' %}
-{% block content %}
 
-<h3>Crear mensaje</h3>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-       <button type="submit" name='enviar' class="btn btn-outline-success"
-            value='enviar'>Enviar</button>
-    </form>
-{% endblock %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" name='enviar' class="btn btn-outline-success"
+        value='enviar'>Enviar</button>
+</form>
