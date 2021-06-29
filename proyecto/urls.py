@@ -31,5 +31,14 @@ urlpatterns = [
 
     path('agregar-doc/', views.agregarDocente, name='agregar_docente'),
 
+    
+    path('paso1/', views.paso1, name='paso1'),
+    path('paso2/', views.paso2, name='paso2'),
+    path('paso3/', views.paso3, name='paso3'),
+    path('paso4/', views.paso4, name='paso4'),
+    path('paso5/', views.paso5, name='paso5'),
+    path('paso6/', views.paso6, name='paso6'),
+    
     path('error/', views.error , name='error_pagina'),
+    
 ]

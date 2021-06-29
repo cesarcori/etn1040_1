@@ -492,5 +492,47 @@ def agregarDocente(request):
     context = {'form':form}
     return render(request, 'proyecto/agregar_docente.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def paso1(request):
+    grupo = request.user.groups.get().name
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/estudiante_paso1.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def paso2(request):
+    grupo = request.user.groups.get().name
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/estudiante_paso2.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def paso3(request):
+    grupo = request.user.groups.get().name
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/estudiante_paso3.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def paso4(request):
+    grupo = request.user.groups.get().name
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/estudiante_paso4.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def paso5(request):
+    grupo = request.user.groups.get().name
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/estudiante_paso5.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def paso6(request):
+    grupo = request.user.groups.get().name
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/estudiante_paso6.html', context)
+
 def error(request):
     return render(request, 'proyecto/error_pagina.html')

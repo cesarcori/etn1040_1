@@ -1,6 +1,14 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 {% include 'proyecto/lista_docente_tutor.html' %}
+<div class="link-primary" style="text-align:center">
+    <p><a href={%url 'paso1'%}>Paso 1</a><p>
+    <p><a href={%url 'paso2'%}>Paso 2</a><p>
+    <p><a href={%url 'paso3'%}>Paso 3</a><p>
+    <p><a href={%url 'paso4'%}>Paso 4</a><p>
+    <p><a href={%url 'paso5'%}>Paso 5</a><p>
+    <p><a href={%url 'paso6'%}>Paso 6</a><p>
+</div>
 Progreso:
 <div class="progress">
     <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
