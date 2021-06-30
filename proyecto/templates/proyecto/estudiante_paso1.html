@@ -1,5 +1,17 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-paso 1
+paso 1 <p>
+<p>
+Como usar el sistema <p>
+Familiarizarse con la materia:<p>
+Link reglamento<p>
+{%for link, titulo in dicc_link.items%}
+<a href="/{{ link }}">{{titulo}}<a><p>
+{%endfor%}
+<p>
+Link material docente<p>
+Introduccion de la materia:<p>
+Como elaborar el perfil <p>
+Formato Perfil de Proyecto de grado. <p>
 
 {% endblock %}

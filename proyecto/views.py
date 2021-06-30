@@ -465,6 +465,10 @@ def agregarDocente(request):
             elif DatosDocente.objects.filter(grupo=grupo).exists():
                 messages.info(request, 
             'No se agregó al docente, otro docente ya se asigno a este grupo')
+            elif 2==DatosDocente.objects.filter(mencion=mencion).count():
+                messages.info(request, 
+            'No se agregó al docente, Solo se admite 2 docentes por mencion')
+
             else:                 
                 # creacion del usuario
                 User.objects.create_user(
@@ -496,7 +500,14 @@ def agregarDocente(request):
 @allowed_users(allowed_roles=['estudiante'])
 def paso1(request):
     grupo = request.user.groups.get().name
-    context = {'grupo': grupo}
+    # link reglamentos
+    links = Reglamento.objects.all()
+    titulos = [' '.join(link.archivo.name.split('/')[1].split('.')[0].split('_')).title() for link in links]
+    # dicc_link = {titulos[0]:links[0], titulos[1]:links[1]}
+    dicc_link = {}
+    for n in range(len(links)):
+        dicc_link[links[n]] = titulos[n]
+    context = {'grupo': grupo, 'links':links, 'titulos':titulos, 'dicc_link':dicc_link}
     return render(request, 'proyecto/estudiante_paso1.html', context)
 
 @login_required(login_url='login')
