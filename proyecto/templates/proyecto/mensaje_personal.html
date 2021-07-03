@@ -2,7 +2,7 @@
 {% block content %}
 <p>
 {% include 'proyecto/crear_mensaje_personal.html'%}
-<h4>Mensajes</h4>
+<h4>Mensajes con: {{usuario_link.first_name}} {{usuario_link.last_name}} </h4> 
 {%for mensaje in mensajes%}
 **********************************
 <p>

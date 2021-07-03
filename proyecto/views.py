@@ -270,6 +270,7 @@ def mensajePersonal(request, pk_doc_tut_est):
     usuario = request.user
     id_user = request.user.id.__str__()
     id_link = pk_doc_tut_est.__str__()
+    usuario_link = User.objects.get(id=id_link)
     if request.method == "POST":
         form = MensajeForm(request.POST)
         if form.is_valid():
@@ -297,7 +298,7 @@ def mensajePersonal(request, pk_doc_tut_est):
         sala = Sala.objects.get(nombre_sala=nombre_sala)
         mensajes = sala.mensajesala_set.all().order_by('-fecha_creacion')
         context = {'grupo':grupo,'mensajes':mensajes,
-                'form':form}
+                'form':form,'usuario_link':usuario_link}
         return render(request, 'proyecto/mensaje_personal.html', context)
 
 @login_required(login_url='login')
