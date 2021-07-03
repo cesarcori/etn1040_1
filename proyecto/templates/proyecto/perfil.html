@@ -1,5 +1,6 @@
 {%  extends 'proyecto/main.html' %}
-{% block content %}
+{% block content %}            
+<h3>Tu Información</h3>
 {% if grupo == 'administrador'%}
     <p>
     Nombre: {{ request.user.datosadministrador.nombre }}<p>
@@ -22,7 +23,8 @@
         {{request.user.datosestudiante.grupo_doc.apellido}}</a><p>
     Tutor: <a href="{% url 'enlace_tutor' request.user.datosestudiante.tutor.id %}">
     {{request.user.datosestudiante.tutor.nombre}} 
-    {{request.user.datosestudiante.tutor.apellido}}
+    {{request.user.datosestudiante.tutor.apellido}}</a>
+    <p>
 {%elif grupo == 'docente' %}
     <p>
     Nombre: {{ request.user.datosdocente.nombre }}<p>
@@ -42,6 +44,5 @@
     Mención: {{ request.user.datostutor.mencion}}<p>
     Cantidad de Estudiantes: {{ request.user.datostutor.datosestudiante_set.count}}<p>
 {%endif%}
-
 {% endblock %}
 

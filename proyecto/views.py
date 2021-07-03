@@ -12,11 +12,11 @@ from .models import *
 
 from random import randint
 # busqueda
-import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-import nltk
-from nltk.corpus import stopwords
+# import pandas as pd
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.metrics.pairwise import linear_kernel
+# import nltk
+# from nltk.corpus import stopwords
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
@@ -236,35 +236,6 @@ def perfilUsuarios(request):
     context = {'grupo': grupo}
     return render(request, 'proyecto/perfil.html', context)
 
-@login_required(login_url='login')
-def busquedaProyectos(request):
-    grupo = request.user.groups.get().name
-    if request.method == 'POST':
-        buscado = request.POST['buscado']
-        frase_busqueda = request.POST.get('habilitar')
-        tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
-        lista_nombres = [item for item in tesis_df['NOMBRE']]
-        lista_titulos = [item for item in tesis_df['TITULO']]
-        stop_words = set(stopwords.words('spanish')) 
-        # search_terms = 'servicio de voz'
-        search_terms = buscado
-        vectorizer = TfidfVectorizer(stop_words=stop_words)
-        vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
-        cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
-        titulo_scores = [item.item() for item in cosine_similarities[1:]]  # convert back to native Python dtypes
-        score_titles = list(zip(titulo_scores, lista_titulos))
-        ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
-                x[0])[:20] 
-        dicc_score = {}
-        for score_titulo in ordenado_score:
-            dicc_score[score_titulo[0]] = score_titulo[1]
-        context = {'grupo': grupo,'dicc_score':dicc_score,
-                'buscado':buscado}
-    else:
-        context = {'grupo': grupo,}
-    return render(request, 'proyecto/busqueda.html', context)
-
-
 # Comunicados, docentes, tutores, y vista estudiantes
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','estudiante'])
@@ -325,7 +296,8 @@ def mensajePersonal(request, pk_doc_tut_est):
             nombre_sala = id_user + id_link
         sala = Sala.objects.get(nombre_sala=nombre_sala)
         mensajes = sala.mensajesala_set.all().order_by('-fecha_creacion')
-        context = {'grupo': grupo,'mensajes':mensajes,'form':form}
+        context = {'grupo':grupo,'mensajes':mensajes,
+                'form':form}
         return render(request, 'proyecto/mensaje_personal.html', context)
 
 @login_required(login_url='login')
@@ -467,6 +439,13 @@ def listaDocentes(request):
     context = {'docentes':docentes}
     return render(request, 'proyecto/lista_docente.html', context)
 
+@login_required(login_url='login')
+@admin_only
+def listaTutores(request):
+    tutores= DatosTutor.objects.all().order_by('apellido')
+    context = {'tutores':tutores}
+    return render(request, 'proyecto/lista_tutores.html', context)
+
 # Agregar docentes, tutores al sistema
 @login_required(login_url='login')
 @admin_only
@@ -550,10 +529,79 @@ def paso2(request):
     return render(request, 'proyecto/estudiante_paso2.html', context)
 
 @login_required(login_url='login')
+def busquedaProyectos(request):
+    grupo = request.user.groups.get().name
+    if request.method == 'POST':
+        buscado = request.POST['buscado']
+        frase_busqueda = request.POST.get('habilitar')
+        tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
+        lista_nombres = [item for item in tesis_df['NOMBRE']]
+        lista_titulos = [item for item in tesis_df['TITULO']]
+        stop_words = set(stopwords.words('spanish')) 
+        # search_terms = 'servicio de voz'
+        search_terms = buscado
+        vectorizer = TfidfVectorizer(stop_words=stop_words)
+        vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
+        cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
+        titulo_scores = [item.item() for item in cosine_similarities[1:]]  # convert back to native Python dtypes
+        score_titles = list(zip(titulo_scores, lista_titulos))
+        ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
+                x[0])[:20] 
+        dicc_score = {}
+        for score_titulo in ordenado_score:
+            dicc_score[score_titulo[0]] = score_titulo[1]
+        context = {'grupo': grupo,'dicc_score':dicc_score,
+                'buscado':buscado}
+    else:
+        context = {'grupo': grupo,}
+    return render(request, 'proyecto/busqueda.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 def paso3(request):
     grupo = request.user.groups.get().name
-    context = {'grupo': grupo}
+    tutor = request.user.datosestudiante.tutor
+    # registro de tutor
+    if request.method == 'POST':
+        correo = request.POST['agregar_tutor']
+        # si el tutor ya fue registrado
+        if DatosTutor.objects.filter(correo=correo).exists():
+            user_est = request.user.datosestudiante
+            user_est.tutor = DatosTutor.objects.get(correo=correo)
+            user_est.save()
+        else: 
+            usuario = correo.split('@')[0]
+            # creacion de usuario tutor
+            User.objects.create_user(
+                    username = usuario + '_tutor',
+                    email = correo,
+                    first_name = usuario + '_sin_llenar',
+                    last_name = 'sin_llenar',
+                    password = usuario + '_tutor',
+                    )
+            # agregando a grupo tutor
+            group = Group.objects.get(name='tutor')
+            user = User.objects.get(email=correo)
+            user.groups.add(group)
+            # creacion de datos tutor
+            dato_tutor = DatosTutor()
+            dato_tutor.usuario = User.objects.get(email=correo)
+            dato_tutor.correo = correo
+            dato_tutor.nombre = usuario + '_nombre'
+            dato_tutor.apellido= 'sin_llenar'
+            dato_tutor.celular= 'sin_llenar'
+            dato_tutor.save()
+            # relacionando estudiante al tutor
+            user_est = request.user.datosestudiante
+            user_est.tutor = DatosTutor.objects.get(correo=correo)
+            user_est.save()
+            # creacion de salas tutor-estudiante
+            id_tutor = str(DatosTutor.objects.last().usuario_id)
+            id_estudiante = str(request.user.id)
+            nombre_sala = id_tutor + id_estudiante
+            Sala.objects.create(nombre_sala = nombre_sala)
+    mensaje = 'Ya se le asigno el tutor'
+    context = {'grupo': grupo, 'tutor':tutor}
     return render(request, 'proyecto/estudiante_paso3.html', context)
 
 @login_required(login_url='login')

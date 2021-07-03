@@ -14,7 +14,7 @@
     {% for docente in docentes %}
     <tr>
         <td>{{docente.grupo}}</td>
-      <td><a href="{% url 'enlace_docente' docente.id %}">{{docente.apellido}},
+      <td><a class="text-underline-hover" href="{% url 'enlace_docente' docente.id %}">{{docente.apellido}},
               {{docente.nombre}}</a></td>
         <td>{{docente.mencion}}</td>
     </tr>

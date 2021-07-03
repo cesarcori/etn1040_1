@@ -66,7 +66,7 @@ class DatosEstudiante(models.Model):
     mencion = models.CharField(max_length=50, null=True)
     grupo_doc = models.ForeignKey(DatosDocente,on_delete=models.SET(''), null=True)
     tutor = models.ForeignKey(DatosTutor,on_delete=models.SET(''), null=True)
-    # nombre_sala_docente = models.CharField(max_length=50, null=True)
+    # nombre_sala_docente = models.CharField(max_length=50 null=True)
     # nombre_sala_tutor = models.CharField(max_length=50, null=True)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 

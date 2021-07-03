@@ -1,8 +1,7 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 {% comment %}Solo ingresa se ve al docente que se tiene aca{% endcomment %}
-<h3>Enlace Docente</h3>
-<h3>Información del Docente</h3>
+<h3>Información del docente</h3>
 <p>
 {%if grupo == 'administrador' %}
 Nombre: {{docente.nombre}} <p>

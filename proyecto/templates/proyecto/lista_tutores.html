@@ -1,0 +1,22 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+<h3>Lista de tutores:</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Tutor</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for tutor in tutores %}
+    <tr>
+      <td><a class="text-underline-hover" 
+    href="{% url 'enlace_tutor' tutor.id%}">Ing. {{tutor.apellido}} {{tutor.nombre}}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p><p><p>
+{% endblock %}

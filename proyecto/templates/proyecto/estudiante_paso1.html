@@ -17,6 +17,4 @@ Formato Perfil de Proyecto de grado. <p>
 {%for link in material_docente %}
 <a href="{{ link.material_docente.url }}">{{link.material_docente.name}}<a><p>
 {%endfor%}
-Búsqueda de proyectos de grado<p>
-<a class="btn btn-primary" href="{% url 'busqueda' %}">Búsqueda PG</a>
 {% endblock %}

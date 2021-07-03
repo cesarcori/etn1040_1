@@ -1,7 +1,26 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-paso 3 - Fin proyecto de grado <p>
-Carta culminacion de proyecto de grado del tutor al docente <p>
-Documento final PG <p>
+<p>
+paso 3<p>
+Busqueda del tutor.<p>
+Registrar al tutor para que ingrese al sistema.<p>
+
+{% if tutor.nombre == 'sin_tutor' %}
+<p>
+<form class="d-flex" style="margin:auto;max-width:300px" method='post'
+                     action="" >
+    {% csrf_token %}
+    <input name="agregar_tutor" class="form-control me-2" type="email"
+    placeholder="Registrar Email Tutor" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Enviar</button>
+</form>
+<p>
+
+{% else %}
+    Su tutor es: <a href="{% url 'enlace_tutor' tutor.id %}">
+    {{tutor.nombre}} 
+    {{tutor.apellido}}</a>
+    <p>
+{% endif %}
 
 {% endblock %}
