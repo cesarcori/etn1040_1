@@ -39,6 +39,8 @@ urlpatterns = [
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     
+    path('material-para-est/', views.materialParaEst, name='material_para_estudiante'),
+
     path('error/', views.error , name='error_pagina'),
     
 ]

@@ -11,6 +11,12 @@ from .forms import *
 from .models import *
 
 from random import randint
+# busqueda
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
+import nltk
+from nltk.corpus import stopwords
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
@@ -232,9 +238,32 @@ def perfilUsuarios(request):
 
 @login_required(login_url='login')
 def busquedaProyectos(request):
-    grupo = str(request.user.groups.get())
-    context = {'grupo': grupo}
+    grupo = request.user.groups.get().name
+    if request.method == 'POST':
+        buscado = request.POST['buscado']
+        frase_busqueda = request.POST.get('habilitar')
+        tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
+        lista_nombres = [item for item in tesis_df['NOMBRE']]
+        lista_titulos = [item for item in tesis_df['TITULO']]
+        stop_words = set(stopwords.words('spanish')) 
+        # search_terms = 'servicio de voz'
+        search_terms = buscado
+        vectorizer = TfidfVectorizer(stop_words=stop_words)
+        vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
+        cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
+        titulo_scores = [item.item() for item in cosine_similarities[1:]]  # convert back to native Python dtypes
+        score_titles = list(zip(titulo_scores, lista_titulos))
+        ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
+                x[0])[:20] 
+        dicc_score = {}
+        for score_titulo in ordenado_score:
+            dicc_score[score_titulo[0]] = score_titulo[1]
+        context = {'grupo': grupo,'dicc_score':dicc_score,
+                'buscado':buscado}
+    else:
+        context = {'grupo': grupo,}
     return render(request, 'proyecto/busqueda.html', context)
+
 
 # Comunicados, docentes, tutores, y vista estudiantes
 @login_required(login_url='login')
@@ -415,7 +444,6 @@ def enlaceTutor(request, pk_tutor):
             return render(request, 'proyecto/enlace_tutor.html', context)
         else:
             return redirect('error_pagina')
-        
 
 @login_required(login_url='login')
 @admin_only
@@ -502,12 +530,16 @@ def paso1(request):
     grupo = request.user.groups.get().name
     # link reglamentos
     links = Reglamento.objects.all()
-    titulos = [' '.join(link.archivo.name.split('/')[1].split('.')[0].split('_')).title() for link in links]
-    # dicc_link = {titulos[0]:links[0], titulos[1]:links[1]}
+    # titulos = [' '.join(link.archivo.name.split('/')[1].split('.')[0].split('_')).title() for link in links]
+    titulos = [link.archivo.name for link in links]
     dicc_link = {}
     for n in range(len(links)):
         dicc_link[links[n]] = titulos[n]
-    context = {'grupo': grupo, 'links':links, 'titulos':titulos, 'dicc_link':dicc_link}
+    id_usuario_docente = request.user.datosestudiante.grupo_doc.usuario_id
+    usuario_docente = User.objects.get(pk=id_usuario_docente)
+    material_docente = MaterialDocente.objects.filter(propietario=usuario_docente)
+    context = {'grupo': grupo, 'links':links, 'titulos':titulos, 
+            'dicc_link':dicc_link, 'material_docente':material_docente}
     return render(request, 'proyecto/estudiante_paso1.html', context)
 
 @login_required(login_url='login')
@@ -544,6 +576,30 @@ def paso6(request):
     grupo = request.user.groups.get().name
     context = {'grupo': grupo}
     return render(request, 'proyecto/estudiante_paso6.html', context)
+# def handle_uploaded_file(f):  
+    # with open('material_docente/'+f.name, 'wb+') as destination:  
+        # for chunk in f.chunks():
+            # destination.write(chunk)  
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
+def materialParaEst(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    if request.method == 'POST':
+        # form = MaterialDocenteForm(request.POST, request.FILES,
+                # instance=propietario)
+        form = MaterialDocenteForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = form.save(commit=False)
+            file.propietario = usuario
+            file.save()
+            # form.save()
+            # return redirect('material_para_estudiante')
+    else: 
+        form = MaterialDocenteForm
+    material = MaterialDocente.objects.filter(propietario=request.user)
+    context = {'grupo': grupo,'form':form, 'material':material}
+    return render(request, 'proyecto/material_para_estudiante.html', context)
 
 def error(request):
     return render(request, 'proyecto/error_pagina.html')

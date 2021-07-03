@@ -9,3 +9,5 @@ pyvenv.cfg
 /account/migrations
 /reglamentos
 *.pdf
+/media
+/static

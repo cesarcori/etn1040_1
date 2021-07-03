@@ -71,6 +71,15 @@ class MensajeEstudianteForm(forms.Form):
     para = forms.ChoiceField(choices=PARA)
 
 class MensajeForm(forms.Form):
-    # texto = forms.CharField(widget=forms.Textarea)
     texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2, 'cols':25}))
+
+# class MaterialDocenteForm(forms.Form):
+    # propietario = form.
+    # material_docente = forms.FileField()
+class MaterialDocenteForm(forms.ModelForm):
+    class Meta:
+        model = MaterialDocente
+        fields = '__all__'
+        exclude = ['propietario',]
+
 

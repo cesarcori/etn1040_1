@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 
+def validate_file_extension(value):
+    if not value.name.endswith('.pdf'):
+        raise ValidationError(u'Solo Pdf')
+
 class SolicitudInvitado(models.Model):
     usuario = models.CharField(max_length=50, null=True, unique=True)
     correo = models.CharField(max_length=50, null=True, unique=True)
@@ -27,12 +31,17 @@ class DatosDocente(models.Model):
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
     grupo = models.CharField(max_length=50, null=True, unique=True)
-    nombre_sala_estudiante = models.CharField(max_length=50, null=True)
     fecha_inscripcion = models.DateTimeField(auto_now_add=True, null=True)
-
     def __str__(self):
         self.nombre_completo = self.nombre + ' ' + self.apellido
         return self.nombre_completo
+
+class MaterialDocente(models.Model):
+    propietario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    material_docente = models.FileField(upload_to='material_docente/', null=True)
+    # material_docente = models.FileField(null=True, blank=True)
+    # def __str__(self):
+        # return self.propietario.first_name
 
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -40,7 +49,6 @@ class DatosTutor(models.Model):
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     celular = models.CharField(max_length=50, null=True)
-    nombre_sala_estudiante = models.CharField(max_length=50, null=True)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
@@ -100,9 +108,6 @@ class MensajeSala(models.Model):
     sala = models.ForeignKey(Sala, null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
-def validate_file_extension(value):
-    if not value.name.endswith('.pdf'):
-        raise ValidationError(u'Error message')
 class Reglamento(models.Model):
     archivo = models.FileField(upload_to='reglamentos/', null=True,
             blank=True, validators=[validate_file_extension])

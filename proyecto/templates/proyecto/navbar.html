@@ -14,7 +14,24 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
 
-        {% if grupo == 'docente' or grupo == 'tutor' %}
+        {% if grupo == 'docente' %}
+      <li class="nav-item">
+        <a class="nav-link" href="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'mis_comunicados' %}">Mis Comunicados</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'material_para_estudiante' %}">Material para Estudiantes</a>
+      </li>
+
+        {% elif grupo == 'tutor'%}
       <li class="nav-item">
         <a class="nav-link" href="/">Inicio</a>
       </li>
@@ -38,10 +55,6 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
       </li>
-      {% comment %}<li class="nav-item">{% endcomment %}
-        {% comment %}<a class="nav-link" href="{% url 'mensaje_personal' %}">{% endcomment %}
-            {% comment %}Mensajes</a>{% endcomment %}
-      {% comment %}</li>{% endcomment %}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'comunicados_doc_est' %}">
             Comunicados Doc</a>

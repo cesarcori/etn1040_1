@@ -2,12 +2,16 @@
 {% block content %}
 
 <p>
-      <form class="d-flex" style="margin:auto;max-width:300px">
-        <input class="form-control me-2" type="search" 
-            placeholder="Proyecto de Grado" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+<form class="d-flex" style="margin:auto;max-width:300px" method='post'
+                     action="" >
+    {% csrf_token %}
+    <input name="buscado" class="form-control me-2" type="search" placeholder="Proyecto de Grado" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Buscar</button>
+</form>
 <p>
-
-
+Se busco: {{ buscado }}
+<p>
+{% for score, titulo in dicc_score.items %}
+{{score}} ** {{titulo}}<p>
+{%endfor%}
 {% endblock %}

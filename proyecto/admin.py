@@ -4,6 +4,7 @@ from .models import *
 admin.site.register(SolicitudInvitado)
 admin.site.register(DatosEstudiante)
 admin.site.register(DatosDocente)
+admin.site.register(MaterialDocente)
 admin.site.register(DatosTutor)
 admin.site.register(DatosAdministrador)
 admin.site.register(Comunicado)

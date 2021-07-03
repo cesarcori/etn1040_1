@@ -1,6 +1,5 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-
 <h3>Todos los comunicados que creaste</h3>
 {%for comunicado in comunicados %}
 **********************************
@@ -14,7 +13,8 @@ Fecha de publicación:
 **********************************
 
 {%endfor%}
-
-<a class="nav-link" href="{% url 'crear_comunicado' %}">Crear Comunicado</a>
+<p>
+{% comment %}<a class="btn btn-primary" href="{% url 'crear_comunicado' %}">Crear Comunicado</a>{% endcomment %}
+<a class="text-underline-hover" href="{% url 'crear_comunicado' %}">Crear Comunicado</a>
 
 {% endblock %}

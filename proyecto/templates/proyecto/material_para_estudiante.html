@@ -1,0 +1,20 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+Subir material para todos los estudiantes
+{% if grupo == 'docente' %}
+<form method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" name='enviar' class="btn btn-outline-success"
+        value='enviar'>Enviar</button>
+    </form>
+{%endif%}
+
+{%for m in material%}
+<a href="{{ m.material_docente.url }}">{{m.material_docente.name}}<a>
+{% if grupo == 'docente' %}
+Eliminar<p>
+{% endif %}
+{% endfor %}
+{% comment %}{%include 'proyecto/ver_material.html'%}{% endcomment %}
+{% endblock %}
