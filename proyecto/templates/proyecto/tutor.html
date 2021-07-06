@@ -1,31 +1,6 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h2>Bienvenido Tutor</h2>
-<h5>Lista de estudiantes:</h5>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Nº</th>
-      <th scope="col">Estudiante</th>
-      <th scope="col">Estado PG</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td><a href="{% url 'enlace_estudiante'%}">Alfredo Ortega Miranda</a></td>
-      <td>Excelente</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td><a href="#">Javier Ali Pérez</a></td>
-      <td>Crítico</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td><a href="#">Marcelo Miranda García</a></td>
-      <td>Regular</td>
-    </tr>
-  </tbody>
-</table>
-{% endblock %}
+<h2>Bienvenido Tutor: Ing. {{request.user.datostutor.nombre}}
+    {{request.user.datostutor.apellido}}</h2> 
+{% include 'proyecto/lista_estudiantes.html' %}
+{%endblock%}

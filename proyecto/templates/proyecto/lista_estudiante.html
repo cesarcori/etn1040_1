@@ -5,14 +5,18 @@
   <thead>
     <tr>
       <th scope="col">R.U.</th>
-      <th scope="col">Estudiante Solicitante</th>
+      <th scope="col">Estudiante ETN-1040</th>
+      <th scope="col">Grupo</th>
+      <th scope="col">Docente</th>
     </tr>
   </thead>
   <tbody>
     <tr>
 {%for est in datos_est %}
 <th scope="row">{{est.registro_uni}}</th>
-      <td><a href="{% url 'enlace_estudiante'%}">{{est.apellido}}, {{est.nombre}}</a></td>
+      <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+<th scope="row">{{est.grupo_doc.grupo}}</th>
+<th scope="row">{{est.grupo_doc.apellido}}</th>
     </tr>
 {% endfor %}
   </tbody>

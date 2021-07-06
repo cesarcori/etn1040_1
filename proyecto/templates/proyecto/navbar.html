@@ -13,7 +13,8 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-        {% if grupo == 'docente' or grupo == 'tutor' %}
+
+        {% if grupo == 'docente' %}
       <li class="nav-item">
         <a class="nav-link" href="/">Inicio</a>
       </li>
@@ -24,8 +25,26 @@
         <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'compartir_con_todos' %}">Compartir</a>
+        <a class="nav-link" href="{% url 'mis_comunicados' %}">Mis Comunicados</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'material_para_estudiante' %}">Material para Estudiantes</a>
+      </li>
+
+        {% elif grupo == 'tutor'%}
+      <li class="nav-item">
+        <a class="nav-link" href="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'mis_comunicados' %}">Mis Comunicados</a>
+      </li>
+
         {% elif grupo == 'estudiante'%}
       <li class="nav-item">
         <a class="nav-link" href="/">Inicio</a>
@@ -37,8 +56,12 @@
         <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'compartir_personal' %}">
-            Compartir Docente</a>
+        <a class="nav-link" href="{% url 'comunicados_doc_est' %}">
+            Comunicados Doc</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'comunicados_tut_est' %}">
+            Comunicados Tut</a>
       </li>
         {% else %}
       <li class="nav-item">
@@ -56,21 +79,25 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'lista_docentes' %}">Docentes</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'lista_tutores' %}">Tutor</a>
+      </li>
         {% endif %}
     </ul>
   </div>
 
     {% if grupo == 'docente' or grupo == 'tutor' %}
   <span class="hello-msg">Bienvenido, Ing. {{ request.user.first_name }} </span>
-  <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
+  {% comment %}<span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>{% endcomment %}
     {% elif grupo == 'estudiante'%}
   <span class="hello-msg">Bienvenido, Futuro(a) Ing. {{ request.user.first_name }} </span>
-  <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
+  {% comment %}<span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>{% endcomment %}
     {% else %}
   <span class="hello-msg">Bienvenido, Don {{ request.user.first_name }} </span>
-  <span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>
+  {% comment %}<span><a href="{% url 'logout' %}">Cerrar Sesión</a></span>{% endcomment %}
 
     {% endif %}
+  <span><a class="text-underline-hover" href="{% url 'logout' %}">Cerrar Sesión</a></span>
 
 
 </nav>

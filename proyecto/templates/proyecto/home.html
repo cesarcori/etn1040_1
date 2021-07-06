@@ -4,27 +4,10 @@
 <h5>Solicitud de estudiantes:</h5>
 {{aviso}}<p>
 {{info}}
-{% comment %}<input type="checkbox" class="btn-check" id="btn-check-outlined"{% endcomment %}
-                                         {% comment %}autocomplete="off" value="{{form}}">{% endcomment %}
-{% comment %}<label class="btn btn-outline-primary" for="btn-check-outlined">Habilitar</label><br>{% endcomment %}
-{% comment %}<input type="checkbox" class="btn-check" id="btn-check-outlined2" autocomplete="off">{% endcomment %}
-{% comment %}<label class="btn btn-outline-danger" for="btn-check-outlined2">Eliminar</label><br>{% endcomment %}
-{% comment %}<div class="form-check">{% endcomment %}
-  {% comment %}<input class="form-check-input" type="radio" name="exampleRadiosArriba" id="exampleRadios1" value="option1" checked>{% endcomment %}
-  {% comment %}<label class="form-check-label" for="exampleRadios1">{% endcomment %}
-    {% comment %}Default radio{% endcomment %}
-  {% comment %}</label>{% endcomment %}
-{% comment %}</div>{% endcomment %}
-{% comment %}<div class="form-check">{% endcomment %}
-  {% comment %}<input class="form-check-input" type="radio" name="exampleRadiosArriba" id="exampleRadios2" value="option2">{% endcomment %}
-  {% comment %}<label class="form-check-label" for="exampleRadios2">{% endcomment %}
-    {% comment %}Second default radio{% endcomment %}
-  {% comment %}</label>{% endcomment %}
-{% comment %}</div>{% endcomment %}
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Nº</th>
+      <th scope="col">R.U.</th>
       <th scope="col">Estudiante Solicitante</th>
       <th scope="col">Habilitar</th>
       <th scope="col">Eliminar</th>
@@ -33,21 +16,17 @@
   <tbody>
 {% for solicitud in solicitudes %}
     <tr>
-        <td scope="row">{{solicitud.pk}}</td>
-      <td><a href="{% url 'enlace_estudiante'%}">
-              {{solicitud.apellido}} {{solicitud.nombre}}</a></td>
-        <td>
-            {% comment %}<input type="radio" class="btn-check"{% endcomment %}
-{% comment %}name="options-outlined{{solicitud.pk}}" id="success-outlined{{solicitud.pk}}" autocomplete="off">{% endcomment %}
-{% comment %}<label class="btn btn-outline-success" for="success-outlined{{solicitud.pk}}">Habilitar</label>{% endcomment %}
+        <th scope="row">{{solicitud.registro_uni}}</th>
+      <td><a href="{% url 'enlace_solicitante' solicitud.pk %}">
+              {{solicitud.apellido}}, {{solicitud.nombre}}</a>
+      </td>
 <form action='' method='POST'>
     {% csrf_token %}
+        <td>
        <button type="submit" name='habilitar' class="btn btn-outline-success"
             value={{solicitud.pk}}>Habilitar</button>
         </td>
         <td> 
-{% comment %}<input type="radio" class="btn-check" name="options-outlined{{solicitud.pk}}" id="danger-outlined{{solicitud.pk}}" autocomplete="off">{% endcomment %}
-{% comment %}<label class="btn btn-outline-danger" for="danger-outlined{{solicitud.pk}}">Eliminar</label>{% endcomment %}
         <button type="submit" name='eliminar' class="btn btn-outline-danger"
             value={{solicitud.pk}}>Eliminar</button>
         </td>

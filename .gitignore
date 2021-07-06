@@ -9,4 +9,11 @@ myvenv
 /lib
 pyvenv.cfg
 /account/migrations
+<<<<<<< HEAD
 .DS_Store
+=======
+/reglamentos
+*.pdf
+/media
+/static
+>>>>>>> develop

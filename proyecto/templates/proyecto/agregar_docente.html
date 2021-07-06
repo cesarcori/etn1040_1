@@ -1,0 +1,13 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h3>Agregar docente</h3>
+{% for message in messages %}
+    <p id="messages">{{ message }}</p>
+{% endfor %}
+<form method="POST" action="">
+    {% csrf_token %}
+    {{form.as_p}}
+  <button type="submit" class="btn btn-primary my-1">Agregar</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<p>
+{% include 'proyecto/crear_mensaje_personal.html'%}
+<h4>Mensajes con: {{usuario_link.first_name}} {{usuario_link.last_name}} </h4> 
+{%for mensaje in mensajes%}
+**********************************
+<p>
+{{mensaje.usuario.first_name}}: {{mensaje.texto}}<p>
+<p>{{mensaje.fecha_creacion}}<p>
+{%endfor%}
+**********************************
+
+{% endblock %}

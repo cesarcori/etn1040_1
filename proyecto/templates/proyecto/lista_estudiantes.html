@@ -1,0 +1,35 @@
+<h5>Lista de estudiantes ETN-1040, Proyecto de Grado:</h5>
+<table class="table table-striped">
+  <thead>
+    <tr>
+    {%if grupo == 'administrador'%}
+      <th scope="col">R.U.</th>
+    {%endif%}
+      <th scope="col">Estudiante ETN-1040</th>
+    {%if grupo == 'administrador'%}
+      <th scope="col">Grupo</th>
+      <th scope="col">Docente</th>
+    {%endif%}
+      <th scope="col">Mensajes</th>
+      <th scope="col">Celular</th>
+      <th scope="col">Correo Electrónico</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+{%for est in datos_est %}
+{%if grupo == 'administrador'%}
+<th scope="row">{{est.registro_uni}}</th>
+{%endif%}
+<td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+{%if grupo == 'administrador'%}
+<th scope="row">{{est.grupo_doc.grupo}}</th>
+<th scope="row">{{est.grupo_doc.apellido}}</th>
+{%endif%}
+<td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
+<th scope="row">{{est.celular}}</th>
+<th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,9 @@
+id,usuario,correo,nombre,apellido,carnet,registro_uni,celular,mencion,fecha_inscripcion,grupo_doc_id
+2,cesar,cesar@gmail.com,Cesar,Cori,6002311,1642511,73012345,"Sistemas de Computación","2021-06-14 15:39:05.953624",
+3,julio,julio@gmail.com,Julio,Cori,6002322,1642522,73012345,"Sistemas de Computación","2021-06-14 15:42:58.689674",
+4,antonio,antonio@gmail.com,Antonio,Quea,6002344,1642544,73012345,Control,"2021-06-14 15:50:37.460462",
+5,marlene,marlene@gmail.com,Marlene,Cruz,6002355,1642555,73009217,Control,"2021-06-14 16:21:10.605157",
+6,marlene2,marlene2@gmail.com,"Marlene Mari",Quispe,6002366,1642566,73009218,Control,"2021-06-14 16:21:11.844676",
+7,felix,felix@gmail.com,"Felix Antonio","Mamani Pérez",6002377,1642577,73012345,Control,"2021-06-14 16:25:41.934489",
+8,mario,mario@gmail.com,Mario,Alvarado,6002388,1642588,73012345,"Telecomunicación","2021-06-14 17:14:46.653673",
+9,romulo,romulo@gmail.com,Romulo,Corilazo,6002399,1642599,73012345,"Telecomunicación","2021-06-14 17:14:47.644453",

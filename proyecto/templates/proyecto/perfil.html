@@ -1,37 +1,48 @@
 {%  extends 'proyecto/main.html' %}
-{% block content %}
-
-<style>
-	.profile-pic{
-		max-width: 200px;
-		max-height:200px;
-		margin: 0 auto;
-		border-radius: 50%;
-	}
-</style>
-
-<br>
-<div class="row">
-	<div class="col-md-3">
-		<div class="card card-body">
-			<a class="btn btn-warning" href="{% url 'home' %}">Atras</a>
-			<hr>
-			<h3 style="text-align: center">Perfil de Usuario</h3>
-			<hr>
-			<img class="profile-pic" src="{{request.user.customer.profile_pic.url}}" >
-		
-		</div>
-	</div>
-	<div class="col-md-9">
-		<div class="card card-body">
-			<form method="POST" action="" enctype="multipart/form-data">
-				{% csrf_token %}
-				{{form.as_p}}
-			<input class="btn btn-primary" type="submit" name="Update Information">
-			</form>
-		</div>
-	</div>
-</div>
-
+{% block content %}            
+<h3>Tu Información</h3>
+{% if grupo == 'administrador'%}
+    <p>
+    Nombre: {{ request.user.datosadministrador.nombre }}<p>
+    Apellido: {{ request.user.datosadministrador.apellido }}<p>
+    Celular: {{ request.user.datosadministrador.celular }}<p>
+    Correo Electrónico: {{ request.user.datosadministrador.correo}}<p>
+{%elif grupo == 'estudiante' %}
+    <p>
+    Nombre: {{ request.user.datosestudiante.nombre }}<p>
+    Apellido: {{ request.user.datosestudiante.apellido }}<p>
+    Celular: {{ request.user.datosestudiante.celular }}<p>
+    Usuario: {{ request.user.datosestudiante.usuario }}<p>
+    Correo Electrónico: {{ request.user.datosestudiante.correo}}<p>
+    Cédula de Identidad: {{ request.user.datosestudiante.carnet}}<p>
+    Registro Universitario: {{ request.user.datosestudiante.registro_uni}}<p>
+    Mención: {{ request.user.datosestudiante.mencion}}<p>
+    Grupo: {{ request.user.datosestudiante.grupo_doc.grupo}}<p>
+    Docente: <a href="{% url 'enlace_docente' request.user.datosestudiante.grupo_doc.id %}">
+        {{ request.user.datosestudiante.grupo_doc.nombre}} 
+        {{request.user.datosestudiante.grupo_doc.apellido}}</a><p>
+    Tutor: <a href="{% url 'enlace_tutor' request.user.datosestudiante.tutor.id %}">
+    {{request.user.datosestudiante.tutor.nombre}} 
+    {{request.user.datosestudiante.tutor.apellido}}</a>
+    <p>
+{%elif grupo == 'docente' %}
+    <p>
+    Nombre: {{ request.user.datosdocente.nombre }}<p>
+    Apellido: {{ request.user.datosdocente.apellido }}<p>
+    Celular: {{ request.user.datosdocente.celular }}<p>
+    Correo Electrónico: {{ request.user.datosdocente.correo}}<p>
+    Mención: {{ request.user.datosdocente.mencion}}<p>
+    Grupo : {{ request.user.datosdocente.grupo}}<p>
+    Cantidad de Estudiantes: {{ request.user.datosdocente.datosestudiante_set.count}}<p>
+        
+{%elif grupo == 'tutor' %}
+    <p>
+    Nombre: {{ request.user.datostutor.nombre }}<p>
+    Apellido: {{ request.user.datostutor.apellido }}<p>
+    Celular: {{ request.user.datostutor.celular }}<p>
+    Correo Electrónico: {{ request.user.datostutor.correo}}<p>
+    Mención: {{ request.user.datostutor.mencion}}<p>
+    Cantidad de Estudiantes: {{ request.user.datostutor.datosestudiante_set.count}}<p>
+{%endif%}
 {% endblock %}
 

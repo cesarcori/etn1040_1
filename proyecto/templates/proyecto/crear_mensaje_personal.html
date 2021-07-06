@@ -1,0 +1,7 @@
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" name='enviar' class="btn btn-outline-success"
+        value='enviar'>Enviar</button>
+</form>
