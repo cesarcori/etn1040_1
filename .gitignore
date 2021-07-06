@@ -16,4 +16,9 @@ pyvenv.cfg
 *.pdf
 /media
 /static
+<<<<<<< HEAD
+>>>>>>> develop
+=======
+estudiantes.csv
+salida.csv
 >>>>>>> develop
