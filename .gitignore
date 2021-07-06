@@ -11,3 +11,5 @@ pyvenv.cfg
 *.pdf
 /media
 /static
+estudiantes.csv
+salida.csv
