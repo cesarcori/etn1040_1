@@ -1,0 +1,19 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<p>
+<div class="mb-3">
+<form method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <a class="btn btn-danger" href={%url 'entrega_perfil'%}>Cancelar</a>
+    <button type="submit" name='enviar' class="btn btn-success"
+        value='enviar'>Enviar</button>
+    {% comment %}<button type="submit" name='cancelar' class="btn btn-outline-danger"{% endcomment %}
+        {% comment %}value='enviar'>Cancelar</button>{% endcomment %}
+</form>
+</div>
+<p>
+{%for m in material%}
+<a href="{{ m.material_estudiante.url }}">{{m.material_estudiante.name}}<a><p>
+{%endfor%}
+{% endblock %}

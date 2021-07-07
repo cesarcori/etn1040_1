@@ -43,6 +43,17 @@ class MaterialDocente(models.Model):
     # def __str__(self):
         # return self.propietario.first_name
 
+class MaterialEstudiante(models.Model):
+    propietario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    texto = models.TextField(blank=True, null=True)
+    material_estudiante = models.FileField(upload_to='material_estudiante/', null=True)
+
+class CorregirPerfil(models.Model):
+    docente_tutor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    corregir_perfil = models.ForeignKey(MaterialEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    texto = models.TextField(blank=True, null=True)
+    material_para_corregir = models.FileField(upload_to='material_para_corregir/', null=True)
+
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)

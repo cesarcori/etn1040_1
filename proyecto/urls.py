@@ -37,6 +37,7 @@ urlpatterns = [
     path('paso2/', views.paso2, name='paso2'),
     path('paso3/', views.paso3, name='paso3'),
     path('paso4/', views.paso4, name='paso4'),
+    path('paso4/entrega-perfil', views.entregaPerfil, name='entrega_perfil'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     

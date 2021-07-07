@@ -614,6 +614,23 @@ def paso4(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+def entregaPerfil(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    if request.method == 'POST':
+        form = MaterialEstudianteForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = form.save(commit=False)
+            file.propietario = usuario
+            file.save()
+    else: 
+        form = MaterialEstudianteForm
+    material = MaterialEstudiante.objects.filter(propietario=request.user)
+    context = {'grupo': grupo,'form':form, 'material':material}
+    return render(request, 'proyecto/entrega_perfil.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
 def paso5(request):
     grupo = request.user.groups.get().name
     context = {'grupo': grupo}

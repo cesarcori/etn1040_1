@@ -82,4 +82,20 @@ class MaterialDocenteForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['propietario',]
 
+class MaterialEstudianteForm(forms.ModelForm):
+    class Meta:
+        model = MaterialEstudiante
+        fields = '__all__'
+        exclude = ['propietario',]
+        widgets = {
+        # 'texto': forms.Textarea(attrs={'rows': 2, 'cols': 25}),
+        'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+'placeholder':'Escribe tus modificaciones que elaboraste en el perfil...',}),
+        'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
+                  }
+        labels = {
+                'texto': ('Enviar Perfil'),
+'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
+amarillo'),
+                }
 
