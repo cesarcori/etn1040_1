@@ -86,7 +86,7 @@ class MaterialEstudianteForm(forms.ModelForm):
     class Meta:
         model = MaterialEstudiante
         fields = '__all__'
-        exclude = ['propietario',]
+        exclude = ['sala']
         widgets = {
         # 'texto': forms.Textarea(attrs={'rows': 2, 'cols': 25}),
         'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
@@ -98,4 +98,23 @@ class MaterialEstudianteForm(forms.ModelForm):
 'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
 amarillo'),
                 }
-
+class SalaRevisarForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisar
+        fields = '__all__'
+        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar']
+        widgets = {
+    'sala': 
+    forms.TextInput(attrs={'class':'input-group input-group-lg',
+    'placeholder':'Escribe el nombre de la sala...'}),
+    'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+    'placeholder':'Escribe tus modificaciones que elaboraste en el perfil...',}),
+    'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
+    'material_estudiante': forms.FileInput(attrs={'class':'form-control'}),
+                }
+        labels = {
+                'sala': ('Asunto de la revisión:'),
+                'texto': ('Detalles revisión:'),
+'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
+amarillo'),
+                }

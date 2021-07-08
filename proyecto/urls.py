@@ -39,7 +39,10 @@ urlpatterns = [
     path('paso3/', views.paso3, name='paso3'),
     path('paso4/', views.paso4, name='paso4'),
     path('paso4/entrega-perfil', views.entregaPerfil, name='entrega_perfil'),
-    path('paso4/entrega-perfil/correccion', views.correccion, name='correccion'),
+    path('paso4/entrega-perfil/crear-sala-revisar', views.crearSalaRevisar,
+        name='crear_sala'),
+    path('paso4/entrega-perfil/sala/<int:pk_sala>/', views.salaRevisar,
+        name='sala_revisar'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     

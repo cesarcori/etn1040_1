@@ -368,19 +368,24 @@ def enlaceEstudiante(request, pk_est):
 @allowed_users(allowed_roles=['docente','tutor','administrador'])
 def progresoEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
+    progreso = str(50)
     estudiante = DatosEstudiante.objects.get(id=pk_est)
     if grupo == 'docente':
         # evita que se un docente consulte otros estudiantes
         existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
-            context = {'grupo': grupo,'estudiante':estudiante,}
+            context = {'grupo': grupo,'estudiante':estudiante,
+                    'progreso':progreso,}
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
             return redirect('error_pagina')
     elif grupo== 'tutor':
         existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
-            context = {'grupo': grupo,'estudiante':estudiante,}
+            material= estudiante.usuario.materialestudiante_set.all()
+            context = {'grupo':grupo,'estudiante':estudiante,
+                    'progreso':progreso,
+                    'material':material,}
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
             return redirect('error_pagina')
@@ -638,6 +643,9 @@ def paso4(request):
 def entregaPerfil(request):
     grupo = request.user.groups.get().name
     usuario = request.user
+    estudiante = usuario.datosestudiante
+    docente = estudiante.grupo_doc
+    tutor = estudiante.tutor
     if request.method == 'POST':
         form = MaterialEstudianteForm(request.POST, request.FILES)
         if form.is_valid():
@@ -646,13 +654,39 @@ def entregaPerfil(request):
             file.save()
     else: 
         form = MaterialEstudianteForm
-    material = MaterialEstudiante.objects.filter(propietario=request.user)
-    context = {'grupo': grupo,'form':form, 'material':material}
+    # material = MaterialEstudiante.objects.filter(estudiante_rev=usuario.datosestudiante)
+        salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
+    context = {'grupo': grupo,'form':form,'salas':salas}
     return render(request, 'proyecto/entrega_perfil.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-def correccion(request):
+def crearSalaRevisar(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    estudiante = usuario.datosestudiante
+    docente = estudiante.grupo_doc
+    tutor = estudiante.tutor
+    if request.method == 'POST':
+        form = SalaRevisarForm(request.POST)
+        if form.is_valid():
+            nombre_sala = request.POST['sala']
+            file = form.save(commit=False)
+            file.docente_rev = docente
+            file.tutor_rev= tutor
+            file.estudiante_rev = estudiante
+            file.sala = 'rev_'+nombre_sala
+            print(file.sala)
+            messages.success(request, 'Se creó la sala!!!')
+            # file.save()
+    else: 
+        form = SalaRevisarForm
+    context = {'grupo': grupo,'form':form,}
+    return render(request, 'proyecto/crear_sala_revisar.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def salaRevisar(request):
     grupo = request.user.groups.get().name
     usuario = request.user
     material = MaterialEstudiante.objects.filter(propietario=usuario)
