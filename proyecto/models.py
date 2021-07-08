@@ -51,8 +51,8 @@ class MaterialEstudiante(models.Model):
 class CorregirPerfil(models.Model):
     docente_tutor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     corregir_perfil = models.ForeignKey(MaterialEstudiante, null=True, blank=True, on_delete=models.CASCADE)
-    texto = models.TextField(blank=True, null=True)
     material_para_corregir = models.FileField(upload_to='material_para_corregir/', null=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)

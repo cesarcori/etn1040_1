@@ -365,6 +365,27 @@ def enlaceEstudiante(request, pk_est):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','administrador'])
+def progresoEstudiante(request, pk_est):
+    grupo = str(request.user.groups.get())
+    estudiante = DatosEstudiante.objects.get(id=pk_est)
+    if grupo == 'docente':
+        # evita que se un docente consulte otros estudiantes
+        existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
+        if existe_est:
+            context = {'grupo': grupo,'estudiante':estudiante,}
+            return render(request, 'proyecto/progreso_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
+    elif grupo== 'tutor':
+        existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
+        if existe_est:
+            context = {'grupo': grupo,'estudiante':estudiante,}
+            return render(request, 'proyecto/progreso_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','administrador'])
 def enlaceDocente(request, pk_doc):
     grupo = request.user.groups.get().name
@@ -628,6 +649,15 @@ def entregaPerfil(request):
     material = MaterialEstudiante.objects.filter(propietario=request.user)
     context = {'grupo': grupo,'form':form, 'material':material}
     return render(request, 'proyecto/entrega_perfil.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def correccion(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    material = MaterialEstudiante.objects.filter(propietario=usuario)
+    context = {'grupo': grupo,'material':material}
+    return render(request, 'proyecto/entrega_perfil_correccion.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

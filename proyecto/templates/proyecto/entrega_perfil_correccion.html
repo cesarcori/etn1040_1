@@ -1,0 +1,9 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+Correccion<p>
+{%for m in material%}
+<a href="{{ m.material_estudiante.url }}">{{m.material_estudiante.name}}<a><p>
+{%endfor%}
+
+<a href={%url 'entrega_perfil'%}>Atras</a>
+{% endblock %}

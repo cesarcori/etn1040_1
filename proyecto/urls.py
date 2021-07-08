@@ -22,6 +22,7 @@ urlpatterns = [
     path('comp-personal/', views.compartirPersonal, name='compartir_personal'),
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
+    path('progreso-est/<int:pk_est>', views.progresoEstudiante, name='progreso_estudiante'),
     path('info-solicitante/<int:pk_sol>', views.enlaceSolicitante,
         name='enlace_solicitante'),
     path('info-doc/<int:pk_doc>/', views.enlaceDocente, name='enlace_docente'),
@@ -38,6 +39,7 @@ urlpatterns = [
     path('paso3/', views.paso3, name='paso3'),
     path('paso4/', views.paso4, name='paso4'),
     path('paso4/entrega-perfil', views.entregaPerfil, name='entrega_perfil'),
+    path('paso4/entrega-perfil/correccion', views.correccion, name='correccion'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     

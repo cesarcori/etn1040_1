@@ -13,7 +13,10 @@
 </form>
 </div>
 <p>
-{%for m in material%}
-<a href="{{ m.material_estudiante.url }}">{{m.material_estudiante.name}}<a><p>
-{%endfor%}
+
+<a href={%url 'correccion'%}>Corrección No</a>
+
+{% comment %}{%for m in material%}{% endcomment %}
+{% comment %}<a href="{{ m.material_estudiante.url }}">{{m.material_estudiante.name}}<a><p>{% endcomment %}
+{% comment %}{%endfor%}{% endcomment %}
 {% endblock %}
