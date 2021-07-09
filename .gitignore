@@ -4,7 +4,7 @@
 __pycache__/
 db.sqlite3
 myvenv
-/migrations/
+proyecto/migrations/
 /bin
 /lib
 pyvenv.cfg
