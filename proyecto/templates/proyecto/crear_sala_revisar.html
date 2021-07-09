@@ -25,7 +25,10 @@
 </form>
 </div>
 {% for message in messages %}
-    <p id="messages">{{ message }}</p>
+    {% comment %}<p id="messages">{{ message }}</p>{% endcomment %}
+    <div class="alert alert-success text-center" role="alert">
+        {{ message }}
+    </div>
 {% endfor %}
 <p>
 {% endblock %}

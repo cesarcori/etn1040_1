@@ -382,10 +382,10 @@ def progresoEstudiante(request, pk_est):
     elif grupo== 'tutor':
         existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
-            material= estudiante.usuario.materialestudiante_set.all()
+            # material= estudiante.usuario.materialestudiante_set.all()
             context = {'grupo':grupo,'estudiante':estudiante,
                     'progreso':progreso,
-                    'material':material,}
+                    }
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
             return redirect('error_pagina')
@@ -668,17 +668,16 @@ def crearSalaRevisar(request):
     docente = estudiante.grupo_doc
     tutor = estudiante.tutor
     if request.method == 'POST':
-        form = SalaRevisarForm(request.POST)
+        form = SalaRevisarForm(request.POST, request.FILES)
         if form.is_valid():
             nombre_sala = request.POST['sala']
             file = form.save(commit=False)
             file.docente_rev = docente
             file.tutor_rev= tutor
             file.estudiante_rev = estudiante
-            file.sala = 'rev_'+nombre_sala
-            print(file.sala)
-            messages.success(request, 'Se creó la sala!!!')
-            # file.save()
+            file.sala = nombre_sala
+            file.save()
+            messages.success(request, 'Se creó la sala revisión con éxito!!!')
     else: 
         form = SalaRevisarForm
     context = {'grupo': grupo,'form':form,}
@@ -686,12 +685,14 @@ def crearSalaRevisar(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-def salaRevisar(request):
+def salaRevisar(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
-    material = MaterialEstudiante.objects.filter(propietario=usuario)
-    context = {'grupo': grupo,'material':material}
-    return render(request, 'proyecto/entrega_perfil_correccion.html', context)
+    info_estu = SalaRevisar.objects.get(id=pk_sala)
+    docente = usuario.datosestudiante.grupo_doc.usuario
+    comunicados = docente.comunicado_set.all().order_by('-fecha_creacion')
+    context = {'grupo': grupo, 'info_estu':info_estu,'comunicados':comunicados}
+    return render(request, 'proyecto/sala_revisar.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
