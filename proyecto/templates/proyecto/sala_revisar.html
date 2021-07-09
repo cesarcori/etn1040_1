@@ -15,11 +15,26 @@
   </div>
 </div>
 
-
 <br>
+
 <div class="container">
   <div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-3">
     <div class="col">
+
+<div class="card">
+  <div class="card-header">
+      Mensajes con: <strong>{{usuario_link.first_name}}
+          {{usuario_link.last_name}}</strong>
+  </div>
+  <div class="card-body">
+{%for mensaje in mensajes%}
+<strong>{{mensaje.usuario.first_name}}</strong>: {{mensaje.texto}}
+<div class="card-subtitle mb-2 text-muted">{{mensaje.fecha_creacion}}</div>
+{%endfor%}
+  </div>
+</div>
+
+
 
 <div class="accordion" id="accordionExample">
 {%for comunicado in comunicados %}
