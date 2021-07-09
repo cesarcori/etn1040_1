@@ -2,13 +2,26 @@
 {% block content %}
 <p>
 {% include 'proyecto/crear_mensaje_personal.html'%}
-<h4>Mensajes con: {{usuario_link.first_name}} {{usuario_link.last_name}} </h4> 
+<br>
+<div class="card">
+  <div class="card-header">
+      Mensajes con: <strong>{{usuario_link.first_name}}
+          {{usuario_link.last_name}}</strong>
+  </div>
+  <div class="card-body">
 {%for mensaje in mensajes%}
-**********************************
-<p>
-{{mensaje.usuario.first_name}}: {{mensaje.texto}}<p>
-<p>{{mensaje.fecha_creacion}}<p>
+<strong>{{mensaje.usuario.first_name}}</strong>: {{mensaje.texto}}
+<div class="card-subtitle mb-2 text-muted">{{mensaje.fecha_creacion}}</div>
 {%endfor%}
-**********************************
+  </div>
+</div>
+
+{% comment %}{%for mensaje in mensajes%}{% endcomment %}
+{% comment %}**********************************{% endcomment %}
+{% comment %}<p>{% endcomment %}
+{% comment %}{{mensaje.usuario.first_name}}: {{mensaje.texto}}<p>{% endcomment %}
+{% comment %}<p>{{mensaje.fecha_creacion}}<p>{% endcomment %}
+{% comment %}{%endfor%}{% endcomment %}
+{% comment %}**********************************{% endcomment %}
 
 {% endblock %}

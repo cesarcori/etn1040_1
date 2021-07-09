@@ -23,8 +23,10 @@
                     data-bs-parent="#accordionExample">
       <div class="accordion-body">
           {{comunicado.texto}}<br>
-          <p><strong>Fecha de
-              publicación:</strong>&nbsp;{{comunicado.fecha_creacion}}</p> 
+          {% comment %}<p><strong>Fecha de{% endcomment %}
+              {% comment %}publicación:</strong>&nbsp;{{comunicado.fecha_creacion}}</p> {% endcomment %}
+        <p>
+        <div class="card-subtitle mb-2 text-muted">Publicación: {{comunicado.fecha_creacion}}</div>
       </div>
     </div>
   </div>

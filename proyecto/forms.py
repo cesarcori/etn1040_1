@@ -59,6 +59,16 @@ class ComunicadoForm(forms.ModelForm):
     class Meta:
         model = Comunicado
         fields = ('tema', 'texto',)
+        widgets = {
+    'tema':forms.TextInput(attrs={'class':'input-group input-group-lg',
+    'placeholder':'Escribe el asunto...'}),
+    'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+'placeholder':'Escribe el comunicado para los estudiantes...',}),
+                  }
+        labels = {
+        'tema': ('Asunto'),
+        'texto': ('Comunicado'),
+                }
 
 class MensajeEstudianteForm(forms.Form):
     d = 'Docente'
@@ -71,11 +81,11 @@ class MensajeEstudianteForm(forms.Form):
     para = forms.ChoiceField(choices=PARA)
 
 class MensajeForm(forms.Form):
-    texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2, 'cols':25}))
+    # texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2, 'cols':25}))
+    texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2,
+        'class':'form-control', 'placeholder':'Escribe el mensaje...'}),
+        label='')
 
-# class MaterialDocenteForm(forms.Form):
-    # propietario = form.
-    # material_docente = forms.FileField()
 class MaterialDocenteForm(forms.ModelForm):
     class Meta:
         model = MaterialDocente
