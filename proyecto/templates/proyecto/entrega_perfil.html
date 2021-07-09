@@ -1,0 +1,40 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<p>
+<a class="btn btn-primary" href="{% url 'crear_sala' %}">Crear Revisión</a><br>
+
+{% comment %}{%for s in salas%}{% endcomment %}
+{% comment %}<a href={%url 'sala_revisar' s.id %}>{{s.sala}}</a><p>{% endcomment %}
+{% comment %}{%endfor%}{% endcomment %}
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Revisión</th>
+    </tr>
+  </thead>
+  <tbody>
+{%for s in salas%}
+    <tr>
+<td>
+<a href={%url 'sala_revisar' s.id %}>{{s.sala}}</a>
+</td>      
+    </tr>
+{%endfor%}
+  </tbody>
+</table>
+<a class="btn btn-danger" href={%url 'paso4'%}>Atras</a>
+{% comment %}<div class="mb-3">{% endcomment %}
+{% comment %}<form method="POST" action="" enctype="multipart/form-data">{% endcomment %}
+    {% comment %}{% csrf_token %}{% endcomment %}
+    {% comment %}{{ form.as_p }}{% endcomment %}
+    {% comment %}<a class="btn btn-danger" href={%url 'entrega_perfil'%}>Cancelar</a>{% endcomment %}
+    {% comment %}<button type="submit" name='enviar' class="btn btn-success"{% endcomment %}
+        {% comment %}value='enviar'>Enviar</button>{% endcomment %}
+    {% comment %}[><button type="submit" name='cancelar' class="btn btn-outline-danger"<]{% endcomment %}
+        {% comment %}[>value='enviar'>Cancelar</button><]{% endcomment %}
+{% comment %}</form>{% endcomment %}
+{% comment %}</div>{% endcomment %}
+{% comment %}<p>{% endcomment %}
+
+
+{% endblock %}

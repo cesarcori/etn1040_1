@@ -6,17 +6,43 @@
 <h3>Comunicado por Tutor Ing. {{request.user.datosestudiante.tutor.apellido}}</h3>
 {%endif%}
 
+<div class="accordion" id="accordionExample">
 {%for comunicado in comunicados %}
-**********************************
-<p>
-Tema:
-{{comunicado.tema}}<p>
-Contenido:
-{{comunicado.texto}}<p>
-Fecha de publicación:
-{{comunicado.fecha_creacion}}<p>
-**********************************
-
+  <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo{{comunicado.id}}">
+      <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo{{comunicado.id}}" 
+                    aria-expanded="false"
+                    aria-controls="collapseTwo{{comunicado.id}}">
+          <strong>{{comunicado.tema}}</strong>
+      </button>
+    </h2>
+    <div id="collapseTwo{{comunicado.id}}" class="accordion-collapse collapse"
+                    aria-labelledby="headingTwo{{comunicado.id}}" 
+                    data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+          {{comunicado.texto}}<br>
+          {% comment %}<p><strong>Fecha de{% endcomment %}
+              {% comment %}publicación:</strong>&nbsp;{{comunicado.fecha_creacion}}</p> {% endcomment %}
+        <p>
+        <div class="card-subtitle mb-2 text-muted">Publicación: {{comunicado.fecha_creacion}}</div>
+      </div>
+    </div>
+  </div>
 {%endfor%}
+</div>
+{% comment %}{%for comunicado in comunicados %}{% endcomment %}
+{% comment %}**********************************{% endcomment %}
+{% comment %}<p>{% endcomment %}
+{% comment %}Tema:{% endcomment %}
+{% comment %}{{comunicado.tema}}<p>{% endcomment %}
+{% comment %}Contenido:{% endcomment %}
+{% comment %}{{comunicado.texto}}<p>{% endcomment %}
+{% comment %}Fecha de publicación:{% endcomment %}
+{% comment %}{{comunicado.fecha_creacion}}<p>{% endcomment %}
+{% comment %}**********************************{% endcomment %}
+
+{% comment %}{%endfor%}{% endcomment %}
 
 {% endblock %}

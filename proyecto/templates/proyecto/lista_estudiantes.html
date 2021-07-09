@@ -13,6 +13,7 @@
       <th scope="col">Mensajes</th>
       <th scope="col">Celular</th>
       <th scope="col">Correo Electrónico</th>
+      <th scope="col">Info</th>
     </tr>
   </thead>
   <tbody>
@@ -20,8 +21,11 @@
 {%for est in datos_est %}
 {%if grupo == 'administrador'%}
 <th scope="row">{{est.registro_uni}}</th>
-{%endif%}
 <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+{%endif%}
+{%if grupo == 'docente' or 'tutor'%}
+<td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+{%endif%}
 {%if grupo == 'administrador'%}
 <th scope="row">{{est.grupo_doc.grupo}}</th>
 <th scope="row">{{est.grupo_doc.apellido}}</th>
@@ -29,6 +33,7 @@
 <td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
 <th scope="row">{{est.celular}}</th>
 <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
+<td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
     </tr>
 {% endfor %}
   </tbody>

@@ -1,0 +1,18 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+<h4>Progreso del estudiante: {{estudiante}}</h4>
+<div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
+        aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
+        {{progreso}}%
+    </div>
+</div>
+<br>
+Material enviado
+{%for m in material%}
+<a href="{{ m.material_estudiante.url }}">{{m.material_estudiante.name}}<a><p>
+{%endfor%}
+<br>
+Chat
+{% endblock %}
+

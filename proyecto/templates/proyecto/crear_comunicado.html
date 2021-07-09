@@ -1,11 +1,11 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 
-<h3>Crear comunicado para todos los estudiantes</h3>
+<h3>Comunicado para todos los estudiantes</h3>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-       <button type="submit" name='enviar' class="btn btn-outline-success"
+       <button type="submit" name='enviar' class="btn btn-success"
             value='enviar'>Enviar</button>
     </form>
 {% endblock %}

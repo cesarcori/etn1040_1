@@ -365,6 +365,32 @@ def enlaceEstudiante(request, pk_est):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','administrador'])
+def progresoEstudiante(request, pk_est):
+    grupo = str(request.user.groups.get())
+    progreso = str(50)
+    estudiante = DatosEstudiante.objects.get(id=pk_est)
+    if grupo == 'docente':
+        # evita que se un docente consulte otros estudiantes
+        existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
+        if existe_est:
+            context = {'grupo': grupo,'estudiante':estudiante,
+                    'progreso':progreso,}
+            return render(request, 'proyecto/progreso_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
+    elif grupo== 'tutor':
+        existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
+        if existe_est:
+            # material= estudiante.usuario.materialestudiante_set.all()
+            context = {'grupo':grupo,'estudiante':estudiante,
+                    'progreso':progreso,
+                    }
+            return render(request, 'proyecto/progreso_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','administrador'])
 def enlaceDocente(request, pk_doc):
     grupo = request.user.groups.get().name
@@ -611,6 +637,62 @@ def paso4(request):
     grupo = request.user.groups.get().name
     context = {'grupo': grupo}
     return render(request, 'proyecto/estudiante_paso4.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def entregaPerfil(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    estudiante = usuario.datosestudiante
+    docente = estudiante.grupo_doc
+    tutor = estudiante.tutor
+    if request.method == 'POST':
+        form = MaterialEstudianteForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = form.save(commit=False)
+            file.propietario = usuario
+            file.save()
+    else: 
+        form = MaterialEstudianteForm
+    # material = MaterialEstudiante.objects.filter(estudiante_rev=usuario.datosestudiante)
+        salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
+    context = {'grupo': grupo,'form':form,'salas':salas}
+    return render(request, 'proyecto/entrega_perfil.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def crearSalaRevisar(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    estudiante = usuario.datosestudiante
+    docente = estudiante.grupo_doc
+    tutor = estudiante.tutor
+    if request.method == 'POST':
+        form = SalaRevisarForm(request.POST, request.FILES)
+        if form.is_valid():
+            nombre_sala = request.POST['sala']
+            file = form.save(commit=False)
+            file.docente_rev = docente
+            file.tutor_rev= tutor
+            file.estudiante_rev = estudiante
+            file.sala = nombre_sala
+            file.save()
+            messages.success(request, 'Se creó la sala revisión con éxito!!!')
+    else: 
+        form = SalaRevisarForm
+    context = {'grupo': grupo,'form':form,}
+    return render(request, 'proyecto/crear_sala_revisar.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def salaRevisar(request, pk_sala):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    info_estu = SalaRevisar.objects.get(id=pk_sala)
+    docente = usuario.datosestudiante.grupo_doc.usuario
+    comunicados = docente.comunicado_set.all().order_by('-fecha_creacion')
+    context = {'grupo': grupo, 'info_estu':info_estu,'comunicados':comunicados}
+    return render(request, 'proyecto/sala_revisar.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

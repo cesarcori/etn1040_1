@@ -59,6 +59,16 @@ class ComunicadoForm(forms.ModelForm):
     class Meta:
         model = Comunicado
         fields = ('tema', 'texto',)
+        widgets = {
+    'tema':forms.TextInput(attrs={'class':'input-group input-group-lg',
+    'placeholder':'Escribe el asunto...'}),
+    'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+'placeholder':'Escribe el comunicado para los estudiantes...',}),
+                  }
+        labels = {
+        'tema': ('Asunto'),
+        'texto': ('Comunicado'),
+                }
 
 class MensajeEstudianteForm(forms.Form):
     d = 'Docente'
@@ -71,15 +81,50 @@ class MensajeEstudianteForm(forms.Form):
     para = forms.ChoiceField(choices=PARA)
 
 class MensajeForm(forms.Form):
-    texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2, 'cols':25}))
+    # texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2, 'cols':25}))
+    texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2,
+        'class':'form-control', 'placeholder':'Escribe el mensaje...'}),
+        label='')
 
-# class MaterialDocenteForm(forms.Form):
-    # propietario = form.
-    # material_docente = forms.FileField()
 class MaterialDocenteForm(forms.ModelForm):
     class Meta:
         model = MaterialDocente
         fields = '__all__'
         exclude = ['propietario',]
 
-
+class MaterialEstudianteForm(forms.ModelForm):
+    class Meta:
+        model = MaterialEstudiante
+        fields = '__all__'
+        exclude = ['sala']
+        widgets = {
+        # 'texto': forms.Textarea(attrs={'rows': 2, 'cols': 25}),
+        'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+'placeholder':'Escribe tus modificaciones que elaboraste en el perfil...',}),
+        'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
+                  }
+        labels = {
+                'texto': ('Enviar Perfil'),
+'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
+amarillo'),
+                }
+class SalaRevisarForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisar
+        fields = '__all__'
+        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar']
+        widgets = {
+    'sala': 
+    forms.TextInput(attrs={'class':'input-group input-group-lg',
+    'placeholder':'Escribe el nombre de la sala...'}),
+    'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+    'placeholder':'Escribe tus modificaciones que elaboraste en el perfil...',}),
+    'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
+    'material_estudiante': forms.FileInput(attrs={'class':'form-control'}),
+                }
+        labels = {
+                'sala': ('Asunto de la revisión:'),
+                'texto': ('Detalles revisión:'),
+'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
+amarillo'),
+                }
