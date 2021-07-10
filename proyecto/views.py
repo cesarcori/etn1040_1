@@ -374,18 +374,22 @@ def progresoEstudiante(request, pk_est):
         # evita que se un docente consulte otros estudiantes
         existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
+            info_estu = SalaRevisar.objects.get(estudiante_rev=estudiante)
+            salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
             context = {'grupo': grupo,'estudiante':estudiante,
-                    'progreso':progreso,}
+                    'progreso':progreso,'info_estu':info_estu,
+                    'salas':salas}
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
             return redirect('error_pagina')
     elif grupo== 'tutor':
         existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
-            # material= estudiante.usuario.materialestudiante_set.all()
-            context = {'grupo':grupo,'estudiante':estudiante,
-                    'progreso':progreso,
-                    }
+            info_estu = SalaRevisar.objects.get(estudiante_rev=estudiante)
+            salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
+            context = {'grupo': grupo,'estudiante':estudiante,
+                    'progreso':progreso,'info_estu':info_estu,
+                    'salas':salas}
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
             return redirect('error_pagina')
@@ -684,15 +688,85 @@ def crearSalaRevisar(request):
     return render(request, 'proyecto/crear_sala_revisar.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
+@allowed_users(allowed_roles=['estudiante','docente','tutor'])
 def salaRevisar(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
     info_estu = SalaRevisar.objects.get(id=pk_sala)
-    docente = usuario.datosestudiante.grupo_doc.usuario
-    comunicados = docente.comunicado_set.all().order_by('-fecha_creacion')
-    context = {'grupo': grupo, 'info_estu':info_estu,'comunicados':comunicados}
+    if grupo == 'docente':
+        if request.method == "POST":
+            form= MensajeDocenteRevisarForm(request.POST)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.sala = info_estu
+                file.usuario = usuario
+                file.save()
+        else:
+            form= MensajeDocenteRevisarForm
+    elif grupo == 'tutor':
+        if request.method == "POST":
+            form= MensajeTutorRevisarForm(request.POST)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.sala = info_estu
+                file.usuario = usuario
+                file.save()
+        else:
+            form= MensajeTutorRevisarForm()
+    mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    mensajes_tut = MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    context = {'grupo': grupo, 'info_estu':info_estu,
+            'form':form,
+            'mensajes_doc':mensajes_doc,
+            'mensajes_tut':mensajes_tut,
+    }
     return render(request, 'proyecto/sala_revisar.html', context)
+
+def salaRevisarEstDoc(request, pk_sala):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    info_estu = SalaRevisar.objects.get(id=pk_sala)
+    if grupo == 'estudiante':
+        if request.method == "POST":
+            form= MensajeDocenteRevisarForm(request.POST)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.sala = info_estu
+                file.usuario = usuario
+                file.save()
+        else:
+            form = MensajeDocenteRevisarForm
+    mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    mensajes_tut= MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    context = {'grupo': grupo, 'info_estu':info_estu,
+            'form':form,
+            'mensajes_doc':mensajes_doc,
+            'mensajes_tut':mensajes_tut,
+            }
+    return render(request, 'proyecto/sala_revisar_est_doc.html', context)
+
+def salaRevisarEstTut(request, pk_sala):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    info_estu = SalaRevisar.objects.get(id=pk_sala)
+    if grupo == 'estudiante':
+        if request.method == "POST":
+            form= MensajeTutorRevisarForm(request.POST)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.sala = info_estu
+                file.usuario = usuario
+                file.save()
+        else:
+            form = MensajeTutorRevisarForm
+    mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    mensajes_tut= MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    context = {'grupo': grupo, 'info_estu':info_estu,
+            'form':form,
+            'mensajes_doc':mensajes_doc,
+            'mensajes_tut':mensajes_tut,
+            }
+    return render(request, 'proyecto/sala_revisar_est_tut.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

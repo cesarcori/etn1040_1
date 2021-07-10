@@ -1,0 +1,19 @@
+.text-underline-hover {
+    text-decoration: none;
+}
+
+.text-underline-hover:hover {
+    text-decoration: underline;
+}
+
+.btn-colorido
+ 
+{
+ 
+background-color:#F04703;
+ 
+color:#FFF;
+ 
+/*border-color: #2F3E48;*/
+ 
+}

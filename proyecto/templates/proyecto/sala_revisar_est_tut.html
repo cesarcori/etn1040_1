@@ -1,0 +1,8 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<a class="btn btn-danger" 
+href={%url 'entrega_perfil' %}> Atras</a>
+<p>
+{%include 'proyecto/sala_revisar_chat_tutor.html'%}
+
+{% endblock %}
