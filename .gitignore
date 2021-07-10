@@ -3,10 +3,7 @@
 *~
 __pycache__/
 db.sqlite3
-<<<<<<< HEAD
-=======
 myvenv
->>>>>>> master
 proyecto/migrations/
 /bin
 /lib
