@@ -48,8 +48,15 @@ class MaterialEstudiante(models.Model):
     texto = models.TextField(blank=True, null=True)
     material_estudiante = models.FileField(upload_to='material_estudiante/', null=True)
 
-class MensajeRevisar(models.Model):
+class MensajeDocenteRevisar(models.Model):
     texto = models.TextField(blank=True, null=True)
+    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+
+class MensajeTutorRevisar(models.Model):
+    texto = models.TextField(blank=True, null=True)
+    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -69,7 +76,6 @@ class CorregirPerfil(models.Model):
     corregir_perfil = models.ForeignKey(MaterialEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     material_para_corregir = models.FileField(upload_to='material_para_corregir/', null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-
 
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)

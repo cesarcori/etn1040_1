@@ -8,11 +8,39 @@
     </div>
 </div>
 <br>
-Material enviado
-{%for m in material%}
-<a href="{{ m.material_estudiante.url }}">{{m.material_estudiante.name}}<a><p>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Revisión</th>
+    </tr>
+  </thead>
+  <tbody>
+{%for s in salas%}
+    <tr>
+<td>
+<a href={%url 'sala_revisar' s.id %}>{{s.sala}}</a>
+</td>      
+    </tr>
 {%endfor%}
+  </tbody>
+</table>
+
+<a class="btn btn-danger" href='/'> Atras</a>
+
+{% comment %}<div class="card">{% endcomment %}
+    {% comment %}<h5>    {% endcomment %}
+        {% comment %}<div class="card-header">{% endcomment %}
+        {% comment %}{{info_estu.sala}}{% endcomment %}
+        {% comment %}</div>{% endcomment %}
+    {% comment %}</h5>{% endcomment %}
+  {% comment %}<div class="card-body">{% endcomment %}
+    {% comment %}<p class="card-text">{{info_estu.texto}}</p>{% endcomment %}
+  {% comment %}</div>{% endcomment %}
+  {% comment %}<div class="card-footer bg-transparent ">{% endcomment %}
+    {% comment %}<a href="{{ info_estu.material_estudiante.url }}" class="card-link">Archivo</a>{% endcomment %}
+  {% comment %}</div>{% endcomment %}
+{% comment %}</div>{% endcomment %}
 <br>
-Chat
 {% endblock %}
 

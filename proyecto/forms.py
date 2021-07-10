@@ -63,7 +63,7 @@ class ComunicadoForm(forms.ModelForm):
     'tema':forms.TextInput(attrs={'class':'input-group input-group-lg',
     'placeholder':'Escribe el asunto...'}),
     'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
-'placeholder':'Escribe el comunicado para los estudiantes...',}),
+    'placeholder':'Escribe el comunicado para los estudiantes...',}),
                   }
         labels = {
         'tema': ('Asunto'),
@@ -128,3 +128,29 @@ class SalaRevisarForm(forms.ModelForm):
 'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
 amarillo'),
                 }
+class MensajeDocenteRevisarForm(forms.ModelForm):
+    class Meta:
+        model = MensajeDocenteRevisar
+        fields = ['texto']
+        widgets = {
+                'texto': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Correcciones que debe realizar...'}), 
+                }
+        labels = {
+                'texto': ''
+                }
+
+class MensajeTutorRevisarForm(forms.ModelForm):
+    class Meta:
+        model = MensajeTutorRevisar
+        fields = ['texto']
+        widgets = {
+                'texto': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Correcciones que debe realizar...'}), 
+                }
+        labels = {
+                'texto': ''
+                }
+    # texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2,
+        # 'class':'form-control', 'placeholder':'Escribe el mensaje...'}),
+        # label='')
