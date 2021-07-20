@@ -13,14 +13,41 @@
   <thead>
     <tr>
       <th scope="col">Revisión</th>
+      <th scope="col">Texto</th>
+      <th scope="col">Perfil</th>
+      <th scope="col">Revisar</th>
     </tr>
   </thead>
   <tbody>
 {%for s in salas%}
     <tr>
 <td>
-<a href={%url 'sala_revisar' s.id %}>{{s.sala}}</a>
+<button class="btn btn-danger">{{s.sala}}</button>
 </td>      
+
+<td>
+<p>
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      Texto
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+      {{s.texto}}
+  </div>
+</div>
+</td>      
+
+<td>
+    <a class="btn btn-danger" href="{{ s.material_estudiante.url }}">Archivo</a>
+</td>
+<td>
+<a class="btn btn-primary" href="{% url 'sala_revisar' s.id %}">Revisar</a>
+</td>      
+
+{% comment %}<td>{% endcomment %}
+{% comment %}<a href={%url 'sala_revisar' s.id %}>{{s.sala}}</a>{% endcomment %}
+{% comment %}</td>      {% endcomment %}
     </tr>
 {%endfor%}
   </tbody>
