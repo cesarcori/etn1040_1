@@ -9,6 +9,8 @@ from django.contrib.auth.models import User, Group
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from .forms import *
 from .models import *
+from .prueba import *
+from .cartas import *
 
 from random import randint
 # busqueda
@@ -639,6 +641,7 @@ def paso3(request):
 @allowed_users(allowed_roles=['estudiante'])
 def paso4(request):
     grupo = request.user.groups.get().name
+    hola()
     context = {'grupo': grupo}
     return render(request, 'proyecto/estudiante_paso4.html', context)
 
@@ -768,6 +771,26 @@ def salaRevisarEstTut(request, pk_sala):
             }
     return render(request, 'proyecto/sala_revisar_est_tut.html', context)
 
+# def carta_aceptacion(request):
+    # buffer = io.BytesIO()
+    # carta_aceptacion(buffer)
+    # buffer.seek(0)
+    # return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
+# import io
+# from django.http import FileResponse
+# from fpdf import FPDF
+def carta_aceptacion_tutor(request):
+    buffer = io.BytesIO()
+    carta_aceptacion(buffer)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
+
+def carta_solicitud_tutor(request):
+    buffer = io.BytesIO()
+    carta_solicitud(buffer)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='carta_solicitud.pdf')
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 def paso5(request):
@@ -808,3 +831,4 @@ def materialParaEst(request):
 
 def error(request):
     return render(request, 'proyecto/error_pagina.html')
+

@@ -48,6 +48,11 @@ urlpatterns = [
         name='sala_revisar_est_doc'),
     path('sala-rev/tut/<int:pk_sala>/',views.salaRevisarEstTut,
         name='sala_revisar_est_tut'),
+    # path('paso4/pdf/', views.some_view, name='some_view'),
+    path('paso4/carta-aceptacion/', views.carta_aceptacion_tutor,
+        name='carta_aceptacion_tutor'),
+    path('paso4/carta-solicitud/', views.carta_solicitud_tutor,
+        name='carta_solicitud_tutor'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     
