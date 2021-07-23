@@ -9,7 +9,6 @@ from django.contrib.auth.models import User, Group
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from .forms import *
 from .models import *
-from .prueba import *
 from .cartas import *
 
 from random import randint
@@ -641,7 +640,6 @@ def paso3(request):
 @allowed_users(allowed_roles=['estudiante'])
 def paso4(request):
     grupo = request.user.groups.get().name
-    hola()
     context = {'grupo': grupo}
     return render(request, 'proyecto/estudiante_paso4.html', context)
 
