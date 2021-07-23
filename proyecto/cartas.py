@@ -8,7 +8,7 @@ from django.http import FileResponse
 from fpdf import FPDF
 # from .libreriaCartas import *
 
-def carta_aceptacion(buffer):
+def carta_aceptacion(buffer, info_estu):
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
@@ -69,21 +69,31 @@ def carta_aceptacion(buffer):
         pdf.ln(th)
 # totos estos datos vienen de la base de datos
 # ===========================================
-    nombre = 'Julio Cesar Cori Ochoa'
-    carnet = '6002358'
-    extension = 'L.P.'
-    celular = '73009217'
-    correo = 'ingeumsacori@gmail.com'
-    docente = 'Jorge Mario León Gómez'
-    tutor = 'Freddy Valle Velasquez'
+    # nombre = 'Julio Cesar Cori Ochoa'
+    # carnet = '6002358'
+    # extension = 'L.P.'
+    # celular = '73009217'
+    # correo = 'ingeumsacori@gmail.com'
+    # docente = 'Jorge Mario León Gómez'
+    # tutor = 'Freddy Valle Velasquez'
+    # titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
+# ===========================================
+# de la base de datos
+# ===========================================
+    nombre = info_estu[0]
+    carnet = info_estu[1] 
+    extension = info_estu[2] 
+    celular = info_estu[3] 
+    correo = info_estu[4] 
+    docente = info_estu[5] 
+    tutor = info_estu[6] 
+    titulo_perfil = info_estu[7] 
+# ===========================================
+# estatico, no se mueve, a menos que sea por personalizacion
     cargo = 'docente de la asignatura etn-1040'
     lugar = 'carrera de ingeniería electrónica'
     institucion = 'facultad de ingeniería'
     universidad = 'universidad mayor de san andrés'
-    titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
-# ===========================================
-
-# estatico, no se mueve, a menos que sea por personalizacion
     parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, mi aceptación como tutor, en el desarrollo del Proyecto de Grado:'
     parrafo1_2 = titulo_perfil
     parrafo1_3 = 'A cargo del estudiante'
@@ -132,7 +142,7 @@ def carta_aceptacion(buffer):
     text_center('e-mail.: '+ correo)
     guardar(buffer)
 
-def carta_solicitud(buffer):
+def carta_solicitud(buffer, info_estu):
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
@@ -193,16 +203,29 @@ def carta_solicitud(buffer):
         pdf.ln(th)
 # totos estos datos vienen de la base de datos
 # ===========================================
-    nombre = 'Julio Cesar Cori Ochoa'
-    carnet = '6002358'
-    extension = 'L.P.'
-    celular = '73009217'
-    correo = 'ingeumsacori@gmail.com'
-    docente = 'Jorge Mario León Gómez'
-    tutor = 'Freddy Valle Velasquez'
-    cargo = 'director'
-    lugar = 'instituto de electrónica aplicada'
-    institucion = 'facultad de ingeniería'
+    # nombre = 'Julio Cesar Cori Ochoa'
+    # carnet = '6002358'
+    # extension = 'L.P.'
+    # celular = '73009217'
+    # correo = 'ingeumsacori@gmail.com'
+    # docente = 'Jorge Mario León Gómez'
+    # tutor = 'Freddy Valle Velasquez'
+    # cargo = 'director'
+    # lugar = 'instituto de electrónica aplicada'
+    # institucion = 'facultad de ingeniería'
+# ===========================================
+# de la base de datos
+# ===========================================
+    nombre = info_estu[0]
+    carnet = info_estu[1]
+    extension = info_estu[2]
+    celular = info_estu[3]
+    correo = info_estu[4]
+    docente = info_estu[5]
+    tutor = info_estu[6]
+    cargo = info_estu[7]
+    lugar = info_estu[8]
+    institucion = info_estu[9]
 # ===========================================
     parrafo1_1 = 'Saludo a usted de mi mayor concideración y con todo respeto '
     parrafo1_2 = 'solicitar tutoría en la elaboración del Proyecto de Grado '

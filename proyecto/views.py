@@ -723,6 +723,7 @@ def salaRevisar(request, pk_sala):
     }
     return render(request, 'proyecto/sala_revisar.html', context)
 
+@login_required(login_url='login')
 def salaRevisarEstDoc(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -746,6 +747,7 @@ def salaRevisarEstDoc(request, pk_sala):
             }
     return render(request, 'proyecto/sala_revisar_est_doc.html', context)
 
+@login_required(login_url='login')
 def salaRevisarEstTut(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -769,18 +771,51 @@ def salaRevisarEstTut(request, pk_sala):
             }
     return render(request, 'proyecto/sala_revisar_est_tut.html', context)
 
+@login_required(login_url='login')
 def carta_aceptacion_tutor(request):
     buffer = io.BytesIO()
-    carta_aceptacion(buffer)
+    estudiante = request.user.datosestudiante
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    extension = 'L.P.'
+    titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
+    info_estu = [
+            estudiante.__str__(),
+            estudiante.carnet,
+            extension,
+            estudiante.tutor.celular,
+            estudiante.tutor.correo,
+            estudiante.grupo_doc.__str__(),
+            estudiante.tutor.__str__(),
+            titulo_perfil
+            ]
+    carta_aceptacion(buffer, info_estu)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
 
+@login_required(login_url='login')
 def carta_solicitud_tutor(request):
     buffer = io.BytesIO()
-    carta_solicitud(buffer)
+    estudiante = request.user.datosestudiante
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    extension = 'L.P.'
+    cargo = 'director'
+    lugar = 'instituto de electrónica aplicada'
+    institucion = 'facultad de ingeniería'
+    info_estu = [
+            estudiante.__str__(),
+            estudiante.carnet,
+            extension,
+            estudiante.celular,
+            estudiante.correo,
+            estudiante.grupo_doc.__str__(),
+            estudiante.tutor.__str__(),
+            cargo, lugar, institucion, 
+            ]
+    carta_solicitud(buffer, info_estu)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_solicitud.pdf')
 
+@login_required(login_url='login')
 def registro_perfil(request):
     grupo = request.user.groups.get().name
     usuario = request.user
