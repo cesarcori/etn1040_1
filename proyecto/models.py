@@ -148,3 +148,10 @@ class Reglamento(models.Model):
     def __str__(self):
         return self.archivo.name
 
+class RegistroPerfil(models.Model):
+    usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=50, null=True)
+    resumen = models.TextField(blank=True, null=True)
+    cronograma = models.TextField(blank=True, null=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+

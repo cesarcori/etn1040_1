@@ -53,6 +53,8 @@ urlpatterns = [
         name='carta_aceptacion_tutor'),
     path('paso4/carta-solicitud/', views.carta_solicitud_tutor,
         name='carta_solicitud_tutor'),
+    path('paso4/registro-perfil/', views.registro_perfil,
+        name='registro_perfil'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     

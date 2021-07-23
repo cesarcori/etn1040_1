@@ -769,14 +769,6 @@ def salaRevisarEstTut(request, pk_sala):
             }
     return render(request, 'proyecto/sala_revisar_est_tut.html', context)
 
-# def carta_aceptacion(request):
-    # buffer = io.BytesIO()
-    # carta_aceptacion(buffer)
-    # buffer.seek(0)
-    # return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
-# import io
-# from django.http import FileResponse
-# from fpdf import FPDF
 def carta_aceptacion_tutor(request):
     buffer = io.BytesIO()
     carta_aceptacion(buffer)
@@ -788,6 +780,23 @@ def carta_solicitud_tutor(request):
     carta_solicitud(buffer)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_solicitud.pdf')
+
+def registro_perfil(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    if request.method == "POST":
+        form= RegistroPerfilForm(request.POST)
+        if form.is_valid():
+            file = form.save(commit=False)
+            file.sala = info_estu
+            file.usuario = usuario
+            file.save()
+    else:
+        form = RegistroPerfilForm()
+    context = {'grupo': grupo, 
+            'form':form,
+    }
+    return render(request, 'proyecto/registro_perfil.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
