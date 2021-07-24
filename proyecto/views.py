@@ -640,7 +640,9 @@ def paso3(request):
 @allowed_users(allowed_roles=['estudiante'])
 def paso4(request):
     grupo = request.user.groups.get().name
-    context = {'grupo': grupo}
+    estudiante = request.user.datosestudiante
+    registro_perfil_existe = RegistroPerfil.objects.filter(usuario=estudiante).exists()
+    context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,}
     return render(request, 'proyecto/estudiante_paso4.html', context)
 
 @login_required(login_url='login')
@@ -811,27 +813,35 @@ def carta_solicitud_tutor(request):
             estudiante.tutor.__str__(),
             cargo, lugar, institucion, 
             ]
-    carta_solicitud(buffer, info_estu)
+    carta_solicitud(buffer,info_estu)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_solicitud.pdf')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
 def registro_perfil(request):
     grupo = request.user.groups.get().name
-    usuario = request.user
+    estudiante = request.user.datosestudiante
     if request.method == "POST":
         form= RegistroPerfilForm(request.POST)
         if form.is_valid():
             file = form.save(commit=False)
-            file.sala = info_estu
-            file.usuario = usuario
+            file.usuario = estudiante
             file.save()
+            return render(request, 'proyecto/exito_registro_perfil.html')
     else:
         form = RegistroPerfilForm()
-    context = {'grupo': grupo, 
-            'form':form,
-    }
+    context = {'grupo': grupo, 'form':form,}
     return render(request, 'proyecto/registro_perfil.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def ver_perfil_registrado(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    perfil = RegistroPerfil.objects.get(usuario=estudiante)
+    context = {'grupo': grupo,'perfil':perfil}
+    return render(request, 'proyecto/ver_perfil_registrado.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

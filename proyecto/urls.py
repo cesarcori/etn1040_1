@@ -55,6 +55,8 @@ urlpatterns = [
         name='carta_solicitud_tutor'),
     path('paso4/registro-perfil/', views.registro_perfil,
         name='registro_perfil'),
+    path('paso4/perfil-registrado/', views.ver_perfil_registrado,
+        name='ver_perfil_registrado'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     

@@ -159,11 +159,14 @@ class RegistroPerfilForm(forms.ModelForm):
     class Meta:
         model = RegistroPerfil
         fields = '__all__'
-        exclude = ['usuario','cronograma']
-        # widgets = {
-                # 'texto': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    # 'placeholder':'Correcciones que debe realizar...'}), 
-                # }
-        # labels = {
-                # 'texto': ''
-                # }
+        exclude = ['usuario',]
+        widgets = {
+                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        'placeholder':'Copia el título del perfil...'}),
+                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Copia el resumen del perfil...'}), 
+                }
+        labels = {
+                'titulo': 'Titulo del Perfil',
+                'resumen': 'Resumen del Perfil',
+                }
