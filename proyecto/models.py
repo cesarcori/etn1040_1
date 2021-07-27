@@ -155,3 +155,15 @@ class RegistroPerfil(models.Model):
     # cronograma = models.TextField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
+class Formularios(models.Model):
+    archivo = models.FileField(upload_to='formularios/', null=True,
+            blank=True, validators=[validate_file_extension])
+
+class RegistroCronograma(models.Model):
+    usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    actividad = models.CharField(max_length=200, null=True)
+    # semana = models.CharField(max_length=3, null=True)
+    semana_inicial = models.PositiveSmallIntegerField(null=True, blank=True)
+    semana_final= models.PositiveSmallIntegerField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+

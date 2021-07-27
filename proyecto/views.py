@@ -10,6 +10,7 @@ from .decorators import unauthenticated_user, allowed_users, admin_only
 from .forms import *
 from .models import *
 from .cartas import *
+from .formularios import *
 
 from random import randint
 # busqueda
@@ -842,6 +843,68 @@ def ver_perfil_registrado(request):
     perfil = RegistroPerfil.objects.get(usuario=estudiante)
     context = {'grupo': grupo,'perfil':perfil}
     return render(request, 'proyecto/ver_perfil_registrado.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def cronograma_registro(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    cronograma = RegistroCronograma.objects.filter(usuario=estudiante)
+    if cronograma.exists():
+        max_semana = range(1,1+max([n.semana_final for n in cronograma]))
+        vector_final = []
+        for c in cronograma:
+            # print(cronograma[n-1])
+            print(c.semana_inicial, c.semana_final)
+            vector = []
+            for n in max_semana:
+                if n < c.semana_inicial or n > c.semana_final:
+                    vector.append(' ')
+                else:
+                    vector.append('*')
+            vector_final.append(vector)
+        dicc_crono = {}
+        for n in range(len(cronograma)):
+            dicc_crono[cronograma[n]] = vector_final[n]
+        print(dicc_crono)
+    else:
+        max_semana = range(0)
+    if request.method == "POST":
+        form= RegistroCronogramaForm(request.POST)
+        if form.is_valid():
+            file = form.save(commit=False)
+            file.usuario = estudiante
+            file.save()
+            return redirect('cronograma_registro')
+    else:
+        form = RegistroCronogramaForm()
+        context = {'grupo': grupo,'form':form,'cronograma':cronograma, 
+                'max_semana': max_semana,'vector_final':vector_final,
+                'dicc_crono':dicc_crono}
+        return render(request, 'proyecto/cronograma_registro.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def formulario_1(request):
+    buffer = io.BytesIO()
+    estudiante = request.user.datosestudiante
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    extension = 'L.P.'
+    cargo = 'director'
+    lugar = 'instituto de electrónica aplicada'
+    institucion = 'facultad de ingeniería'
+    info_estu = [
+            estudiante.__str__(),
+            estudiante.carnet,
+            extension,
+            estudiante.tutor.__str__(),
+            estudiante.grupo_doc.__str__(),
+            estudiante.registroperfil.titulo,
+            estudiante.mencion,
+            ]
+    formulario1(buffer,info_estu)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='formulario_1.pdf')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

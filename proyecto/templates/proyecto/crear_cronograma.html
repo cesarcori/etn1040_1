@@ -1,0 +1,7 @@
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}<p><p>
+    <a class="btn btn-danger" href={%url 'paso4'%}>Atras</a>
+    <button type="submit" name='enviar' class="btn btn-success"
+        value='enviar'>Agregar</button>
+</form>

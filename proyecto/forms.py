@@ -170,3 +170,22 @@ class RegistroPerfilForm(forms.ModelForm):
                 'titulo': 'Titulo del Perfil',
                 'resumen': 'Resumen del Perfil',
                 }
+
+class RegistroCronogramaForm(forms.ModelForm):
+    solo_numero = RegexValidator(r'^([1-9]|10){1,3}$', 'solo se admite 3 digitos')
+    class Meta:
+        model = RegistroCronograma
+        fields = '__all__'
+        exclude = ['usuario',]
+        widgets = {
+                'actividad': forms.TextInput(attrs={
+                        'placeholder':'Actividad a elaborar'}),
+                # 'semana': forms.TextInput(attrs={
+                        # 'placeholder':'Semana'}),
+                }
+        labels = {
+                'actividad': '',
+                # 'semana_inicial': 'Semana',
+                # 'semana_inicial': 'Semana',
+                }
+    # semana = forms.CharField(validators=[solo_numero])

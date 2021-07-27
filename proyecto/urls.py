@@ -57,6 +57,10 @@ urlpatterns = [
         name='registro_perfil'),
     path('paso4/perfil-registrado/', views.ver_perfil_registrado,
         name='ver_perfil_registrado'),
+    path('paso4/cronograma-registro/', views.cronograma_registro,
+        name='cronograma_registro'),
+    path('paso4/formulario-aprobacion/', views.formulario_1,
+        name='formulario_1'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     
