@@ -855,7 +855,6 @@ def cronograma_registro(request):
         vector_final = []
         for c in cronograma:
             # print(cronograma[n-1])
-            print(c.semana_inicial, c.semana_final)
             vector = []
             for n in max_semana:
                 if n < c.semana_inicial or n > c.semana_final:
@@ -866,9 +865,9 @@ def cronograma_registro(request):
         dicc_crono = {}
         for n in range(len(cronograma)):
             dicc_crono[cronograma[n]] = vector_final[n]
-        print(dicc_crono)
     else:
         max_semana = range(0)
+        dicc_crono = {}
     if request.method == "POST":
         form= RegistroCronogramaForm(request.POST)
         if form.is_valid():
@@ -879,9 +878,15 @@ def cronograma_registro(request):
     else:
         form = RegistroCronogramaForm()
         context = {'grupo': grupo,'form':form,'cronograma':cronograma, 
-                'max_semana': max_semana,'vector_final':vector_final,
+                'max_semana': max_semana,
                 'dicc_crono':dicc_crono}
         return render(request, 'proyecto/cronograma_registro.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def eliminar_actividad(request, id_act):
+    RegistroCronograma.objects.get(id=id_act).delete()
+    return redirect('cronograma_registro')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -923,6 +928,7 @@ def paso6(request):
     # with open('material_docente/'+f.name, 'wb+') as destination:  
         # for chunk in f.chunks():
             # destination.write(chunk)  
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
 def materialParaEst(request):

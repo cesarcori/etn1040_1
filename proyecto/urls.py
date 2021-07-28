@@ -61,6 +61,8 @@ urlpatterns = [
         name='cronograma_registro'),
     path('paso4/formulario-aprobacion/', views.formulario_1,
         name='formulario_1'),
+    path('paso4/eliminar-actividad/<int:id_act>', views.eliminar_actividad,
+        name='eliminar_actividad'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     
