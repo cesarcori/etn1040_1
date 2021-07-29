@@ -1,0 +1,13 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h4>¿Esta seguro de registrar?</h4>
+<h4>Una vez registrado el cronograma ya</h4>
+<h4>no se podrá modificar el cronograma</h4>
+{% comment %}<a class="btn btn-success" href={%url 'cronograma_registro' %}>Registrar</a>{% endcomment %}
+<form action='' method='POST'>
+    {% csrf_token %}
+    <a class="btn btn-danger" href={%url 'cronograma_registro' %}>Cancelar</a>
+    <button type="submit" name='registrar' class="btn btn-success" 
+        value='Registrado'>Registrar</button>
+</form> 
+{% endblock %}

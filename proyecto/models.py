@@ -98,6 +98,7 @@ class DatosEstudiante(models.Model):
     registro_uni = models.CharField(max_length=50, null=True, unique=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
+    cronograma = models.CharField(max_length=50, null=True)
     grupo_doc = models.ForeignKey(DatosDocente,on_delete=models.SET(''), null=True)
     tutor = models.ForeignKey(DatosTutor,on_delete=models.SET(''), null=True)
     # nombre_sala_docente = models.CharField(max_length=50 null=True)

@@ -850,6 +850,10 @@ def cronograma_registro(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     cronograma = RegistroCronograma.objects.filter(usuario=estudiante)
+    if estudiante.cronograma == None:
+        existe_cronograma = False
+    else:
+        existe_cronograma = True
     if cronograma.exists():
         max_semana = range(1,1+max([n.semana_final for n in cronograma]))
         vector_final = []
@@ -879,8 +883,22 @@ def cronograma_registro(request):
         form = RegistroCronogramaForm()
         context = {'grupo': grupo,'form':form,'cronograma':cronograma, 
                 'max_semana': max_semana,
-                'dicc_crono':dicc_crono}
+                'dicc_crono':dicc_crono,
+                'existe_cronograma': existe_cronograma}
         return render(request, 'proyecto/cronograma_registro.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def cronograma_confirmar(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    if request.method == "POST":
+        registrar = request.POST.get('registrar')
+        estudiante.cronograma = registrar
+        estudiante.save()
+        return redirect('cronograma_registro')
+    context = {'grupo': grupo,} 
+    return render(request, 'proyecto/cronograma_confirmar.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

@@ -63,6 +63,8 @@ urlpatterns = [
         name='formulario_1'),
     path('paso4/eliminar-actividad/<int:id_act>', views.eliminar_actividad,
         name='eliminar_actividad'),
+    path('paso4/cronograma-registro/confirmar', views.cronograma_confirmar,
+        name='cronograma_confirmar'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso6/', views.paso6, name='paso6'),
     

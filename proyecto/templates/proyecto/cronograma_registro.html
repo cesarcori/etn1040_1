@@ -1,7 +1,15 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h4>Registrar Cronograma del Proyecto de Grado</h4>
+
+{% if existe_cronograma %}
+<a class="btn btn-danger" href={%url 'paso4' %}>Atras</a><p>
+{% endif %}
+
+{% if not existe_cronograma %}
 {% include 'proyecto/crear_cronograma.html'%}
+{% endif %}
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -15,8 +23,10 @@
   <tbody>
 {% for c, vector in dicc_crono.items %}
     <th scope="row">
+    {% if not existe_cronograma %}
     <a class="btn btn-danger" href={%url 'eliminar_actividad' c.id %}>X</a></th>
-    <th scope="row">{{c.actividad}}</th>
+    {% endif %}
+    <th scope="row">{{c.actividad.title}}</th>
     {% for s in vector %}
         <td>{{s}}</td>
     {% endfor %}
@@ -24,4 +34,7 @@
 {% endfor %}          
   </tbody>
 </table>
+{% if not existe_cronograma %}
+<a class="btn btn-warning" href={%url 'cronograma_confirmar' %}>Registrar Cronograma</a>
+{% endif %}
 {% endblock %}
