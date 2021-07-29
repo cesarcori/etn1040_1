@@ -888,6 +888,55 @@ def cronograma_registro(request):
         return render(request, 'proyecto/cronograma_registro.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
+def ver_cronograma(request, id_est):
+    grupo = request.user.groups.get().name
+    if grupo == 'tutor':
+        estudiante = request.user.datostutor.datosestudiante_set.get(id=id_est)
+    elif grupo == 'docente':
+        estudiante = request.user.datosdocente.datosestudiante_set.get(id=id_est)
+    print(estudiante)
+    cronograma = RegistroCronograma.objects.filter(usuario=estudiante)
+    print(estudiante.cronograma)
+    if estudiante.cronograma == None:
+        existe_cronograma = False
+    else:
+        existe_cronograma = True
+    if cronograma.exists():
+        max_semana = range(1,1+max([n.semana_final for n in cronograma]))
+        vector_final = []
+        for c in cronograma:
+            # print(cronograma[n-1])
+            vector = []
+            for n in max_semana:
+                if n < c.semana_inicial or n > c.semana_final:
+                    vector.append(' ')
+                else:
+                    vector.append('*')
+            vector_final.append(vector)
+        dicc_crono = {}
+        for n in range(len(cronograma)):
+            dicc_crono[cronograma[n]] = vector_final[n]
+    else:
+        max_semana = range(0)
+        dicc_crono = {}
+    # if request.method == "POST":
+        # form= RegistroCronogramaForm(request.POST)
+        # if form.is_valid():
+            # file = form.save(commit=False)
+            # file.usuario = estudiante
+            # file.save()
+            # return redirect('cronograma_registro')
+    # else:
+        # form = RegistroCronogramaForm()
+    context = {'grupo': grupo,'cronograma':cronograma, 
+            'max_semana': max_semana,
+            'estudiante': estudiante,
+            'dicc_crono': dicc_crono,
+            'existe_cronograma': existe_cronograma}
+    return render(request, 'proyecto/cronograma_registro.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 def cronograma_confirmar(request):
     grupo = request.user.groups.get().name

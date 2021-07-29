@@ -23,6 +23,7 @@ urlpatterns = [
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
     path('progreso-est/<int:pk_est>', views.progresoEstudiante, name='progreso_estudiante'),
+    path('progreso-est/crono/<int:id_est>', views.ver_cronograma, name='ver_cronograma'),
     path('info-solicitante/<int:pk_sol>', views.enlaceSolicitante,
         name='enlace_solicitante'),
     path('info-doc/<int:pk_doc>/', views.enlaceDocente, name='enlace_docente'),
