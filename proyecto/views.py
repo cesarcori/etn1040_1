@@ -846,14 +846,15 @@ def ver_perfil_registrado(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-def cronograma_registro(request):
+def cronograma_actividad(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    cronograma = RegistroCronograma.objects.filter(usuario=estudiante)
-    if estudiante.cronograma == None:
-        existe_cronograma = False
-    else:
-        existe_cronograma = True
+    cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
+    existe_cronograma = RegistroCronograma.objects.filter(usuario=estudiante).exists()
+    if existe_cronograma:
+        registro_cronograma = RegistroCronograma.objects.get(usuario=estudiante)
+    else: 
+        registro_cronograma = ''
     if cronograma.exists():
         max_semana = range(1,1+max([n.semana_final for n in cronograma]))
         vector_final = []
@@ -873,19 +874,20 @@ def cronograma_registro(request):
         max_semana = range(0)
         dicc_crono = {}
     if request.method == "POST":
-        form= RegistroCronogramaForm(request.POST)
+        form= ActividadesCronogramaForm(request.POST)
         if form.is_valid():
             file = form.save(commit=False)
             file.usuario = estudiante
             file.save()
-            return redirect('cronograma_registro')
+            return redirect('cronograma_actividad')
     else:
-        form = RegistroCronogramaForm()
+        form = ActividadesCronogramaForm()
         context = {'grupo': grupo,'form':form,'cronograma':cronograma, 
                 'max_semana': max_semana,
                 'dicc_crono':dicc_crono,
+                'registro_cronograma': registro_cronograma,
                 'existe_cronograma': existe_cronograma}
-        return render(request, 'proyecto/cronograma_registro.html', context)
+        return render(request, 'proyecto/cronograma_actividad.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
@@ -895,13 +897,8 @@ def ver_cronograma(request, id_est):
         estudiante = request.user.datostutor.datosestudiante_set.get(id=id_est)
     elif grupo == 'docente':
         estudiante = request.user.datosdocente.datosestudiante_set.get(id=id_est)
-    print(estudiante)
-    cronograma = RegistroCronograma.objects.filter(usuario=estudiante)
-    print(estudiante.cronograma)
-    if estudiante.cronograma == None:
-        existe_cronograma = False
-    else:
-        existe_cronograma = True
+    cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
+    existe_cronograma = RegistroCronograma.objects.filter(usuario=estudiante).exists()
     if cronograma.exists():
         max_semana = range(1,1+max([n.semana_final for n in cronograma]))
         vector_final = []
@@ -920,40 +917,42 @@ def ver_cronograma(request, id_est):
     else:
         max_semana = range(0)
         dicc_crono = {}
-    # if request.method == "POST":
-        # form= RegistroCronogramaForm(request.POST)
-        # if form.is_valid():
-            # file = form.save(commit=False)
-            # file.usuario = estudiante
-            # file.save()
-            # return redirect('cronograma_registro')
-    # else:
-        # form = RegistroCronogramaForm()
+    # fecha del registro
+    registro_cronograma = RegistroCronograma.objects.get(usuario=estudiante)
     context = {'grupo': grupo,'cronograma':cronograma, 
             'max_semana': max_semana,
             'estudiante': estudiante,
             'dicc_crono': dicc_crono,
+            'registro_cronograma': registro_cronograma,
             'existe_cronograma': existe_cronograma}
-    return render(request, 'proyecto/cronograma_registro.html', context)
+    return render(request, 'proyecto/cronograma_actividad.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-def cronograma_confirmar(request):
+def cronograma_registrar(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    # if request.method == "POST":
+        # registrar = request.POST.get('registrar')
+        # estudiante.cronograma = registrar
+        # estudiante.save()
+        # return redirect('cronograma_actividad')
     if request.method == "POST":
-        registrar = request.POST.get('registrar')
-        estudiante.cronograma = registrar
-        estudiante.save()
-        return redirect('cronograma_registro')
-    context = {'grupo': grupo,} 
-    return render(request, 'proyecto/cronograma_confirmar.html', context)
+        form= RegistroCronogramaForm(request.POST)
+        if form.is_valid():
+            file = form.save(commit=False)
+            file.usuario = estudiante
+            file.save()
+            return redirect('cronograma_actividad')
+    form= RegistroCronogramaForm()
+    context = {'grupo': grupo,'form':form} 
+    return render(request, 'proyecto/cronograma_registrar.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 def eliminar_actividad(request, id_act):
-    RegistroCronograma.objects.get(id=id_act).delete()
-    return redirect('cronograma_registro')
+    ActividadesCronograma.objects.get(id=id_act).delete()
+    return redirect('cronograma_actividad')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

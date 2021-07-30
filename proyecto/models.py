@@ -39,9 +39,6 @@ class DatosDocente(models.Model):
 class MaterialDocente(models.Model):
     propietario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     material_docente = models.FileField(upload_to='material_docente/', null=True)
-    # material_docente = models.FileField(null=True, blank=True)
-    # def __str__(self):
-        # return self.propietario.first_name
 
 class MaterialEstudiante(models.Model):
     sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
@@ -160,11 +157,14 @@ class Formularios(models.Model):
     archivo = models.FileField(upload_to='formularios/', null=True,
             blank=True, validators=[validate_file_extension])
 
-class RegistroCronograma(models.Model):
+class ActividadesCronograma(models.Model):
     usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     actividad = models.CharField(max_length=200, null=True)
-    # semana = models.CharField(max_length=3, null=True)
     semana_inicial = models.PositiveSmallIntegerField(null=True, blank=True)
     semana_final= models.PositiveSmallIntegerField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+
+class RegistroCronograma(models.Model):
+    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 

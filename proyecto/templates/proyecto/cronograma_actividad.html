@@ -1,13 +1,13 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h4>Registrar Cronograma del Proyecto de Grado</h4>
 
-{% if existe_cronograma and grupo == 'estudiante'%}
-<a class="btn btn-danger" href={%url 'paso4' %}>Atras</a><p>
+{% if not existe_cronograma %}
+<h4>Registrar Cronograma del Proyecto de Grado</h4>
 {% endif %}
 
-{% if grupo == 'docente' or grupo == 'tutor'%}
-<a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.id %}>Atras</a><p>
+{% if existe_cronograma %}
+<h4>Cronograma del Proyecto de Grado</h4>
+<h5>Registrado el: {{registro_cronograma.fecha_creacion}}</h5>
 {% endif %}
 
 
@@ -18,7 +18,9 @@
 <table class="table table-striped">
   <thead>
     <tr>
+    {% if not existe_cronograma %}
       <th scope="col">*</th>
+    {% endif %}
       <th scope="col">Semanas</th>
 {% for r in max_semana %}
 <th scope="col">S{{r}}</th>
@@ -27,8 +29,8 @@
   </thead>
   <tbody>
 {% for c, vector in dicc_crono.items %}
-    <th scope="row">
     {% if not existe_cronograma %}
+    <th scope="row">
     <a class="btn btn-danger" href={%url 'eliminar_actividad' c.id %}>X</a></th>
     {% endif %}
     <th scope="row">{{c.actividad.title}}</th>
@@ -40,6 +42,16 @@
   </tbody>
 </table>
 {% if not existe_cronograma %}
-<a class="btn btn-warning" href={%url 'cronograma_confirmar' %}>Registrar Cronograma</a>
+<a class="btn btn-warning" href={%url 'cronograma_registrar' %}>Registrar Cronograma</a>
 {% endif %}
+
+{% comment %}botton atras{% endcomment %}
+{% if existe_cronograma and grupo == 'estudiante'%}
+<a class="btn btn-danger" href={%url 'paso4' %}>Atras</a><p>
+{% endif %}
+
+{% if grupo == 'docente' or grupo == 'tutor'%}
+<a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.id %}>Atras</a><p>
+{% endif %}
+
 {% endblock %}
