@@ -195,3 +195,18 @@ class RegistroCronogramaForm(forms.ModelForm):
         model = RegistroCronograma
         fields = '__all__'
         exclude = ['usuario',]
+
+class FechasForm(forms.ModelForm):
+    class Meta:
+        model = Fechas
+        fields = '__all__'
+        exclude = ['usuario',]
+        # widgets = {
+                # 'actividad': forms.TextInput(attrs={
+                        # 'placeholder':'Actividad a elaborar'}),
+                # # 'semana': forms.TextInput(attrs={
+                        # # 'placeholder':'Semana'}),
+                # }
+        # labels = {
+                # 'actividad': '',
+                # }

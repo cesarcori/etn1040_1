@@ -47,7 +47,8 @@
 
 {% comment %}botton atras{% endcomment %}
 {% if existe_cronograma and grupo == 'estudiante'%}
-<a class="btn btn-danger" href={%url 'paso4' %}>Atras</a><p>
+<a class="btn btn-danger" href="{{ request.META.HTTP_REFERER}} ">Atras</a><p>
+
 {% endif %}
 
 {% if grupo == 'docente' or grupo == 'tutor'%}

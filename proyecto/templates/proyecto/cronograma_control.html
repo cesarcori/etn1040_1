@@ -1,0 +1,16 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h4>Control del cronograma:</h4>
+<p>
+Registro: {{fecha}} <p>
+Han pasado: {{semanas}} semanas y {{dias}} días <p>
+Actividad a realizar:<p>
+
+{% for actividad in actividades %}
+<ul>{{actividad.capitalize}}</ul>
+{% endfor %}
+
+<a href={%url 'cronograma_actividad'%}>Ver Cronograma</a><p>
+<p>
+<a class="btn btn-danger" href={%url 'paso5' %}>Atras</a><p>
+{% endblock %}

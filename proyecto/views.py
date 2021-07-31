@@ -13,6 +13,7 @@ from .cartas import *
 from .formularios import *
 
 from random import randint
+from datetime import timedelta
 # busqueda
 # import pandas as pd
 # from sklearn.feature_extraction.text import TfidfVectorizer
@@ -932,11 +933,6 @@ def ver_cronograma(request, id_est):
 def cronograma_registrar(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    # if request.method == "POST":
-        # registrar = request.POST.get('registrar')
-        # estudiante.cronograma = registrar
-        # estudiante.save()
-        # return redirect('cronograma_actividad')
     if request.method == "POST":
         form= RegistroCronogramaForm(request.POST)
         if form.is_valid():
@@ -986,14 +982,58 @@ def paso5(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+def cronograma_control(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
+    fecha = RegistroCronograma.objects.get(usuario=estudiante).fecha_creacion
+    # de semanas a dias:
+    max_semana = range(1,1+max([n.semana_final for n in cronograma]))
+    vector_final = []
+    for c in cronograma:
+        vector = []
+        for n in max_semana:
+            if n < c.semana_inicial or n > c.semana_final:
+                vector.append(' ')
+            else:
+                vector.append('*')
+        vector_final.append(vector)
+    dicc_crono = {}
+    for n in range(len(cronograma)):
+        dicc_crono[cronograma[n]] = vector_final[n]
+    semana_actividad = {}
+    for semana in max_semana:
+        vec_actividad = []
+        for actividad in cronograma:
+            if semana >= actividad.semana_inicial and semana <= actividad.semana_final:
+                vec_actividad.append(actividad.actividad)
+        semana_actividad[semana] = vec_actividad
+    # fecha = estudiante.fecha_inscripcion
+    dias_delta = date.today() - fecha.date()
+    dias_delta = dias_delta + timedelta(8)
+    # dias a semanas:
+    semanas = dias_delta.days // 7
+    dias = dias_delta.days % 7
+
+    # semanas actividad
+    if semanas == 0:
+        num_semana = 1
+    else:
+        num_semana = semanas
+    actividades = semana_actividad[num_semana]
+
+    fecha = RegistroCronograma.objects.get(usuario=estudiante).fecha_creacion
+    context = {'grupo': grupo, 'cronograma': cronograma, 'fecha': fecha,
+            'semanas': semanas, 'dias': dias, 
+            'actividades': actividades}
+    return render(request, 'proyecto/cronograma_control.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
 def paso6(request):
     grupo = request.user.groups.get().name
     context = {'grupo': grupo}
     return render(request, 'proyecto/estudiante_paso6.html', context)
-# def handle_uploaded_file(f):  
-    # with open('material_docente/'+f.name, 'wb+') as destination:  
-        # for chunk in f.chunks():
-            # destination.write(chunk)  
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])

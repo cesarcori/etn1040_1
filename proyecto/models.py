@@ -168,3 +168,9 @@ class RegistroCronograma(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
+class Fechas(models.Model):
+    usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    actividad = models.CharField(max_length=200, null=True)
+    fecha_inicial = models.DateField(null=True, blank=True)
+    fecha_final= models.DateField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
