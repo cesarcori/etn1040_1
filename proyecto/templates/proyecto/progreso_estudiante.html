@@ -12,17 +12,18 @@
 <a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.id %}>Ver Cronograma</a>
 <p>
 
+{% comment %}********* PROYECTO DE GRADO **************{% endcomment %}
 <table class="table table-striped table-hover">
   <thead>
     <tr>
       <th scope="col">Revisión</th>
-      <th scope="col">Texto</th>
-      <th scope="col">Perfil</th>
+      <th scope="col">Asunto</th>
+      <th scope="col">Proyecto</th>
       <th scope="col">Revisar</th>
     </tr>
   </thead>
   <tbody>
-{%for s in salas%}
+{%for s in salas_proy%}
     <tr>
 <td>
 <button class="btn btn-danger">{{s.sala}}</button>
@@ -45,12 +46,53 @@
     <a class="btn btn-danger" href="{{ s.material_estudiante.url }}">Archivo</a>
 </td>
 <td>
+<a class="btn btn-primary" href="{% url 'sala_revisar_proyecto' s.id %}">Revisar</a>
+</td>      
+
+    </tr>
+{%endfor%}
+  </tbody>
+</table>
+
+
+
+{% comment %}********* PERFIL **************{% endcomment %}
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Revisión</th>
+      <th scope="col">Asunto</th>
+      <th scope="col">Perfil</th>
+      <th scope="col">Revisar</th>
+    </tr>
+  </thead>
+  <tbody>
+{%for s in salas%}
+    <tr>
+<td>
+<button class="btn btn-danger">{{s.sala}}</button>
+</td>      
+
+<td>
+<p>
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      Asunto
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+      {{s.texto}}
+  </div>
+</div>
+</td>      
+
+<td>
+    <a class="btn btn-danger" href="{{ s.material_estudiante.url }}">Archivo</a>
+</td>
+<td>
 <a class="btn btn-primary" href="{% url 'sala_revisar' s.id %}">Revisar</a>
 </td>      
 
-{% comment %}<td>{% endcomment %}
-{% comment %}<a href={%url 'sala_revisar' s.id %}>{{s.sala}}</a>{% endcomment %}
-{% comment %}</td>      {% endcomment %}
     </tr>
 {%endfor%}
   </tbody>
@@ -58,19 +100,6 @@
 
 <a class="btn btn-danger" href='/'> Atras</a>
 
-{% comment %}<div class="card">{% endcomment %}
-    {% comment %}<h5>    {% endcomment %}
-        {% comment %}<div class="card-header">{% endcomment %}
-        {% comment %}{{info_estu.sala}}{% endcomment %}
-        {% comment %}</div>{% endcomment %}
-    {% comment %}</h5>{% endcomment %}
-  {% comment %}<div class="card-body">{% endcomment %}
-    {% comment %}<p class="card-text">{{info_estu.texto}}</p>{% endcomment %}
-  {% comment %}</div>{% endcomment %}
-  {% comment %}<div class="card-footer bg-transparent ">{% endcomment %}
-    {% comment %}<a href="{{ info_estu.material_estudiante.url }}" class="card-link">Archivo</a>{% endcomment %}
-  {% comment %}</div>{% endcomment %}
-{% comment %}</div>{% endcomment %}
 <br>
 {% endblock %}
 

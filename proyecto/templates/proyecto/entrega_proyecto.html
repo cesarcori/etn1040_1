@@ -1,14 +1,14 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <p>
-<a class="btn btn-primary" href="{% url 'crear_sala' %}">Crear Revisión</a><br>
+<a class="btn btn-primary" href="{% url 'crear_sala_proyecto' %}">Crear Revisión</a><br>
 
 <table class="table table-striped table-hover">
   <thead>
     <tr>
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
-      <th scope="col">Perfil</th>
+      <th scope="col">Proyecto</th>
       <th scope="col">Docente</th>
       <th scope="col">Tutor</th>
     </tr>
@@ -17,7 +17,6 @@
 {%for s in salas%}
     <tr>
 <td>
-{% comment %}<a href={%url 'sala_revisar' s.id %}>{{s.sala}}</a>{% endcomment %}
 <button class="btn btn-danger">{{s.sala}}</button>
 </td>      
 
@@ -40,16 +39,16 @@
     <a class="btn btn-danger" href="{{ s.material_estudiante.url }}">Archivo</a>
 </td>      
 <td>
-<a class="btn btn-primary" href="{% url 'sala_revisar_est_doc' s.id %}">Revisión</a>
+<a class="btn btn-primary" href="{% url 'sala_revisar_proy_est_doc' s.id %}">Revisión</a>
 </td>      
 <td>
-<a class="btn btn-danger" href="{% url 'sala_revisar_est_tut' s.id %}">Revisión</a>
+<a class="btn btn-danger" href="{% url 'sala_revisar_proy_est_tut' s.id %}">Revisión</a>
 </td>      
     </tr>
 {%endfor%}
   </tbody>
 </table>
-<a class="btn btn-danger" href={%url 'paso4'%}>Atras</a>
+<a class="btn btn-danger" href="{% url 'paso5'%}">Atras</a><p>
 <p>
 
 {% endblock %}

@@ -1,31 +1,17 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <p>
-{% comment %}<form method='post' action="" >{% endcomment %}
-    {% comment %}{% csrf_token %}{% endcomment %}
-    {% comment %}<div class="input-group">{% endcomment %}
-    {% comment %}<span class="input-group-text">Sala</span>{% endcomment %}
-    {% comment %}<input type="text" name="nombre_sala" {% endcomment %}
-    {% comment %}placeholder="Escriba el nombre de la sala..." {% endcomment %}
-    {% comment %}aria-label="First name" class="form-control">{% endcomment %}
-    {% comment %}</div>{% endcomment %}
-{% comment %}<br>{% endcomment %}
-    {% comment %}<a class="btn btn-danger" href={%url 'entrega_perfil'%}>Cancelar</a>{% endcomment %}
-    {% comment %}<button type="submit" name='enviar' class="btn btn-success"{% endcomment %}
-        {% comment %}value='enviar'>Enviar</button>{% endcomment %}
-{% comment %}</form>{% endcomment %}
 
 <div class="mb-3">
     <form method="POST" action="" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <a class="btn btn-danger" href={%url 'entrega_perfil'%}>Atras</a>
+    <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
     <button type="submit" name='enviar' class="btn btn-success"
         value='enviar'>Enviar</button>
 </form>
 </div>
 {% for message in messages %}
-    {% comment %}<p id="messages">{{ message }}</p>{% endcomment %}
     <div class="alert alert-success text-center" role="alert">
         {{ message }}
     </div>
