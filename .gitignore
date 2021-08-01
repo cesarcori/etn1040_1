@@ -4,11 +4,9 @@
 __pycache__/
 db.sqlite3
 myvenv
-proyecto/migrations/
 /bin
 /lib
 pyvenv.cfg
-/account/migrations
 .DS_Store
 /reglamentos
 *.pdf
