@@ -1163,6 +1163,28 @@ def paso6(request):
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def carta_final_tutor(request):
+    buffer = io.BytesIO()
+    estudiante = request.user.datosestudiante
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    extension = 'L.P.'
+    titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
+    info_estu = [
+            estudiante.__str__(),
+            estudiante.carnet,
+            extension,
+            estudiante.tutor.celular,
+            estudiante.tutor.correo,
+            estudiante.grupo_doc.__str__(),
+            estudiante.tutor.__str__(),
+            titulo_perfil
+            ]
+    carta_final(buffer, info_estu)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='carta_final.pdf')
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
 def materialParaEst(request):
     grupo = request.user.groups.get().name

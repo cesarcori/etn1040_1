@@ -61,6 +61,7 @@ urlpatterns = [
     path('sala-rev-proy/tut/<int:pk_sala>/',views.salaRevisarProyEstTut, name='sala_revisar_proy_est_tut'),
 
     path('paso6/', views.paso6, name='paso6'),
+    path('paso6/carta-final/', views.carta_final_tutor, name='carta_final'),
     
     path('material-para-est/', views.materialParaEst, name='material_para_estudiante'),
 
