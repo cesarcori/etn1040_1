@@ -10,7 +10,19 @@
 <br>
 
 <a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.id %}>Ver Cronograma</a>
+{%if grupo == 'docente' and calificacion == None and not proyecto == None%}
+<a class="btn btn-success" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
+{%endif%}
+{%if grupo == 'docente' or grupo == 'tutor' and not calificacion == None%}
+<h5 class='text-center'>La calificacion del Proyecto de Grado es: </h5>
+<h3 class="text-center">* {{calificacion}} *</h3>
+{%endif%}
+{%if grupo == 'tutor' and calificacion == None and not proyecto == None%}
+<h5 class='text-center'>El docente aún no puso la nota</h5>
+<h5 class='text-center'>Pero el estudiante ya registró el Proyecto de Grado </h5>
+{%endif%}
 <p>
+
 
 {% comment %}********* PROYECTO DE GRADO **************{% endcomment %}
 <table class="table table-striped table-hover">

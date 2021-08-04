@@ -81,7 +81,6 @@ class MensajeEstudianteForm(forms.Form):
     para = forms.ChoiceField(choices=PARA)
 
 class MensajeForm(forms.Form):
-    # texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2, 'cols':25}))
     texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2,
         'class':'form-control', 'placeholder':'Escribe el mensaje...'}),
         label='')
@@ -91,38 +90,6 @@ class MaterialDocenteForm(forms.ModelForm):
         model = MaterialDocente
         fields = '__all__'
         exclude = ['propietario',]
-
-
-    # class Meta:
-        # model = MaterialEstudiante
-        # fields = '__all__'
-        # exclude = ['sala']
-        # widgets = {
-        # 'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
-# 'placeholder':'Escribe tus modificaciones que elaboraste en el perfil...',}),
-        # 'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
-                  # }
-        # labels = {
-                # 'texto': ('Enviar Perfil'),
-# 'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
-# amarillo'),
-                # }
-
-# class MaterialEstudianteProyectoForm(forms.ModelForm):
-    # class Meta:
-        # model = MaterialEstudianteProyecto
-        # fields = '__all__'
-        # exclude = ['sala']
-        # widgets = {
-        # # 'texto': forms.Textarea(attrs={'rows': 2, 'cols': 25}),
-        # 'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
-# 'placeholder':'Escribe tus modificaciones que elaboraste en el perfil...',}),
-        # 'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
-                  # }
-        # labels = {
-                # 'texto': ('Enviar Perfil'),
-# 'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
-# amarillo'),}
 
 class SalaRevisarForm(forms.ModelForm):
     class Meta:
@@ -200,9 +167,6 @@ class MensajeTutorRevisarForm(forms.ModelForm):
         labels = {
                 'texto': ''
                 }
-    # texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2,
-        # 'class':'form-control', 'placeholder':'Escribe el mensaje...'}),
-        # label='')
         
 class MensajeTutorRevisarProyectoForm(forms.ModelForm):
     class Meta:
@@ -215,9 +179,6 @@ class MensajeTutorRevisarProyectoForm(forms.ModelForm):
         labels = {
                 'texto': ''
                 }
-    # texto = forms.CharField(widget=forms.Textarea(attrs={'rows':2,
-        # 'class':'form-control', 'placeholder':'Escribe el mensaje...'}),
-        # label='')
 
 class RegistroPerfilForm(forms.ModelForm):
     class Meta:
@@ -244,15 +205,10 @@ class ActividadesCronogramaForm(forms.ModelForm):
         widgets = {
                 'actividad': forms.TextInput(attrs={
                         'placeholder':'Actividad a elaborar'}),
-                # 'semana': forms.TextInput(attrs={
-                        # 'placeholder':'Semana'}),
                 }
         labels = {
                 'actividad': '',
-                # 'semana_inicial': 'Semana',
-                # 'semana_inicial': 'Semana',
                 }
-    # semana = forms.CharField(validators=[solo_numero])
 
 class RegistroCronogramaForm(forms.ModelForm):
     class Meta:
@@ -260,3 +216,21 @@ class RegistroCronogramaForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['usuario',]
 
+class ProyectoDeGradoForm(forms.ModelForm):
+    class Meta:
+        model = ProyectoDeGrado
+        fields = '__all__'
+        exclude = ['usuario','calificacion']
+        widgets = {
+                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        'placeholder':'Copia el título del Proyecto de Grado...'}),
+                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Copia el resumen del Proyecto de Grado...'}), 
+                }
+        labels = {
+                'titulo': 'Titulo del Proyecto de Grado',
+                'resumen': 'Resumen del Proyecto de Grado',
+                }
+
+class CalificarProyectoForm(forms.Form):
+    calificacion = forms.IntegerField(min_value=1, max_value=100)

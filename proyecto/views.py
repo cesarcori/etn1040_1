@@ -371,8 +371,15 @@ def enlaceEstudiante(request, pk_est):
 @allowed_users(allowed_roles=['docente','tutor','administrador'])
 def progresoEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
-    progreso = str(50)
+    progreso = str(80)
     estudiante = DatosEstudiante.objects.get(id=pk_est)
+    if ProyectoDeGrado.objects.filter(usuario=estudiante).exists():
+        proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+        calificacion = proyecto.calificacion
+    else:
+        proyecto = None
+        calificacion = None
+    print(proyecto, calificacion)
     if grupo == 'docente':
         # evita que se un docente consulte otros estudiantes
         existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
@@ -387,6 +394,8 @@ def progresoEstudiante(request, pk_est):
                     'salas':salas,
                     'info_estu_proy':info_estu_proy,
                     'salas_proy':salas_proy,
+                    'proyecto': proyecto,
+                    'calificacion': calificacion,
                     }
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
@@ -404,6 +413,8 @@ def progresoEstudiante(request, pk_est):
                     'salas':salas,
                     'info_estu_proy':info_estu_proy,
                     'salas_proy':salas_proy,
+                    'proyecto': proyecto,
+                    'calificacion': calificacion,
                     }
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
@@ -435,9 +446,6 @@ def enlaceDocente(request, pk_doc):
             return render(request, 'proyecto/enlace_docente.html', context)
         else:
             return redirect('error_pagina')
-    # estudiantes = docente.datosestudiante_set.all()
-    # context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-    # return render(request, 'proyecto/enlace_docente.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','administrador','estudiante'])
@@ -1159,7 +1167,9 @@ def salaRevisarProyEstTut(request, pk_sala):
 @allowed_users(allowed_roles=['estudiante'])
 def paso6(request):
     grupo = request.user.groups.get().name
-    context = {'grupo': grupo}
+    estudiante = request.user.datosestudiante
+    proyecto_grado = ProyectoDeGrado.objects.filter(usuario=estudiante).exists()
+    context = {'grupo': grupo, 'proyecto_grado': proyecto_grado}
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
@@ -1185,20 +1195,67 @@ def carta_final_tutor(request):
     return FileResponse(buffer, as_attachment=True, filename='carta_final.pdf')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def registroProyecto(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    if request.method == 'POST':
+        form = ProyectoDeGradoForm(request.POST)
+        if form.is_valid():
+            file = form.save(commit=False)
+            file.usuario = estudiante
+            file.save()
+        return redirect('paso6')
+    else: 
+        form = ProyectoDeGradoForm
+    context = {'grupo': grupo,'form':form,}
+    return render(request, 'proyecto/registro_proyecto.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def ver_proyecto_grado(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+    context = {'grupo': grupo,'proyecto':proyecto}
+    return render(request, 'proyecto/ver_proyecto_grado.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente'])
+def calificarProyecto(request, id_est):
+    grupo = request.user.groups.get().name
+    usuario = request.user.datosdocente
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    if request.method == 'POST':
+        form = CalificarProyectoForm(request.POST)
+        calificacion_form = request.POST['calificacion']
+        proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+        proyecto.calificacion = calificacion_form
+        proyecto.save()
+        return redirect('progreso_estudiante',pk_est=id_est)
+    else: 
+        form = CalificarProyectoForm
+    context = {'grupo': grupo,'estudiante':estudiante, 'form': form}
+    return render(request, 'proyecto/calificar_proyecto.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def ultimosFormularios(request):
+    grupo = request.user.groups.get().name
+    context = {'grupo': grupo,}
+    return render(request, 'proyecto/ultimos_formularios.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
 def materialParaEst(request):
     grupo = request.user.groups.get().name
     usuario = request.user
     if request.method == 'POST':
-        # form = MaterialDocenteForm(request.POST, request.FILES,
-                # instance=propietario)
         form = MaterialDocenteForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.save(commit=False)
             file.propietario = usuario
             file.save()
-            # form.save()
-            # return redirect('material_para_estudiante')
     else: 
         form = MaterialDocenteForm
     material = MaterialDocente.objects.filter(propietario=request.user)

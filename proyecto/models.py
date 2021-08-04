@@ -86,12 +86,6 @@ class SalaRevisarProyecto(models.Model):
     def __str__(self):
         return self.sala
 
-# class CorregirPerfil(models.Model):
-    # docente_tutor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    # corregir_perfil = models.ForeignKey(MaterialEstudiante, null=True, blank=True, on_delete=models.CASCADE)
-    # material_para_corregir = models.FileField(upload_to='material_para_corregir/', null=True)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)
@@ -186,3 +180,9 @@ class RegistroCronograma(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
+class ProyectoDeGrado(models.Model):
+    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=200, null=True)
+    resumen = models.TextField(blank=True, null=True)
+    calificacion = models.PositiveSmallIntegerField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)

@@ -1,10 +1,14 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <p>
-paso 6<p>
 <a href={%url 'carta_final'%}>Carta de Conclución</a><p>
-Documento final PG <p>
-Gereracion de ultimos 3 formularios<p>
+{% if not proyecto_grado %}
+<a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a><p>
+{% endif %}
+{% if proyecto_grado %}
+<a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado</a><p>
+{% endif %}
+<a href={%url 'ultimos_formularios'%}>Generación de los 3 formularios</a><p>
 <a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a><p>
 
 {% endblock %}
