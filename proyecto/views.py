@@ -1304,7 +1304,7 @@ def formulario_3(request):
             estudiante.registroperfil.titulo,
             estudiante.mencion,
             ]
-    formulario1(buffer,info_estu)
+    formulario3(buffer,info_estu)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_3.pdf')
 
@@ -1327,7 +1327,7 @@ def formulario_4(request):
             estudiante.registroperfil.titulo,
             estudiante.mencion,
             ]
-    formulario1(buffer,info_estu)
+    formulario4(buffer,info_estu)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_4.pdf')
 

@@ -99,10 +99,6 @@ def formulario1(buffer, info_estu):
             # clave para aplicar buffer
             pdf_writer.write(buffer)
 
-            # with open(output_file, "wb") as filehandle_output:
-                # # write the watermarked file to the new file
-                # pdf_writer.write(filehandle_output)
-
     # eliminando el pdf auxiliar
     remove('form1_solapa.pdf')
 
@@ -196,8 +192,286 @@ def formulario2(buffer, info_estu):
     remove('form2_solapa.pdf')
 
 def formulario3(buffer, info_estu):
-    pass
+    individual = 'V'
+    multiple = ''
+    tele= ''
+    control = ''
+    sistemas = 'V'
+    nombre = 'Julio Cesar Cori Ochoa'
+    carnet = '6002358 L.P.'
+    titulo = 'Diseño de un Sistema de Comparación de Trabajos de Grado \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    ETN-1040 Proyecto de Grado'
+    docente_tutor = 'Ing. Freddy Valle'
+    mencion = 'Sistemas de Computación'
+    empresa = 'Carrera de Ingeniería Electrónica'
+    supervisor = 'Ing. Vladimir Barra Garcia'
+    cargo = 'Jefe de Carrera Ingeniería Electrónica'
+    fecha_aprobacion = '12/06/21'
+    gestion = 'I/2021'
+    a = '7'
+    b = '5'
+    c = '20'
+    d = '2'
+    suma = '34'
+    nota_40 = suma
+    literal_40 = 'Treita y cuatro'
+    nota_60 = '49'
+    literal_60 = 'Cuarenta y nueve'
+    fecha_cierre = ['8', '08', '2021']
+    gestion_cierre = 'II/2021'
+    docente_etn1040 = 'Ing. Jorge Mario León Gómez'
+    director = 'Ing. Juan Carlos Machicao Aparicio'
+# Generacion del pdf
+    pdf = FPDF(format="letter")
+    pdf.add_page()
+    pdf.set_font("Times", size=10)
+
+# Modalidad:
+    pdf.set_xy(88,42)
+    pdf.cell(w=5, h=6, txt=individual, ln=1, border=1, align='C')
+
+    pdf.set_xy(110,42)
+    pdf.cell(w=5, h=6, txt=multiple, ln=1, border=1, align='C')
+
+# Mencion
+    pdf.set_xy(150,42)
+    pdf.cell(w=5, h=6, txt=tele, ln=1, border=1, align='C')
+
+    pdf.set_xy(162,42)
+    pdf.cell(w=5, h=6, txt=control, ln=1, border=1, align='C')
+
+    pdf.set_xy(173,42)
+    pdf.cell(w=5, h=6, txt=sistemas, ln=1, border=1, align='C')
+
+# Postulante
+    pdf.set_xy(47,48)
+    pdf.cell(w=55, h=6, txt=nombre, ln=1, border=0, align='L')
+
+    pdf.set_xy(112,48)
+    pdf.cell(w=55, h=6, txt=carnet, ln=1, border=0, align='L')
+
+# Titulo del tema
+    pdf.set_xy(54,54.7)
+    pdf.multi_cell(w=135, h=4, txt=titulo, ln=1, border=0, 
+        align='J', max_line_height=20)
+
+# Docente Tutor
+    pdf.set_xy(65,74)
+    pdf.cell(w=55, h=6, txt=docente_tutor, ln=1, border=0, align='L')
+
+# Empresa o institucion
+    pdf.set_xy(67,90)
+    pdf.cell(w=120, h=6, txt=empresa, ln=1, border=0, align='L')
+
+# Supervisor
+    pdf.set_xy(50,98)
+    pdf.cell(w=45, h=6, txt=supervisor, ln=1, border=0, align='L')
+
+    pdf.set_xy(110,98)
+    pdf.cell(w=45, h=6, txt=cargo, ln=1, border=0, align='L')
+
+# Fecha de aprobacion
+    pdf.set_xy(83,107)
+    pdf.cell(w=20, h=6, txt=fecha_aprobacion, ln=1, border=1, align='C')
+
+    pdf.set_xy(140,107)
+    pdf.cell(w=20, h=6, txt=gestion, ln=1, border=0, align='C')
+
+# Notas
+    pdf.set_xy(40,139)
+    pdf.cell(w=6, h=6, txt=a, ln=1, border=1, align='C')
+
+    pdf.set_xy(72,139)
+    pdf.cell(w=6, h=6, txt=b, ln=1, border=1, align='C')
+
+    pdf.set_xy(105,139)
+    pdf.cell(w=6, h=6, txt=c, ln=1, border=1, align='C')
+
+    pdf.set_xy(137,139)
+    pdf.cell(w=6, h=6, txt=d, ln=1, border=1, align='C')
+
+    pdf.set_xy(170,139)
+    pdf.cell(w=6, h=6, txt=suma, ln=1, border=1, align='C')
+
+# Nota de elaboracion del proyecto s/40
+    pdf.set_xy(99,147)
+    pdf.cell(w=20, h=6, txt=nota_40, ln=1, border=0, align='C')
+
+    pdf.set_xy(127,147)
+    pdf.cell(w=60, h=6, txt=literal_40, ln=1, border=0, align='C')
+
+# Trabajo final y defensa publica s/60
+    pdf.set_xy(60,169)
+    pdf.cell(w=20, h=6, txt=nota_60, ln=1, border=0, align='C')
+
+    pdf.set_xy(92,169)
+    pdf.cell(w=80, h=6, txt=literal_60, ln=1, border=0, align='C')
+
+# Trabajo final y defensa publica s/60
+    pdf.set_xy(50,212)
+    pdf.cell(w=20, h=6, txt=nota_60, ln=1, border=0, align='C')
+
+    pdf.set_xy(75,212)
+    pdf.cell(w=80, h=6, txt=literal_60, ln=1, border=0, align='C')
+
+# Fecha de Cierre
+    pdf.set_xy(60,224)
+    pdf.cell(w=10,h=6, txt=fecha_cierre[0], ln=1, border=0, align='C')
+
+    pdf.set_xy(72,224)
+    pdf.cell(w=10,h=6, txt=fecha_cierre[1], ln=1, border=0, align='C')
+
+    pdf.set_xy(85,224)
+    pdf.cell(w=11,h=6, txt=fecha_cierre[2], ln=1, border=0, align='C')
+
+# Gestion
+    pdf.set_xy(110,224)
+    pdf.cell(w=20,h=6, txt=gestion_cierre, ln=1, border=0, align='C')
+
+# Firmas
+    pdf.set_xy(35,253)
+    pdf.cell(w=70,h=6, txt=docente_etn1040, ln=1, border=0, align='C')
+    pdf.set_xy(115,253)
+    pdf.cell(w=70,h=6, txt=director, ln=1, border=0, align='C')
+
+# Guardar archivo
+    pdf.output("form3_solapa.pdf")
+
+    input_file = MEDIA_ROOT + "formularios/form3.pdf"  
+    watermark_file = "form3_solapa.pdf"
+    output_file = "form3_final.pdf"  
+
+    with open(input_file, "rb") as filehandle_input:  
+        # read content of the original file
+        pdf = PyPDF2.PdfFileReader(filehandle_input)
+
+        with open(watermark_file, "rb") as filehandle_watermark:
+            # read content of the watermark
+            watermark = PyPDF2.PdfFileReader(filehandle_watermark)
+
+            # get first page of the original PDF
+            first_page = pdf.getPage(0)
+
+            # get first page of the watermark PDF
+            first_page_watermark = watermark.getPage(0)
+
+            # merge the two pages
+            first_page.mergePage(first_page_watermark)
+
+            # create a pdf writer object for the output file
+            pdf_writer = PyPDF2.PdfFileWriter()
+
+            # add page
+            pdf_writer.addPage(first_page)
+
+            pdf_writer.write(buffer)
+
+    # eliminando el pdf auxiliar
+    remove('form3_solapa.pdf')
+
 
 def formulario4(buffer, info_estu):
-    pass
+    individual = 'V'
+    equipo_de = '1'
+    nombre = 'Julio Cesar Cori Ochoa'
+    carnet = '6002358 L.P.'
+    tutor = 'Ing. Freddy Valle'
+    titulo = 'Diseño de un Sistema de Comparación de Trabajos de Grado \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    ETN-1040 Proyecto de Grado'
+    numeral = '34'
+    literal = 'Treita y cuatro'
+    nota_40 = '49'
+    literal_40 = 'Cuarenta y nueve'
+    fecha = ['8', 'agosto', '2021']
+    docente_etn1040 = 'Jorge Mario León Gómez'
+
+# Generacion del pdf
+    pdf = FPDF(format="letter")
+    pdf.add_page()
+    pdf.set_font("Times", size=12)
+
+# Modalidad:
+    pdf.set_xy(88,54)
+    pdf.cell(w=5, h=6, txt=individual, ln=1, border=0, align='C')
+
+    pdf.set_xy(140,54)
+    pdf.cell(w=5, h=6, txt=equipo_de, ln=1, border=0, align='C')
+
+# Postulante
+    pdf.set_xy(35,72)
+    pdf.cell(w=100, h=6, txt=nombre, ln=1, border=0, align='L')
+
+    pdf.set_xy(135,72)
+    pdf.cell(w=50, h=6, txt=carnet, ln=1, border=0, align='L')
+
+# Docente Tutor
+    pdf.set_xy(35,98)
+    pdf.cell(w=100, h=6, txt=tutor, ln=1, border=0, align='L')
+
+# Titulo del tema
+    pdf.set_xy(35,114)
+    pdf.multi_cell(w=140, h=8.3, txt=titulo, ln=1, border=0, 
+        align='J', max_line_height=60)
+
+# Calificacion obtenida s/40
+    pdf.set_xy(50,165)
+    pdf.cell(w=15, h=6, txt=nota_40, ln=1, border=0, align='C')
+
+    pdf.set_xy(120,165)
+    pdf.cell(w=40, h=6, txt=literal_40, ln=1, border=0, align='C')
+
+# Fecha de Cierre
+    pdf.set_xy(109,209)
+    pdf.cell(w=10,h=6, txt=fecha[0], ln=1, border=0, align='C')
+
+    pdf.set_xy(130,209)
+    pdf.cell(w=20,h=6, txt=fecha[1], ln=1, border=0, align='C')
+
+    pdf.set_xy(168,209)
+    pdf.cell(w=15,h=6, txt=fecha[2], ln=1, border=0, align='C')
+
+# Ing. (supongo docente 1040)
+    pdf.set_xy(37,234)
+    pdf.cell(w=100, h=6, txt=docente_etn1040, ln=1, border=0, align='L')
+
+# Guardar archivo
+    pdf.output("form4_solapa.pdf")
+
+    input_file = MEDIA_ROOT + "formularios/form4.pdf"  
+    watermark_file = "form4_solapa.pdf"
+    output_file = "form4_final.pdf"  
+
+    with open(input_file, "rb") as filehandle_input:  
+        # read content of the original file
+        pdf = PyPDF2.PdfFileReader(filehandle_input)
+
+        with open(watermark_file, "rb") as filehandle_watermark:
+            # read content of the watermark
+            watermark = PyPDF2.PdfFileReader(filehandle_watermark)
+
+            # get first page of the original PDF
+            first_page = pdf.getPage(0)
+
+            # get first page of the watermark PDF
+            first_page_watermark = watermark.getPage(0)
+
+            # merge the two pages
+            first_page.mergePage(first_page_watermark)
+
+            # create a pdf writer object for the output file
+            pdf_writer = PyPDF2.PdfFileWriter()
+
+            # add page
+            pdf_writer.addPage(first_page)
+
+            # buffer
+            pdf_writer.write(buffer)
+
+    # eliminando el pdf auxiliar
+    remove('form4_solapa.pdf')
 
