@@ -5,8 +5,6 @@ from datetime import date
 import PyPDF2
 from etn1040_1.settings import MEDIA_ROOT
 def formulario1(buffer, info_estu):
-
-    # =============================================
     # Datod de la base de datos
     nombre = info_estu[0]
     carnet = info_estu[1] 
@@ -103,22 +101,22 @@ def formulario1(buffer, info_estu):
     remove('form1_solapa.pdf')
 
 def formulario2(buffer, info_estu):
-    postulante = 'Julio Cesar Cori Ochoa'
-    fecha_aprobacion = '12/06/21'
-    titulo = 'Diseño de un Sistema de Comparación de Trabajos de Grado \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    ETN-1040 Proyecto de Grado'
-    mencion = 'Sistemas de Computación'
-    gestion = 'I/2021'
-    asesor = 'Ing. Freddy Valle'
-    docente_etn1040 = 'Ing. Jorge Mario León Gómez'
-    abstract= 'Diseño de un Sistema de Comparación de Trabajos de Grado \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    ETN-1040 Proyecto de Grado'
+    ## info de base de datos
+    postulante = info_estu[0]
+    asesor = info_estu[1]
+    docente_etn1040 = info_estu[2]
+    titulo = info_estu[3]
+    mencion = info_estu[4]
+    abstract= info_estu[5]
+    dia = info_estu[6].day.__str__()
+    mes = info_estu[6].month.__str__()
+    year = info_estu[6].year.__str__()
+    fecha_aprobacion = dia+'/'+mes+'/'+year
+    if int(mes) >= 6:
+        periodo = 'I'
+    else:
+        periodo = 'II'
+    gestion = periodo + '/' + year
 
     pdf = FPDF(format="letter")
     pdf.add_page()
@@ -151,7 +149,7 @@ def formulario2(buffer, info_estu):
 
 # Docente
     pdf.set_xy(60,107)
-    pdf.cell(w=76, h=8, txt=docente_etn1040, ln=1, border=1, align='C')
+    pdf.cell(w=76, h=8, txt='Ing. '+docente_etn1040, ln=1, border=1, align='C')
 # Abstract
     pdf.set_xy(27,133)
     pdf.multi_cell(w=162, h=5, txt=abstract, ln=1, border=0, 
@@ -337,7 +335,6 @@ def formulario3(buffer, info_estu):
 
 # Guardar archivo
     pdf.output("form3_solapa.pdf")
-
     input_file = MEDIA_ROOT + "formularios/form3.pdf"  
     watermark_file = "form3_solapa.pdf"
     output_file = "form3_final.pdf"  
@@ -364,7 +361,6 @@ def formulario3(buffer, info_estu):
 
             # add page
             pdf_writer.addPage(first_page)
-
             pdf_writer.write(buffer)
 
     # eliminando el pdf auxiliar

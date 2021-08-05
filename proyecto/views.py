@@ -1267,19 +1267,19 @@ def materialParaEst(request):
 def formulario_2(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
+    proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
-    extension = 'L.P.'
     cargo = 'director'
     lugar = 'instituto de electrónica aplicada'
     institucion = 'facultad de ingeniería'
     info_estu = [
             estudiante.__str__(),
-            estudiante.carnet,
-            extension,
             estudiante.tutor.__str__(),
             estudiante.grupo_doc.__str__(),
-            estudiante.registroperfil.titulo,
+            proyecto.titulo,
             estudiante.mencion,
+            proyecto.resumen,
+            proyecto.fecha_creacion,
             ]
     formulario2(buffer,info_estu)
     buffer.seek(0)
