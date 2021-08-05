@@ -1262,6 +1262,75 @@ def materialParaEst(request):
     context = {'grupo': grupo,'form':form, 'material':material}
     return render(request, 'proyecto/material_para_estudiante.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def formulario_2(request):
+    buffer = io.BytesIO()
+    estudiante = request.user.datosestudiante
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    extension = 'L.P.'
+    cargo = 'director'
+    lugar = 'instituto de electrónica aplicada'
+    institucion = 'facultad de ingeniería'
+    info_estu = [
+            estudiante.__str__(),
+            estudiante.carnet,
+            extension,
+            estudiante.tutor.__str__(),
+            estudiante.grupo_doc.__str__(),
+            estudiante.registroperfil.titulo,
+            estudiante.mencion,
+            ]
+    formulario2(buffer,info_estu)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='formulario_2.pdf')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def formulario_3(request):
+    buffer = io.BytesIO()
+    estudiante = request.user.datosestudiante
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    extension = 'L.P.'
+    cargo = 'director'
+    lugar = 'instituto de electrónica aplicada'
+    institucion = 'facultad de ingeniería'
+    info_estu = [
+            estudiante.__str__(),
+            estudiante.carnet,
+            extension,
+            estudiante.tutor.__str__(),
+            estudiante.grupo_doc.__str__(),
+            estudiante.registroperfil.titulo,
+            estudiante.mencion,
+            ]
+    formulario1(buffer,info_estu)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='formulario_3.pdf')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def formulario_4(request):
+    buffer = io.BytesIO()
+    estudiante = request.user.datosestudiante
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    extension = 'L.P.'
+    cargo = 'director'
+    lugar = 'instituto de electrónica aplicada'
+    institucion = 'facultad de ingeniería'
+    info_estu = [
+            estudiante.__str__(),
+            estudiante.carnet,
+            extension,
+            estudiante.tutor.__str__(),
+            estudiante.grupo_doc.__str__(),
+            estudiante.registroperfil.titulo,
+            estudiante.mencion,
+            ]
+    formulario1(buffer,info_estu)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='formulario_4.pdf')
+
 def error(request):
     return render(request, 'proyecto/error_pagina.html')
 

@@ -64,6 +64,9 @@ urlpatterns = [
     path('paso6/carta-final/', views.carta_final_tutor, name='carta_final'),
     path('paso6/registro-proyecto/', views.registroProyecto, name='registro_proyecto'),
     path('paso6/ultimos-formularios/', views.ultimosFormularios, name='ultimos_formularios'),
+    path('paso6/formulario-material-proyecto-grado/', views.formulario_2, name='formulario_2'),
+    path('paso6/formulario-3/', views.formulario_3, name='formulario_3'),
+    path('paso6/formulario-4/', views.formulario_4, name='formulario_4'),
     path('paso6/proyecto/', views.ver_proyecto_grado, name='ver_proyecto_grado'),
 
     path('calificar-proyecto/<int:id_est>/', views.calificarProyecto, name='calificar_proyecto'),

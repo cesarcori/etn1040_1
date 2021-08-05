@@ -5,21 +5,6 @@ from datetime import date
 import PyPDF2
 from etn1040_1.settings import MEDIA_ROOT
 def formulario1(buffer, info_estu):
-    # =============================================
-    # Datod de la base de datos
-    # check = 'Si'
-    # nombre = 'Julio Cesar Cori Ochoa'
-    # carnet = 'C.I.: 6002358 L.P.'
-    # tutor = 'Ing. Freddy Valle'
-    # titulo = 'Diseño de un Sistema de Comparación de Trabajos de Grado \
-    # de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    # ETN-1040 Proyecto de Grado'
-    # dia = '23'
-    # mes = 'mayo' 
-    # year = '2021'
-    # docente = 'Ing. Jorge Mario León Gómez'
-    # mencion = 'Sistemas de Computación'
-    # =============================================
 
     # =============================================
     # Datod de la base de datos
@@ -59,7 +44,7 @@ def formulario1(buffer, info_estu):
     pdf.cell(txt=nombre, ln=1, align="J")
 
     pdf.set_xy(130,85)
-    pdf.cell(txt=carnet, ln=1, align="J")
+    pdf.cell(txt=carnet + ' ' + extension, ln=1, align="J")
 
 # Tutor
     pdf.set_xy(32,128)
@@ -84,13 +69,9 @@ def formulario1(buffer, info_estu):
     pdf.cell(txt=mencion, ln=1, align="J")
     pdf.output("form1_solapa.pdf")
 
-    # input_file = "../media/formularios/form1.pdf"  
-    # input_file = "/home/jcsar/Documents/codesArchLab/programas/Python/webPython/djangoPython/etn1040_1/media/formularios/form1.pdf"  
-    print(MEDIA_ROOT)
     input_file = MEDIA_ROOT + "formularios/form1.pdf"  
     watermark_file = "form1_solapa.pdf"
     output_file = "form1_final.pdf"  
-    # output_file = buffer
 
     with open(input_file, "rb") as filehandle_input:  
         # read content of the original file
@@ -124,3 +105,99 @@ def formulario1(buffer, info_estu):
 
     # eliminando el pdf auxiliar
     remove('form1_solapa.pdf')
+
+def formulario2(buffer, info_estu):
+    postulante = 'Julio Cesar Cori Ochoa'
+    fecha_aprobacion = '12/06/21'
+    titulo = 'Diseño de un Sistema de Comparación de Trabajos de Grado \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    ETN-1040 Proyecto de Grado'
+    mencion = 'Sistemas de Computación'
+    gestion = 'I/2021'
+    asesor = 'Ing. Freddy Valle'
+    docente_etn1040 = 'Ing. Jorge Mario León Gómez'
+    abstract= 'Diseño de un Sistema de Comparación de Trabajos de Grado \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
+    ETN-1040 Proyecto de Grado'
+
+    pdf = FPDF(format="letter")
+    pdf.add_page()
+    pdf.set_font("Times", size=12)
+
+# Postulante
+    pdf.set_xy(60,41)
+    pdf.cell(w=65, h=8, txt=postulante, ln=1, border=1, align='C')
+
+# Fecha de aprobacion
+    pdf.set_xy(167,41)
+    pdf.cell(w=23, h=8, txt=fecha_aprobacion, ln=1, border=1, align='C')
+
+# Titulo del tema
+    pdf.set_xy(60,55)
+    pdf.multi_cell(w=130, h=6, txt=titulo, ln=1, border=1, 
+        align='C', max_line_height=10)
+
+# Mencion
+    pdf.set_xy(60,77)
+    pdf.cell(w=50, h=8, txt=mencion, ln=1, border=1, align='C')
+
+# Gestion academica
+    pdf.set_xy(150,77)
+    pdf.cell(w=40, h=8, txt=gestion, ln=1, border=1, align='C')
+
+# Asesor
+    pdf.set_xy(60,92)
+    pdf.cell(w=76, h=8, txt=asesor, ln=1, border=1, align='C')
+
+# Docente
+    pdf.set_xy(60,107)
+    pdf.cell(w=76, h=8, txt=docente_etn1040, ln=1, border=1, align='C')
+# Abstract
+    pdf.set_xy(27,133)
+    pdf.multi_cell(w=162, h=5, txt=abstract, ln=1, border=0, 
+        align='J', max_line_height=150)
+# Guardar archivo
+    pdf.output("form2_solapa.pdf")
+
+    input_file = MEDIA_ROOT + "formularios/form2.pdf"  
+    watermark_file = "form2_solapa.pdf"
+    output_file = "form2_final.pdf"  
+
+    with open(input_file, "rb") as filehandle_input:  
+        # read content of the original file
+        pdf = PyPDF2.PdfFileReader(filehandle_input)
+
+        with open(watermark_file, "rb") as filehandle_watermark:
+            # read content of the watermark
+            watermark = PyPDF2.PdfFileReader(filehandle_watermark)
+
+            # get first page of the original PDF
+            first_page = pdf.getPage(0)
+
+            # get first page of the watermark PDF
+            first_page_watermark = watermark.getPage(0)
+
+            # merge the two pages
+            first_page.mergePage(first_page_watermark)
+
+            # create a pdf writer object for the output file
+            pdf_writer = PyPDF2.PdfFileWriter()
+
+            # add page
+            pdf_writer.addPage(first_page)
+
+            pdf_writer.write(buffer)
+
+    # eliminando el pdf auxiliar
+    remove('form2_solapa.pdf')
+
+def formulario3(buffer, info_estu):
+    pass
+
+def formulario4(buffer, info_estu):
+    pass
+
