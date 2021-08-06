@@ -1269,9 +1269,6 @@ def formulario_2(request):
     estudiante = request.user.datosestudiante
     proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
-    cargo = 'director'
-    lugar = 'instituto de electrónica aplicada'
-    institucion = 'facultad de ingeniería'
     info_estu = [
             estudiante.__str__(),
             estudiante.tutor.__str__(),
@@ -1290,21 +1287,9 @@ def formulario_2(request):
 def formulario_3(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
+    proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
-    extension = 'L.P.'
-    cargo = 'director'
-    lugar = 'instituto de electrónica aplicada'
-    institucion = 'facultad de ingeniería'
-    info_estu = [
-            estudiante.__str__(),
-            estudiante.carnet,
-            extension,
-            estudiante.tutor.__str__(),
-            estudiante.grupo_doc.__str__(),
-            estudiante.registroperfil.titulo,
-            estudiante.mencion,
-            ]
-    formulario3(buffer,info_estu)
+    formulario3(buffer,estudiante,proyecto)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_3.pdf')
 
@@ -1313,21 +1298,13 @@ def formulario_3(request):
 def formulario_4(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
+    proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
     extension = 'L.P.'
     cargo = 'director'
     lugar = 'instituto de electrónica aplicada'
     institucion = 'facultad de ingeniería'
-    info_estu = [
-            estudiante.__str__(),
-            estudiante.carnet,
-            extension,
-            estudiante.tutor.__str__(),
-            estudiante.grupo_doc.__str__(),
-            estudiante.registroperfil.titulo,
-            estudiante.mencion,
-            ]
-    formulario4(buffer,info_estu)
+    formulario4(buffer,estudiante, proyecto)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_4.pdf')
 

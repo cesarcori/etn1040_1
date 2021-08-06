@@ -4,6 +4,81 @@ from os import remove
 from datetime import date
 import PyPDF2
 from etn1040_1.settings import MEDIA_ROOT
+UNIDADES = (
+    'cero',
+    'uno',
+    'dos',
+    'tres',
+    'cuatro',
+    'cinco',
+    'seis',
+    'siete',
+    'ocho',
+    'nueve'
+)
+DECENAS = (
+    'diez',
+    'once',
+    'doce',
+    'trece',
+    'catorce',
+    'quince',
+    'dieciseis',
+    'diecisiete',
+    'dieciocho',
+    'diecinueve'
+)
+VEINTE = (
+    'Veinte',
+    'Veintiun',
+    'Veintidos',
+    'Veintitres',
+    'Veinticuatro',
+    'Veinticinco',
+    'Veintiseis',
+    'Veintisiete',
+    'Veintiocho',
+    'Veintinueve',
+)
+DIEZ_DIEZ = (
+    'Cero',
+    'Diez',
+    'Veinte',
+    'Treinta',
+    'Cuarenta',
+    'Cincuenta',
+    'Sesenta',
+    'Setenta',
+    'Ochenta',
+    'Noventa'
+)
+def fecha_right():
+    meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+    hoy = date.today()
+    dia = hoy.day.__str__()
+    mes = meses[hoy.month - 1]
+    year = hoy.year.__str__()
+    return dia, mes, year
+def numero_letra(numero):
+    numero = int(numero)
+    if numero < 10:
+        return UNIDADES[numero]
+    decena, unidad = divmod(numero, 10)
+    if numero <= 19:
+        resultado = DECENAS[unidad]
+    elif numero == 20:
+        resultado = 'Veinte'
+    elif numero == 100:
+        resultado = 'Cien'
+    elif numero <= 29 and numero>=21:
+        resultado = 'Veinti%s' % UNIDADES[unidad]
+    else:
+        resultado = DIEZ_DIEZ[decena]
+        if unidad > 0:
+            resultado = '%s y %s' % (resultado, UNIDADES[unidad])
+    return resultado
+    # if numero_entero <= 99:
+        # resultado = leer_decenas(numero_entero)
 def formulario1(buffer, info_estu):
     # Datod de la base de datos
     nombre = info_estu[0]
@@ -112,7 +187,7 @@ def formulario2(buffer, info_estu):
     mes = info_estu[6].month.__str__()
     year = info_estu[6].year.__str__()
     fecha_aprobacion = dia+'/'+mes+'/'+year
-    if int(mes) >= 6:
+    if int(mes) <= 6:
         periodo = 'I'
     else:
         periodo = 'II'
@@ -189,24 +264,38 @@ def formulario2(buffer, info_estu):
     # eliminando el pdf auxiliar
     remove('form2_solapa.pdf')
 
-def formulario3(buffer, info_estu):
-    individual = 'V'
-    multiple = ''
+def formulario3(buffer, estudiante, proyecto):
+    # mencion
     tele= ''
     control = ''
-    sistemas = 'V'
-    nombre = 'Julio Cesar Cori Ochoa'
-    carnet = '6002358 L.P.'
-    titulo = 'Diseño de un Sistema de Comparación de Trabajos de Grado \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    ETN-1040 Proyecto de Grado'
-    docente_tutor = 'Ing. Freddy Valle'
-    mencion = 'Sistemas de Computación'
+    sistemas = ''
+    if estudiante.mencion == 'Control':
+        control = 'V'
+    elif estudiante.mencion == 'Sistemas de Computación':
+        sistemas = 'V'
+    else:
+        tele = 'V'
+    nombre = estudiante.__str__()
+    carnet = estudiante.carnet
+    titulo = proyecto.titulo
+    docente_tutor = estudiante.tutor.__str__()
+    mencion = estudiante.mencion
     empresa = 'Carrera de Ingeniería Electrónica'
     supervisor = 'Ing. Vladimir Barra Garcia'
     cargo = 'Jefe de Carrera Ingeniería Electrónica'
-    fecha_aprobacion = '12/06/21'
-    gestion = 'I/2021'
+    # individual o multiple
+    individual = 'V'
+    multiple = ''
+    # fecha aprobacion
+    fecha_aprobacion = proyecto.fecha_creacion.date().__str__()
+    mes = proyecto.fecha_creacion.month.__str__()
+    year= proyecto.fecha_creacion.year.__str__()
+    # gestion
+    if int(mes) <= 6:
+        periodo = 'I'
+    else:
+        periodo = 'II'
+    gestion = periodo + '/' + year
     a = '7'
     b = '5'
     c = '20'
@@ -367,23 +456,19 @@ def formulario3(buffer, info_estu):
     remove('form3_solapa.pdf')
 
 
-def formulario4(buffer, info_estu):
+def formulario4(buffer, estudiante, proyecto):
     individual = 'V'
     equipo_de = '1'
-    nombre = 'Julio Cesar Cori Ochoa'
-    carnet = '6002358 L.P.'
-    tutor = 'Ing. Freddy Valle'
-    titulo = 'Diseño de un Sistema de Comparación de Trabajos de Grado \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    de la Carrera de Ingeniería Electrónica, aplicado a la asignatura \
-    ETN-1040 Proyecto de Grado'
-    numeral = '34'
-    literal = 'Treita y cuatro'
-    nota_40 = '49'
-    literal_40 = 'Cuarenta y nueve'
-    fecha = ['8', 'agosto', '2021']
+    nombre = estudiante.__str__()
+    carnet = estudiante.carnet
+    extension = 'L.P.'
+    tutor = estudiante.tutor.__str__()
+    titulo = proyecto.titulo
+    nota_40 = proyecto.calificacion.__str__()
+    # literal_40 = 'Cuarenta y nueve'
+    literal_40 = numero_letra(nota_40)
+    fecha = fecha_right()
+    # fecha = ['8', 'agosto', '2021']
     docente_etn1040 = 'Jorge Mario León Gómez'
 
 # Generacion del pdf
@@ -403,11 +488,11 @@ def formulario4(buffer, info_estu):
     pdf.cell(w=100, h=6, txt=nombre, ln=1, border=0, align='L')
 
     pdf.set_xy(135,72)
-    pdf.cell(w=50, h=6, txt=carnet, ln=1, border=0, align='L')
+    pdf.cell(w=50, h=6, txt=carnet + ' ' + extension, ln=1, border=0, align='L')
 
 # Docente Tutor
     pdf.set_xy(35,98)
-    pdf.cell(w=100, h=6, txt=tutor, ln=1, border=0, align='L')
+    pdf.cell(w=100, h=6, txt='Ing. '+tutor, ln=1, border=0, align='L')
 
 # Titulo del tema
     pdf.set_xy(35,114)

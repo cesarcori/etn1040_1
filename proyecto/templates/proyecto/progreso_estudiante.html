@@ -13,7 +13,11 @@
 {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
 <a class="btn btn-success" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
 {%endif%}
-{%if grupo == 'docente' or grupo == 'tutor' and not calificacion == None%}
+{%if grupo == 'docente' and not calificacion == None%}
+<h5 class='text-center'>La calificacion del Proyecto de Grado es: </h5>
+<h3 class="text-center">* {{calificacion}} *</h3>
+{%endif%}
+{%if grupo == 'tutor' and not calificacion == None%}
 <h5 class='text-center'>La calificacion del Proyecto de Grado es: </h5>
 <h3 class="text-center">* {{calificacion}} *</h3>
 {%endif%}
