@@ -5,7 +5,10 @@
 <h3>Resumen</h3>
 {{proyecto.resumen}}<br>
 <br>
-{% if not calificacion_existe %}
+{% if proyecto.calificacion %}
+<h5 class='text-center'>La calificacion del Proyecto de Grado es: </h5>
+<h3 class="text-center">* {{proyecto.calificacion}} *</h3>
+{% else %}
 <h4 class="text-center">El docente aún no calificó el Proyecto de Grado</h4>
 {% endif %}
 <a class="btn btn-danger" href={%url 'paso6'%}>Atras</a>

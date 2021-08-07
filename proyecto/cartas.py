@@ -363,7 +363,7 @@ def carta_final(buffer, info_estu):
     lugar = 'carrera de ingeniería electrónica'
     institucion = 'facultad de ingeniería'
     universidad = 'universidad mayor de san andrés'
-    parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, la conclución satisfactoria, en el desarrollo del Proyecto de Grado:'
+    parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, la conclusión satisfactoria, en el desarrollo del Proyecto de Grado:'
     parrafo1_2 = titulo_perfil
     parrafo1_3 = 'A cargo del estudiante'
     parrafo1_4 = nombre
