@@ -4,14 +4,14 @@
 paso 4<p>
 Visto bueno del docente y tutor se lo dara en la revision<p>
 <a href={%url 'entrega_perfil'%}>Entregar perfil para revisión</a><p>
-<a href={%url 'carta_aceptacion_tutor'%}>Carta aceptacion de tutoría</a><p>
-<a href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a><p>
 {% if registro_perfil_existe %}
-<a href={%url 'ver_perfil_registrado'%}>Perfil Registrado</a><p>
+<a href={%url 'ver_perfil_registrado'%}>Registro de Perfil</a><p>
 {% else %}
 <a href={%url 'registro_perfil'%}>Registro de Perfil</a><p>
 {% endif %}
-<a href={%url 'cronograma_actividad'%}>Cronograma</a><p>
+<a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a><p>
+<a href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a><p>
+<a href={%url 'carta_aceptacion_tutor'%}>Carta aceptacion de tutoría</a><p>
 <a href={%url 'formulario_1'%}>Formulario de Aprobación</a><p>
 
 <a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a><p>

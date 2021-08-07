@@ -121,7 +121,7 @@ def formulario1(buffer, info_estu):
 
 # Tutor
     pdf.set_xy(32,128)
-    pdf.cell(txt=tutor, ln=1, align="J")
+    pdf.cell(txt='Ing. '+tutor, ln=1, align="J")
 
 # Titulo
     pdf.set_xy(32,148)
@@ -137,7 +137,7 @@ def formulario1(buffer, info_estu):
 
 # Docente - mencion 
     pdf.set_xy(29,236)
-    pdf.cell(txt=docente, ln=1, align="J")
+    pdf.cell(txt='Ing. '+docente, ln=1, align="J")
     pdf.set_xy(50,245.8)
     pdf.cell(txt=mencion, ln=1, align="J")
     pdf.output("form1_solapa.pdf")

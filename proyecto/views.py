@@ -201,8 +201,11 @@ def tutor(request):
 @allowed_users(allowed_roles=['estudiante'])
 def estudiante(request):
     grupo = 'estudiante'
-    progreso = str(50)
     estudiante = request.user.datosestudiante
+    if Progreso.objects.filter(usuario=estudiante).exists():
+        progreso = Progreso.objects.get(usuario=estudiante).nivel
+    else:
+        progreso = 1
     context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante}
     return render(request, 'proyecto/estudiante.html', context)
 

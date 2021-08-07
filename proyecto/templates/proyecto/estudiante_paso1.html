@@ -1,19 +1,15 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-paso 1 <p>
 <p>
 Como usar el sistema <p>
-Familiarizarse con la materia:<p>
 Reglamentos de la Materia ETN-1040<p>
-Introduccion de la materia:<p>
 {%for link, titulo in dicc_link.items%}
-<a href="{{ link.archivo.url }}">{{titulo}}<a><p>
+<a href="{{ link.archivo.url }}">{{titulo}}</a><p>
 {%endfor%}
 <p>
+Introduccion de la materia:<p>
 Documentos compartidos por Docente:
-Ing. {{request.user.datosestudiante.grupo_doc.apellido}}<p>
-Como elaborar el perfil <p>
-Formato Perfil de Proyecto de grado. <p>
+Ing. {{request.user.datosestudiante.grupo_doc}}<p>
 {%for link in material_docente %}
 <a href="{{ link.material_docente.url }}">{{link.material_docente.name}}<a><p>
 {%endfor%}

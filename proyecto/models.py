@@ -186,3 +186,8 @@ class ProyectoDeGrado(models.Model):
     resumen = models.TextField(blank=True, null=True)
     calificacion = models.PositiveSmallIntegerField(null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+
+class Progreso(models.Model):
+    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    nivel = models.PositiveSmallIntegerField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
