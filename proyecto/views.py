@@ -6,7 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 
-from .decorators import unauthenticated_user, allowed_users, admin_only
+from .decorators import unauthenticated_user, allowed_users, admin_only, permitir_paso1
+from .decorators import *
 from .forms import *
 from .models import *
 from .cartas import *
@@ -374,8 +375,8 @@ def enlaceEstudiante(request, pk_est):
 @allowed_users(allowed_roles=['docente','tutor','administrador'])
 def progresoEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
-    progreso = str(80)
     estudiante = DatosEstudiante.objects.get(id=pk_est)
+    progreso = Progreso.objects.get(usuario=estudiante).nivel
     if ProyectoDeGrado.objects.filter(usuario=estudiante).exists():
         proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
         calificacion = proyecto.calificacion
@@ -562,6 +563,7 @@ def agregarDocente(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso1()
 def paso1(request):
     grupo = request.user.groups.get().name
     # link reglamentos
@@ -580,12 +582,14 @@ def paso1(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso2()
 def paso2(request):
     grupo = request.user.groups.get().name
     context = {'grupo': grupo}
     return render(request, 'proyecto/estudiante_paso2.html', context)
 
 @login_required(login_url='login')
+@permitir_paso2()
 def busquedaProyectos(request):
     grupo = request.user.groups.get().name
     if request.method == 'POST':
@@ -615,6 +619,7 @@ def busquedaProyectos(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso3()
 def paso3(request):
     grupo = request.user.groups.get().name
     tutor = request.user.datosestudiante.tutor
@@ -663,6 +668,7 @@ def paso3(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso4()
 def paso4(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -672,6 +678,7 @@ def paso4(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso4()
 def entregaPerfil(request):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -683,6 +690,7 @@ def entregaPerfil(request):
             'salas':salas}
     return render(request, 'proyecto/entrega_perfil.html', context)
 
+@permitir_paso4()
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 def crearSalaRevisar(request):
@@ -708,6 +716,7 @@ def crearSalaRevisar(request):
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/crear_sala_revisar.html', context)
 
+@permitir_paso4()
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','docente','tutor'])
 def salaRevisar(request, pk_sala):
@@ -743,6 +752,7 @@ def salaRevisar(request, pk_sala):
     }
     return render(request, 'proyecto/sala_revisar.html', context)
 
+@permitir_paso4()
 @login_required(login_url='login')
 def salaRevisarEstDoc(request, pk_sala):
     grupo = request.user.groups.get().name
@@ -767,6 +777,7 @@ def salaRevisarEstDoc(request, pk_sala):
             }
     return render(request, 'proyecto/sala_revisar_est_doc.html', context)
 
+@permitir_paso4()
 @login_required(login_url='login')
 def salaRevisarEstTut(request, pk_sala):
     grupo = request.user.groups.get().name
@@ -791,6 +802,7 @@ def salaRevisarEstTut(request, pk_sala):
             }
     return render(request, 'proyecto/sala_revisar_est_tut.html', context)
 
+@permitir_paso4()
 @login_required(login_url='login')
 def carta_aceptacion_tutor(request):
     buffer = io.BytesIO()
@@ -812,6 +824,7 @@ def carta_aceptacion_tutor(request):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
 
+@permitir_paso4()
 @login_required(login_url='login')
 def carta_solicitud_tutor(request):
     buffer = io.BytesIO()
@@ -837,6 +850,7 @@ def carta_solicitud_tutor(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso4()
 def registro_perfil(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -854,6 +868,7 @@ def registro_perfil(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso4()
 def ver_perfil_registrado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -863,6 +878,7 @@ def ver_perfil_registrado(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso4()
 def cronograma_actividad(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -908,6 +924,7 @@ def cronograma_actividad(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
+@permitir_paso4()
 def ver_cronograma(request, id_est):
     grupo = request.user.groups.get().name
     if grupo == 'tutor':
@@ -946,6 +963,7 @@ def ver_cronograma(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso4()
 def cronograma_registrar(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -962,12 +980,14 @@ def cronograma_registrar(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso4()
 def eliminar_actividad(request, id_act):
     ActividadesCronograma.objects.get(id=id_act).delete()
     return redirect('cronograma_actividad')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso4()
 def formulario_1(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
@@ -991,6 +1011,7 @@ def formulario_1(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso5()
 def paso5(request):
     grupo = request.user.groups.get().name
     context = {'grupo': grupo}
@@ -998,6 +1019,7 @@ def paso5(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso5()
 def cronograma_control(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -1046,6 +1068,7 @@ def cronograma_control(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso5()
 def entregaProyecto(request):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -1059,6 +1082,7 @@ def entregaProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso5()
 def crearSalaRevisarProyecto(request):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -1084,6 +1108,7 @@ def crearSalaRevisarProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','docente','tutor'])
+@permitir_paso5()
 def salaRevisarProyecto(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -1118,6 +1143,7 @@ def salaRevisarProyecto(request, pk_sala):
     return render(request, 'proyecto/sala_revisar.html', context)
 
 @login_required(login_url='login')
+@permitir_paso5()
 def salaRevisarProyEstDoc(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -1143,6 +1169,7 @@ def salaRevisarProyEstDoc(request, pk_sala):
     return render(request, 'proyecto/sala_revisar_proy_est_doc.html', context)
 
 @login_required(login_url='login')
+@permitir_paso5()
 def salaRevisarProyEstTut(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -1168,6 +1195,7 @@ def salaRevisarProyEstTut(request, pk_sala):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
 def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -1177,6 +1205,7 @@ def paso6(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
 def carta_final_tutor(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
@@ -1199,6 +1228,7 @@ def carta_final_tutor(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
 def registroProyecto(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -1216,6 +1246,7 @@ def registroProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
 def ver_proyecto_grado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -1225,6 +1256,7 @@ def ver_proyecto_grado(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
+@permitir_paso6()
 def calificarProyecto(request, id_est):
     grupo = request.user.groups.get().name
     usuario = request.user.datosdocente
@@ -1243,6 +1275,7 @@ def calificarProyecto(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
 def ultimosFormularios(request):
     grupo = request.user.groups.get().name
     context = {'grupo': grupo,}
@@ -1250,6 +1283,7 @@ def ultimosFormularios(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
+@permitir_paso6()
 def materialParaEst(request):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -1267,6 +1301,7 @@ def materialParaEst(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
 def formulario_2(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
@@ -1287,6 +1322,7 @@ def formulario_2(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
 def formulario_3(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
@@ -1298,6 +1334,7 @@ def formulario_3(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
 def formulario_4(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
