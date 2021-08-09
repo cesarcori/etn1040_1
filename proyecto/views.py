@@ -157,7 +157,12 @@ def home(request):
                     celular = info_usuario.celular,
                     mencion = info_usuario.mencion,
                     grupo_doc = docente_asignado,
-                    tutor = DatosTutor.objects.get(nombre='sin_tutor')
+                    # tutor = DatosTutor.objects.get(nombre='sin_tutor')
+                    )
+            estudiante = DatosEstudiante.objects.get(correo=info_usuario.correo)
+            Progreso.objects.create(
+                    usuario = estudiante,
+                    nivel = 1
                     )
             # creacion de salas docente-estudiante
             id_docente = str(DatosEstudiante.objects.last().grupo_doc.usuario_id)
@@ -568,6 +573,7 @@ def paso1(request):
     grupo = request.user.groups.get().name
     # link reglamentos
     links = Reglamento.objects.all()
+    estudiante = request.user.datosestudiante
     # titulos = [' '.join(link.archivo.name.split('/')[1].split('.')[0].split('_')).title() for link in links]
     titulos = [link.archivo.name for link in links]
     dicc_link = {}
@@ -576,8 +582,10 @@ def paso1(request):
     id_usuario_docente = request.user.datosestudiante.grupo_doc.usuario_id
     usuario_docente = User.objects.get(pk=id_usuario_docente)
     material_docente = MaterialDocente.objects.filter(propietario=usuario_docente)
+    progreso = Progreso.objects.get(usuario=estudiante)
     context = {'grupo': grupo, 'links':links, 'titulos':titulos, 
-            'dicc_link':dicc_link, 'material_docente':material_docente}
+            'dicc_link':dicc_link, 'material_docente':material_docente,
+            'progreso': progreso}
     return render(request, 'proyecto/estudiante_paso1.html', context)
 
 @login_required(login_url='login')
@@ -585,11 +593,13 @@ def paso1(request):
 @permitir_paso2()
 def paso2(request):
     grupo = request.user.groups.get().name
-    context = {'grupo': grupo}
+    estudiante = request.user.datosestudiante
+    progreso = Progreso.objects.get(usuario=estudiante)
+    context = {'grupo': grupo,'progreso': progreso}
     return render(request, 'proyecto/estudiante_paso2.html', context)
 
 @login_required(login_url='login')
-@permitir_paso2()
+# @permitir_paso2()
 def busquedaProyectos(request):
     grupo = request.user.groups.get().name
     if request.method == 'POST':
@@ -622,7 +632,8 @@ def busquedaProyectos(request):
 @permitir_paso3()
 def paso3(request):
     grupo = request.user.groups.get().name
-    tutor = request.user.datosestudiante.tutor
+    estudiante = request.user.datosestudiante
+    tutor = estudiante.tutor
     # registro de tutor
     if request.method == 'POST':
         correo = request.POST['agregar_tutor']
@@ -662,6 +673,10 @@ def paso3(request):
             id_estudiante = str(request.user.id)
             nombre_sala = id_tutor + id_estudiante
             Sala.objects.create(nombre_sala = nombre_sala)
+        progreso = Progreso.objects.get(usuario=estudiante)
+        progreso.nivel = 31
+        progreso.save()
+        return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
     context = {'grupo': grupo, 'tutor':tutor}
     return render(request, 'proyecto/estudiante_paso3.html', context)
@@ -673,7 +688,10 @@ def paso4(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     registro_perfil_existe = RegistroPerfil.objects.filter(usuario=estudiante).exists()
-    context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,}
+    progreso = Progreso.objects.get(usuario=estudiante)
+    perfil = RegistroPerfil.objects.filter(usuario=estudiante)
+    context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,
+            'progreso': progreso,'perfil':perfil}
     return render(request, 'proyecto/estudiante_paso4.html', context)
 
 @login_required(login_url='login')
@@ -924,7 +942,7 @@ def cronograma_actividad(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
-@permitir_paso4()
+# @permitir_paso4()
 def ver_cronograma(request, id_est):
     grupo = request.user.groups.get().name
     if grupo == 'tutor':
@@ -1014,7 +1032,9 @@ def formulario_1(request):
 @permitir_paso5()
 def paso5(request):
     grupo = request.user.groups.get().name
-    context = {'grupo': grupo}
+    estudiante = request.user.datosestudiante
+    progreso = Progreso.objects.get(usuario=estudiante)
+    context = {'grupo': grupo, 'progreso': progreso}
     return render(request, 'proyecto/estudiante_paso5.html', context)
 
 @login_required(login_url='login')
@@ -1200,7 +1220,10 @@ def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     proyecto_grado = ProyectoDeGrado.objects.filter(usuario=estudiante).exists()
-    context = {'grupo': grupo, 'proyecto_grado': proyecto_grado}
+    proyecto = ProyectoDeGrado.objects.filter(usuario=estudiante)
+    progreso = Progreso.objects.get(usuario=estudiante)
+    context = {'grupo': grupo, 'proyecto_grado': proyecto_grado,
+            'progreso': progreso, 'proyecto':proyecto }
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
@@ -1256,7 +1279,7 @@ def ver_proyecto_grado(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
-@permitir_paso6()
+# @permitir_paso6()
 def calificarProyecto(request, id_est):
     grupo = request.user.groups.get().name
     usuario = request.user.datosdocente
@@ -1347,6 +1370,63 @@ def formulario_4(request):
     formulario4(buffer,estudiante, proyecto)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_4.pdf')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso1()
+def confirmarPaso1(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    progreso = Progreso.objects.get(usuario=estudiante)
+    if request.method == 'POST':
+        confirmar = request.POST['confirmar']
+        confirmar = int(confirmar)
+        if confirmar < 19 and confirmar >= 1:
+            progreso.nivel = 19
+        elif confirmar < 25 and confirmar >= 19:
+            progreso.nivel = 25
+        elif confirmar < 25 and confirmar >= 19:
+            progreso.nivel = 25
+        elif confirmar < 69 and confirmar >= 25:
+            progreso.nivel = 69
+        progreso.save()
+        return redirect('estudiante')
+    context = {'grupo': grupo, 'progreso': progreso}
+    return render(request, 'proyecto/confirmar_paso.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso5()
+def confirmarPaso5(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    progreso = Progreso.objects.get(usuario=estudiante)
+    if request.method == 'POST':
+        confirmar = request.POST['confirmar']
+        confirmar = int(confirmar)
+        if confirmar < 81 and confirmar >= 69:
+            progreso.nivel = 81
+        progreso.save()
+        return redirect('estudiante')
+    context = {'grupo': grupo, 'progreso': progreso}
+    return render(request, 'proyecto/confirmar_paso.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
+def confirmarPaso6(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    progreso = Progreso.objects.get(usuario=estudiante)
+    if request.method == 'POST':
+        confirmar = request.POST['confirmar']
+        confirmar = int(confirmar)
+        if confirmar < 100 and confirmar >= 81:
+            progreso.nivel = 100
+        progreso.save()
+        return redirect('estudiante')
+    context = {'grupo': grupo, 'progreso': progreso}
+    return render(request, 'proyecto/confirmar_paso.html', context)
 
 def error(request):
     return render(request, 'proyecto/error_pagina.html')

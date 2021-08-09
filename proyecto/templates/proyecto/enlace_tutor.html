@@ -2,12 +2,14 @@
 {% block content %}
 
 {% comment %}{%if request.user.datosestudiante.tutor.id == tutor.id%}{% endcomment %}
+{% if tutor %}
 <H3>Información del tutor</h3>
 <p>
 Nombre: {{tutor.nombre}} <p>
 Apellido: {{tutor.apellido}} <p>
 Correo Electrónico: <a href="mailto:{{tutor.correo}}?Subject=Asunto">{{tutor.correo}}</a><p>
 Número de Celular: {{tutor.celular}} <p>
+{% endif %}
 {% comment %}prueba: <a href="mailto:elcorreoquequieres@correo.com?Subject=Aquí%20el%20asunto%20del%20mail">Aquí el texto que quieras</a>{% endcomment %}
 {% comment %}{%endif%}{% endcomment %}
 

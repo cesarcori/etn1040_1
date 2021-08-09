@@ -14,6 +14,18 @@ Visto bueno del docente y tutor se lo dara en la revision<p>
 <a href={%url 'carta_aceptacion_tutor'%}>Carta aceptacion de tutoría</a><p>
 <a href={%url 'formulario_1'%}>Formulario de Aprobación</a><p>
 
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a><p>
+<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+
+{% if perfil %}
+{% if progreso.nivel < 69 %}
+<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a>
+{% endif %}
+{% if progreso.nivel >= 69 %}
+<h4>Este paso ya fué confirmado</h4>
+{% endif %}
+{% else %}
+<a class="btn btn-success disabled" href={%url 'confirmar_paso_1' %}>Completado</a>
+No se registro aún el perfil y el cronograma
+{% endif %}
 
 {% endblock %}

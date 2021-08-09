@@ -13,5 +13,13 @@ Ing. {{request.user.datosestudiante.grupo_doc}}<p>
 {%for link in material_docente %}
 <a href="{{ link.material_docente.url }}">{{link.material_docente.name}}<a><p>
 {%endfor%}
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a><p>
+<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+{% if progreso %}
+{% if progreso.nivel < 19 %}
+<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a>
+{% endif %}
+{% if progreso.nivel >= 19 %}
+<h4>Este paso ya fué confirmado</h4>
+{% endif %}
+{% endif %}
 {% endblock %}

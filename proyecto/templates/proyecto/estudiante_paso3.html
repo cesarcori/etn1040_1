@@ -5,7 +5,8 @@ paso 3<p>
 Busqueda del tutor.<p>
 Registrar al tutor para que ingrese al sistema.<p>
 
-{% if tutor.nombre == 'sin_tutor' %}
+{% comment %}{% if tutor.nombre == 'sin_tutor' %}{% endcomment %}
+{% if not tutor %}
 <p>
 <form class="d-flex" style="margin:auto;max-width:300px" method='post'
                      action="" >

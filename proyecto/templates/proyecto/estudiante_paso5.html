@@ -4,6 +4,13 @@
 <p>
 <a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a><p>
 <a href={%url 'entrega_proyecto' %}>Revision Proyecto</a><p>
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a><p>
+<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+
+{% if progreso.nivel < 81 %}
+<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a>
+{% endif %}
+{% if progreso.nivel >= 81 %}
+<h4>Este paso ya fué confirmado</h4>
+{% endif %}
 
 {% endblock %}

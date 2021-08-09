@@ -1,0 +1,10 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h2>Confirmo que completé este paso.</h2>
+<form action='' method='POST'>
+    {% csrf_token %}
+    <a class="btn btn-danger" href={%url 'home' %}>Cancelar</a>
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value={{progreso.nivel}}>Confirmar</button>
+</form> 
+{% endblock %}
