@@ -14,17 +14,21 @@
     Celular: {{ request.user.datosestudiante.celular }}<p>
     Usuario: {{ request.user.datosestudiante.usuario }}<p>
     Correo Electrónico: {{ request.user.datosestudiante.correo}}<p>
-    Cédula de Identidad: {{ request.user.datosestudiante.carnet}}<p>
+    Cédula de Identidad: {{ request.user.datosestudiante.carnet}} {{request.user.datosestudiante.extension}}<p>
     Registro Universitario: {{ request.user.datosestudiante.registro_uni}}<p>
     Mención: {{ request.user.datosestudiante.mencion}}<p>
     Grupo: {{ request.user.datosestudiante.grupo_doc.grupo}}<p>
     Docente: <a href="{% url 'enlace_docente' request.user.datosestudiante.grupo_doc.id %}">
         {{ request.user.datosestudiante.grupo_doc.nombre}} 
         {{request.user.datosestudiante.grupo_doc.apellido}}</a><p>
+    {% if request.user.datosestudiante.tutor %}
     Tutor: <a href="{% url 'enlace_tutor' request.user.datosestudiante.tutor.id %}">
     {{request.user.datosestudiante.tutor.nombre}} 
     {{request.user.datosestudiante.tutor.apellido}}</a>
     <p>
+    {% else %}
+    Aún no asignaste tutor<p>
+    {% endif %}
 {%elif grupo == 'docente' %}
     <p>
     Nombre: {{ request.user.datosdocente.nombre }}<p>
@@ -41,8 +45,9 @@
     Apellido: {{ request.user.datostutor.apellido }}<p>
     Celular: {{ request.user.datostutor.celular }}<p>
     Correo Electrónico: {{ request.user.datostutor.correo}}<p>
-    Mención: {{ request.user.datostutor.mencion}}<p>
+    {% comment %}Mención: {{ request.user.datostutor.mencion}}<p>{% endcomment %}
     Cantidad de Estudiantes: {{ request.user.datostutor.datosestudiante_set.count}}<p>
 {%endif%}
+<a href={% url 'editar_perfil' %}>Editar</a>
 {% endblock %}
 

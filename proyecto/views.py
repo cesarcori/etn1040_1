@@ -38,6 +38,7 @@ def registerPage(request):
             nombre = form.cleaned_data.get('nombre')
             apellido = form.cleaned_data.get('apellido')
             carnet = form.cleaned_data.get('carnet')
+            extension = form.cleaned_data.get('extension')
             registro_uni = form.cleaned_data.get('registro_uni')
             celular = form.cleaned_data.get('celular')
             mencion = form.cleaned_data.get('mencion')
@@ -80,6 +81,7 @@ def registerPage(request):
                         nombre = nombre,
                         apellido = apellido,
                         carnet = carnet,
+                        extension = extension,
                         registro_uni = registro_uni,
                         celular = celular,
                         mencion = mencion,
@@ -135,7 +137,6 @@ def home(request):
                 docente_asignado = doc_mencion[1]
 
             docente = doc_mencion[0]                   
-
             # creacion del usuario
             User.objects.create_user(
                     username = info_usuario.usuario,
@@ -153,6 +154,7 @@ def home(request):
                     nombre = info_usuario.nombre,
                     apellido = info_usuario.apellido,
                     carnet = info_usuario.carnet,
+                    extension = info_usuario.extension,
                     registro_uni = info_usuario.registro_uni,
                     celular = info_usuario.celular,
                     mencion = info_usuario.mencion,
@@ -218,35 +220,45 @@ def estudiante(request):
 @login_required(login_url='login')
 def perfilUsuarios(request):
     grupo = str(request.user.groups.get())
-    # id_usuario = request.user.id
-    # # switch-case
-    # def perfil_admi():
-        # usuario = User.objects.get(id=id_usuario)
-        # info = usuario.datosadministrador
-        # return info
-    # def perfil_estudiante():
-        # info = DatosEstudiante.objects.all()
-        # return info
-    # def perfil_docente():
-        # info = DatosDocente.objects.all()
-        # return info
-    # def perfil_tutor():
-        # info = DatosTutor.objects.all()
-        # return info
-    # def perfil_usuario(grupo):
-        # grupo_pertenece = {
-                # 'administrador': perfil_admi,
-                # 'estudiante': perfil_estudiante,
-                # 'docente': perfil_docente,
-                # 'tutor': perfil_tutor,
-                # }
-        # func = grupo_pertenece.get(grupo)
-        # return func
-    # llamando datos del usuario segun grupo que pertenece
-    # info_usuario = perfil_usuario(grupo)
-    # print(perfil_usuario(grupo))
     context = {'grupo': grupo}
     return render(request, 'proyecto/perfil.html', context)
+
+@login_required(login_url='login')
+def editarPerfil(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    if grupo == 'tutor':
+        tutor = usuario.datostutor
+        form = DatosTutorForm(instance=tutor)
+        if request.method == "POST":
+            form = DatosTutorForm(request.POST, instance=tutor)
+            nombre = request.POST['nombre']
+            apellido = request.POST['apellido']
+            if form.is_valid():
+                form.save()
+                usuario.first_name = nombre
+                usuario.last_name = apellido
+                usuario.save()
+                return redirect('perfil')
+    if grupo == 'docente':
+        docente = usuario.datosdocente
+        form = DatosDocenteForm(instance=docente)
+        if request.method == "POST":
+            form = DatosDocenteForm(request.POST, instance=docente)
+            if form.is_valid():
+                form.save()
+                return redirect('perfil')
+    if grupo == 'estudiante':
+        estudiante = usuario.datosestudiante
+        form = DatosEstudianteForm(instance=estudiante)
+        if request.method == "POST":
+            form = DatosEstudianteForm(request.POST, instance=estudiante)
+            if form.is_valid():
+                form.save()
+                usuario.save()
+                return redirect('perfil')
+    context = {'grupo': grupo,'form':form}
+    return render(request, 'proyecto/editar_perfil.html', context)
 
 # Comunicados, docentes, tutores, y vista estudiantes
 @login_required(login_url='login')
@@ -327,10 +339,17 @@ def comunicadosDocEst(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 def comunicadosTutEst(request):
-    grupo = str(request.user.groups.get())
-    id_tutor= request.user.datosestudiante.tutor.usuario_id
-    tutor = User.objects.get(id=id_tutor)
-    comunicados = tutor.comunicado_set.all().order_by('-fecha_creacion')
+    grupo = request.user.groups.get().name
+    # id_tutor= request.user.datosestudiante.tutor.usuario_id
+    # tutor = User.objects.get(id=id_tutor)
+    tutor = request.user.datosestudiante.tutor.usuario
+    if tutor:
+        if Comunicado.objects.filter(autor=tutor).exists():
+            comunicados = tutor.comunicado_set.all().order_by('-fecha_creacion')
+        else:
+            comunicados = None
+    else:
+        comunicados = None
     valor = 'tutor'
     context = {'grupo': grupo, 'comunicados':comunicados, 'valor':valor}
     return render(request, 'proyecto/comunicado_estudiantes.html', context)
@@ -831,7 +850,7 @@ def carta_aceptacion_tutor(request):
     info_estu = [
             estudiante.__str__(),
             estudiante.carnet,
-            extension,
+            estudiante.extension,
             estudiante.tutor.celular,
             estudiante.tutor.correo,
             estudiante.grupo_doc.__str__(),
@@ -855,7 +874,7 @@ def carta_solicitud_tutor(request):
     info_estu = [
             estudiante.__str__(),
             estudiante.carnet,
-            extension,
+            estudiante.extension,
             estudiante.celular,
             estudiante.correo,
             estudiante.grupo_doc.__str__(),
@@ -1010,14 +1029,13 @@ def formulario_1(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
     # lo siguiente hay que hagregar de alguna forma a la base de datos
-    extension = 'L.P.'
     cargo = 'director'
     lugar = 'instituto de electrónica aplicada'
     institucion = 'facultad de ingeniería'
     info_estu = [
             estudiante.__str__(),
             estudiante.carnet,
-            extension,
+            estudiante.extension,
             estudiante.tutor.__str__(),
             estudiante.grupo_doc.__str__(),
             estudiante.registroperfil.titulo,
@@ -1238,7 +1256,7 @@ def carta_final_tutor(request):
     info_estu = [
             estudiante.__str__(),
             estudiante.carnet,
-            extension,
+            estudiante.extension,
             estudiante.tutor.celular,
             estudiante.tutor.correo,
             estudiante.grupo_doc.__str__(),

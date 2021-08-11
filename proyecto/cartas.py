@@ -269,7 +269,7 @@ def carta_solicitud(buffer, info_estu):
 
 # firma 
     text_center('Univ.: '+nombre)
-    text_center('C.I.: '+carnet+' '+extension)
+    text_center('C.I.: '+carnet+' '+ extension)
     text_center('Cel.: '+ celular)
     text_center('e-mail.: '+ correo)
 

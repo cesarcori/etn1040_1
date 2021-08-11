@@ -59,8 +59,8 @@ def fecha_right():
     mes = meses[hoy.month - 1]
     year = hoy.year.__str__()
     return dia, mes, year
-def numero_letra(numero):
-    numero = int(numero)
+def numero_letra(numero_int):
+    numero = int(numero_int)
     if numero < 10:
         return UNIDADES[numero]
     decena, unidad = divmod(numero, 10)
@@ -277,6 +277,7 @@ def formulario3(buffer, estudiante, proyecto):
         tele = 'V'
     nombre = estudiante.__str__()
     carnet = estudiante.carnet
+    extension = estudiante.extension
     titulo = proyecto.titulo
     docente_tutor = estudiante.tutor.__str__()
     mencion = estudiante.mencion
@@ -336,7 +337,7 @@ def formulario3(buffer, estudiante, proyecto):
     pdf.cell(w=55, h=6, txt=nombre, ln=1, border=0, align='L')
 
     pdf.set_xy(112,48)
-    pdf.cell(w=55, h=6, txt=carnet, ln=1, border=0, align='L')
+    pdf.cell(w=55, h=6, txt=carnet+' '+extension, ln=1, border=0, align='L')
 
 # Titulo del tema
     pdf.set_xy(54,54.7)
@@ -461,7 +462,7 @@ def formulario4(buffer, estudiante, proyecto):
     equipo_de = '1'
     nombre = estudiante.__str__()
     carnet = estudiante.carnet
-    extension = 'L.P.'
+    extension = estudiante.extension
     tutor = estudiante.tutor.__str__()
     titulo = proyecto.titulo
     nota_40 = proyecto.calificacion.__str__()

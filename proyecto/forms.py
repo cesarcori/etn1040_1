@@ -19,6 +19,18 @@ class CreateUserForm(UserCreationForm):
         (t, t),
         (c, c),
     ] 
+
+    EXTENSION = [
+        ( 'LP'  ,  'La Paz' )     ,
+        ( 'SC'  ,  'Santa Cruz' ) ,
+        ( 'OR'  ,  'Oruro' )      ,
+        ( 'CB'  ,  'Cochabamba' ) ,
+        ( 'CH'  ,  'Chuquisaca' ) ,
+        ( 'PT'  ,  'Potosí' )     ,
+        ( 'TJ'  ,  'Tarija' )     ,
+        ( 'BE'  ,  'Beni' )       ,
+        ( 'PD'  ,  'Pando' )      ,
+    ]
     class Meta:
         model = User
         fields = [
@@ -30,6 +42,7 @@ class CreateUserForm(UserCreationForm):
     nombre = forms.CharField(max_length = 200, validators=[solo_letra])
     apellido = forms.CharField(max_length = 200, validators=[solo_letra])
     carnet = forms.CharField(max_length = 200, validators=[solo_carnet])
+    extension = forms.ChoiceField(choices=EXTENSION)
     registro_uni = forms.CharField(max_length = 200, 
                     label='Registro Universitario', validators=[solo_ru])
     celular = forms.CharField(max_length = 200, validators=[solo_celular])
@@ -234,3 +247,17 @@ class ProyectoDeGradoForm(forms.ModelForm):
 
 class CalificarProyectoForm(forms.Form):
     calificacion = forms.IntegerField(min_value=1, max_value=100)
+
+class DatosTutorForm(forms.ModelForm):
+    class Meta:
+        model = DatosTutor
+        fields = '__all__'
+        exclude = ['usuario','correo']
+class DatosDocenteForm(forms.ModelForm):
+    class Meta:
+        model = DatosDocente
+        fields = ['celular']
+class DatosEstudianteForm(forms.ModelForm):
+    class Meta:
+        model = DatosEstudiante
+        fields = ['celular']

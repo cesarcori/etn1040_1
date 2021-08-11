@@ -13,6 +13,7 @@ class SolicitudInvitado(models.Model):
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     carnet = models.CharField(max_length=50, null=True, unique=True)
+    extension = models.CharField(max_length=50, null=True, unique=True)
     registro_uni = models.CharField(max_length=50, null=True, unique=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
@@ -104,14 +105,13 @@ class DatosEstudiante(models.Model):
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     carnet = models.CharField(max_length=50, null=True, unique=True)
+    extension = models.CharField(max_length=50, null=True, unique=True)
     registro_uni = models.CharField(max_length=50, null=True, unique=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
     cronograma = models.CharField(max_length=50, null=True)
     grupo_doc = models.ForeignKey(DatosDocente,on_delete=models.SET(''), null=True)
     tutor = models.ForeignKey(DatosTutor,on_delete=models.SET(''), null=True)
-    # nombre_sala_docente = models.CharField(max_length=50 null=True)
-    # nombre_sala_tutor = models.CharField(max_length=50, null=True)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

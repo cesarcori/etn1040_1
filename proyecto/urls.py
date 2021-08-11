@@ -13,6 +13,7 @@ urlpatterns = [
     path('estudiante/', views.estudiante, name='estudiante'),
 
     path('perfil/', views.perfilUsuarios, name='perfil'),
+    path('perfil/editar', views.editarPerfil, name='editar_perfil'),
     path('busqueda/', views.busquedaProyectos, name='busqueda'),
     path('mis_comun/', views.misComunicados, name='mis_comunicados'),
     path('crear-comun/', views.crearComunicado, name='crear_comunicado'),
@@ -74,8 +75,8 @@ urlpatterns = [
     path('material-para-est/', views.materialParaEst, name='material_para_estudiante'),
 
     path('confirmar-paso-1/', views.confirmarPaso1, name='confirmar_paso_1'),
-    path('confirmar-paso-5/', views.confirmarPaso5, name='confirmar_paso_1'),
-    path('confirmar-paso-6/', views.confirmarPaso6, name='confirmar_paso_1'),
+    path('confirmar-paso-5/', views.confirmarPaso5, name='confirmar_paso_5'),
+    path('confirmar-paso-6/', views.confirmarPaso6, name='confirmar_paso_6'),
 
     path('error/', views.error , name='error_pagina'),
     
