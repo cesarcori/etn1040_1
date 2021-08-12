@@ -38,7 +38,6 @@
     Mención: {{ request.user.datosdocente.mencion}}<p>
     Grupo : {{ request.user.datosdocente.grupo}}<p>
     Cantidad de Estudiantes: {{ request.user.datosdocente.datosestudiante_set.count}}<p>
-        
 {%elif grupo == 'tutor' %}
     <p>
     Nombre: {{ request.user.datostutor.nombre }}<p>

@@ -257,6 +257,14 @@ def editarPerfil(request):
                 form.save()
                 usuario.save()
                 return redirect('perfil')
+    if grupo == 'administrador':
+        administrador = usuario.datosadministrador
+        form = DatosAdministradorForm(instance=administrador)
+        if request.method == "POST":
+            form = DatosAdministradorForm(request.POST, instance=administrador)
+            if form.is_valid():
+                form.save()
+                return redirect('perfil')
     context = {'grupo': grupo,'form':form}
     return render(request, 'proyecto/editar_perfil.html', context)
 

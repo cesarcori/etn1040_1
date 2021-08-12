@@ -261,3 +261,7 @@ class DatosEstudianteForm(forms.ModelForm):
     class Meta:
         model = DatosEstudiante
         fields = ['celular']
+class DatosAdministradorForm(forms.ModelForm):
+    class Meta:
+        model = DatosAdministrador
+        fields = ['celular']
