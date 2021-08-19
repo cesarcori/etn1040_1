@@ -13,9 +13,14 @@ Número de Celular: {{estudiante.celular}} <p>
 Grupo: {{estudiante.grupo_doc.grupo}} <p>
 Docente: <a href="{% url 'enlace_docente' estudiante.grupo_doc.id %}">
     {{estudiante.grupo_doc.nombre}} {{estudiante.grupo_doc.apellido}}</a><p>
+{% if estudiante.tutor %}
 {%if grupo == 'docente' or grupo == 'administrador'%}
 Tutor: <a href="{% url 'enlace_tutor' estudiante.tutor.id %}">
     {{estudiante.tutor.nombre}} {{estudiante.tutor.apellido}}</a><p>
+Fecha de Inscripción: {{estudiante.fecha_inscripcion}}
+{%endif%}
+{% else %}
+Aún no tiene tutor<p>
 Fecha de Inscripción: {{estudiante.fecha_inscripcion}}
 {%endif%}
 {% endblock %}

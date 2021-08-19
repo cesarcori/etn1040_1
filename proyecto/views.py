@@ -16,11 +16,11 @@ from .formularios import *
 from random import randint
 from datetime import timedelta
 # busqueda
-# import pandas as pd
-# from sklearn.feature_extraction.text import TfidfVectorizer
-# from sklearn.metrics.pairwise import linear_kernel
-# import nltk
-# from nltk.corpus import stopwords
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
+import nltk
+from nltk.corpus import stopwords
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
@@ -1332,7 +1332,7 @@ def ultimosFormularios(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
-@permitir_paso6()
+# @permitir_paso6()
 def materialParaEst(request):
     grupo = request.user.groups.get().name
     usuario = request.user

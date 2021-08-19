@@ -13,13 +13,13 @@
 
 {% if proyecto_grado and proyecto.0.calificacion%}
 {% if progreso.nivel < 100 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a>
+<a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a>
 {% endif %}
 {% if progreso.nivel >= 100 %}
 <h4>Este paso ya fué confirmado</h4>
 {% endif %}
 {% else %}
-<a class="btn btn-success disabled" href={%url 'confirmar_paso_1' %}>Completado</a>
+<a class="btn btn-success disabled" href={%url 'confirmar_paso_6' %}>Completado</a>
 No se registro aún el proyecto o no se puso calificación
 {% endif %}
 
