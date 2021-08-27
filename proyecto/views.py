@@ -16,11 +16,11 @@ from .formularios import *
 from random import randint
 from datetime import timedelta
 # busqueda
-import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-import nltk
-from nltk.corpus import stopwords
+# import pandas as pd
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.metrics.pairwise import linear_kernel
+# import nltk
+# from nltk.corpus import stopwords
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
@@ -147,7 +147,7 @@ def home(request):
                     )
 
             # creacion de datos del usuario
-            sin_tutor = User.objects.get(username='sin_tutor')
+            # sin_tutor = User.objects.get(username='sin_tutor')
             DatosEstudiante.objects.create(
                     usuario = User.objects.get(username=info_usuario.usuario),
                     correo = info_usuario.correo,
@@ -190,6 +190,20 @@ def home(request):
     return render(request, 'proyecto/home.html', context)
 
 @login_required(login_url='login')
+@admin_only
+def eliminarUsuario(request, usuario_id):
+    usuario = User.objects.get(pk=usuario_id)    
+    eliminar = 'no'
+    if request.method == 'POST':
+        eliminar = request.POST['eliminar']
+        print(eliminar)
+    if eliminar == 'si':
+        usuario.delete()
+        return redirect('home')
+    context = {'usuario':usuario}
+    return render(request, 'proyecto/eliminar_usuario.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
 def docente(request):
     grupo = 'docente'
@@ -210,12 +224,41 @@ def tutor(request):
 def estudiante(request):
     grupo = 'estudiante'
     estudiante = request.user.datosestudiante
-    if Progreso.objects.filter(usuario=estudiante).exists():
-        progreso = Progreso.objects.get(usuario=estudiante).nivel
+    if estudiante.grupo_doc == None:
+        sorteo = 'no'
+        if request.method == 'POST':
+            sorteo = request.POST['sorteo']
+        if sorteo == 'si':
+            # sorteo docente
+            mencion = estudiante.mencion
+            doc_mencion = DatosDocente.objects.filter(mencion=mencion)
+            cantidad_est1 = doc_mencion[0].datosestudiante_set.count()
+            cantidad_est2 = doc_mencion[1].datosestudiante_set.count()
+            if cantidad_est1 == cantidad_est2:
+                sorteo = randint(0,1)
+                docente_asignado = doc_mencion[sorteo]
+            elif cantidad_est1 < cantidad_est2:
+                docente_asignado = doc_mencion[0]
+            else:
+                docente_asignado = doc_mencion[1]
+            docente = doc_mencion[0]                   
+            # guardar docente
+            estudiante.grupo_doc = docente
+            estudiante.save()
+            # creacion de salas docente-estudiante
+            id_docente = estudiante.grupo_doc.usuario_id.__str__()
+            id_estudiante = estudiante.usuario_id.__str__()
+            nombre_sala = id_docente + id_estudiante
+            Sala.objects.create(nombre_sala = nombre_sala)
+            return redirect('estudiante')
+        return render(request, 'proyecto/sorteo_docente.html')
     else:
-        progreso = 1
-    context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante}
-    return render(request, 'proyecto/estudiante.html', context)
+        if Progreso.objects.filter(usuario=estudiante).exists():
+            progreso = Progreso.objects.get(usuario=estudiante).nivel
+        else:
+            progreso = 1
+        context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante}
+        return render(request, 'proyecto/estudiante.html', context)
 
 @login_required(login_url='login')
 def perfilUsuarios(request):
@@ -231,7 +274,7 @@ def editarPerfil(request):
         tutor = usuario.datostutor
         form = DatosTutorForm(instance=tutor)
         if request.method == "POST":
-            form = DatosTutorForm(request.POST, instance=tutor)
+            form = DatosTutorForm(request.POST, request.FILES, instance=tutor)
             nombre = request.POST['nombre']
             apellido = request.POST['apellido']
             if form.is_valid():
@@ -244,7 +287,7 @@ def editarPerfil(request):
         docente = usuario.datosdocente
         form = DatosDocenteForm(instance=docente)
         if request.method == "POST":
-            form = DatosDocenteForm(request.POST, instance=docente)
+            form = DatosDocenteForm(request.POST, request.FILES, instance=docente)
             if form.is_valid():
                 form.save()
                 return redirect('perfil')
@@ -252,7 +295,9 @@ def editarPerfil(request):
         estudiante = usuario.datosestudiante
         form = DatosEstudianteForm(instance=estudiante)
         if request.method == "POST":
-            form = DatosEstudianteForm(request.POST, instance=estudiante)
+            form = DatosEstudianteForm(request.POST, request.FILES, instance=estudiante)
+            print(form.instance.celular)
+            print(form.instance.imagen_perfil)
             if form.is_valid():
                 form.save()
                 usuario.save()
@@ -261,7 +306,7 @@ def editarPerfil(request):
         administrador = usuario.datosadministrador
         form = DatosAdministradorForm(instance=administrador)
         if request.method == "POST":
-            form = DatosAdministradorForm(request.POST, instance=administrador)
+            form = DatosAdministradorForm(request.POST, request.FILES, instance=administrador)
             if form.is_valid():
                 form.save()
                 return redirect('perfil')
@@ -350,7 +395,10 @@ def comunicadosTutEst(request):
     grupo = request.user.groups.get().name
     # id_tutor= request.user.datosestudiante.tutor.usuario_id
     # tutor = User.objects.get(id=id_tutor)
-    tutor = request.user.datosestudiante.tutor.usuario
+    if request.user.datosestudiante.tutor == None:
+        tutor = None
+    else:
+        tutor = request.user.datosestudiante.tutor.usuario
     if tutor:
         if Comunicado.objects.filter(autor=tutor).exists():
             comunicados = tutor.comunicado_set.all().order_by('-fecha_creacion')
@@ -622,7 +670,29 @@ def paso2(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     progreso = Progreso.objects.get(usuario=estudiante)
-    context = {'grupo': grupo,'progreso': progreso}
+    if request.method == 'POST':
+        buscado = request.POST['buscado']
+        frase_busqueda = request.POST.get('habilitar')
+        tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
+        lista_nombres = [item for item in tesis_df['NOMBRE']]
+        lista_titulos = [item for item in tesis_df['TITULO']]
+        stop_words = set(stopwords.words('spanish')) 
+        # search_terms = 'servicio de voz'
+        search_terms = buscado
+        vectorizer = TfidfVectorizer(stop_words=stop_words)
+        vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
+        cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
+        titulo_scores = [item.item() for item in cosine_similarities[1:]]  # convert back to native Python dtypes
+        score_titles = list(zip(titulo_scores, lista_titulos))
+        ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
+                x[0])[:20] 
+        dicc_score = {}
+        for score_titulo in ordenado_score:
+            dicc_score[score_titulo[0]] = score_titulo[1]
+        context = {'grupo': grupo,'dicc_score':dicc_score,
+                'buscado':buscado,'progreso':progreso}
+    else:
+        context = {'grupo': grupo,'progreso': progreso}
     return render(request, 'proyecto/estudiante_paso2.html', context)
 
 @login_required(login_url='login')
@@ -669,6 +739,11 @@ def paso3(request):
             user_est = request.user.datosestudiante
             user_est.tutor = DatosTutor.objects.get(correo=correo)
             user_est.save()
+            # creacion de salas tutor-estudiante
+            id_tutor = str(DatosTutor.objects.last().usuario_id)
+            id_estudiante = str(request.user.id)
+            nombre_sala = id_tutor + id_estudiante
+            Sala.objects.create(nombre_sala = nombre_sala)
         else: 
             usuario = correo.split('@')[0]
             # creacion de usuario tutor

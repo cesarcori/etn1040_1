@@ -1,25 +1,26 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
+<p>Reglamentos de la Materia ETN-1040</p>
 <p>
-Como usar el sistema <p>
-Reglamentos de la Materia ETN-1040<p>
 {%for link, titulo in dicc_link.items%}
-<a href="{{ link.archivo.url }}">{{titulo}}</a><p>
+<a href="{{ link.archivo.url }}">{{titulo}}</a><br>
 {%endfor%}
-<p>
-Introduccion de la materia:<p>
-Documentos compartidos por Docente:
-Ing. {{request.user.datosestudiante.grupo_doc}}<p>
-{%for link in material_docente %}
+</p>
+
+<p>Introducción de la materia:<br>
+Documentos compartidos por Docente ETN-1040:
+Ing. {{request.user.datosestudiante.grupo_doc}}</p>
+<p>{%for link in material_docente %}
 <a href="{{ link.material_docente.url }}">{{link.material_docente.name}}<a><p>
-{%endfor%}
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+{%endfor%}</p>
+<p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+
 {% if progreso %}
 {% if progreso.nivel < 19 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a>
+<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
 {% endif %}
 {% if progreso.nivel >= 19 %}
-<h4>Este paso ya fué confirmado</h4>
+<h4>Paso completado</h4>
 {% endif %}
 {% endif %}
 {% endblock %}

@@ -8,6 +8,7 @@
       <th scope="col">Grupo</th>
       <th scope="col">Docente</th>
       <th scope="col">Mención</th>
+      <th scope="col">Eliminar</th>
     </tr>
   </thead>
   <tbody>
@@ -17,6 +18,7 @@
       <td><a class="text-underline-hover" href="{% url 'enlace_docente' docente.id %}">{{docente.apellido}},
               {{docente.nombre}}</a></td>
         <td>{{docente.mencion}}</td>
+        <td><a class="text-underline-hover" href="{% url 'eliminar_usuario' docente.usuario_id %}">Eliminar</a></td>
     </tr>
     {% endfor %}
   </tbody>

@@ -1,0 +1,18 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+<h3>¿Está seguro que desea eliminar al</h3> 
+<h1 class='text-danger'> {{usuario.groups.get.name.title}}?</h1>
+{%if usuario.groups.get.name == 'estudiante'%}
+{%endif %}
+Nombre: {{usuario.first_name}} {{usuario.last_name}}<br> 
+Usuario: {{usuario.username}}<br>
+e-mail: {{usuario.email}}<br> 
+<br>
+<form action='' method='POST'>
+    {% csrf_token %}
+    <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER}}">Cancelar</a>
+    <button type="submit" name='eliminar' class="btn btn-success" 
+    value='si'>Si, Eliminar</button>
+</form> 
+{% endblock %}
+

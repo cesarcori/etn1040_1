@@ -256,12 +256,12 @@ class DatosTutorForm(forms.ModelForm):
 class DatosDocenteForm(forms.ModelForm):
     class Meta:
         model = DatosDocente
-        fields = ['celular']
+        fields = ['celular', 'imagen_perfil']
 class DatosEstudianteForm(forms.ModelForm):
     class Meta:
         model = DatosEstudiante
-        fields = ['celular']
+        fields = ['celular','imagen_perfil']
 class DatosAdministradorForm(forms.ModelForm):
     class Meta:
         model = DatosAdministrador
-        fields = ['celular']
+        fields = ['celular','imagen_perfil']

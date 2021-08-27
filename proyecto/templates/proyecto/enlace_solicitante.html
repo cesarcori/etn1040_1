@@ -1,16 +1,36 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 
-<H3>información del estudiante</h3>
+<h3>Información del solicitante</h3>
+<style>
+	.profile-pic{
+		max-width: 200px;
+		max-height:200px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<img class="profile-pic" src="{{request.user.datosestudiante.imagen_perfil.url}}" >
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="card card-body">
 <p>
-Nombre: {{estudiante.nombre}} <p>
-Apellido: {{estudiante.apellido}} <p>
-Registro Universitario: {{estudiante.registro_uni}} <p>
-Mención: {{estudiante.mencion}} <p>
-Cédula de Identidad: {{estudiante.carnet}} {{estudiante.extension}}<p>
-Correo Electrónico: {{estudiante.correo}} <p>
-Número de Celular: {{estudiante.celular}} <p>
-Fecha de Solicitud: {{estudiante.fecha_solicitud}}
+Nombre: {{estudiante.nombre}}<br>
+Apellido: {{estudiante.apellido}}<br>
+Registro Universitario: {{estudiante.registro_uni}}<br>
+Mención: {{estudiante.mencion}}<br>
+Cédula de Identidad: {{estudiante.carnet}} {{estudiante.extension}}<br>
+Correo Electrónico: {{estudiante.correo}}<br>
+Número de Celular: {{estudiante.celular}}<br>
+Fecha de Solicitud: {{estudiante.fecha_solicitud}}</p>
+		</div>
+	</div>
+</div>
 
 
 {% endblock %}

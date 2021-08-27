@@ -1,32 +1,29 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-paso 2 - investigacion del perfil
-busqueda de proyectos de grado, que no sean repetidos
-<p>
-Búsqueda de proyectos de grado<p>
-{% comment %}<a class="btn btn-primary" href="{% url 'busqueda' %}">Búsqueda PG</a>{% endcomment %}
-{% comment %}<p>{% endcomment %}
+<p>Búsqueda de proyectos de grado<br>
+Ingrese el título de su perfil o proyecto de grado,<br>
+no debe ser igual mayor al <strong>90% de similitud</strong>.</p>
 
 <p>
-<form class="d-flex" style="margin:auto;max-width:300px" method='post'
-                     action="" >
+{% comment %}<form class="d-flex" style="margin:auto;max-width:300px" method='post' action="" >{% endcomment %}
+<form class="d-flex" method='post' action="" >
     {% csrf_token %}
     <input name="buscado" class="form-control me-2" type="search" placeholder="Proyecto de Grado" aria-label="Search">
     <button class="btn btn-outline-success" type="submit">Buscar</button>
 </form>
-<p>
-Se busco: {{ buscado }}
-<p>
-{% for score, titulo in dicc_score.items %}
-{{score}} ** {{titulo}}<p>
-{%endfor%}
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+</p>
+<p>Se busco: <strong>{{ buscado }}</strong></p>
+<p>{% for score, titulo in dicc_score.items %}
+{{score}} ** {{titulo}}<br>
+{%endfor%}</p>
+
+<p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if progreso.nivel < 25 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a>
+<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
 {% endif %}
 {% if progreso.nivel >= 25 %}
-<h4>Este paso ya fué confirmado</h4>
+<h4>Paso Completado</h4>
 {% endif %}
 
 {% endblock %}

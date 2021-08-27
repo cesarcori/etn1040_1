@@ -1,15 +1,33 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-{% comment %}Solo ingresa se ve al docente que se tiene aca{% endcomment %}
 <h3>Información del docente</h3>
-<p>
+<style>
+	.profile-pic{
+		max-width: 200px;
+		max-height:200px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<img class="profile-pic" src="{{docente.imagen_perfil.url}}" >
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="card card-body">
+
 {%if grupo == 'administrador' %}
-Nombre: {{docente.nombre}} <p>
-Apellido: {{docente.apellido}} <p>
-Celular: {{docente.celular}} <p>
-Correo Electrónico: {{docente.celular}} <p>
-Grupo: {{docente.grupo}} <p>
-Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
+<p>Nombre: {{docente.nombre}}<br>
+Apellido: {{docente.apellido}}<br>
+Celular: {{docente.celular}}<br>
+Correo Electrónico: {{docente.celular}}<br>
+Grupo: {{docente.grupo}}<br>
+Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>
+		</div>
+	</div>
+</div>
 <h3>Lista de Estudiantes</h3>
 <table class="table table-striped">
   <thead>
@@ -28,21 +46,26 @@ Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
 {%endif%}
 
 {%if grupo == 'estudiante'%}
-Nombre: {{docente.nombre}} <p>
-Apellido: {{docente.apellido}} <p>
-Celular: {{docente.celular}} <p>
-Correo Electrónico: {{docente.celular}} <p>
-Grupo: {{docente.grupo}} <p>
-Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
+<p>Nombre: {{docente.nombre}}<br>
+Apellido: {{docente.apellido}}<br>
+Celular: {{docente.celular}}<br>
+Correo Electrónico: {{docente.celular}}<br>
+Grupo: {{docente.grupo}}</p>
+		</div>
+	</div>
+</div>
 {%endif%}
 
 {%if grupo == 'tutor'%}
-Nombre: {{docente.nombre}} <p>
-Apellido: {{docente.apellido}} <p>
-Celular: {{docente.celular}} <p>
-Correo Electrónico: {{docente.celular}} <p>
-Grupo: {{docente.grupo}} <p>
-Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}
+<p>Nombre: {{docente.nombre}}<br>
+Apellido: {{docente.apellido}}<br>
+Celular: {{docente.celular}}<br>
+Correo Electrónico: {{docente.celular}}<br>
+Grupo: {{docente.grupo}}<br>
+{% comment %}Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>{% endcomment %}
+		</div>
+	</div>
+</div>
 {%endif%}
 
 {% endblock %}
