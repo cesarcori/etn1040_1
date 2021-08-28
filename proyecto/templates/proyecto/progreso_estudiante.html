@@ -34,7 +34,11 @@
     <tr>
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
-      <th scope="col">Proyecto</th>
+      <th scope="col">Proyecto
+        <a href=# type="button" class="btn badge rounded-pill bg-success" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno">
+        V.B.</a>
+      </th>
       <th scope="col">Revisar</th>
     </tr>
   </thead>
@@ -42,7 +46,7 @@
 {%for s in salas_proy%}
     <tr>
 <td>
-<button class="btn btn-danger">{{s.sala}}</button>
+{{s.sala}}
 </td>      
 
 <td>
@@ -59,7 +63,7 @@
 </td>      
 
 <td>
-    <a class="btn btn-danger" href="{{ s.material_estudiante.url }}">Archivo</a>
+    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Archivo</a>
 </td>
 <td>
 <a class="btn btn-primary" href="{% url 'sala_revisar_proyecto' s.id %}">Revisar</a>
@@ -78,7 +82,11 @@
     <tr>
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
-      <th scope="col">Perfil</th>
+      <th scope="col">Perfil
+        <a href=# type="button" class="btn badge rounded-pill bg-secondary" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno">
+        V.B.</a>
+      </th>
       <th scope="col">Revisar</th>
     </tr>
   </thead>
