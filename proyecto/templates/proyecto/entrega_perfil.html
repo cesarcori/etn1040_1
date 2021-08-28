@@ -10,8 +10,16 @@
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
       <th scope="col">Perfil</th>
+      {% if request.user.datosestudiante.vb_perfil_docente %}
+      <th scope="col">Docente <i class="fas fa-check"></i></th>
+      {% else %}
       <th scope="col">Docente <i class="fas fa-hourglass-half"></i></th>
+      {% endif %}
+      {% if request.user.datosestudiante.vb_perfil_tutor %}
+      <th scope="col">Tutor <i class="fas fa-check"></i></th>
+      {% else %}
       <th scope="col">Tutor <i class="fas fa-hourglass-half"></i></th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>

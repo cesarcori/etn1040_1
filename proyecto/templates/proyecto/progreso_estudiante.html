@@ -27,7 +27,6 @@
 {%endif%}
 <p>
 
-
 {% comment %}********* PROYECTO DE GRADO **************{% endcomment %}
 <table class="table table-striped table-hover">
   <thead>
@@ -35,9 +34,28 @@
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
       <th scope="col">Proyecto
-        <a href=# type="button" class="btn badge rounded-pill bg-success" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno">
+        {% if grupo == 'docente'%}
+        {% if estudiante.vb_proyecto_docente%}
+        <div type="button" class="btn badge rounded-pill bg-success" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">
+        V.B.</div>
+        {% else %}
+        <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn badge rounded-pill bg-secondary" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
         V.B.</a>
+        {% endif %}
+        {% endif %}
+        {% if grupo == 'tutor'%}
+        {% if estudiante.vb_proyecto_tutor%}
+        <div type="button" class="btn badge rounded-pill bg-success" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">
+        V.B.</div>
+        {% else %}
+        <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn badge rounded-pill bg-secondary" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+        V.B.</a>
+        {% endif %}
+        {% endif %}
       </th>
       <th scope="col">Revisar</th>
     </tr>
@@ -83,9 +101,31 @@
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
       <th scope="col">Perfil
-        <a href=# type="button" class="btn badge rounded-pill bg-secondary" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno">
+        {% if grupo == 'docente'%}
+        {% if estudiante.vb_perfil_docente%}
+        <div type="button" class="btn badge rounded-pill bg-success" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">
+        V.B.</div>
+        {% else %}
+        <a href="{% url 'visto_bueno_perfil' estudiante.id %}" type="button" class="btn badge rounded-pill bg-secondary" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
         V.B.</a>
+        {% endif %}
+        {% endif %}
+        {% if grupo == 'tutor'%}
+        {% if estudiante.vb_perfil_tutor%}
+        <div type="button" class="btn badge rounded-pill bg-success" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">
+        V.B.</div>
+        {% else %}
+        <a href="{% url 'visto_bueno_perfil' estudiante.id %}" type="button" class="btn badge rounded-pill bg-secondary" 
+        data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+        V.B.</a>
+        {% endif %}
+        {% endif %}
+        {% comment %}<a href=# type="button" class="btn badge rounded-pill bg-secondary" {% endcomment %}
+        {% comment %}data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno">{% endcomment %}
+        {% comment %}V.B.</a>{% endcomment %}
       </th>
       <th scope="col">Revisar</th>
     </tr>

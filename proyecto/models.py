@@ -114,6 +114,10 @@ class DatosEstudiante(models.Model):
     grupo_doc = models.ForeignKey(DatosDocente,on_delete=models.SET(''), null=True)
     tutor = models.ForeignKey(DatosTutor,on_delete=models.SET(''), null=True, blank=True)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
+    vb_perfil_docente = models.BooleanField(default=False)
+    vb_perfil_tutor = models.BooleanField(default=False)
+    vb_proyecto_docente = models.BooleanField(default=False)
+    vb_proyecto_tutor = models.BooleanField(default=False)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

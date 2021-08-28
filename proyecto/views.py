@@ -505,6 +505,42 @@ def progresoEstudiante(request, pk_est):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
+def vistoBuenoPerfil(request, id_est):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    visto_bueno = 'no'
+    if request.method == 'POST':
+        visto_bueno = request.POST['visto_bueno']
+    if visto_bueno == 'si':
+        if grupo == 'docente':
+            estudiante.vb_perfil_docente = True
+        else:
+            estudiante.vb_perfil_tutor = True
+        estudiante.save()
+        return redirect('progreso_estudiante',pk_est=id_est)
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/visto_bueno_perfil.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
+def vistoBuenoProyecto(request, id_est):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    visto_bueno = 'no'
+    if request.method == 'POST':
+        visto_bueno = request.POST['visto_bueno']
+    if visto_bueno == 'si':
+        if grupo == 'docente':
+            estudiante.vb_proyecto_docente = True
+        else:
+            estudiante.vb_proyecto_tutor = True
+        estudiante.save()
+        return redirect('progreso_estudiante',pk_est=id_est)
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/visto_bueno_proyecto.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','administrador'])
 def enlaceDocente(request, pk_doc):
     grupo = request.user.groups.get().name

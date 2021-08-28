@@ -9,8 +9,17 @@
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
       <th scope="col">Proyecto</th>
-      <th scope="col">Docente <a href=#><i class="fas fa-hourglass-half"></i></th></a>
+      {% if request.user.datosestudiante.vb_proyecto_docente %}
+      <th scope="col">Docente <i class="fas fa-check"></i></th>
+      {% else %}
+      <th scope="col">Docente <i class="fas fa-hourglass-half"></i></th>
+      {% endif %}
+      {% if request.user.datosestudiante.vb_proyecto_tutor %}
+      <th scope="col">Tutor <i class="fas fa-check"></i></th>
+      {% else %}
       <th scope="col">Tutor <i class="fas fa-hourglass-half"></i></th>
+      {% endif %}
+      {% comment %}<th scope="col">Docente <a href=#><i class="fas fa-hourglass-half"></i></th></a>{% endcomment %}
     </tr>
   </thead>
   <tbody>

@@ -1,14 +1,14 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h5>paso 5</h5>
-<p>
-<a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a><p>
-<a href={%url 'entrega_proyecto' %}>Revision Proyecto</a><p>
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+<h4>Elaboración del Proyecto de Grado y revisión</h4>
+<p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a></p>
+<p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a><p>
 
+<p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 {% if progreso.nivel < 81 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a>
+<a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a></p>
 {% endif %}
+
 {% if progreso.nivel >= 81 %}
 <h4>Este paso ya fué confirmado</h4>
 {% endif %}

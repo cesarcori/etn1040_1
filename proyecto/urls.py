@@ -27,6 +27,8 @@ urlpatterns = [
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
     path('progreso-est/<int:pk_est>', views.progresoEstudiante, name='progreso_estudiante'),
+    path('progreso-est/vis-bu-per/<int:id_est>', views.vistoBuenoPerfil, name='visto_bueno_perfil'),
+    path('progreso-est/vis-bu-pro/<int:id_est>', views.vistoBuenoProyecto, name='visto_bueno_proyecto'),
     path('progreso-est/crono/<int:id_est>', views.ver_cronograma, name='ver_cronograma'),
     path('info-solicitante/<int:pk_sol>', views.enlaceSolicitante,
         name='enlace_solicitante'),

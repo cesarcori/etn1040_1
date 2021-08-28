@@ -6,12 +6,24 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
 {% if registro_perfil_existe %}
 <p><a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a></p>
 {% else %}
-<p><a href={%url 'registro_perfil'%}>Registro de Perfil</a></p>
+    {% if request.user.datosestudiante.vb_perfil_docente and request.user.datosestudiante.vb_perfil_tutor %}
+    <p><a href={%url 'registro_perfil'%}>Registro de Perfil</a></p>
+    {% else %}
+    <p><a class="btn disabled" href={%url 'registro_perfil'%}>Registro de Perfil</a></p>
+    {% endif %}
 {% endif %}
+
+{% if request.user.datosestudiante.vb_perfil_docente and request.user.datosestudiante.vb_perfil_tutor %}
 <p><a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a></p>
 <p><a href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>
 <p><a href={%url 'carta_aceptacion_tutor'%}>Carta aceptacion de tutoría</a></p>
 <p><a href={%url 'formulario_1'%}>Formulario de Aprobación</a></p>
+    {% else %}
+<p><a class="btn disabled" href={%url 'cronograma_actividad'%}>Registro de Cronograma</a></p>
+<p><a class="btn disabled" href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>
+<p><a class="btn disabled" href={%url 'carta_aceptacion_tutor'%}>Carta aceptacion de tutoría</a></p>
+<p><a class="btn disabled" href={%url 'formulario_1'%}>Formulario de Aprobación</a></p>
+    {% endif %}
 
 <a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
