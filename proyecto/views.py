@@ -836,7 +836,6 @@ def crearSalaRevisar(request):
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/crear_sala_revisar.html', context)
 
-@permitir_paso4()
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','docente','tutor'])
 def salaRevisar(request, pk_sala):
@@ -1229,7 +1228,6 @@ def crearSalaRevisarProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','docente','tutor'])
-@permitir_paso5()
 def salaRevisarProyecto(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user

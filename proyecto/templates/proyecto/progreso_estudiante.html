@@ -9,7 +9,7 @@
 </div>
 <br>
 
-<a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.id %}>Ver Cronograma</a>
+<a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.id %}>Cronograma</a>
 {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
 <a class="btn btn-success" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
 {%endif%}
@@ -86,7 +86,7 @@
 {%for s in salas%}
     <tr>
 <td>
-<button class="btn btn-danger">{{s.sala}}</button>
+    <p>{{s.sala}}</p>
 </td>      
 
 <td>
@@ -103,7 +103,7 @@
 </td>      
 
 <td>
-    <a class="btn btn-danger" href="{{ s.material_estudiante.url }}">Archivo</a>
+    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Archivo</a>
 </td>
 <td>
 <a class="btn btn-primary" href="{% url 'sala_revisar' s.id %}">Revisar</a>
