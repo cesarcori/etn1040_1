@@ -16,10 +16,10 @@ Ing. {{request.user.datosestudiante.grupo_doc}}</p>
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if progreso %}
-{% if progreso.nivel < 19 %}
+{% if progreso.nivel < 14 %}
 <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
 {% endif %}
-{% if progreso.nivel >= 19 %}
+{% if progreso.nivel >= 14 %}
 <h4>Paso completado</h4>
 {% endif %}
 {% endif %}

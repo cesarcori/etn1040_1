@@ -1,0 +1,35 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+<h3>Reporte del Estudiante</h3>
+<h5>Datos Personales</h5>
+<p><strong>Nombre Completo: </strong>{{estudiante}} 
+<strong>C.I.: </strong>{{estudiante.carnet}} {{estudiante.extension}}<br>
+<strong>Registro Universitario: </strong>{{estudiante.registro_uni}}</p>
+<h5>Datos de Contacto</h5>
+<p><strong>Celular: </strong>{{estudiante.celular}} <strong>e-mail: </strong>{{estudiante.correo}}</p>
+<h5>Estado Actual ETN-1040</h5>
+<p><strong>Docente:</strong> Ing. {{estudiante.grupo_doc}} <strong>Grupo:</strong> {{estudiante.grupo_doc.grupo}}<br>
+<strong>Tutor:</strong> Ing. {{estudiante.tutor}}<br>
+<strong>Progreso ETN-1040: </strong>{{estudiante.progreso.nivel}}% avanzado.
+</p>
+<h5>Actividades elaboradas:</h5>
+<ul>
+{% for paso, subPasos in pasos.items %}
+<strong>{{paso}}</strong>
+    {% for subPaso in subPasos %}
+        <li>{{subPaso}}</li>
+    {% endfor %}
+{% endfor %}
+</ul>
+<h5>Actividades Faltantes:</h5>
+<ul>
+{% for paso, subPasos in pasos_falta.items %}
+<strong>{{paso}}</strong>
+    {% for subPaso in subPasos %}
+        <li>{{subPaso}}</li>
+    {% endfor %}
+{% endfor %}
+</ul>
+
+{% endblock %}
+

@@ -443,13 +443,61 @@ def enlaceEstudiante(request, pk_est):
             return render(request, 'proyecto/enlace_estudiante.html', context)
         else:
             return redirect('error_pagina')
-    else:
+    else:           
         existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
             context = {'grupo': grupo,'estudiante':estudiante,}
             return render(request, 'proyecto/enlace_estudiante.html', context)
         else:
             return redirect('error_pagina')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','administrador'])
+def reporteEstudiante(request, id_est):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    if estudiante.progreso.nivel > 1:
+        pasos = {'Paso 1':['Conocimiento de Reglamentos de Proyecto de Grado',
+                        'Revisión y estudio del material compartido por Docente'],
+                }
+        pasos_falta = {
+                'Paso 2':['Búsqueda de Proyectos de Grado'],
+                'Paso 3':['Asignación de Tutor de Proyecto de Grado',
+                        'Carta aceptación de Tutoría'],
+                'Paso 4':['Entrega y revisión de Perfil de Proyecto de Grado',
+                        'Registro de Perfil de Proyecto de Grado',
+                        'Registro de Cronograma de Proyecto de Grado',
+                        'Formulario 1'],
+                'Paso 5':['Cumplir con el cronograma',
+                        'Revisión del Proyecto de Grado',
+                        'Registro del Proyecto de Grado',],
+                'Paso 6':['Carta de Conclusión',
+                    'Gegeración de los 3 formularios']
+                }
+    if estudiante.progreso.nivel > 14:
+        pasos['Paso 2'] = ['Búsqueda de Proyectos de Grado']
+        del pasos_falta['Paso 2']
+    if estudiante.progreso.nivel > 21:
+        pasos['Paso 3'] = ['Asignación de Tutor de Proyecto de Grado',
+                        'Carta aceptación de Tutoría']
+        del pasos_falta['Paso 3']
+    if estudiante.progreso.nivel > 35:
+        pasos['Paso 4'] = ['Entrega y revisión de Perfil de Proyecto de Grado',
+                        'Registro de Perfil de Proyecto de Grado',
+                        'Registro de Cronograma de Proyecto de Grado',
+                        'Formulario 1']
+        del pasos_falta['Paso 4']
+    if estudiante.progreso.nivel > 64:
+        pasos['Paso 5'] = ['Cumplir con el cronograma',
+                        'Revisión del Proyecto de Grado',
+                        'Registro del Proyecto de Grado',]
+        del pasos_falta['Paso 5']
+    if estudiante.progreso.nivel > 86:
+        pasos['Paso 6'] = ['Carta de Conclusión',
+                    'Gegeración de los 3 formularios']
+        del pasos_falta['Paso 6']
+    context = {'estudiante':estudiante, 'pasos':pasos, 'pasos_falta':pasos_falta}
+    return render(request, 'proyecto/reporte_estudiante.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','administrador'])
@@ -812,7 +860,7 @@ def paso3(request):
             nombre_sala = id_tutor + id_estudiante
             Sala.objects.create(nombre_sala = nombre_sala)
         progreso = Progreso.objects.get(usuario=estudiante)
-        progreso.nivel = 31
+        progreso.nivel = 35
         progreso.save()
         return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
@@ -1169,8 +1217,11 @@ def formulario_1(request):
 def paso5(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    proyecto_grado = ProyectoDeGrado.objects.filter(usuario=estudiante).exists()
+    proyecto = ProyectoDeGrado.objects.filter(usuario=estudiante)
     progreso = Progreso.objects.get(usuario=estudiante)
-    context = {'grupo': grupo, 'progreso': progreso}
+    context = {'grupo': grupo, 'progreso': progreso,'proyecto_grado':proyecto_grado,
+            'proyecto':proyecto,'estudiante':estudiante}
     return render(request, 'proyecto/estudiante_paso5.html', context)
 
 @login_required(login_url='login')
@@ -1354,39 +1405,14 @@ def salaRevisarProyEstTut(request, pk_sala):
 def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    proyecto_grado = ProyectoDeGrado.objects.filter(usuario=estudiante).exists()
-    proyecto = ProyectoDeGrado.objects.filter(usuario=estudiante)
     progreso = Progreso.objects.get(usuario=estudiante)
-    context = {'grupo': grupo, 'proyecto_grado': proyecto_grado,
-            'progreso': progreso, 'proyecto':proyecto }
+    context = {'grupo': grupo, 
+            'progreso': progreso}
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
-def carta_final_tutor(request):
-    buffer = io.BytesIO()
-    estudiante = request.user.datosestudiante
-    # lo siguiente hay que hagregar de alguna forma a la base de datos
-    extension = 'L.P.'
-    titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
-    info_estu = [
-            estudiante.__str__(),
-            estudiante.carnet,
-            estudiante.extension,
-            estudiante.tutor.celular,
-            estudiante.tutor.correo,
-            estudiante.grupo_doc.__str__(),
-            estudiante.tutor.__str__(),
-            titulo_perfil
-            ]
-    carta_final(buffer, info_estu)
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='carta_final.pdf')
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+@permitir_paso5()
 def registroProyecto(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -1396,7 +1422,7 @@ def registroProyecto(request):
             file = form.save(commit=False)
             file.usuario = estudiante
             file.save()
-        return redirect('paso6')
+        return redirect('paso5')
     else: 
         form = ProyectoDeGradoForm
     context = {'grupo': grupo,'form':form,}
@@ -1404,13 +1430,25 @@ def registroProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+@permitir_paso5()
 def ver_proyecto_grado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
     context = {'grupo': grupo,'proyecto':proyecto}
     return render(request, 'proyecto/ver_proyecto_grado.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
+def carta_final_tutor(request):
+    buffer = io.BytesIO()
+    estudiante = request.user.datosestudiante
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    carta_final(buffer, estudiante)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='carta_final.pdf')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
@@ -1516,14 +1554,20 @@ def confirmarPaso1(request):
     if request.method == 'POST':
         confirmar = request.POST['confirmar']
         confirmar = int(confirmar)
-        if confirmar < 19 and confirmar >= 1:
-            progreso.nivel = 19
-        elif confirmar < 25 and confirmar >= 19:
-            progreso.nivel = 25
-        elif confirmar < 25 and confirmar >= 19:
-            progreso.nivel = 25
-        elif confirmar < 69 and confirmar >= 25:
-            progreso.nivel = 69
+        if 1 <= confirmar < 14:
+            progreso.nivel = 14
+        if 14 <= confirmar < 21:
+            progreso.nivel = 21
+        if 35 <= confirmar < 64:
+            progreso.nivel = 64
+        # if confirmar < 19 and confirmar >= 1:
+            # progreso.nivel = 19
+        # elif confirmar < 25 and confirmar >= 19:
+            # progreso.nivel = 25
+        # elif confirmar < 25 and confirmar >= 19:
+            # progreso.nivel = 25
+        # elif confirmar < 69 and confirmar >= 25:
+            # progreso.nivel = 69
         progreso.save()
         return redirect('estudiante')
     context = {'grupo': grupo, 'progreso': progreso}
@@ -1539,8 +1583,9 @@ def confirmarPaso5(request):
     if request.method == 'POST':
         confirmar = request.POST['confirmar']
         confirmar = int(confirmar)
-        if confirmar < 81 and confirmar >= 69:
-            progreso.nivel = 81
+        # if confirmar < 81 and confirmar >= 69:
+        if 64 <= confirmar < 86:
+            progreso.nivel = 86
         progreso.save()
         return redirect('estudiante')
     context = {'grupo': grupo, 'progreso': progreso}
@@ -1556,7 +1601,8 @@ def confirmarPaso6(request):
     if request.method == 'POST':
         confirmar = request.POST['confirmar']
         confirmar = int(confirmar)
-        if confirmar < 100 and confirmar >= 81:
+        # if confirmar < 100 and confirmar >= 81:
+        if 86 <= confirmar < 100:
             progreso.nivel = 100
         progreso.save()
         return redirect('estudiante')

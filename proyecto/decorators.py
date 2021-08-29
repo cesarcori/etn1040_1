@@ -61,10 +61,10 @@ def permitir_paso2():
                 progreso = Progreso.objects.get(usuario=estudiante).nivel
             else:
                 progreso = 1
-            if progreso >= 19:
+            if progreso >= 14:
                 return view_func(request, *args, **kwargs)
             else:
-                return HttpResponse('No se concluyo el paso 1, habilitar con 19 % de progreso')
+                return HttpResponse('No se concluyo el paso 1, habilitar con 14 % de progreso')
         return wrapper_function
     return decorator
 
@@ -76,10 +76,10 @@ def permitir_paso3():
                 progreso = Progreso.objects.get(usuario=estudiante).nivel
             else:
                 progreso = 1
-            if progreso >= 25:
+            if progreso >= 21:
                 return view_func(request, *args, **kwargs)
             else:
-                return HttpResponse('No se concluyo el paso 2, habilitar con 19 % de progreso')
+                return HttpResponse('No se concluyo el paso 2, habilitar con 21 % de progreso')
         return wrapper_function
     return decorator
 
@@ -91,10 +91,10 @@ def permitir_paso4():
                 progreso = Progreso.objects.get(usuario=estudiante).nivel
             else:
                 progreso = 1
-            if progreso >= 31:
+            if progreso >= 35:
                 return view_func(request, *args, **kwargs)
             else:
-                return HttpResponse('No se concluyo el paso 3, habilitar con 31 % de progreso')
+                return HttpResponse('No se concluyo el paso 3, habilitar con 35 % de progreso')
         return wrapper_function
     return decorator
 
@@ -106,10 +106,10 @@ def permitir_paso5():
                 progreso = Progreso.objects.get(usuario=estudiante).nivel
             else:
                 progreso = 1
-            if progreso >= 69:
+            if progreso >= 64:
                 return view_func(request, *args, **kwargs)
             else:
-                return HttpResponse('No se concluyo el paso 4, habilitar con 69 % de progreso')
+                return HttpResponse('No se concluyo el paso 4, habilitar con 64 % de progreso')
         return wrapper_function
     return decorator
 
@@ -121,9 +121,9 @@ def permitir_paso6():
                 progreso = Progreso.objects.get(usuario=estudiante).nivel
             else:
                 progreso = 1
-            if progreso >= 81:
+            if progreso >= 86:
                 return view_func(request, *args, **kwargs)
             else:
-                return HttpResponse('No se concluyo el paso 5, habilitar con 81 % de progreso')
+                return HttpResponse('No se concluyo el paso 5, habilitar con 86 % de progreso')
         return wrapper_function
     return decorator

@@ -19,10 +19,10 @@ no debe ser igual mayor al <strong>90% de similitud</strong>.</p>
 
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
-{% if progreso.nivel < 25 %}
+{% if progreso.nivel < 21 %}
 <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
 {% endif %}
-{% if progreso.nivel >= 25 %}
+{% if progreso.nivel >= 21 %}
 <h4>Paso Completado</h4>
 {% endif %}
 

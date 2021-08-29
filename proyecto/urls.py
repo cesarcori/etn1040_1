@@ -26,6 +26,7 @@ urlpatterns = [
     path('comp-personal/', views.compartirPersonal, name='compartir_personal'),
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
+    path('reporte-est/<int:id_est>', views.reporteEstudiante, name='reporte_estudiante'),
     path('progreso-est/<int:pk_est>', views.progresoEstudiante, name='progreso_estudiante'),
     path('progreso-est/vis-bu-per/<int:id_est>', views.vistoBuenoPerfil, name='visto_bueno_perfil'),
     path('progreso-est/vis-bu-pro/<int:id_est>', views.vistoBuenoProyecto, name='visto_bueno_proyecto'),
@@ -65,15 +66,15 @@ urlpatterns = [
     path('sala-rev-proy/<int:pk_sala>/',views.salaRevisarProyecto,name='sala_revisar_proyecto'),
     path('sala-rev-proy/doc/<int:pk_sala>/',views.salaRevisarProyEstDoc, name='sala_revisar_proy_est_doc'),
     path('sala-rev-proy/tut/<int:pk_sala>/',views.salaRevisarProyEstTut, name='sala_revisar_proy_est_tut'),
+    path('paso5/registro-proyecto/', views.registroProyecto, name='registro_proyecto'),
+    path('paso5/proyecto/', views.ver_proyecto_grado, name='ver_proyecto_grado'),
 
     path('paso6/', views.paso6, name='paso6'),
     path('paso6/carta-final/', views.carta_final_tutor, name='carta_final'),
-    path('paso6/registro-proyecto/', views.registroProyecto, name='registro_proyecto'),
     path('paso6/ultimos-formularios/', views.ultimosFormularios, name='ultimos_formularios'),
     path('paso6/formulario-material-proyecto-grado/', views.formulario_2, name='formulario_2'),
     path('paso6/formulario-3/', views.formulario_3, name='formulario_3'),
     path('paso6/formulario-4/', views.formulario_4, name='formulario_4'),
-    path('paso6/proyecto/', views.ver_proyecto_grado, name='ver_proyecto_grado'),
 
     path('calificar-proyecto/<int:id_est>/', views.calificarProyecto, name='calificar_proyecto'),
     

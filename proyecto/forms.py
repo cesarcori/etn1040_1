@@ -246,7 +246,7 @@ class ProyectoDeGradoForm(forms.ModelForm):
                 }
 
 class CalificarProyectoForm(forms.Form):
-    calificacion = forms.IntegerField(min_value=1, max_value=100)
+    calificacion = forms.IntegerField(min_value=1, max_value=40)
 
 class DatosTutorForm(forms.ModelForm):
     class Meta:

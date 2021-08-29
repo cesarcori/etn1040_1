@@ -15,7 +15,7 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
 
 {% if request.user.datosestudiante.vb_perfil_docente and request.user.datosestudiante.vb_perfil_tutor %}
 <p><a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a></p>
-<p><a href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>
+{% comment %}<p><a href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>{% endcomment %}
 <p><a href={%url 'carta_aceptacion_tutor'%}>Carta aceptacion de tutoría</a></p>
 <p><a href={%url 'formulario_1'%}>Formulario de Aprobación</a></p>
     {% else %}
@@ -28,10 +28,10 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
 <a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if perfil %}
-{% if progreso.nivel < 69 %}
+{% if progreso.nivel < 64 %}
 <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a>
 {% endif %}
-{% if progreso.nivel >= 69 %}
+{% if progreso.nivel >= 64 %}
 <h4>Este paso ya fué confirmado</h4>
 {% endif %}
 {% else %}

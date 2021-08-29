@@ -277,7 +277,7 @@ def carta_solicitud(buffer, info_estu):
     guardar(buffer)
 
 
-def carta_final(buffer, info_estu):
+def carta_final(buffer, estudiante):
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
@@ -349,14 +349,22 @@ def carta_final(buffer, info_estu):
 # ===========================================
 # de la base de datos
 # ===========================================
-    nombre = info_estu[0]
-    carnet = info_estu[1] 
-    extension = info_estu[2] 
-    celular = info_estu[3] 
-    correo = info_estu[4] 
-    docente = info_estu[5] 
-    tutor = info_estu[6] 
-    titulo_perfil = info_estu[7] 
+    # nombre = info_estu[0]
+    # carnet = info_estu[1] 
+    # extension = info_estu[2] 
+    # celular = info_estu[3] 
+    # correo = info_estu[4] 
+    # docente = info_estu[5] 
+    # tutor = info_estu[6] 
+    # titulo_perfil = info_estu[7] 
+    # objeto
+    nombre = estudiante.__str__()
+    celular_tutor = estudiante.tutor.celular
+    correo_tutor = estudiante.tutor.correo
+    docente = estudiante.grupo_doc.__str__()
+    tutor = estudiante.tutor.__str__()
+    titulo_proyecto = estudiante.proyectodegrado.titulo
+
 # ===========================================
 # estatico, no se mueve, a menos que sea por personalizacion
     cargo = 'docente de la asignatura etn-1040'
@@ -364,7 +372,7 @@ def carta_final(buffer, info_estu):
     institucion = 'facultad de ingeniería'
     universidad = 'universidad mayor de san andrés'
     parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, la conclusión satisfactoria, en el desarrollo del Proyecto de Grado:'
-    parrafo1_2 = titulo_perfil
+    parrafo1_2 = titulo_proyecto
     parrafo1_3 = 'A cargo del estudiante'
     parrafo1_4 = nombre
     parrafo1_5 = 'Doy total fe y conformidad el presente Proyecto de Grado cuenta con las características necesarias para ser defendido y presentado ante el Tribunal de Docentes.'
@@ -407,7 +415,7 @@ def carta_final(buffer, info_estu):
 # firma 
     linea(17)
     text_center('Ing.: '+tutor)
-    text_center('Cel.: '+ celular)
-    text_center('e-mail.: '+ correo)
+    text_center('Cel.: '+ celular_tutor)
+    text_center('e-mail.: '+ correo_tutor)
     guardar(buffer)
 

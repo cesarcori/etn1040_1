@@ -4,13 +4,27 @@
 <p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a></p>
 <p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a><p>
 
-<p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
-{% if progreso.nivel < 81 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a></p>
+{% if not proyecto_grado %}
+<a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a><p>
+{% endif %}
+{% if proyecto_grado %}
+<a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado</a><p>
 {% endif %}
 
-{% if progreso.nivel >= 81 %}
-<h4>Este paso ya fué confirmado</h4>
+{% comment %}{% if proyecto_grado and proyecto.0.calificacion%}{% endcomment %}
+<p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+{% if proyecto_grado and estudiante.vb_proyecto_tutor and estudiante.vb_proyecto_docente and proyecto.0.calificacion%}
+    {% if progreso.nivel < 86 %}
+    <a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a></p>
+    {% endif %}
+
+    {% if progreso.nivel >= 86 %}
+    <h4>Este paso ya fué confirmado</h4>
+    {% endif %}
+{% else %}
+<a class="btn btn-success disabled" href={%url 'confirmar_paso_5' %}>Completado</a>
+Aún no se tiene Visto Bueno, No se registro el proyecto de grado o no se calificó.
 {% endif %}
+
 
 {% endblock %}

@@ -13,10 +13,10 @@
     <div class="col">
       <div class="p-3 border bg-light">
         <div class="text-center">
-    {%if progreso >= 19%}
+    {%if progreso >= 14%}
        <a class="btn btn-colorido" href={%url 'paso2'%}>Paso 2</a>
     {% endif %}
-    {%if progreso < 19%}
+    {%if progreso < 14%}
        <a class="btn btn-colorido disabled" href={%url 'paso2'%}>Paso 2</a>
     {% endif %}
         </div>
@@ -25,10 +25,10 @@
     <div class="col">
       <div class="p-3 border bg-light">
         <div class="text-center">
-    {%if progreso >= 25 %}
+    {%if progreso >= 21 %}
        <a class="btn btn-success" href={%url 'paso3'%}>Paso 3</a>
     {% endif %}
-    {%if progreso < 25 %}
+    {%if progreso < 21 %}
        <a class="btn btn-success disabled" href={%url 'paso3'%}>Paso 3</a>
     {% endif %}
         </div>
@@ -37,10 +37,10 @@
     <div class="col">
       <div class="p-3 border bg-light">
         <div class="text-center">
-    {%if progreso >= 31%}
+    {%if progreso >= 35%}
        <a class="btn btn-danger" href={%url 'paso4'%}>Paso 4</a>
     {% endif %}
-    {%if progreso < 31 %}
+    {%if progreso < 35 %}
        <a class="btn btn-danger disabled" href={%url 'paso4'%}>Paso 4</a>
     {% endif %}
         </div>
@@ -49,10 +49,10 @@
     <div class="col">
       <div class="p-3 border bg-light">
         <div class="text-center">
-    {%if progreso >= 69 %}
+    {%if progreso >= 64 %}
        <a class="btn btn-warning" href={%url 'paso5'%}>Paso 5</a>
     {% endif %}
-    {%if progreso < 69 %}
+    {%if progreso < 64 %}
        <a class="btn btn-warning disabled" href={%url 'paso5'%}>Paso 5</a>
     {% endif %}
         </div>
@@ -61,10 +61,10 @@
     <div class="col">
       <div class="p-3 border bg-light">
         <div class="text-center">
-    {%if progreso >= 81 %}
+    {%if progreso >= 86 %}
        <a class="btn btn-dark" href={%url 'paso6'%}>Paso 6</a>
     {% endif %}
-    {%if progreso < 81 %}
+    {%if progreso < 86 %}
        <a class="btn btn-dark disabled " href={%url 'paso6'%}>Paso 6</a>
     {% endif %}
         </div>
