@@ -11,6 +11,7 @@ from .decorators import *
 from .forms import *
 from .models import *
 from .cartas import *
+from .reportes import *
 from .formularios import *
 
 from random import randint
@@ -218,6 +219,21 @@ def tutor(request):
     datos_est = request.user.datostutor.datosestudiante_set.all().order_by('apellido')
     context = {'datos_est':datos_est,'grupo':grupo}
     return render(request, 'proyecto/tutor.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tutor'])
+def solicitudTutoria(request, id_est):
+    grupo = 'tutor'
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    aceptar = 'no'
+    if request.method == 'POST':
+        aceptar = request.POST['confirmar']
+    if aceptar == 'si':
+        estudiante.tutor_acepto = True
+        estudiante.save()
+        return redirect('tutor')
+    context = {'grupo':grupo,'estudiante':estudiante}
+    return render(request, 'proyecto/solicitud_tutoria.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -864,8 +880,18 @@ def paso3(request):
         progreso.save()
         return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
-    context = {'grupo': grupo, 'tutor':tutor}
+    context = {'grupo': grupo, 'tutor':tutor, 'estudiante':estudiante}
     return render(request, 'proyecto/estudiante_paso3.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso3()
+def reporteTutorAcepto(request):
+    buffer = io.BytesIO()
+    estudiante = request.user.datosestudiante
+    reporte_tutor_acepto(buffer, estudiante)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -1011,19 +1037,19 @@ def carta_aceptacion_tutor(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
     # lo siguiente hay que hagregar de alguna forma a la base de datos
-    extension = 'L.P.'
-    titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
-    info_estu = [
-            estudiante.__str__(),
-            estudiante.carnet,
-            estudiante.extension,
-            estudiante.tutor.celular,
-            estudiante.tutor.correo,
-            estudiante.grupo_doc.__str__(),
-            estudiante.tutor.__str__(),
-            titulo_perfil
-            ]
-    carta_aceptacion(buffer, info_estu)
+    # extension = 'L.P.'
+    # titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
+    # info_estu = [
+            # estudiante.__str__(),
+            # estudiante.carnet,
+            # estudiante.extension,
+            # estudiante.tutor.celular,
+            # estudiante.tutor.correo,
+            # estudiante.grupo_doc.__str__(),
+            # estudiante.tutor.__str__(),
+            # titulo_perfil
+            # ]
+    carta_aceptacion(buffer, estudiante)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
 

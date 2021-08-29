@@ -8,7 +8,7 @@ from django.http import FileResponse
 from fpdf import FPDF
 # from .libreriaCartas import *
 
-def carta_aceptacion(buffer, info_estu):
+def carta_aceptacion(buffer, estudiante):
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
@@ -80,15 +80,21 @@ def carta_aceptacion(buffer, info_estu):
 # ===========================================
 # de la base de datos
 # ===========================================
-    nombre = info_estu[0]
-    carnet = info_estu[1] 
-    extension = info_estu[2] 
-    celular = info_estu[3] 
-    correo = info_estu[4] 
-    docente = info_estu[5] 
-    tutor = info_estu[6] 
-    titulo_perfil = info_estu[7] 
+    # nombre = info_estu[0]
+    # carnet = info_estu[1] 
+    # extension = info_estu[2] 
+    # celular = info_estu[3] 
+    # correo = info_estu[4] 
+    # docente = info_estu[5] 
+    # tutor = info_estu[6] 
+    # titulo_perfil = info_estu[7] 
 # ===========================================
+    nombre_estudiante = estudiante.__str__()
+    celular_tutor = estudiante.tutor.celular
+    correo_tutor = estudiante.tutor.correo
+    docente = estudiante.grupo_doc.__str__()
+    tutor = estudiante.tutor.__str__()
+    titulo_perfil= estudiante.registroperfil.titulo
 # estatico, no se mueve, a menos que sea por personalizacion
     cargo = 'docente de la asignatura etn-1040'
     lugar = 'carrera de ingeniería electrónica'
@@ -97,7 +103,7 @@ def carta_aceptacion(buffer, info_estu):
     parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, mi aceptación como tutor, en el desarrollo del Proyecto de Grado:'
     parrafo1_2 = titulo_perfil
     parrafo1_3 = 'A cargo del estudiante'
-    parrafo1_4 = nombre
+    parrafo1_4 = nombre_estudiante
     parrafo1_5 = 'Y doy el compromiso de supervisar el cumplimiento de cronograma propuesto en el perfil.'
     despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
 
@@ -138,8 +144,8 @@ def carta_aceptacion(buffer, info_estu):
 # firma 
     linea(17)
     text_center('Ing.: '+tutor)
-    text_center('Cel.: '+ celular)
-    text_center('e-mail.: '+ correo)
+    text_center('Cel.: '+ celular_tutor)
+    text_center('e-mail.: '+ correo_tutor)
     guardar(buffer)
 
 def carta_solicitud(buffer, info_estu):

@@ -113,6 +113,7 @@ class DatosEstudiante(models.Model):
     mencion = models.CharField(max_length=50, null=True)
     grupo_doc = models.ForeignKey(DatosDocente,on_delete=models.SET(''), null=True)
     tutor = models.ForeignKey(DatosTutor,on_delete=models.SET(''), null=True, blank=True)
+    tutor_acepto = models.BooleanField(default=False)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     vb_perfil_docente = models.BooleanField(default=False)
     vb_perfil_tutor = models.BooleanField(default=False)

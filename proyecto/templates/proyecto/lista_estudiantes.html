@@ -23,13 +23,24 @@
 <th scope="row">{{est.registro_uni}}</th>
 <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
 {%endif%}
-{%if grupo == 'docente' or 'tutor'%}
+
+{%if grupo == 'docente' %}
 <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
 {%endif%}
+
+{%if grupo == 'tutor' %}
+    {%if est.tutor_acepto%}
+    <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+    {% else %}
+    <td><a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.id %}"><strong>Solicitud</strong> {{est.apellido}}, {{est.nombre}}</a></td>
+    {% endif %}
+{%endif%}
+
 {%if grupo == 'administrador'%}
 <th scope="row">{{est.grupo_doc.grupo}}</th>
 <th scope="row">{{est.grupo_doc.apellido}}</th>
 {%endif%}
+
 <td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
 <th scope="row">{{est.celular}}</th>
 <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>

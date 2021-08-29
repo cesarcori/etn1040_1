@@ -2,7 +2,7 @@
 {% block content %}
 <p>Búsqueda de proyectos de grado<br>
 Ingrese el título de su perfil o proyecto de grado,<br>
-no debe ser igual mayor al <strong>90% de similitud</strong>.</p>
+no debe ser igual mayor al <strong>95% de similitud</strong>.</p>
 
 <p>
 {% comment %}<form class="d-flex" style="margin:auto;max-width:300px" method='post' action="" >{% endcomment %}
@@ -22,6 +22,7 @@ no debe ser igual mayor al <strong>90% de similitud</strong>.</p>
 {% if progreso.nivel < 21 %}
 <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
 {% endif %}
+
 {% if progreso.nivel >= 21 %}
 <h4>Paso Completado</h4>
 {% endif %}

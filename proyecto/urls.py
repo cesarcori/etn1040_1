@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('docente/', views.docente, name='docente'),
     path('tutor/', views.tutor, name='tutor'),
+    path('tutor/solicitud-tutoria/<int:id_est>', views.solicitudTutoria, name='solicitud_tutoria'),
     path('estudiante/', views.estudiante, name='estudiante'),
 
     path('perfil/', views.perfilUsuarios, name='perfil'),
@@ -45,6 +46,7 @@ urlpatterns = [
     path('paso1/', views.paso1, name='paso1'),
     path('paso2/', views.paso2, name='paso2'),
     path('paso3/', views.paso3, name='paso3'),
+    path('paso3/reporte-tutor-acepto/', views.reporteTutorAcepto, name='reporte_tutor_acepto'),
     path('paso4/', views.paso4, name='paso4'),
     path('paso4/entrega-perfil', views.entregaPerfil, name='entrega_perfil'),
     path('paso4/entrega-perfil/crear-sala-revisar', views.crearSalaRevisar, name='crear_sala'),
