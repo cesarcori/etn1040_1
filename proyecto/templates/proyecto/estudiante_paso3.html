@@ -34,4 +34,8 @@ Espere hasta que acepte su solicitud
 {% endif %}
 
 <a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a><p>
+
+{% if tutor and estudiante.tutor_acepto%}
+<h5>Paso Completado</h5>
+{% endif %}
 {% endblock %}

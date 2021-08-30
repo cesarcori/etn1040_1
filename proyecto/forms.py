@@ -265,3 +265,21 @@ class DatosAdministradorForm(forms.ModelForm):
     class Meta:
         model = DatosAdministrador
         fields = ['celular','imagen_perfil']
+class BusquedaProyectoForm(forms.ModelForm):
+    class Meta:
+        model = BusquedaProyecto
+        fields = '__all__'
+        # exclude = ['usuario','calificacion']
+        widgets = {
+                'autor': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        'placeholder':'Nombre del autor del Proyecto de Grado'}),
+                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        'placeholder':'Titulo del Proyecto de Grado'}),
+                # 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    # 'placeholder':'Copia el resumen del Proyecto de Grado...'}), 
+                }
+        labels = {
+                'autor': 'Autor del Proyecto de Grado',
+                'titulo': 'Titulo del Proyecto de Grado',
+                # 'resumen': 'Resumen del Proyecto de Grado',
+                }

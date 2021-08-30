@@ -19,6 +19,7 @@ urlpatterns = [
     path('perfil/', views.perfilUsuarios, name='perfil'),
     path('perfil/editar', views.editarPerfil, name='editar_perfil'),
     path('busqueda/', views.busquedaProyectos, name='busqueda'),
+    path('busqueda/agregar/', views.agregarProyecto, name='agregar_proyecto'),
     path('mis_comun/', views.misComunicados, name='mis_comunicados'),
     path('crear-comun/', views.crearComunicado, name='crear_comunicado'),
     path('mensaje-personal/<int:pk_doc_tut_est>', views.mensajePersonal, name='mensaje_personal'),

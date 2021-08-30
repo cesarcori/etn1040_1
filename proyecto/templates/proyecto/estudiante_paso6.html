@@ -9,7 +9,7 @@
 <a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a>
 {% endif %}
 {% if progreso.nivel >= 100 %}
-<h4>Este paso ya fué confirmado</h4>
+<h5 class='text-success'>Felicidades!<br>Completaste todos los pasos!</h5>
 {% endif %}
 
 {% endblock %}

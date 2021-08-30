@@ -25,14 +25,14 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
 <p><a class="btn disabled" href=#>Formulario de Aprobación</a></p>
     {% endif %}
 
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+    <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a></p>
 
 {% if perfil %}
 {% if progreso.nivel < 64 %}
 <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a>
 {% endif %}
 {% if progreso.nivel >= 64 %}
-<h4>Este paso ya fué confirmado</h4>
+<h5>Paso Completado</h5>
 {% endif %}
 {% else %}
 <a class="btn btn-success disabled" href={%url 'confirmar_paso_1' %}>Completado</a>

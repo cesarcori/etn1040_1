@@ -14,7 +14,7 @@ no debe ser igual mayor al <strong>95% de similitud</strong>.</p>
 </p>
 <p>Se busco: <strong>{{ buscado }}</strong></p>
 <p>{% for score, titulo in dicc_score.items %}
-{{score}} ** {{titulo}}<br>
+{{score}}% {{titulo}}<br>
 {%endfor%}</p>
 
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
@@ -24,7 +24,7 @@ no debe ser igual mayor al <strong>95% de similitud</strong>.</p>
 {% endif %}
 
 {% if progreso.nivel >= 21 %}
-<h4>Paso Completado</h4>
+<h5>Paso Completado</h5>
 {% endif %}
 
 {% endblock %}

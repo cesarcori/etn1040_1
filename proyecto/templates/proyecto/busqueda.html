@@ -9,6 +9,9 @@
 </form></p>
 <p>Se busco: <strong>{{ buscado }}</strong></p>
 {% for score, titulo in dicc_score.items %}
-{{score}} ** {{titulo}}<p>
+{{score}}% {{titulo}}<p>
 {%endfor%}
+{% if grupo == 'administrador' %}
+<a class="btn btn-sm btn-info" href="{% url 'agregar_proyecto' %}">Agregar Proyecto de Grado</a><p>
+{% endif %}
 {% endblock %}

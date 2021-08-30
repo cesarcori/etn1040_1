@@ -17,11 +17,11 @@ from .formularios import *
 from random import randint
 from datetime import timedelta
 # busqueda
-# import pandas as pd
-# from sklearn.feature_extraction.text import TfidfVectorizer
-# from sklearn.metrics.pairwise import linear_kernel
-# import nltk
-# from nltk.corpus import stopwords
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
+import nltk
+from nltk.corpus import stopwords
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
@@ -468,7 +468,7 @@ def enlaceEstudiante(request, pk_est):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','administrador'])
+@allowed_users(allowed_roles=['estudiante','administrador','docente','tutor'])
 def reporteEstudiante(request, id_est):
     grupo = request.user.groups.get().name
     estudiante = DatosEstudiante.objects.get(id=id_est)
@@ -512,7 +512,7 @@ def reporteEstudiante(request, id_est):
         pasos['Paso 6'] = ['Carta de Conclusión',
                     'Gegeración de los 3 formularios']
         del pasos_falta['Paso 6']
-    context = {'estudiante':estudiante, 'pasos':pasos, 'pasos_falta':pasos_falta}
+    context = {'grupo':grupo,'estudiante':estudiante, 'pasos':pasos, 'pasos_falta':pasos_falta}
     return render(request, 'proyecto/reporte_estudiante.html', context)
 
 @login_required(login_url='login')
@@ -782,10 +782,9 @@ def paso2(request):
         vectorizer = TfidfVectorizer(stop_words=stop_words)
         vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
         cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
-        titulo_scores = [item.item() for item in cosine_similarities[1:]]  # convert back to native Python dtypes
+        titulo_scores = [round(item.item(),2)*100 for item in cosine_similarities[1:]]  # convert back to native Python dtypes
         score_titles = list(zip(titulo_scores, lista_titulos))
-        ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
-                x[0])[:20] 
+        ordenado_score = sorted(score_titles, reverse=True, key=lambda x:x[0])[:20] 
         dicc_score = {}
         for score_titulo in ordenado_score:
             dicc_score[score_titulo[0]] = score_titulo[1]
@@ -796,7 +795,6 @@ def paso2(request):
     return render(request, 'proyecto/estudiante_paso2.html', context)
 
 @login_required(login_url='login')
-# @permitir_paso2()
 def busquedaProyectos(request):
     grupo = request.user.groups.get().name
     if request.method == 'POST':
@@ -823,6 +821,20 @@ def busquedaProyectos(request):
     else:
         context = {'grupo': grupo,}
     return render(request, 'proyecto/busqueda.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['administrador'])
+def agregarProyecto(request):
+    grupo = request.user.groups.get().name
+    form = BusquedaProyectoForm
+    if request.method == 'POST':
+        form = BusquedaProyectoForm(request.POST)
+        if form.is_valid():
+            # file = form.save(commit=False)
+            form.save()
+            return redirect('busqueda')
+    context = {'grupo': grupo,'form':form}
+    return render(request, 'proyecto/agregar_proyecto.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

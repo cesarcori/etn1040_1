@@ -27,7 +27,6 @@
 	<div class="col-md-9">
 		<div class="card card-body">
 {% if grupo == 'administrador'%}
-
     <p>Nombre: {{ request.user.datosadministrador.nombre }}<br>
     Apellido: {{ request.user.datosadministrador.apellido }}<br>
     Celular: {{ request.user.datosadministrador.celular }}<br>
@@ -52,6 +51,7 @@
     {% else %}
     Tutor: Aún no asignaste tutor</p>
     {% endif %}
+    <a href="{% url 'reporte_estudiante' request.user.datosestudiante.id %}">Reporte Actual</a>
 {%elif grupo == 'docente' %}
     Nombre: {{ request.user.datosdocente.nombre }}<br>
     Apellido: {{ request.user.datosdocente.apellido }}<br>
