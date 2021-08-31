@@ -6,7 +6,7 @@ Ingrese el e-mail del tutor y espere que acepte su solicitud.</p>
 
 
 {% comment %}{% if tutor.nombre == 'sin_tutor' %}{% endcomment %}
-{% if not tutor and estudiante.tutor_acepto %}
+{% if not tutor and not estudiante.tutor_acepto %}
 <p>
 <form class="d-flex" style="margin:auto;max-width:300px" method='post'
                      action="" >

@@ -231,6 +231,9 @@ def solicitudTutoria(request, id_est):
     if aceptar == 'si':
         estudiante.tutor_acepto = True
         estudiante.save()
+        progreso = Progreso.objects.get(usuario=estudiante)
+        progreso.nivel = 35
+        progreso.save()
         return redirect('tutor')
     context = {'grupo':grupo,'estudiante':estudiante}
     return render(request, 'proyecto/solicitud_tutoria.html', context)
@@ -782,7 +785,7 @@ def paso2(request):
         vectorizer = TfidfVectorizer(stop_words=stop_words)
         vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
         cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
-        titulo_scores = [round(item.item(),2)*100 for item in cosine_similarities[1:]]  # convert back to native Python dtypes
+        titulo_scores = [round(item.item()*100,1) for item in cosine_similarities[1:]]  # convert back to native Python dtypes
         score_titles = list(zip(titulo_scores, lista_titulos))
         ordenado_score = sorted(score_titles, reverse=True, key=lambda x:x[0])[:20] 
         dicc_score = {}
@@ -809,7 +812,7 @@ def busquedaProyectos(request):
         vectorizer = TfidfVectorizer(stop_words=stop_words)
         vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
         cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
-        titulo_scores = [item.item() for item in cosine_similarities[1:]]  # convert back to native Python dtypes
+        titulo_scores = [round(item.item()*100,1) for item in cosine_similarities[1:]]  # convert back to native Python dtypes
         score_titles = list(zip(titulo_scores, lista_titulos))
         ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
                 x[0])[:20] 
@@ -887,9 +890,9 @@ def paso3(request):
             id_estudiante = str(request.user.id)
             nombre_sala = id_tutor + id_estudiante
             Sala.objects.create(nombre_sala = nombre_sala)
-        progreso = Progreso.objects.get(usuario=estudiante)
-        progreso.nivel = 35
-        progreso.save()
+        # progreso = Progreso.objects.get(usuario=estudiante)
+        # progreso.nivel = 35
+        # progreso.save()
         return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
     context = {'grupo': grupo, 'tutor':tutor, 'estudiante':estudiante}
