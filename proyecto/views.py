@@ -751,6 +751,47 @@ def agregarDocente(request):
     return render(request, 'proyecto/agregar_docente.html', context)
 
 @login_required(login_url='login')
+@admin_only
+def agregarTutor(request):
+    form = TutorForm
+    if request.method == 'POST':
+        form = TutorForm(request.POST)
+        if form.is_valid():
+            correo = form.cleaned_data.get('correo')
+            nombre = form.cleaned_data.get('nombre')
+            apellido = form.cleaned_data.get('apellido')
+            usuario = correo.split('@')[0] + "_tutor"
+            password = usuario
+            if User.objects.filter(email=correo).exists():
+                messages.info(request,
+            'No se agregó al tutor, un usuario usa este mismo correo\
+            electrónico')
+
+            else:                 
+                # creacion del usuario
+                User.objects.create_user(
+                        username = usuario,
+                        email = correo,
+                        first_name = nombre,
+                        last_name = apellido,
+                        password = password,
+                        )
+                group = Group.objects.get(name='tutor')
+                user = User.objects.get(username=usuario)
+                user.groups.add(group)
+                # creacion de datos
+                DatosTutor.objects.create(
+                        usuario = User.objects.get(username=usuario),
+                        correo = correo,
+                        nombre = nombre,
+                        apellido = apellido,
+                        celular = 'llenar',
+                        )
+                messages.success(request, 'Tutor Registrado con exito!!!')
+    context = {'form':form}
+    return render(request, 'proyecto/agregar_tutor.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 @permitir_paso1()
 def paso1(request):

@@ -42,6 +42,7 @@ urlpatterns = [
     path('lista_tut/', views.listaTutores, name='lista_tutores'),
 
     path('agregar-doc/', views.agregarDocente, name='agregar_docente'),
+    path('agregar-tut/', views.agregarTutor, name='agregar_tutor'),
 
     
     path('paso1/', views.paso1, name='paso1'),

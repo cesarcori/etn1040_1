@@ -290,3 +290,8 @@ class BusquedaProyectoForm(forms.ModelForm):
                 'bibliografia': 'Bibliografía',
                 'perfil_proyecto' : 'Documento'
                 }
+class TutorForm(forms.ModelForm):
+    class Meta:
+        model = DatosTutor
+        fields = '__all__'
+        exclude = ['usuario','imagen_perfil','celular']
