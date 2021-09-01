@@ -272,14 +272,21 @@ class BusquedaProyectoForm(forms.ModelForm):
         # exclude = ['usuario','calificacion']
         widgets = {
                 'autor': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Nombre del autor del Proyecto de Grado'}),
+                        'placeholder':'Nombre del autor del Perfil o Proyecto de Grado'}),
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Titulo del Proyecto de Grado'}),
-                # 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    # 'placeholder':'Copia el resumen del Proyecto de Grado...'}), 
+                        'placeholder':'Titulo del Perfil o Proyecto de Grado'}),
+                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Resumen del Proyecto de Grado...'}), 
+                'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Índice del Proyecto de Grado...'}), 
+                'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Bibliografía del Proyecto de Grado...'}), 
                 }
         labels = {
-                'autor': 'Autor del Proyecto de Grado',
-                'titulo': 'Titulo del Proyecto de Grado',
-                # 'resumen': 'Resumen del Proyecto de Grado',
+                'autor': 'Autor',
+                'titulo': 'Titulo',
+                'resumen': 'Resumen',
+                'indice': 'Índice',
+                'bibliografia': 'Bibliografía',
+                'perfil_proyecto' : 'Documento'
                 }

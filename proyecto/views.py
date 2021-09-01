@@ -226,14 +226,20 @@ def solicitudTutoria(request, id_est):
     grupo = 'tutor'
     estudiante = DatosEstudiante.objects.get(id=id_est)
     aceptar = 'no'
+    rechazar = 'no'
     if request.method == 'POST':
-        aceptar = request.POST['confirmar']
+        aceptar = request.POST.get('confirmar')
+        rechazar = request.POST.get('rechazar') 
     if aceptar == 'si':
         estudiante.tutor_acepto = True
         estudiante.save()
         progreso = Progreso.objects.get(usuario=estudiante)
         progreso.nivel = 35
         progreso.save()
+        return redirect('tutor')
+    if rechazar == 'si':
+        estudiante.tutor = None
+        estudiante.save()
         return redirect('tutor')
     context = {'grupo':grupo,'estudiante':estudiante}
     return render(request, 'proyecto/solicitud_tutoria.html', context)
@@ -779,6 +785,11 @@ def paso2(request):
         tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
         lista_nombres = [item for item in tesis_df['NOMBRE']]
         lista_titulos = [item for item in tesis_df['TITULO']]
+        # agrego de base de datos
+        lista_titulos_sistema = [m.titulo for m in BusquedaProyecto.objects.all()]
+        lista_nombres_sistema = [m.autor for m in BusquedaProyecto.objects.all()]
+        lista_titulos = lista_titulos + lista_titulos_sistema
+        lista_nombres = lista_nombres + lista_nombres_sistema
         stop_words = set(stopwords.words('spanish')) 
         # search_terms = 'servicio de voz'
         search_terms = buscado
@@ -806,6 +817,11 @@ def busquedaProyectos(request):
         tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
         lista_nombres = [item for item in tesis_df['NOMBRE']]
         lista_titulos = [item for item in tesis_df['TITULO']]
+        # agregando a las listas nombres y titulos de la base de datos
+        lista_titulos_sistema = [m.titulo for m in BusquedaProyecto.objects.all()]
+        lista_nombres_sistema = [m.autor for m in BusquedaProyecto.objects.all()]
+        lista_titulos = lista_titulos + lista_titulos_sistema
+        lista_nombres = lista_nombres + lista_nombres_sistema
         stop_words = set(stopwords.words('spanish')) 
         # search_terms = 'servicio de voz'
         search_terms = buscado
@@ -813,7 +829,7 @@ def busquedaProyectos(request):
         vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
         cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
         titulo_scores = [round(item.item()*100,1) for item in cosine_similarities[1:]]  # convert back to native Python dtypes
-        score_titles = list(zip(titulo_scores, lista_titulos))
+        score_titles = list(zip(titulo_scores, lista_titulos, lista_nombres))
         ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
                 x[0])[:20] 
         dicc_score = {}
@@ -1298,7 +1314,7 @@ def cronograma_control(request):
     dias_delta = date.today() - fecha.date()
     dias_delta = dias_delta + timedelta(8)
     # dias a semanas:
-    semanas = dias_delta.days // 7
+    semanas = dias_delta.days // 7 - 1
     dias = dias_delta.days % 7
 
     # semanas actividad
