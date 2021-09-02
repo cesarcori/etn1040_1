@@ -1,14 +1,39 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h4>Elaboración del Proyecto de Grado y revisión</h4>
-<p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a></p>
-<p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a><p>
-
-{% if not proyecto_grado %}
-<a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a><p>
+<h4>Elaboración del Proyecto de Grado y Revisión</h4>
+{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor %}
+    <p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>
+    <i class="fas text-success fa-check"></i></p>
+    <p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a>
+    <i class="fas text-success fa-check"></i></p>
+{% else %}
+    <p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>
+    <i class="fas text-danger fa-graduation-cap"></i><br>
+    <p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a>
+    <i class="fas text-danger fa-graduation-cap"></i></p>
+    <p><a class="btn disabled" href=#>Registro Proyecto de Grado</a>
+    <i class="fas text-danger fa-graduation-cap"></i></p>
 {% endif %}
-{% if proyecto_grado %}
-<a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado</a><p>
+
+{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor and not proyecto_grado%}
+    <p><a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>
+    <i class="fas text-danger fa-graduation-cap"></i></p>
+{% endif %}
+
+{% if proyecto_grado and proyecto.0.calificacion %}
+    {% comment %}<a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>{% endcomment %}
+    <p><a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado y Calificado</a>
+    <i class="fas text-success fa-check"></i></p>
+{% comment %}{% else %}{% endcomment %}
+    {% comment %}<p><a class="btn disabled" href=#>Registro Proyecto de Grado</a>{% endcomment %}
+    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
+    {% comment %}<a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>{% endcomment %}
+    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
+{% endif %}
+
+{% if proyecto and not proyecto.0.calificacion %}
+    <p><a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado, Esperando Nota</a>
+    <i class="fas text-warning fa-graduation-cap"></i></p>
 {% endif %}
 
 {% comment %}{% if proyecto_grado and proyecto.0.calificacion%}{% endcomment %}

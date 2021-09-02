@@ -10,14 +10,14 @@
       <th scope="col">Asunto</th>
       <th scope="col">Proyecto</th>
       {% if request.user.datosestudiante.vb_proyecto_docente %}
-      <th scope="col">Docente <i class="fas fa-check"></i></th>
+      <th scope="col"><div class='bg-success text-white'>Docente V.B. <i class="fas fa-check"></i></th>
       {% else %}
-      <th scope="col">Docente <i class="fas fa-hourglass-half"></i></th>
+      <th scope="col"><div class='bg-danger text-white'>Docente <i class="fas fa-history"></i></th>
       {% endif %}
       {% if request.user.datosestudiante.vb_proyecto_tutor %}
-      <th scope="col">Tutor <i class="fas fa-check"></i></th>
+      <th scope="col"><div class='bg-success text-white'>Tutor V.B. <i class="fas fa-check"></i></th>
       {% else %}
-      <th scope="col">Tutor <i class="fas fa-hourglass-half"></i></th>
+      <th scope="col"><div class='bg-danger text-white'>Tutor <i class="fas fa-history"></i></th>
       {% endif %}
       {% comment %}<th scope="col">Docente <a href=#><i class="fas fa-hourglass-half"></i></th></a>{% endcomment %}
     </tr>

@@ -9,7 +9,11 @@
 </div>
 <br>
 
+{% if estudiante.registrocronograma %}
 <a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.id %}>Cronograma</a>
+{% else %}
+<a class="btn btn-warning disabled" href=#>Cronograma</a>
+{% endif %}
 {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
 <a class="btn btn-success" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
 {%endif%}
@@ -27,33 +31,58 @@
 {%endif%}
 <p>
 
+{% if progreso >= 64%}
+{% if grupo == 'docente' %}
+    {% if estudiante.vb_proyecto_tutor%}
+<div class="d-inline p-2 bg-success text-white">El Tutor ya dio el visto bueno al proyecto de grado</div>
+    {% else %}
+<div class="d-inline p-2 bg-danger text-white">El Tutor aún no dio el visto bueno al proyecto de grado</div>
+    {% endif %}
+{% endif %}
+<p>
 {% comment %}********* PROYECTO DE GRADO **************{% endcomment %}
-<table class="table table-striped table-hover">
+<h4 class='text-center'><strong>REVISIÓN DE PROYECTO DE GRADO</strong></h4>
+<div class = 'border border-4 
+{% if progreso >= 64%}
+    border-success
+{% else %}
+    border-secondary
+{% endif %}
+    '>
+<table class="table table-striped table-hover ">
   <thead>
     <tr>
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
-      <th scope="col">Proyecto
+      {% comment %}<th scope="col">Proyecto{% endcomment %}
+      <th scope="col">
         {% if grupo == 'docente'%}
         {% if estudiante.vb_proyecto_docente%}
-        <div type="button" class="btn badge rounded-pill bg-success" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">
-        V.B.</div>
+        <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
         {% else %}
-        <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn badge rounded-pill bg-secondary" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-        V.B.</a>
+            {% if salas_proy %}
+                <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                Dar Visto Bueno</a>
+            {% else %}
+                <a href=# type="button" class="btn btn-outline-danger btn-sm disabled" 
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                Dar Visto Bueno</a>
+            {% endif %}
         {% endif %}
         {% endif %}
         {% if grupo == 'tutor'%}
         {% if estudiante.vb_proyecto_tutor%}
-        <div type="button" class="btn badge rounded-pill bg-success" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">
-        V.B.</div>
+        <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
         {% else %}
-        <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn badge rounded-pill bg-secondary" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-        V.B.</a>
+            {% if salas_proy %}
+                <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                Dar Visto Bueno</a>
+            {% else %}
+            <a href=# type="button" class="btn btn-outline-danger btn-sm disabled"> 
+                Dar Visto Bueno</a>
+            {% endif %}
         {% endif %}
         {% endif %}
       </th>
@@ -81,7 +110,7 @@
 </td>      
 
 <td>
-    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Archivo</a>
+    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Proyecto</a>
 </td>
 <td>
 <a class="btn btn-primary" href="{% url 'sala_revisar_proyecto' s.id %}">Revisar</a>
@@ -91,36 +120,72 @@
 {%endfor%}
   </tbody>
 </table>
+</div>
+<br>
+{% endif %}
 
-
-
+{% comment %}Visto bueno del tutor en vista del docente{% endcomment %}
 {% comment %}********* PERFIL **************{% endcomment %}
-<table class="table table-striped table-hover">
+{% if grupo == 'docente' and progreso < 64%}
+    {% if estudiante.vb_perfil_tutor%}
+<div class="d-inline p-2 bg-success text-white">El Tutor ya dio el visto bueno</div>
+    {% else %}
+<div class="d-inline p-2 bg-danger text-white">El Tutor aún no dio el visto bueno</div>
+    {% endif %}
+{% endif %}
+{% comment %}<hr class="py-1 text-dark">{% endcomment %}
+<h4 class='text-center'><strong>REVISIÓN DE PERFIL</strong></h4>
+
+<div class = 'border border-4 
+{% if progreso >= 64%}
+    border-seccondary
+{% else %}
+    border-success
+{% endif %}
+    '>
+<table class="table table-striped table-hover ">
   <thead>
     <tr>
       <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
-      <th scope="col">Perfil
+      <th scope="col">
         {% if grupo == 'docente'%}
         {% if estudiante.vb_perfil_docente%}
-        <div type="button" class="btn badge rounded-pill bg-success" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">
-        V.B.</div>
+        {% comment %}<div type="button" class="btn badge rounded-pill bg-success" {% endcomment %}
+        {% comment %}data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">{% endcomment %}
+        {% comment %}V.B.</div>{% endcomment %}
+        {% comment %}<div type="button" class="btn btn-success" {% endcomment %}
+        {% comment %}data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">{% endcomment %}
+        {% comment %}V.B.</div>{% endcomment %}
+        <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
         {% else %}
-        <a href="{% url 'visto_bueno_perfil' estudiante.id %}" type="button" class="btn badge rounded-pill bg-secondary" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-        V.B.</a>
+            {% if salas %}
+                <a href="{% url 'visto_bueno_perfil' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                Dar Visto Bueno</a>
+            {% else %}
+                <a href=# type="button" class="btn btn-outline-danger btn-sm disabled" 
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                Dar Visto Bueno</a>
+            {% endif %}
         {% endif %}
         {% endif %}
+
         {% if grupo == 'tutor'%}
         {% if estudiante.vb_perfil_tutor%}
-        <div type="button" class="btn badge rounded-pill bg-success" 
+        <div class="d-inline p-2 bg-success text-white" 
         data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">
-        V.B.</div>
+        Visto Bueno OK</div>
         {% else %}
-        <a href="{% url 'visto_bueno_perfil' estudiante.id %}" type="button" class="btn badge rounded-pill bg-secondary" 
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-        V.B.</a>
+            {% if salas %}
+                <a href="{% url 'visto_bueno_perfil' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                Dar Visto Bueno</a>
+            {% else %}
+                <a href=# type="button" class="btn btn-outline-danger btn-sm disabled" 
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                Dar Visto Bueno</a>
+            {% endif %}
         {% endif %}
         {% endif %}
         {% comment %}<a href=# type="button" class="btn badge rounded-pill bg-secondary" {% endcomment %}
@@ -151,7 +216,7 @@
 </td>      
 
 <td>
-    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Archivo</a>
+    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Perfil</a>
 </td>
 <td>
 <a class="btn btn-primary" href="{% url 'sala_revisar' s.id %}">Revisar</a>
@@ -161,7 +226,8 @@
 {%endfor%}
   </tbody>
 </table>
-
+</div>
+<br>
 <a class="btn btn-danger" href='/'> Atras</a>
 
 <br>

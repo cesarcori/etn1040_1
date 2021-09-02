@@ -1,10 +1,11 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 {% comment %}<h2>Perfil de Proyecto de Grado</h2>{% endcomment %}
-<h3>Título</h3>
+<h4>Título</h4>
 {{perfil.titulo.upper}}
-<h3>Resumen</h3>
+<h4>Resumen</h4>
 {{perfil.resumen}}<br>
-<br>
-<a class="btn btn-danger" href={%url 'paso4'%}>Atras</a>
+<p>
+<a href="{{ perfil.perfil.url }}">Perfil Aprobado<a></p>
+<p><a class="btn btn-danger" href={%url 'paso4'%}>Atras</a></p>
 {% endblock %}

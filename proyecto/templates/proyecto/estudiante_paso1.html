@@ -3,15 +3,24 @@
 <p>Reglamentos de la Materia ETN-1040</p>
 <p>
 {%for link, titulo in dicc_link.items%}
-<a href="{{ link.archivo.url }}">{{titulo}}</a><br>
+<a href="{{ link.archivo.url }}">{{titulo}} </a>
+{% if progreso.nivel < 14 %}
+<i class="fas text-danger fa-graduation-cap"></i><br>
+{% else %}
+<i class="fas text-success fa-check"></i><br>
+{% endif %}
 {%endfor%}
 </p>
-
 <p>Introducción de la materia:<br>
 Documentos compartidos por Docente ETN-1040:
 Ing. {{request.user.datosestudiante.grupo_doc}}</p>
 <p>{%for link in material_docente %}
-<a href="{{ link.material_docente.url }}">{{link.material_docente.name}}<a><p>
+<a href="{{ link.material_docente.url }}">{{link.material_docente.name}}<a>
+{% if progreso.nivel < 14 %}
+<i class="fas text-danger fa-graduation-cap"></i><br>
+{% else %}
+<i class="fas text-success fa-check"></i><br>
+{% endif %}
 {%endfor%}</p>
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 

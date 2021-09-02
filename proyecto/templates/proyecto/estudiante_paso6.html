@@ -1,15 +1,17 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<p>
-<a href={%url 'carta_final'%}>Carta de Conclusión</a><p>
-<a href={%url 'ultimos_formularios'%}>Generación de los 3 formularios</a><p>
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+
+<p><a href={%url 'carta_final'%}>Carta de Conclusión</a>
+<i class="fas text-success fa-check"></i></p>
+<p><a href={%url 'ultimos_formularios'%}>Generación de los 3 formularios</a>
+<i class="fas text-success fa-check"></i></p>
+<p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if progreso.nivel < 100 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a>
+<a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a></p>
 {% endif %}
 {% if progreso.nivel >= 100 %}
-<h5 class='text-success'>Felicidades!<br>Completaste todos los pasos!</h5>
+<h5 class='text-success'>Felicidades!<br>Completaste Terminaste el Proyecto de Grado!</h5>
 {% endif %}
 
 {% endblock %}

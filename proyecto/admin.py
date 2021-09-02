@@ -14,4 +14,5 @@ admin.site.register(MensajeSala)
 admin.site.register(Reglamento)
 admin.site.register(RegistroPerfil)
 admin.site.register(Formularios)
+admin.site.register(Mencion)
 

@@ -12,21 +12,21 @@
 <strong>Tutor:</strong> Ing. {{estudiante.tutor}}<br>
 <strong>Progreso ETN-1040: </strong>{{estudiante.progreso.nivel}}% avanzado.
 </p>
-<h5>Actividades elaboradas:</h5>
+<h5 class="text-success">Actividades elaboradas:</h5>
 <ul>
 {% for paso, subPasos in pasos.items %}
 <strong>{{paso}}</strong>
     {% for subPaso in subPasos %}
-        <li>{{subPaso}}</li>
+        <li class='text-success'>{{subPaso}}</li>
     {% endfor %}
 {% endfor %}
 </ul>
-<h5>Actividades Faltantes:</h5>
+<h5 class="text-danger">Actividades Faltantes:</h5>
 <ul>
 {% for paso, subPasos in pasos_falta.items %}
 <strong>{{paso}}</strong>
     {% for subPaso in subPasos %}
-        <li>{{subPaso}}</li>
+        <li class='text-danger'>{{subPaso}}</li>
     {% endfor %}
 {% endfor %}
 </ul>

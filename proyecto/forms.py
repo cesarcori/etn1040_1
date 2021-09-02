@@ -11,14 +11,18 @@ class CreateUserForm(UserCreationForm):
     solo_celular = RegexValidator(r'^[6|7][0-9]{7}$', 
             'Ingresar un numero de celular')
 
-    s = 'Sistemas de Computación'
-    t = 'Telecomunicación'
-    c = 'Control'
-    MENCION = [
-        (s, s),
-        (t, t),
-        (c, c),
-    ] 
+    # s = 'Sistemas de Computación'
+    # t = 'Telecomunicación'
+    # c = 'Control'
+    # s = Mencion.objects.all()[0]
+    # t = Mencion.objects.all()[1]
+    # c = Mencion.objects.all()[2]
+    # MENCION = [
+        # (s, s),
+        # (t, t),
+        # (c, c),
+    # ] 
+    MENCION = [(m,m) for m in Mencion.objects.all()]
 
     EXTENSION = [
         ( 'LP'  ,  'La Paz' )     ,

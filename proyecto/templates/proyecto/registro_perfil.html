@@ -1,7 +1,7 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h4>Registrar titulo, resumen y cronograma del Perfil de proyecto de grado</h4>
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <a class="btn btn-danger" href={%url 'paso4'%}>Atras</a>

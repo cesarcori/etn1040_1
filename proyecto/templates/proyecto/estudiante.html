@@ -4,71 +4,138 @@
 <div class="container">
   <div class="row row-cols-2 row-cols-lg-3 g-2 g-lg-3">
     <div class="col">
-      <div class="p-3 border bg-light">
+    {%if progreso == 1%}
+      <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-primary" href={%url 'paso1'%}>Paso 1</a>
+       {% comment %}<a class="btn btn-colorido" href={%url 'paso2'%}>Paso 2</a>{% endcomment %}
+        <a class="btn btn-warning" href={%url 'paso1'%}>Paso 1</a>
+        </div>
+      </div>
+    {% endif %}
+    {%if progreso > 1%}
+      <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+            <a class="btn btn-success" href={%url 'paso1'%}>Paso 1</a>
         </div>
       </div>    
+    {% endif %}
     </div>
     <div class="col">
-      <div class="p-3 border bg-light">
+    {%if progreso == 14%}
+      <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-    {%if progreso >= 14%}
-       <a class="btn btn-colorido" href={%url 'paso2'%}>Paso 2</a>
+       {% comment %}<a class="btn btn-colorido" href={%url 'paso2'%}>Paso 2</a>{% endcomment %}
+       <a class="btn btn-warning" href={%url 'paso2'%}>Paso 2</a>
+        </div>
+      </div>
+    {% endif %}
+    {%if progreso > 14%}
+      <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       {% comment %}<a class="btn btn-colorido" href={%url 'paso2'%}>Paso 2</a>{% endcomment %}
+       <a class="btn btn-success" href={%url 'paso2'%}>Paso 2</a>
+        </div>
+      </div>
     {% endif %}
     {%if progreso < 14%}
-       <a class="btn btn-colorido disabled" href={%url 'paso2'%}>Paso 2</a>
-    {% endif %}
+      <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       <a class="btn btn-danger disabled text-white">Paso 2</a>
         </div>
       </div>
+    {% endif %}
     </div>
     <div class="col">
-      <div class="p-3 border bg-light">
+    {%if progreso == 21 %}
+      <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-    {%if progreso >= 21 %}
+       <a class="btn btn-warning" href={%url 'paso3'%}>Paso 3</a>
+        </div>
+      </div>
+    {% endif %}
+    {%if progreso > 21 %}
+      <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
        <a class="btn btn-success" href={%url 'paso3'%}>Paso 3</a>
+        </div>
+      </div>
     {% endif %}
     {%if progreso < 21 %}
-       <a class="btn btn-success disabled" href={%url 'paso3'%}>Paso 3</a>
-    {% endif %}
+      <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       <a class="btn btn-danger disabled text-white">Paso 3</a>
         </div>
       </div>
+    {% endif %}
     </div>
     <div class="col">
-      <div class="p-3 border bg-light">
+    {%if progreso == 35%}
+      <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-    {%if progreso >= 35%}
-       <a class="btn btn-danger" href={%url 'paso4'%}>Paso 4</a>
+       <a class="btn btn-warning" href={%url 'paso4'%}>Paso 4</a>
+        </div>
+      </div>
+    {% endif %}
+    {%if progreso > 35%}
+      <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       <a class="btn btn-success" href={%url 'paso4'%}>Paso 4</a>
+        </div>
+      </div>
     {% endif %}
     {%if progreso < 35 %}
-       <a class="btn btn-danger disabled" href={%url 'paso4'%}>Paso 4</a>
-    {% endif %}
+      <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       <a class="btn btn-danger disabled text-white">Paso 4</a>
         </div>
       </div>
+    {% endif %}
     </div>
     <div class="col">
-      <div class="p-3 border bg-light">
+    {%if progreso == 64 %}
+      <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-    {%if progreso >= 64 %}
        <a class="btn btn-warning" href={%url 'paso5'%}>Paso 5</a>
+        </div>
+      </div>
+    {% endif %}
+    {%if progreso > 64 %}
+      <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       <a class="btn btn-success" href={%url 'paso5'%}>Paso 5</a>
+        </div>
+      </div>
     {% endif %}
     {%if progreso < 64 %}
-       <a class="btn btn-warning disabled" href={%url 'paso5'%}>Paso 5</a>
-    {% endif %}
+      <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       <a class="btn btn-danger disabled text-white">Paso 5</a>
         </div>
       </div>
+    {% endif %}
     </div>
     <div class="col">
-      <div class="p-3 border bg-light">
+    {%if progreso == 86 %}
+      <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-    {%if progreso >= 86 %}
-       <a class="btn btn-dark" href={%url 'paso6'%}>Paso 6</a>
-    {% endif %}
-    {%if progreso < 86 %}
-       <a class="btn btn-dark disabled " href={%url 'paso6'%}>Paso 6</a>
-    {% endif %}
+       <a class="btn btn-warning" href={%url 'paso6'%}>Paso 6</a>
         </div>
       </div>
+    {% endif %}
+    {%if progreso > 86 %}
+      <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       <a class="btn btn-success" href={%url 'paso6'%}>Paso 6</a>
+        </div>
+      </div>
+    {% endif %}
+    {%if progreso < 86 %}
+      <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
+        <div class="text-center">
+       <a class="btn btn-danger disabled text-white">Paso 6</a>
+        </div>
+      </div>
+    {% endif %}
     </div>
   </div>
 </div>

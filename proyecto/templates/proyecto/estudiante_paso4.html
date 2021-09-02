@@ -2,40 +2,57 @@
 {% block content %}
 <p>Revisión del Perfil de Proyecto de Grado por el Docente ETN-1040 y el Tutor<br> 
 para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto de Grado<p>
-<p><a href={%url 'entrega_perfil'%}>Entregar perfil para revisión</a></p>
-{% if registro_perfil_existe %}
-<p><a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a></p>
+<p><a href={%url 'entrega_perfil'%}>Entregar perfil para revisión</a>
+{% if estudiante.vb_perfil_docente and estudiante.vb_perfil_tutor%}
+<i class="fas text-success fa-check"></i></p>
 {% else %}
-    {% if request.user.datosestudiante.vb_perfil_docente and request.user.datosestudiante.vb_perfil_tutor %}
-    <p><a href={%url 'registro_perfil'%}>Registro de Perfil</a></p>
+<i class="fas text-danger fa-graduation-cap"></i></p>
+{% endif %}
+
+{% if registro_perfil_existe %}
+<p><a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a>
+<i class="fas text-success fa-check"></i></p>
+{% else %}
+    {% if estudiante.vb_perfil_docente and estudiante.vb_perfil_tutor %}
+        <p><a href={%url 'registro_perfil'%}>Registro de Perfil</a>
+        <i class="fas text-danger fa-graduation-cap"></i></p>
     {% else %}
-    <p><a class="btn disabled" href={%url 'registro_perfil'%}>Registro de Perfil</a></p>
+        <p><a class="btn disabled" href={%url 'registro_perfil'%}>Registro de Perfil</a>
+        <i class="fas text-danger fa-graduation-cap"></i></p>
     {% endif %}
 {% endif %}
-{% if not request.user.datosestudiante.registrocronograma%}
-hola
-{%endif%}
-{% comment %}{{request.user.datosestudiante.vb_perfil_docente}}{% endcomment %}
-{% comment %}{{request.user.datosestudiante.vb_perfil_tutor}}{% endcomment %}
-{% comment %}{{request.user.datosestudiante.registrocronograma}}{% endcomment %}
 
-{% if request.user.datosestudiante.vb_perfil_docente and request.user.datosestudiante.vb_perfil_tutor %}
-    {% if request.user.datosestudiante.registrocronograma%}
-    <p><a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a></p>
+{% if estudiante.vb_perfil_docente and estudiante.vb_perfil_tutor and registro_perfil_existe%}
+    {% if estudiante.registrocronograma%}
+    <p><a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a>
+    <i class="fas text-success fa-check "></i></p>
     {% else %}
-    <p><a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a></p>
+    <p><a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a>
+    <i class="fas text-danger fa-graduation-cap"></i></p>
     {%endif%}
+{% else %}
+<p><a class="btn disabled" href=#>Registro de Cronograma</a>
+<i class="fas text-danger fa-graduation-cap"></i></p>
 {% comment %}<p><a href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>{% endcomment %}
 {% comment %}<p><a href={%url 'carta_aceptacion_tutor'%}>Carta aceptacion de tutoría</a></p>{% endcomment %}
-<p><a href={%url 'formulario_1'%}>Formulario de Aprobación</a></p>
-{% else %}
-<p><a class="btn disabled" href=#>Registro de Cronograma</a></p>
-{% comment %}<p><a class="btn disabled" href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>{% endcomment %}
-{% comment %}<p><a class="btn disabled" >Carta aceptacion de tutoría</a></p>{% endcomment %}
-<p><a class="btn disabled" href=#>Formulario de Aprobación</a></p>
 {% endif %}
 
-    <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+{% if estudiante.vb_perfil_docente and estudiante.vb_perfil_tutor and registro_perfil_existe %}
+    {% if estudiante.registrocronograma%}
+        <p><a href={%url 'formulario_1'%}>Formulario de Aprobación</a>
+        <i class="fas text-success fa-check "></i></p>
+    {% else %}
+        <p><a class="btn disabled" href=#>Formulario de Aprobación</a>
+        <i class="fas text-danger fa-graduation-cap"></i></p>
+    {%endif%}
+{% else %}
+{% comment %}<p><a class="btn disabled" href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>{% endcomment %}
+{% comment %}<p><a class="btn disabled" >Carta aceptacion de tutoría</a></p>{% endcomment %}
+<p><a class="btn disabled" href=#>Formulario de Aprobación</a>
+<i class="fas text-danger fa-graduation-cap"></i></p>
+{% endif %}
+
+<p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if perfil %}
 {% if progreso.nivel < 64 %}

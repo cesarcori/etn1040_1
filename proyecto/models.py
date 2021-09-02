@@ -101,6 +101,8 @@ class DatosTutor(models.Model):
         self.nombre_completo = self.nombre + ' ' + self.apellido
         return self.nombre_completo
 
+
+
 class DatosEstudiante(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)
@@ -170,7 +172,7 @@ class RegistroPerfil(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(blank=True, null=True)
-    # cronograma = models.TextField(blank=True, null=True)
+    perfil = models.FileField(upload_to='perfiles/', null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class Formularios(models.Model):
@@ -192,6 +194,7 @@ class ProyectoDeGrado(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(blank=True, null=True)
+    archivo = models.FileField(upload_to='proyectos/', null=True)
     calificacion = models.PositiveSmallIntegerField(null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -213,3 +216,8 @@ class BusquedaProyecto(models.Model):
     perfil_proyecto = models.CharField(max_length=200, choices=documento, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
+class Mencion(models.Model):
+    nombre = models.CharField(max_length=200, null=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+    def __str__(self):
+        return self.nombre

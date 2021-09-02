@@ -17,11 +17,11 @@ from .formularios import *
 from random import randint
 from datetime import timedelta
 # busqueda
-import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-import nltk
-from nltk.corpus import stopwords
+# import pandas as pd
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.metrics.pairwise import linear_kernel
+# import nltk
+# from nltk.corpus import stopwords
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
@@ -481,6 +481,25 @@ def enlaceEstudiante(request, pk_est):
 def reporteEstudiante(request, id_est):
     grupo = request.user.groups.get().name
     estudiante = DatosEstudiante.objects.get(id=id_est)
+    if estudiante.progreso.nivel == 1:
+        pasos = {
+                }
+        pasos_falta = {
+                'Paso 1':['Conocimiento de Reglamentos de Proyecto de Grado',
+                        'Revisión y estudio del material compartido por Docente'],
+                'Paso 2':['Búsqueda de Proyectos de Grado'],
+                'Paso 3':['Asignación de Tutor de Proyecto de Grado',
+                        'Carta aceptación de Tutoría'],
+                'Paso 4':['Entrega y revisión de Perfil de Proyecto de Grado',
+                        'Registro de Perfil de Proyecto de Grado',
+                        'Registro de Cronograma de Proyecto de Grado',
+                        'Formulario 1'],
+                'Paso 5':['Cumplir con el cronograma',
+                        'Revisión del Proyecto de Grado',
+                        'Registro del Proyecto de Grado',],
+                'Paso 6':['Carta de Conclusión',
+                    'Gegeración de los 3 formularios']
+                }
     if estudiante.progreso.nivel > 1:
         pasos = {'Paso 1':['Conocimiento de Reglamentos de Proyecto de Grado',
                         'Revisión y estudio del material compartido por Docente'],
@@ -536,7 +555,6 @@ def progresoEstudiante(request, pk_est):
     else:
         proyecto = None
         calificacion = None
-    print(proyecto, calificacion)
     if grupo == 'docente':
         # evita que se un docente consulte otros estudiantes
         existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
@@ -975,7 +993,7 @@ def paso4(request):
     progreso = Progreso.objects.get(usuario=estudiante)
     perfil = RegistroPerfil.objects.filter(usuario=estudiante)
     context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,
-            'progreso': progreso,'perfil':perfil}
+            'progreso': progreso,'perfil':perfil,'estudiante':estudiante}
     return render(request, 'proyecto/estudiante_paso4.html', context)
 
 @login_required(login_url='login')
@@ -1156,7 +1174,7 @@ def registro_perfil(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     if request.method == "POST":
-        form= RegistroPerfilForm(request.POST)
+        form= RegistroPerfilForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.save(commit=False)
             file.usuario = estudiante
@@ -1515,7 +1533,7 @@ def registroProyecto(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     if request.method == 'POST':
-        form = ProyectoDeGradoForm(request.POST)
+        form = ProyectoDeGradoForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.save(commit=False)
             file.usuario = estudiante
