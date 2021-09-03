@@ -28,6 +28,8 @@ Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>
 		</div>
 	</div>
 </div>
+<div class='text-right'>
+    <a href={% url 'resetear_password' docente.usuario_id %}>Resetear Contraseña</a></div>
 <h3>Lista de Estudiantes</h3>
 <table class="table table-striped">
   <thead>

@@ -28,4 +28,10 @@ Número de Celular: {{tutor.celular}}</p>
 		</div>
 	</div>
 </div>
+
+{% if grupo == 'administrador'%}
+<div class='text-right'>
+    <a href={% url 'resetear_password' tutor.usuario_id %}>Resetear Contraseña</a></div>
+{% endif %}
+
 {% endblock %}

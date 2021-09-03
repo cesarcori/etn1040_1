@@ -44,4 +44,9 @@ Fecha de Inscripción: {{estudiante.fecha_inscripcion}}</p>
 		</div>
 	</div>
 </div>
+{% if grupo == 'administrador'%}
+<div class='text-right'>
+    <a href={% url 'resetear_password' estudiante.usuario_id %}>Resetear Contraseña</a></div>
+{% endif %}
+
 {% endblock %}

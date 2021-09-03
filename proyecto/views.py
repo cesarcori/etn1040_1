@@ -6,6 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
 from .decorators import unauthenticated_user, allowed_users, admin_only, permitir_paso1
 from .decorators import *
 from .forms import *
@@ -22,6 +25,7 @@ from datetime import timedelta
 # from sklearn.metrics.pairwise import linear_kernel
 # import nltk
 # from nltk.corpus import stopwords
+
 
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
@@ -190,6 +194,7 @@ def home(request):
             'form':form, 'info':info, 'aviso':aviso}
     return render(request, 'proyecto/home.html', context)
 
+
 @login_required(login_url='login')
 @admin_only
 def eliminarUsuario(request, usuario_id):
@@ -337,6 +342,36 @@ def editarPerfil(request):
                 return redirect('perfil')
     context = {'grupo': grupo,'form':form}
     return render(request, 'proyecto/editar_perfil.html', context)
+
+@login_required(login_url='login')
+def editarPassword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            # messages.success(request, 'Contraseña actualizada!')
+            return redirect('perfil')
+        # else:
+            # messages.error(request, 'Corrige el error de abajo.')
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {'form':form}
+    return render(request, 'proyecto/editar_password.html', context)
+
+@login_required(login_url='login')
+@admin_only
+def resetearPassword(request, id_user):
+    grupo = request.user.groups.get().name
+    usuario = User.objects.get(id=id_user)
+    if request.method == 'POST':
+        confirmar = request.POST['confirmar']
+        if confirmar == 'si':
+            usuario.set_password(usuario.__str__())
+            usuario.save()
+            return redirect('home')
+    context = {'usuario':usuario}
+    return render(request, 'proyecto/resetear_password.html', context)
 
 # Comunicados, docentes, tutores, y vista estudiantes
 @login_required(login_url='login')

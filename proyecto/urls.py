@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path
+# cambia password
+from django.contrib.auth import views as auth_views
 from . import views
 urlpatterns = [
 
@@ -15,6 +17,9 @@ urlpatterns = [
     path('tutor/', views.tutor, name='tutor'),
     path('tutor/solicitud-tutoria/<int:id_est>', views.solicitudTutoria, name='solicitud_tutoria'),
     path('estudiante/', views.estudiante, name='estudiante'),
+
+    path('passcontra/', views.editarPassword, name='editar_password'),
+    path('resetPass/<int:id_user>', views.resetearPassword, name='resetear_password'),
 
     path('perfil/', views.perfilUsuarios, name='perfil'),
     path('perfil/editar', views.editarPerfil, name='editar_perfil'),
