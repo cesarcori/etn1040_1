@@ -1,5 +1,6 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
+<div class='text-right'><a href={% url 'imprimir_reporte' estudiante.id%}>Imprimir Reporte</a></div>
 <h3>Reporte del Estudiante</h3>
 <h5>Datos Personales</h5>
 <p><strong>Nombre Completo: </strong>{{estudiante}} 
@@ -34,5 +35,6 @@
 {% comment %}It is {% now "jS F Y H:i" %}{% endcomment %}
 {% comment %}It is {% now "SHORT_DATETIME_FORMAT" %}{% endcomment %}
 {% comment %}<p><strong>Fecha:</strong></p>{% endcomment %}
+
 {% endblock %}
 

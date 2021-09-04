@@ -237,7 +237,9 @@ class ProyectoDeGradoForm(forms.ModelForm):
     class Meta:
         model = ProyectoDeGrado
         fields = '__all__'
-        exclude = ['usuario','calificacion']
+        exclude = ['usuario','calificacion','nota_tiempo_elaboracion',
+                'nota_expos_seminarios','nota_informes_trabajo',
+                'nota_cumplimiento_cronograma']
         widgets = {
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
                         'placeholder':'Copia el título del Proyecto de Grado...'}),
@@ -250,7 +252,10 @@ class ProyectoDeGradoForm(forms.ModelForm):
                 }
 
 class CalificarProyectoForm(forms.Form):
-    calificacion = forms.IntegerField(min_value=1, max_value=40)
+    nota1= forms.IntegerField(min_value=1, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
+    nota2= forms.IntegerField(min_value=1, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
+    nota3= forms.IntegerField(min_value=1, max_value=22,label='Informes de Trabajo (Max. 22%)')
+    nota4= forms.IntegerField(min_value=1, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
 
 class DatosTutorForm(forms.ModelForm):
     class Meta:
@@ -299,3 +304,8 @@ class TutorForm(forms.ModelForm):
         model = DatosTutor
         fields = '__all__'
         exclude = ['usuario','imagen_perfil','celular']
+class AuspicioForm(forms.ModelForm):
+    class Meta:
+        model = Auspicio
+        fields = '__all__'
+        exclude = ['usuario']

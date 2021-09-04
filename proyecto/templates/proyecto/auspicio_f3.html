@@ -1,0 +1,11 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h3>Llenar Auspiciadores: {{estudiante}}</h3>
+<form method='post' >
+    {% csrf_token %}
+    {{form.as_p}}
+    <a class="btn btn-danger" href={%url 'ultimos_formularios' %}>Cancelar</a>
+    <button class="btn btn-success" type="submit">Actualizar</button>
+</form>
+
+{% endblock %}

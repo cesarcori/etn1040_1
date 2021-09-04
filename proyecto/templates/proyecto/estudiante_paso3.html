@@ -22,7 +22,8 @@ Ingrese el e-mail del tutor y espere que acepte su solicitud.</p>
 <p>Se solicitó tutoria a:
 <a href="{% url 'enlace_tutor' tutor.id %}">{{tutor.nombre}} {{tutor.apellido}}</a><br>
 Espere hasta que acepte su solicitud
-<i class="fas fa-user-clock text-primary"></i>
+<i class="fas fa-user-clock text-primary"></i><br>
+<a href="{% url 'indicaciones_tutor' estudiante.id %}">Imprimir Indicaciones a Tutor</a><br>
 </p>
 {% endif %}
 
@@ -30,7 +31,7 @@ Espere hasta que acepte su solicitud
 <p>El <strong>Ing. {{tutor}}</strong> aceptó la solicitud de tutoría
 <i class="fas fa-user-check text-success"></i>
 </p>
-<p><a href={%url 'reporte_tutor_acepto'%}>Carta de Aceptación para DMA</a>
+<p><a href={%url 'reporte_tutor_acepto' estudiante.id %}>Carta de Aceptación para DMA</a>
 <i class="fas text-success fa-check"></i></p>
 {% endif %}
 

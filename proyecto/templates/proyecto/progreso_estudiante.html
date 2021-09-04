@@ -1,5 +1,6 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
+
 <h4>Progreso del estudiante: {{estudiante}}</h4>
 <div class="progress">
     <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
@@ -18,29 +19,59 @@
 <a class="btn btn-success" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
 {%endif%}
 {%if grupo == 'docente' and not calificacion == None%}
-<h5 class='text-center'>La calificacion del Proyecto de Grado es: </h5>
-<h3 class="text-center">* {{calificacion}} *</h3>
+<p>
+<strong>Calificación del Proyecto de Grado</strong><br>
+Tiempo Elaboración (Max. 9%): <strong>{{proyecto.nota_tiempo_elaboracion}}</strong><br>
+Exposiciones/Seminarios (Max. 6%): <strong>{{proyecto.nota_expos_seminarios}}</strong><br>
+Informes de Trabajos (Max. 22%): <strong>{{proyecto.nota_informes_trabajo}}</strong><br>
+Cumplimiento de Cronograma (Max. 3%): <strong>{{proyecto.nota_cumplimiento_cronograma}}</strong><br>
+Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
+</p>
+{% comment %}<h5 class='text-center'>La calificacion del Proyecto de Grado es: </h5>{% endcomment %}
+{% comment %}<h3 class="text-center">* {{calificacion}} *</h3>{% endcomment %}
 {%endif%}
 {%if grupo == 'tutor' and not calificacion == None%}
-<h5 class='text-center'>La calificacion del Proyecto de Grado es: </h5>
-<h3 class="text-center">* {{calificacion}} *</h3>
+<p>
+<strong>Calificación del Proyecto de Grado</strong><br>
+Tiempo Elaboración (Max. 9%): <strong>{{proyecto.nota_tiempo_elaboracion}}</strong><br>
+Exposiciones/Seminarios (Max. 6%): <strong>{{proyecto.nota_expos_seminarios}}</strong><br>
+Informes de Trabajos (Max. 22%): <strong>{{proyecto.nota_informes_trabajo}}</strong><br>
+Cumplimiento de Cronograma (Max. 3%): <strong>{{proyecto.nota_cumplimiento_cronograma}}</strong><br>
+Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
+</p>
+{% comment %}<h5 class='text-center'>La calificacion del Proyecto de Grado es: </h5>{% endcomment %}
+{% comment %}<h3 class="text-center">* {{calificacion}} *</h3>{% endcomment %}
 {%endif%}
 {%if grupo == 'tutor' and calificacion == None and not proyecto == None%}
 <h5 class='text-center'>El docente aún no puso la nota</h5>
 <h5 class='text-center'>Pero el estudiante ya registró el Proyecto de Grado </h5>
 {%endif%}
+{% comment %}******** visto bueno ********{% endcomment %}
 <p>
-
-{% if progreso >= 64%}
 {% if grupo == 'docente' %}
-    {% if estudiante.vb_proyecto_tutor%}
-<div class="d-inline p-2 bg-success text-white">El Tutor ya dio el visto bueno al proyecto de grado</div>
+    {% if progreso < 64 %}
+        {% if estudiante.vb_perfil_tutor%}
+            <div class="d-inline p-2 bg-success text-white">El Tutor ya dio el visto bueno al perfil</div>
+        {% else %}
+            <div class="d-inline p-2 bg-danger text-white">El Tutor aún no dio el visto bueno al perfil</div>
+        {% endif %}
     {% else %}
-<div class="d-inline p-2 bg-danger text-white">El Tutor aún no dio el visto bueno al proyecto de grado</div>
+        {% if estudiante.vb_proyecto_tutor%}
+            <div class="d-inline p-2 bg-success text-white">El Tutor ya dio el visto bueno al proyecto de grado</div>
+        {% else %}
+            <div class="d-inline p-2 bg-danger text-white">El Tutor aún no dio el visto bueno al proyecto de grado</div>
+        {% endif %}
     {% endif %}
 {% endif %}
-<p>
+</p>
+
+
+
+
+<div class="row">
+    <div class="col-md-7">
 {% comment %}********* PROYECTO DE GRADO **************{% endcomment %}
+{% if progreso >= 64%}
 <h4 class='text-center'><strong>REVISIÓN DE PROYECTO DE GRADO</strong></h4>
 <div class = 'border border-4 
 {% if progreso >= 64%}
@@ -122,27 +153,20 @@
 </table>
 </div>
 <br>
+
 {% endif %}
 
-{% comment %}Visto bueno del tutor en vista del docente{% endcomment %}
+
 {% comment %}********* PERFIL **************{% endcomment %}
-{% if grupo == 'docente' and progreso < 64%}
-    {% if estudiante.vb_perfil_tutor%}
-<div class="d-inline p-2 bg-success text-white">El Tutor ya dio el visto bueno</div>
+{% if progreso < 64%}
+    <h4 class='text-center'><strong>REVISIÓN DE PERFIL</strong></h4>
+    <div class = 'border border-4 
+    {% if progreso >= 64%}
+        border-seccondary
     {% else %}
-<div class="d-inline p-2 bg-danger text-white">El Tutor aún no dio el visto bueno</div>
+        border-success
     {% endif %}
-{% endif %}
-{% comment %}<hr class="py-1 text-dark">{% endcomment %}
-<h4 class='text-center'><strong>REVISIÓN DE PERFIL</strong></h4>
-
-<div class = 'border border-4 
-{% if progreso >= 64%}
-    border-seccondary
-{% else %}
-    border-success
-{% endif %}
-    '>
+        '>
 <table class="table table-striped table-hover ">
   <thead>
     <tr>
@@ -150,25 +174,19 @@
       <th scope="col">Asunto</th>
       <th scope="col">
         {% if grupo == 'docente'%}
-        {% if estudiante.vb_perfil_docente%}
-        {% comment %}<div type="button" class="btn badge rounded-pill bg-success" {% endcomment %}
-        {% comment %}data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">{% endcomment %}
-        {% comment %}V.B.</div>{% endcomment %}
-        {% comment %}<div type="button" class="btn btn-success" {% endcomment %}
-        {% comment %}data-bs-toggle="tooltip" data-bs-placement="right" title="Visto Bueno OK">{% endcomment %}
-        {% comment %}V.B.</div>{% endcomment %}
-        <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
-        {% else %}
-            {% if salas %}
-                <a href="{% url 'visto_bueno_perfil' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
-                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-                Dar Visto Bueno</a>
+            {% if estudiante.vb_perfil_docente%}
+            <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
             {% else %}
-                <a href=# type="button" class="btn btn-outline-danger btn-sm disabled" 
-                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-                Dar Visto Bueno</a>
+                {% if salas %}
+                    <a href="{% url 'visto_bueno_perfil' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                    Dar Visto Bueno</a>
+                {% else %}
+                    <a href=# type="button" class="btn btn-outline-danger btn-sm disabled" 
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                    Dar Visto Bueno</a>
+                {% endif %}
             {% endif %}
-        {% endif %}
         {% endif %}
 
         {% if grupo == 'tutor'%}
@@ -228,6 +246,123 @@
 </table>
 </div>
 <br>
+
+
+
+{% endif %}
+
+    </div>
+    <div class="col-md-5">
+		<h5>Documentos del estudiante:</h5>
+		<div class="card card-body">
+            <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                <th scope="col">Documento</th>
+                <th scope="col">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% if estudiante.tutor_acepto%}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href={%url 'reporte_tutor_acepto' estudiante.id%} 
+                            class='text-white text-underline-hover'>
+                            Carta de Aceptación Tutoría</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Carta de Aceptación Tutoría</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if estudiante.registroperfil %}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href="{{ estudiante.registroperfil.perfil.url }}" 
+                            class='text-white text-underline-hover'>
+                            Perfil de Proyecto de Grado</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Perfil de Proyecto de Grado</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                <tr>
+                    {% if estudiante.registrocronograma %}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href={%url 'formulario_1' estudiante.id%}
+                            class='text-white text-underline-hover'>
+                            Formulario 1<br>Aprobación Perfil</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Formulario 1<br>Aprobación Perfil</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if estudiante.proyectodegrado%}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href="{{ estudiante.proyectodegrado.archivo.url }}"
+                            class='text-white text-underline-hover'>
+                            Proyecto de Grado</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Proyecto de Grado</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if estudiante.proyectodegrado.calificacion %}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href={%url 'carta_final' estudiante.id %} class='text-white text-underline-hover'>
+                            Carta de Conclusión</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Carta de Conclusión</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if estudiante.proyectodegrado.calificacion%}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href={%url 'formulario_2' estudiante.id %} class='text-white text-underline-hover'>
+                            Formulario 2<br>Materia: Proyecto</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Formulario 2<br>Materia: Proyecto</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if estudiante.proyectodegrado.calificacion%}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href={%url 'formulario_3' estudiante.id %} class='text-white text-underline-hover'>
+                            Formulario 3<br>Registro y Seguimiento</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Formulario 3<br>Registro y Seguimiento</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if estudiante.proyectodegrado.calificacion %}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href={%url 'formulario_4' estudiante.id %} class='text-white text-underline-hover'>
+                            Formulario 4<br>Solicitud Nombramiento Tribunal</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Formulario 4<br>Solicitud Nombramiento Tribunal</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
 <a class="btn btn-danger" href='/'> Atras</a>
 
 <br>

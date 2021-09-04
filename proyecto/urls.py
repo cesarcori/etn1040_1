@@ -34,6 +34,7 @@ urlpatterns = [
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
     path('reporte-est/<int:id_est>', views.reporteEstudiante, name='reporte_estudiante'),
+    path('reporte-est/imprimir/<int:id_est>', views.imprimirReporteEstudiante, name='imprimir_reporte'),
     path('progreso-est/<int:pk_est>', views.progresoEstudiante, name='progreso_estudiante'),
     path('progreso-est/vis-bu-per/<int:id_est>', views.vistoBuenoPerfil, name='visto_bueno_perfil'),
     path('progreso-est/vis-bu-pro/<int:id_est>', views.vistoBuenoProyecto, name='visto_bueno_proyecto'),
@@ -49,11 +50,11 @@ urlpatterns = [
     path('agregar-doc/', views.agregarDocente, name='agregar_docente'),
     path('agregar-tut/', views.agregarTutor, name='agregar_tutor'),
 
-    
     path('paso1/', views.paso1, name='paso1'),
     path('paso2/', views.paso2, name='paso2'),
     path('paso3/', views.paso3, name='paso3'),
-    path('paso3/reporte-tutor-acepto/', views.reporteTutorAcepto, name='reporte_tutor_acepto'),
+    path('paso3/reporte-tutor-acepto/<int:id_est>', views.reporteTutorAcepto, name='reporte_tutor_acepto'),
+    path('paso3/indicaciones-tutor/<int:id_est>', views.reporteIndicacionesTutor, name='indicaciones_tutor'),
     path('paso4/', views.paso4, name='paso4'),
     path('paso4/entrega-perfil', views.entregaPerfil, name='entrega_perfil'),
     path('paso4/entrega-perfil/crear-sala-revisar', views.crearSalaRevisar, name='crear_sala'),
@@ -65,7 +66,7 @@ urlpatterns = [
     path('paso4/registro-perfil/', views.registro_perfil, name='registro_perfil'),
     path('paso4/perfil-registrado/', views.ver_perfil_registrado, name='ver_perfil_registrado'),
     path('cronograma-actividad/', views.cronograma_actividad, name='cronograma_actividad'),
-    path('paso4/formulario-aprobacion/', views.formulario_1, name='formulario_1'),
+    path('paso4/formulario-aprobacion/<int:id_est>', views.formulario_1, name='formulario_1'),
     path('paso4/eliminar-actividad/<int:id_act>', views.eliminar_actividad, name='eliminar_actividad'),
     path('paso4/cronograma-actividad/registrar', views.cronograma_registrar, name='cronograma_registrar'),
     path('paso5/', views.paso5, name='paso5'),
@@ -79,11 +80,12 @@ urlpatterns = [
     path('paso5/proyecto/', views.ver_proyecto_grado, name='ver_proyecto_grado'),
 
     path('paso6/', views.paso6, name='paso6'),
-    path('paso6/carta-final/', views.carta_final_tutor, name='carta_final'),
+    path('paso6/carta-final/<int:id_est>', views.carta_final_tutor, name='carta_final'),
     path('paso6/ultimos-formularios/', views.ultimosFormularios, name='ultimos_formularios'),
-    path('paso6/formulario-material-proyecto-grado/', views.formulario_2, name='formulario_2'),
-    path('paso6/formulario-3/', views.formulario_3, name='formulario_3'),
-    path('paso6/formulario-4/', views.formulario_4, name='formulario_4'),
+    path('paso6/formulario-material-proyecto-grado/<int:id_est>', views.formulario_2, name='formulario_2'),
+    path('paso6/formulario-3/<int:id_est>', views.formulario_3, name='formulario_3'),
+    path('paso6/formulario-3/auspicio/<int:id_est>', views.auspicioF3, name='auspicio_f3'),
+    path('paso6/formulario-4/<int:id_est>', views.formulario_4, name='formulario_4'),
 
     path('calificar-proyecto/<int:id_est>/', views.calificarProyecto, name='calificar_proyecto'),
     

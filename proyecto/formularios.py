@@ -4,6 +4,7 @@ from os import remove
 from datetime import date
 import PyPDF2
 from etn1040_1.settings import MEDIA_ROOT
+from .models import Auspicio
 UNIDADES = (
     'cero',
     'uno',
@@ -280,10 +281,24 @@ def formulario3(buffer, estudiante, proyecto):
     extension = estudiante.extension
     titulo = proyecto.titulo
     docente_tutor = estudiante.tutor.__str__()
+    docente = estudiante.grupo_doc.__str__()
     mencion = estudiante.mencion
-    empresa = 'Carrera de Ingeniería Electrónica'
-    supervisor = 'Ing. Vladimir Barra Garcia'
-    cargo = 'Jefe de Carrera Ingeniería Electrónica'
+    nota1 = proyecto.nota_tiempo_elaboracion.__str__()
+    nota2 = proyecto.nota_expos_seminarios.__str__()
+    nota3 = proyecto.nota_informes_trabajo.__str__()
+    nota4 = proyecto.nota_cumplimiento_cronograma.__str__()
+    calificacion = proyecto.calificacion.__str__()
+    # empresa = 'Carrera de Ingeniería Electrónica'
+    # supervisor = 'Ing. Vladimir Barra Garcia'
+    # cargo = 'Jefe de Carrera Ingeniería Electrónica'
+    if Auspicio.objects.filter(usuario=estudiante).exists():
+        empresa = estudiante.auspicio.empresa
+        supervisor = estudiante.auspicio.supervisor
+        cargo = estudiante.auspicio.cargo
+    else:
+        empresa = ''
+        supervisor = ''
+        cargo = ''
     # individual o multiple
     individual = 'V'
     multiple = ''
@@ -297,19 +312,19 @@ def formulario3(buffer, estudiante, proyecto):
     else:
         periodo = 'II'
     gestion = periodo + '/' + year
-    a = '7'
-    b = '5'
-    c = '20'
-    d = '2'
-    suma = '34'
-    nota_40 = suma
-    literal_40 = 'Treita y cuatro'
-    nota_60 = '49'
-    literal_60 = 'Cuarenta y nueve'
-    fecha_cierre = ['8', '08', '2021']
-    gestion_cierre = 'II/2021'
-    docente_etn1040 = 'Ing. Jorge Mario León Gómez'
-    director = 'Ing. Juan Carlos Machicao Aparicio'
+    a = nota1
+    b = nota2
+    c = nota3
+    d = nota4
+    suma = calificacion
+    nota_40 = calificacion
+    literal_40 = numero_letra(nota_40)
+    nota_60 = ''
+    literal_60 = ''
+    fecha_cierre = ['', '', '']
+    gestion_cierre = ''
+    docente_etn1040 = docente
+    director = ''
 # Generacion del pdf
     pdf = FPDF(format="letter")
     pdf.add_page()
@@ -419,7 +434,7 @@ def formulario3(buffer, estudiante, proyecto):
 
 # Firmas
     pdf.set_xy(35,253)
-    pdf.cell(w=70,h=6, txt=docente_etn1040, ln=1, border=0, align='C')
+    pdf.cell(w=70,h=6, txt='Ing. '+docente_etn1040, ln=1, border=0, align='C')
     pdf.set_xy(115,253)
     pdf.cell(w=70,h=6, txt=director, ln=1, border=0, align='C')
 

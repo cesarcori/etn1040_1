@@ -195,8 +195,18 @@ class ProyectoDeGrado(models.Model):
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(blank=True, null=True)
     archivo = models.FileField(upload_to='proyectos/', null=True)
+    nota_tiempo_elaboracion = models.PositiveSmallIntegerField(null=True, blank=True)
+    nota_expos_seminarios = models.PositiveSmallIntegerField(null=True, blank=True)
+    nota_informes_trabajo = models.PositiveSmallIntegerField(null=True, blank=True)
+    nota_cumplimiento_cronograma = models.PositiveSmallIntegerField(null=True, blank=True)
     calificacion = models.PositiveSmallIntegerField(null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+
+class Auspicio(models.Model):
+    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    empresa = models.CharField(max_length=200, default='', null=True)
+    supervisor = models.CharField(max_length=200, default='', null=True)
+    cargo = models.CharField(max_length=200, default='', null=True)
 
 class Progreso(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)

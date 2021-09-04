@@ -39,7 +39,7 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
 
 {% if estudiante.vb_perfil_docente and estudiante.vb_perfil_tutor and registro_perfil_existe %}
     {% if estudiante.registrocronograma%}
-        <p><a href={%url 'formulario_1'%}>Formulario de Aprobación</a>
+        <p><a href={%url 'formulario_1' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
         <i class="fas text-success fa-check "></i></p>
     {% else %}
         <p><a class="btn disabled" href=#>Formulario de Aprobación</a>
@@ -48,7 +48,7 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
 {% else %}
 {% comment %}<p><a class="btn disabled" href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>{% endcomment %}
 {% comment %}<p><a class="btn disabled" >Carta aceptacion de tutoría</a></p>{% endcomment %}
-<p><a class="btn disabled" href=#>Formulario de Aprobación</a>
+<p><a class="btn disabled" href=#>Formulario 1 - Aprobación de Perfil</a>
 <i class="fas text-danger fa-graduation-cap"></i></p>
 {% endif %}
 

@@ -579,6 +579,16 @@ def reporteEstudiante(request, id_est):
     return render(request, 'proyecto/reporte_estudiante.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','administrador','docente','tutor'])
+def imprimirReporteEstudiante(request, id_est):
+    buffer = io.BytesIO()
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    usuario_solicitante = request.user
+    docReporteEstudiante(buffer, estudiante, usuario_solicitante)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','administrador'])
 def progresoEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
@@ -1009,12 +1019,22 @@ def paso3(request):
     return render(request, 'proyecto/estudiante_paso3.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
-@permitir_paso3()
-def reporteTutorAcepto(request):
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso3()
+def reporteTutorAcepto(request, id_est):
     buffer = io.BytesIO()
-    estudiante = request.user.datosestudiante
+    estudiante = DatosEstudiante.objects.get(id=id_est)
     reporte_tutor_acepto(buffer, estudiante)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','tutor',])
+# @permitir_paso3()
+def reporteIndicacionesTutor(request, id_est):
+    buffer = io.BytesIO()
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    docReporteIndicacionTutor(buffer, estudiante)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
 
@@ -1340,11 +1360,11 @@ def eliminar_actividad(request, id_act):
     return redirect('cronograma_actividad')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
-@permitir_paso4()
-def formulario_1(request):
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso4()
+def formulario_1(request,id_est):
     buffer = io.BytesIO()
-    estudiante = request.user.datosestudiante
+    estudiante = DatosEstudiante.objects.get(id=id_est)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
     cargo = 'director'
     lugar = 'instituto de electrónica aplicada'
@@ -1558,7 +1578,8 @@ def paso6(request):
     estudiante = request.user.datosestudiante
     progreso = Progreso.objects.get(usuario=estudiante)
     context = {'grupo': grupo, 
-            'progreso': progreso}
+            'progreso': progreso,
+            'estudiante': estudiante }
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
@@ -1589,13 +1610,12 @@ def ver_proyecto_grado(request):
     context = {'grupo': grupo,'proyecto':proyecto}
     return render(request, 'proyecto/ver_proyecto_grado.html', context)
 
-
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
-def carta_final_tutor(request):
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso6()
+def carta_final_tutor(request, id_est):
     buffer = io.BytesIO()
-    estudiante = request.user.datosestudiante
+    estudiante = DatosEstudiante.objects.get(id=id_est)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
     carta_final(buffer, estudiante)
     buffer.seek(0)
@@ -1610,9 +1630,16 @@ def calificarProyecto(request, id_est):
     estudiante = DatosEstudiante.objects.get(id=id_est)
     if request.method == 'POST':
         form = CalificarProyectoForm(request.POST)
-        calificacion_form = request.POST['calificacion']
+        nota1 = request.POST['nota1']
+        nota2 = request.POST['nota2']
+        nota3 = request.POST['nota3']
+        nota4 = request.POST['nota4']
         proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
-        proyecto.calificacion = calificacion_form
+        proyecto.nota_tiempo_elaboracion = nota1
+        proyecto.nota_expos_seminarios = nota2
+        proyecto.nota_informes_trabajo = nota3
+        proyecto.nota_cumplimiento_cronograma = nota4
+        proyecto.calificacion = int(nota1)+int(nota2)+int(nota3)+int(nota4)
         proyecto.save()
         return redirect('progreso_estudiante',pk_est=id_est)
     else: 
@@ -1625,7 +1652,8 @@ def calificarProyecto(request, id_est):
 @permitir_paso6()
 def ultimosFormularios(request):
     grupo = request.user.groups.get().name
-    context = {'grupo': grupo,}
+    estudiante = request.user.datosestudiante
+    context = {'grupo': grupo,'estudiante':estudiante}
     return render(request, 'proyecto/ultimos_formularios.html', context)
 
 @login_required(login_url='login')
@@ -1647,11 +1675,11 @@ def materialParaEst(request):
     return render(request, 'proyecto/material_para_estudiante.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
-def formulario_2(request):
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso6()
+def formulario_2(request, id_est):
     buffer = io.BytesIO()
-    estudiante = request.user.datosestudiante
+    estudiante = DatosEstudiante.objects.get(id=id_est)
     proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
     info_estu = [
@@ -1668,11 +1696,11 @@ def formulario_2(request):
     return FileResponse(buffer, as_attachment=True, filename='formulario_2.pdf')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
-def formulario_3(request):
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso6()
+def formulario_3(request, id_est):
     buffer = io.BytesIO()
-    estudiante = request.user.datosestudiante
+    estudiante = DatosEstudiante.objects.get(id=id_est)
     proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
     formulario3(buffer,estudiante,proyecto)
@@ -1680,11 +1708,30 @@ def formulario_3(request):
     return FileResponse(buffer, as_attachment=True, filename='formulario_3.pdf')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
-def formulario_4(request):
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso6()
+def auspicioF3(request, id_est):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    auspicio_est = Auspicio.objects.get(usuario=estudiante)
+    form = AuspicioForm(instance=auspicio_est)
+    if request.method == 'POST':
+        form = AuspicioForm(request.POST, instance=auspicio_est)
+        if form.is_valid():
+            # file = form.save(commit=false)
+            # file.usuario = estudiante
+            # file.save()
+            form.save()
+            return redirect('ultimos_formularios')
+    context = {'grupo': grupo,'form':form,'estudiante':estudiante}
+    return render(request, 'proyecto/auspicio_f3.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso6()
+def formulario_4(request, id_est):
     buffer = io.BytesIO()
-    estudiante = request.user.datosestudiante
+    estudiante = DatosEstudiante.objects.get(id=id_est)
     proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
     extension = 'L.P.'
