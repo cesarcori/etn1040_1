@@ -1,0 +1,30 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+
+<style>
+	.profile-pic{
+		max-width: 200px;
+		max-height:200px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+<div class="row">
+	<div class="col-md-5">
+		<h5>FIRMA</h5>
+		<hr>
+		<div class="card card-body">
+            <img class="profile-pic" src="{{usuario.datostutor.firma.url}}" >
+            <a class="nav-link" href={{ usuario.datostutor.firma.url }}>Ver Firma</a>
+            <a class="nav-link" href="{% url 'cargar_firma' %}">Cambiar Firma</a>
+		</div>
+	</div>
+
+	<div class="col-md-7">
+        {% include 'proyecto/documentos_firma.html'%}
+	</div>
+</div> 
+
+
+{% endblock %}
+

@@ -1,0 +1,17 @@
+<h5>Firmar documentos</h5>
+<hr>
+<form method='post'>
+    {% csrf_token %}
+    {{form.as_p}}
+    {% comment %}<a class="btn btn-danger" href={%url 'firmas' %}>Cancelar</a>{% endcomment %}
+    <button class="btn btn-success" type="submit">Guardar Cambios</button>
+</form>
+{% comment %}<div class="card card-body">{% endcomment %}
+    {% comment %}<a class="nav-link" href="{% url 'firmas' %}">Firmar Carta de Aceptación Tutoria</a>{% endcomment %}
+    {% comment %}<a class="nav-link" href="{% url 'firmas' %}">Firmar Formulario 1 - Aprobación Perfil</a>{% endcomment %}
+    {% comment %}<a class="nav-link" href="{% url 'firmas' %}">Firmar Carta Conclusión Proyecto de Grado</a>{% endcomment %}
+    {% comment %}<a class="nav-link" href="{% url 'firmas' %}">Firmar Formulario 2 - Materia: Proyecto</a>{% endcomment %}
+    {% comment %}<a class="nav-link" href="{% url 'firmas' %}">Firmar Formulario 3 - Registro y Seguimiento</a>{% endcomment %}
+    {% comment %}<a class="nav-link" href="{% url 'firmas' %}">Firmar Formulario 4 - Solicitud Nombramiento de Tribunal</a>{% endcomment %}
+{% comment %}</div>{% endcomment %}
+

@@ -261,7 +261,7 @@ class DatosTutorForm(forms.ModelForm):
     class Meta:
         model = DatosTutor
         fields = '__all__'
-        exclude = ['usuario','correo']
+        exclude = ['usuario','correo','firma']
 class DatosDocenteForm(forms.ModelForm):
     class Meta:
         model = DatosDocente
@@ -307,5 +307,21 @@ class TutorForm(forms.ModelForm):
 class AuspicioForm(forms.ModelForm):
     class Meta:
         model = Auspicio
+        fields = '__all__'
+        exclude = ['usuario']
+# class FirmasForm(forms.ModelForm):
+    # class Meta:
+        # model = Firmas
+        # fields = '__all__'
+        # exclude = ['usuario']
+
+class FirmaTutorForm(forms.ModelForm):
+    class Meta:
+        model = DatosTutor
+        fields = ['firma']
+
+class DocumentosForm(forms.ModelForm):
+    class Meta:
+        model = Documentos
         fields = '__all__'
         exclude = ['usuario']

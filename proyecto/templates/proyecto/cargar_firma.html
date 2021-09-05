@@ -1,0 +1,11 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h3>Cargar Firma</h3>
+<form method='post' enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <a class="btn btn-danger" href={%url 'firmas' %}>Cancelar</a>
+    <button class="btn btn-success" type="submit">Cargar</button>
+</form>
+
+{% endblock %}

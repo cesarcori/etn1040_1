@@ -194,7 +194,6 @@ def home(request):
             'form':form, 'info':info, 'aviso':aviso}
     return render(request, 'proyecto/home.html', context)
 
-
 @login_required(login_url='login')
 @admin_only
 def eliminarUsuario(request, usuario_id):
@@ -202,7 +201,6 @@ def eliminarUsuario(request, usuario_id):
     eliminar = 'no'
     if request.method == 'POST':
         eliminar = request.POST['eliminar']
-        print(eliminar)
     if eliminar == 'si':
         usuario.delete()
         return redirect('home')
@@ -224,6 +222,64 @@ def tutor(request):
     datos_est = request.user.datostutor.datosestudiante_set.all().order_by('apellido')
     context = {'datos_est':datos_est,'grupo':grupo}
     return render(request, 'proyecto/tutor.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tutor'])
+def firmas(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    if Documentos.objects.filter(usuario=usuario).exists():
+        documento = Documentos.objects.get(usuario=usuario)
+        form = DocumentosForm(instance=documento)
+        if request.method == 'POST':
+            form = DocumentosForm(request.POST,instance=documento)
+            if form.is_valid():
+                form.save()
+                return redirect('firmas')
+    else:
+        form = DocumentosForm()
+        if request.method == 'POST':
+            form = DocumentosForm(request.POST)
+            if form.is_valid():
+                documentos = form.save(commit=False)
+                documentos.usuario = usuario
+                documentos.save()
+                return redirect('firmas')
+
+    context = {'grupo': grupo,'form':form,'usuario':usuario}
+    return render(request, 'proyecto/firmas.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso6()
+def cargarFirma(request):
+    grupo = request.user.groups.get().name
+    tutor = request.user.datostutor
+    form = FirmaTutorForm(instance=tutor)
+    if request.method == 'POST':
+        form = FirmaTutorForm(request.POST, request.FILES,instance=tutor)
+        if form.is_valid():
+            form.save()
+            return redirect('firmas')
+    context = {'grupo': grupo,'form':form,}
+    return render(request, 'proyecto/cargar_firma.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# @permitir_paso6()
+def documentosFirma(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    form = DocumentosForm()
+    if request.method == 'POST':
+        form = DocumentosForm(request.POST)
+        if form.is_valid():
+            documentos = form.save(commit=False)
+            documentos.usuario = usuario
+            # comunicado.save()
+            return redirect('firmas')
+    context = {'grupo': grupo,'form':form,}
+    return render(request, 'proyecto/cargar_firma.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor'])
@@ -254,6 +310,67 @@ def solicitudTutoria(request, id_est):
 def estudiante(request):
     grupo = 'estudiante'
     estudiante = request.user.datosestudiante
+    # si se pasa del tiempo se elimina del sistema
+    cronograma_existe = ActividadesCronograma.objects.filter(usuario=estudiante).exists()
+    if cronograma_existe:
+        cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
+            # fecha de registro del cronograma o fecha de registro del proyecto
+        fecha = RegistroCronograma.objects.get(usuario=estudiante).fecha_creacion
+            # fecha limite sistema 2 años y medio
+        # prueba modificar el 0 del delta para eliminar al usuario
+        fecha = fecha.date()-timedelta(0)
+        fecha_limite_sistema = fecha+ timedelta(365*2.5)
+        dia_restante_sistema = fecha_limite_sistema - date.today()
+        dia_restante_sistema = dia_restante_sistema.days
+        # fecha transcurrida desde el inicio
+        dias_transcurridos = date.today() - fecha
+        dias_transcurridos = dias_transcurridos + timedelta(0)
+        # dias a semanas:
+        semanas = dias_transcurridos.days // 7# - 1
+        num_semana = dias_transcurridos.days // 7 + 1
+        dias = dias_transcurridos.days % 7
+        dias_transcurridos = dias_transcurridos.days# - 7
+        # duracion del proyecto
+        max_semana = range(1,1+max([n.semana_final for n in cronograma]))
+        semana_total = len(max_semana)
+        dia_total = 7*semana_total
+        # fecha limite cronograma
+        fecha_limite_crono = fecha + timedelta(dia_total)
+        dia_restante_crono = fecha_limite_crono - date.today()
+        dia_restante_crono = dia_restante_crono.days
+        # fecha limite sistema 2 años y medio
+        fecha_limite_sistema = fecha + timedelta(365*2.5)
+        dia_restante_sistema = fecha_limite_sistema - date.today()
+        dia_restante_sistema= dia_restante_sistema.days
+        # porcentaje
+        por_dia_crono = (dia_restante_crono* 100) / dia_total
+        por_dia_sistema = dia_restante_sistema* 100 / (365*2.5)
+        por_dia_crono = str(por_dia_crono)
+        por_dia_sistema = str(por_dia_sistema)
+
+        dia_retrazo = dia_restante_crono * -1
+        por_dia_retrazo = ( dia_restante_crono *-1* 100)/(365*2.5-dia_total) 
+        por_dia_retrazo= str(por_dia_retrazo)
+
+        if num_semana <= semana_total:
+            limite_cronograma = False
+        else:
+            actividades = []
+            limite_cronograma = True
+        if dia_restante_sistema <= -1:
+            estudiante.usuario.delete()
+            print('Se jodio')
+            return HttpResponse("Fuiste Eliminado del sistema.")
+    else:
+        dia_restante_crono = ''
+        dia_restante_sistema = ''
+        dia_retrazo = ''
+        semana_total = ''
+        por_dia_crono = ''
+        por_dia_sistema = ''
+        por_dia_retrazo = ''
+        limite_cronograma = ''
+
     if estudiante.grupo_doc == None:
         sorteo = 'no'
         if request.method == 'POST':
@@ -287,12 +404,22 @@ def estudiante(request):
             progreso = Progreso.objects.get(usuario=estudiante).nivel
         else:
             progreso = 1
-        context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante}
+        context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante,
+                    'dia_restante_crono':dia_restante_crono,
+                    'dia_restante_sistema':dia_restante_sistema,
+                    'dia_retrazo':dia_retrazo,
+                    'semana_total':semana_total,
+                    'por_dia_crono':por_dia_crono,
+                    'por_dia_sistema':por_dia_sistema,
+                    'por_dia_retrazo':por_dia_retrazo,
+                    'limite_cronograma':limite_cronograma,
+                    'cronograma_existe':cronograma_existe,
+                'dia_restante_sistema':dia_restante_sistema}
         return render(request, 'proyecto/estudiante.html', context)
 
 @login_required(login_url='login')
 def perfilUsuarios(request):
-    grupo = str(request.user.groups.get())
+    grupo = request.user.groups.get().name
     context = {'grupo': grupo}
     return render(request, 'proyecto/perfil.html', context)
 
@@ -1181,19 +1308,6 @@ def salaRevisarEstTut(request, pk_sala):
 def carta_aceptacion_tutor(request):
     buffer = io.BytesIO()
     estudiante = request.user.datosestudiante
-    # lo siguiente hay que hagregar de alguna forma a la base de datos
-    # extension = 'L.P.'
-    # titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
-    # info_estu = [
-            # estudiante.__str__(),
-            # estudiante.carnet,
-            # estudiante.extension,
-            # estudiante.tutor.celular,
-            # estudiante.tutor.correo,
-            # estudiante.grupo_doc.__str__(),
-            # estudiante.tutor.__str__(),
-            # titulo_perfil
-            # ]
     carta_aceptacion(buffer, estudiante)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
@@ -1366,19 +1480,19 @@ def formulario_1(request,id_est):
     buffer = io.BytesIO()
     estudiante = DatosEstudiante.objects.get(id=id_est)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
-    cargo = 'director'
-    lugar = 'instituto de electrónica aplicada'
-    institucion = 'facultad de ingeniería'
-    info_estu = [
-            estudiante.__str__(),
-            estudiante.carnet,
-            estudiante.extension,
-            estudiante.tutor.__str__(),
-            estudiante.grupo_doc.__str__(),
-            estudiante.registroperfil.titulo,
-            estudiante.mencion,
-            ]
-    formulario1(buffer,info_estu)
+    # cargo = 'director'
+    # lugar = 'instituto de electrónica aplicada'
+    # institucion = 'facultad de ingeniería'
+    # info_estu = [
+            # estudiante.__str__(),
+            # estudiante.carnet,
+            # estudiante.extension,
+            # estudiante.tutor.__str__(),
+            # estudiante.grupo_doc.__str__(),
+            # estudiante.registroperfil.titulo,
+            # estudiante.mencion,
+            # ]
+    formulario1(buffer,estudiante)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_1.pdf')
 
@@ -1402,7 +1516,9 @@ def cronograma_control(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
+    # fecha de registro del cronograma o fecha de registro del proyecto
     fecha = RegistroCronograma.objects.get(usuario=estudiante).fecha_creacion
+    fecha = fecha.date() - timedelta(0)
     # de semanas a dias:
     max_semana = range(1,1+max([n.semana_final for n in cronograma]))
     vector_final = []
@@ -1424,24 +1540,56 @@ def cronograma_control(request):
             if semana >= actividad.semana_inicial and semana <= actividad.semana_final:
                 vec_actividad.append(actividad.actividad)
         semana_actividad[semana] = vec_actividad
-    # fecha = estudiante.fecha_inscripcion
-    dias_delta = date.today() - fecha.date()
-    dias_delta = dias_delta + timedelta(8)
+    # fecha transcurrida desde el inicio
+    dias_transcurridos = date.today() - fecha
+    dias_transcurridos = dias_transcurridos + timedelta(0)
     # dias a semanas:
-    semanas = dias_delta.days // 7 - 1
-    dias = dias_delta.days % 7
+    semanas = dias_transcurridos.days // 7# - 1
+    num_semana = dias_transcurridos.days // 7 + 1
+    dias = dias_transcurridos.days % 7
+    dias_transcurridos = dias_transcurridos.days# - 7
+    # duracion del proyecto
+    semana_total = len(max_semana)
+    dia_total = 7*semana_total
+    # fecha limite cronograma
+    fecha_limite_crono = fecha + timedelta(dia_total)
+    dia_restante_crono = fecha_limite_crono - date.today()
+    dia_restante_crono = dia_restante_crono.days
+    # fecha limite sistema 2 años y medio
+    fecha_limite_sistema = fecha + timedelta(365*2.5)
+    dia_restante_sistema = fecha_limite_sistema - date.today()
+    dia_restante_sistema= dia_restante_sistema.days
+    # porcentaje
+    por_dia_crono = (dia_restante_crono* 100) / dia_total
+    por_dia_sistema = dia_restante_sistema* 100 / (365*2.5)
+    por_dia_crono = str(por_dia_crono)
+    por_dia_sistema = str(por_dia_sistema)
 
-    # semanas actividad
-    if semanas == 0:
-        num_semana = 1
+    dia_retrazo = dia_restante_crono * -1
+    por_dia_retrazo = ( dia_restante_crono *-1* 100)/(365*2.5-dia_total) 
+    por_dia_retrazo= str(por_dia_retrazo)
+    
+    if num_semana <= semana_total:
+        actividades = semana_actividad[num_semana]
+        limite_cronograma = False
     else:
-        num_semana = semanas
-    actividades = semana_actividad[num_semana]
-
-    fecha = RegistroCronograma.objects.get(usuario=estudiante).fecha_creacion
+        actividades = []
+        limite_cronograma = True
+    # fecha = RegistroCronograma.objects.get(usuario=estudiante).fecha_creacion
     context = {'grupo': grupo, 'cronograma': cronograma, 'fecha': fecha,
             'semanas': semanas, 'dias': dias, 
-            'actividades': actividades}
+            'actividades': actividades,
+            'dias_transcurridos':dias_transcurridos,
+            'fecha_limite_crono':fecha_limite_crono,
+            'fecha_limite_sistema':fecha_limite_sistema,
+            'dia_restante_crono':dia_restante_crono,
+            'dia_restante_sistema':dia_restante_sistema,
+            'dia_retrazo':dia_retrazo,
+            'semana_tota':semana_total,
+            'por_dia_crono':por_dia_crono,
+            'por_dia_sistema':por_dia_sistema,
+            'por_dia_retrazo':por_dia_retrazo,
+            'limite_cronograma':limite_cronograma}
     return render(request, 'proyecto/cronograma_control.html', context)
 
 @login_required(login_url='login')
@@ -1691,7 +1839,7 @@ def formulario_2(request, id_est):
             proyecto.resumen,
             proyecto.fecha_creacion,
             ]
-    formulario2(buffer,info_estu)
+    formulario2(buffer,estudiante)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_2.pdf')
 

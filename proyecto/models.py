@@ -94,14 +94,13 @@ class DatosTutor(models.Model):
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     celular = models.CharField(max_length=50, null=True)
+    firma = models.ImageField(default='firmas/firma_default.jpg', upload_to='firmas/', null=True)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         self.nombre_completo = self.nombre + ' ' + self.apellido
         return self.nombre_completo
-
-
 
 class DatosEstudiante(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -231,3 +230,17 @@ class Mencion(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return self.nombre
+
+# class Firmas(models.Model):
+    # usuario = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    # firma = models.ImageField(default='firmas/firma_default.jpg', upload_to='firmas/', null=True)
+
+class Documentos(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    firma_carta_aceptacion = models.BooleanField(default=False)
+    firma_formulario1= models.BooleanField(default=False)
+    firma_carta_conclusion= models.BooleanField(default=False)
+    firma_formulario2 = models.BooleanField(default=False)
+    firma_formulario3 = models.BooleanField(default=False)
+    firma_formulario4 = models.BooleanField(default=False)
+

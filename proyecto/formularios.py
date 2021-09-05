@@ -4,6 +4,7 @@ from os import remove
 from datetime import date
 import PyPDF2
 from etn1040_1.settings import MEDIA_ROOT
+from .models import Documentos
 from .models import Auspicio
 UNIDADES = (
     'cero',
@@ -80,15 +81,15 @@ def numero_letra(numero_int):
     return resultado
     # if numero_entero <= 99:
         # resultado = leer_decenas(numero_entero)
-def formulario1(buffer, info_estu):
+def formulario1(buffer, estudiante):
     # Datod de la base de datos
-    nombre = info_estu[0]
-    carnet = info_estu[1] 
-    extension = info_estu[2] 
-    tutor = info_estu[3] 
-    docente = info_estu[4] 
-    titulo = info_estu[5] 
-    mencion = info_estu[6]
+    nombre = estudiante.__str__()
+    carnet = estudiante.carnet
+    extension = estudiante.extension
+    tutor = estudiante.tutor.__str__()
+    docente = estudiante.grupo_doc.__str__()
+    titulo = estudiante.registroperfil.titulo
+    mencion = estudiante.mencion
     # =============================================
     check = 'Si'
 
@@ -120,6 +121,11 @@ def formulario1(buffer, info_estu):
     pdf.set_xy(130,85)
     pdf.cell(txt=carnet + ' ' + extension, ln=1, align="J")
 
+    pdf.set_xy(85,122)
+    if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
+        if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
+            name = MEDIA_ROOT+estudiante.tutor.firma.name
+            pdf.image(name, w = 25)
 # Tutor
     pdf.set_xy(32,128)
     pdf.cell(txt='Ing. '+tutor, ln=1, align="J")
@@ -143,8 +149,10 @@ def formulario1(buffer, info_estu):
     pdf.cell(txt=mencion, ln=1, align="J")
     pdf.output("form1_solapa.pdf")
 
-    input_file = MEDIA_ROOT + "formularios/form1.pdf"  
-    watermark_file = "form1_solapa.pdf"
+    # input_file = MEDIA_ROOT + "formularios/form1.pdf"  
+    # watermark_file = "form1_solapa.pdf"
+    watermark_file = MEDIA_ROOT + "formularios/form1.pdf"  
+    input_file = "form1_solapa.pdf"
     output_file = "form1_final.pdf"  
 
     with open(input_file, "rb") as filehandle_input:  
@@ -176,17 +184,28 @@ def formulario1(buffer, info_estu):
     # eliminando el pdf auxiliar
     remove('form1_solapa.pdf')
 
-def formulario2(buffer, info_estu):
+def formulario2(buffer, estudiante):
     ## info de base de datos
-    postulante = info_estu[0]
-    asesor = info_estu[1]
-    docente_etn1040 = info_estu[2]
-    titulo = info_estu[3]
-    mencion = info_estu[4]
-    abstract= info_estu[5]
-    dia = info_estu[6].day.__str__()
-    mes = info_estu[6].month.__str__()
-    year = info_estu[6].year.__str__()
+    postulante = estudiante.__str__()
+    asesor = estudiante.tutor.__str__()
+    docente_etn1040 = estudiante.grupo_doc.__str__()
+    titulo = estudiante.proyectodegrado.titulo
+    mencion = estudiante.mencion
+    abstract = estudiante.proyectodegrado.resumen
+    fecha = estudiante.proyectodegrado.fecha_creacion
+    dia = fecha.day.__str__()
+    mes = fecha.month.__str__()
+    year = fecha.year.__str__()
+
+    # postulante = info_estu[0]
+    # asesor = info_estu[1]
+    # docente_etn1040 = info_estu[2]
+    # titulo = info_estu[3]
+    # mencion = info_estu[4]
+    # abstract= info_estu[5]
+    # dia = info_estu[6].day.__str__()
+    # mes = info_estu[6].month.__str__()
+    # year = info_estu[6].year.__str__()
     fecha_aprobacion = dia+'/'+mes+'/'+year
     if int(mes) <= 6:
         periodo = 'I'
@@ -222,6 +241,10 @@ def formulario2(buffer, info_estu):
 # Asesor
     pdf.set_xy(60,92)
     pdf.cell(w=76, h=8, txt=asesor, ln=1, border=1, align='C')
+    if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
+        if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
+            name = MEDIA_ROOT+estudiante.tutor.firma.name
+            pdf.image(name, x = 156, y = 86, w = 25)
 
 # Docente
     pdf.set_xy(60,107)
@@ -233,8 +256,10 @@ def formulario2(buffer, info_estu):
 # Guardar archivo
     pdf.output("form2_solapa.pdf")
 
-    input_file = MEDIA_ROOT + "formularios/form2.pdf"  
-    watermark_file = "form2_solapa.pdf"
+    # input_file = MEDIA_ROOT + "formularios/form2.pdf"  
+    # watermark_file = "form2_solapa.pdf"
+    watermark_file = MEDIA_ROOT + "formularios/form2.pdf"  
+    input_file = "form2_solapa.pdf"
     output_file = "form2_final.pdf"  
 
     with open(input_file, "rb") as filehandle_input:  
@@ -362,6 +387,10 @@ def formulario3(buffer, estudiante, proyecto):
 # Docente Tutor
     pdf.set_xy(65,74)
     pdf.cell(w=55, h=6, txt=docente_tutor, ln=1, border=0, align='L')
+    if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
+        if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
+            name = MEDIA_ROOT+estudiante.tutor.firma.name
+            pdf.image(name, x = 145, y = 70, w = 20)
 
 # Empresa o institucion
     pdf.set_xy(67,90)
@@ -440,8 +469,10 @@ def formulario3(buffer, estudiante, proyecto):
 
 # Guardar archivo
     pdf.output("form3_solapa.pdf")
-    input_file = MEDIA_ROOT + "formularios/form3.pdf"  
-    watermark_file = "form3_solapa.pdf"
+    # input_file = MEDIA_ROOT + "formularios/form3.pdf"  
+    # watermark_file = "form3_solapa.pdf"
+    watermark_file = MEDIA_ROOT + "formularios/form3.pdf"  
+    input_file = "form3_solapa.pdf"
     output_file = "form3_final.pdf"  
 
     with open(input_file, "rb") as filehandle_input:  
@@ -509,6 +540,10 @@ def formulario4(buffer, estudiante, proyecto):
 # Docente Tutor
     pdf.set_xy(35,98)
     pdf.cell(w=100, h=6, txt='Ing. '+tutor, ln=1, border=0, align='L')
+    if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
+        if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
+            name = MEDIA_ROOT+estudiante.tutor.firma.name
+            pdf.image(name, x = 90, y = 95, w = 20)
 
 # Titulo del tema
     pdf.set_xy(35,114)
@@ -539,8 +574,10 @@ def formulario4(buffer, estudiante, proyecto):
 # Guardar archivo
     pdf.output("form4_solapa.pdf")
 
-    input_file = MEDIA_ROOT + "formularios/form4.pdf"  
-    watermark_file = "form4_solapa.pdf"
+    # input_file = MEDIA_ROOT + "formularios/form4.pdf"  
+    # watermark_file = "form4_solapa.pdf"
+    watermark_file = MEDIA_ROOT + "formularios/form4.pdf"  
+    input_file = "form4_solapa.pdf"
     output_file = "form4_final.pdf"  
 
     with open(input_file, "rb") as filehandle_input:  

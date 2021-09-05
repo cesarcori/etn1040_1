@@ -1,14 +1,41 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h4>Control del cronograma:</h4>
+<h5>Control del cronograma</h5>
 <p>
-Registro: {{fecha}} <p>
-Han pasado: {{semanas}} semanas y {{dias}} días <p>
-Actividad a realizar:<p>
+Registro: {{fecha}}<br> 
+Han pasado: {{semanas}} semanas y {{dias}} días<br> 
+Días Transcurridos: {{dias_transcurridos}}<br>
+Fecha Límite del Cronograma: {{fecha_limite_crono}}<br>
+Fecha Límite en el Sistema (2 años y medio): {{fecha_limite_sistema}}<br>
+</p>
 
+<p>
+<h5>Dias restantes</h5>
+{% if limite_cronograma %}
+    Dias Retrazados {{dia_retrazo}} <br>
+    <div class="progress">
+        <div class="progress-bar bg-danger" role="progressbar" style="width: {{por_dia_retrazo}}%;"            
+            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_retrazo}}</div>
+    </div>
+{% else %}
+    Le quedan {{dia_restante_crono}} días para concluir con su tiempo<br>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{por_dia_crono}}%;"            
+            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_restante_crono}}</div>
+    </div>
+{% endif %}
+Le quedan {{dia_restante_sistema}} días para sacarlo del sistema<br>
+<div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: {{por_dia_sistema}}%;" 
+        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_restante_sistema}}</div>
+</div>
+</p>
+<p>
+<h5>Actividad a realizar</h5>
 {% for actividad in actividades %}
 <ul>{{actividad.capitalize}}</ul>
 {% endfor %}
+</p>
 
 <a href={%url 'cronograma_actividad'%}>Ver Cronograma</a><p>
 <p>
