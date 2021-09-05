@@ -1189,7 +1189,8 @@ def entregaPerfil(request):
     tutor = estudiante.tutor
     salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
     context = {'grupo': grupo,
-            'salas':salas}
+            'salas':salas,
+            'estudiante':estudiante}
     return render(request, 'proyecto/entrega_perfil.html', context)
 
 @permitir_paso4()
@@ -1603,7 +1604,8 @@ def entregaProyecto(request):
     tutor = estudiante.tutor
     salas = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
     context = {'grupo': grupo,
-            'salas':salas}
+            'salas':salas,
+            'estudiante':estudiante}
     return render(request, 'proyecto/entrega_proyecto.html', context)
 
 @login_required(login_url='login')
@@ -1861,6 +1863,8 @@ def formulario_3(request, id_est):
 def auspicioF3(request, id_est):
     grupo = request.user.groups.get().name
     estudiante = DatosEstudiante.objects.get(id=id_est)
+    if not Auspicio.objects.filter(usuario=estudiante).exists():
+        Auspicio.objects.create(usuario=estudiante)
     auspicio_est = Auspicio.objects.get(usuario=estudiante)
     form = AuspicioForm(instance=auspicio_est)
     if request.method == 'POST':
