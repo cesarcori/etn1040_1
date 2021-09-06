@@ -1,7 +1,0 @@
-id,usuario,correo,nombre,apellido,celular,fecha_inscripcion,mencion,grupo
-16,campero_docente,campero_docente@gmail.com,Jose,Campero,llenar,"2021-06-14 13:35:49.531673","Telecomunicación",A
-18,nava_docente,nava_docente@gmail.com,"Jorge Antonio","Nava Amador",llenar,"2021-06-14 13:40:00.880134",Control,F
-19,"león_docente","león_docente@gmail.com",Jorge,"León Gómez",llenar,"2021-06-14 13:40:41.293241","Sistemas de Computación",E
-20,jurado_docente,jurado_docente@gmail.com,Alfonzo,Jurado,llenar,"2021-06-14 13:41:19.861644",Control,C
-21,caba_docente,caba_docente@gmail.com,Gonzalo,Caba,llenar,"2021-06-14 13:41:57.597665","Telecomunicación",B
-22,laredo_docente,laredo_docente@gmail.com,Victor,"Laredo Antezana",llenar,"2021-06-14 13:42:33.247848","Sistemas de Computación",D
