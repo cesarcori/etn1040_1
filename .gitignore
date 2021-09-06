@@ -10,8 +10,8 @@ pyvenv.cfg
 .DS_Store
 /reglamentos
 *.pdf
-/media
 estudiantes.csv
 salida.csv
+media/*
 !*media/firmas/firma_default.jpg
-!*media/formularios/form/
+!*media/formularios/form/*
