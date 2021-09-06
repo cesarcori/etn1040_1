@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from .models import *
 from django.core.validators import RegexValidator
+from django.db.utils import OperationalError
 
 class CreateUserForm(UserCreationForm):
     solo_carnet = RegexValidator(r'^[0-9]{7,8}$', 'Ingresar solo numero')
@@ -11,18 +12,17 @@ class CreateUserForm(UserCreationForm):
     solo_celular = RegexValidator(r'^[6|7][0-9]{7}$', 
             'Ingresar un numero de celular')
 
-    # s = 'Sistemas de Computación'
-    # t = 'Telecomunicación'
-    # c = 'Control'
-    # s = Mencion.objects.all()[0]
-    # t = Mencion.objects.all()[1]
-    # c = Mencion.objects.all()[2]
-    # MENCION = [
-        # (s, s),
-        # (t, t),
-        # (c, c),
-    # ] 
-    MENCION = [(m,m) for m in Mencion.objects.all()]
+    try:
+        MENCION = [(m,m) for m in Mencion.objects.all()]
+    except OperationalError:
+        s = 'Sistemas de Computación'
+        t = 'Telecomunicación'
+        c = 'Control'
+        MENCION = [
+            (s, s),
+            (t, t),
+            (c, c),
+        ] 
 
     EXTENSION = [
         ( 'LP'  ,  'La Paz' )     ,
