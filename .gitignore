@@ -9,7 +9,6 @@ myvenv
 pyvenv.cfg
 .DS_Store
 /reglamentos
-*.pdf
 estudiantes.csv
 salida.csv
 media/*
