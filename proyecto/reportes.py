@@ -326,7 +326,7 @@ def docReporteIndicacionTutor(buffer, estudiante):
 # ******************** INICIO DEL DOCUMENTO *******************
 # Titulo 
     titulo('ingreso al sistema para el tutor')
-    titulo(nombre_estudiante)
+    titulo(correo_tutor)
     linea()
 # Datos del estudiante
     parrafo('El estudiante: '+nombre_estudiante + ' solicito su tutoría. Para aceptar o rechazar la solicitud debe ingresar al sistema con el siguiente usuario y contraseña.')
@@ -453,7 +453,7 @@ def docReporteIndicacionTutorEnSistema(buffer, estudiante):
 # ******************** INICIO DEL DOCUMENTO *******************
 # Titulo 
     titulo('ingreso al sistema para el tutor')
-    titulo(nombre_estudiante)
+    titulo(tutor)
     linea()
 # Datos del estudiante
     parrafo('El estudiante: '+nombre_estudiante + ' solicito su tutoría. Para aceptar o rechazar la solicitud debe ingresar al sistema con el siguiente usuario y contraseña.')
