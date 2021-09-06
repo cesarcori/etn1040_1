@@ -13,5 +13,5 @@ pyvenv.cfg
 /media
 estudiantes.csv
 salida.csv
-!/media/firmas/firma_default.jpg
-!/media/formularios/form/
+!*/media/firmas/firma_default.jpg
+!*/media/formularios/form/
