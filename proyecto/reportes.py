@@ -218,7 +218,7 @@ def docReporteEstudiante(buffer, estudiante, usuario_solicitante):
     fecha_left()
     guardar(buffer)
 
-def docReporteIndicacionTutor(buffer, estudiante):
+def docReporteIndicacionTutor(buffer, estudiante, http_host):
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
@@ -329,7 +329,7 @@ def docReporteIndicacionTutor(buffer, estudiante):
     titulo(correo_tutor)
     linea()
 # Datos del estudiante
-    parrafo('El estudiante: '+nombre_estudiante + ' solicito su tutoría. Para aceptar o rechazar la solicitud debe ingresar al sistema con el siguiente usuario y contraseña.')
+    parrafo('El estudiante: '+nombre_estudiante + ' solicito su tutoría. Para aceptar o rechazar la solicitud debe ingresar al sistema mediante URL: '+ http_host + ' con el siguiente usuario y contraseña.')
     linea(3)
 # Usuario y password
     text_left('Usuario: '+ estudiante.tutor.usuario.__str__())    

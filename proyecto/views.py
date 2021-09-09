@@ -315,10 +315,10 @@ def estudiante(request):
     if cronograma_existe:
         cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
             # fecha de registro del cronograma o fecha de registro del proyecto
-        fecha = RegistroCronograma.objects.get(usuario=estudiante).fecha_creacion
+        fecha = RegistroPerfil.objects.get(usuario=estudiante).fecha_creacion
             # fecha limite sistema 2 años y medio
         # prueba modificar el 0 del delta para eliminar al usuario
-        fecha = fecha.date()-timedelta(0)
+        fecha = fecha.date()#-timedelta(0)
         fecha_limite_sistema = fecha+ timedelta(365*2.5)
         dia_restante_sistema = fecha_limite_sistema - date.today()
         dia_restante_sistema = dia_restante_sistema.days
@@ -1161,7 +1161,8 @@ def reporteTutorAcepto(request, id_est):
 def reporteIndicacionesTutor(request, id_est):
     buffer = io.BytesIO()
     estudiante = DatosEstudiante.objects.get(id=id_est)
-    docReporteIndicacionTutor(buffer, estudiante)
+    http_host = request.META.get('HTTP_HOST')
+    docReporteIndicacionTutor(buffer, estudiante, http_host)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
 
@@ -1518,7 +1519,7 @@ def cronograma_control(request):
     estudiante = request.user.datosestudiante
     cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
     # fecha de registro del cronograma o fecha de registro del proyecto
-    fecha = RegistroCronograma.objects.get(usuario=estudiante).fecha_creacion
+    fecha = RegistroPerfil.objects.get(usuario=estudiante).fecha_creacion
     fecha = fecha.date() - timedelta(0)
     # de semanas a dias:
     max_semana = range(1,1+max([n.semana_final for n in cronograma]))

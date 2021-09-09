@@ -252,10 +252,10 @@ class ProyectoDeGradoForm(forms.ModelForm):
                 }
 
 class CalificarProyectoForm(forms.Form):
-    nota1= forms.IntegerField(min_value=1, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
-    nota2= forms.IntegerField(min_value=1, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
-    nota3= forms.IntegerField(min_value=1, max_value=22,label='Informes de Trabajo (Max. 22%)')
-    nota4= forms.IntegerField(min_value=1, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
+    nota1= forms.IntegerField(min_value=0, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
+    nota2= forms.IntegerField(min_value=0, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
+    nota3= forms.IntegerField(min_value=0, max_value=22,label='Informes de Trabajo (Max. 22%)')
+    nota4= forms.IntegerField(min_value=0, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
 
 class DatosTutorForm(forms.ModelForm):
     class Meta:
