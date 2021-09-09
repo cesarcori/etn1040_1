@@ -3,7 +3,7 @@
 <p>Reglamentos de la Materia ETN-1040</p>
 <p>
 {%for link, titulo in dicc_link.items%}
-<a href="{{ link.archivo.url }}">{{titulo}} </a>
+<a href="{{ link.archivo.url }}">{{titulo}}</a> 
 {% if progreso.nivel < 14 %}
 <i class="fas text-danger fa-graduation-cap"></i><br>
 {% else %}

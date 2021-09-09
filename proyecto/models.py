@@ -73,6 +73,8 @@ class SalaRevisar(models.Model):
     estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
     texto = models.TextField(blank=True, null=True)
     material_estudiante = models.FileField(upload_to='material_estudiante_perfil/', null=True)
+    material_corregido_docente = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
+    material_corregido_tutor  = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return self.sala
@@ -84,6 +86,8 @@ class SalaRevisarProyecto(models.Model):
     estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
     texto = models.TextField(blank=True, null=True)
     material_estudiante = models.FileField(upload_to='material_estudiante_proyecto/', null=True)
+    material_corregido_docente = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
+    material_corregido_tutor  = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return self.sala

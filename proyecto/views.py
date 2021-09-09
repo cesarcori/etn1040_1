@@ -1960,6 +1960,54 @@ def confirmarPaso6(request):
     context = {'grupo': grupo, 'progreso': progreso}
     return render(request, 'proyecto/confirmar_paso.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tutor','docente'])
+def perfilCorregido (request, id_sala):
+    grupo = request.user.groups.get().name
+    sala = SalaRevisar.objects.get(id=id_sala)
+    id_est = sala.estudiante_rev.id
+    if grupo == 'tutor':
+        form = PerfilCorregidoTutorForm(instance=sala)
+        if request.method == 'POST':
+            form = PerfilCorregidoTutorForm(request.POST, request.FILES, instance=sala)
+            if form.is_valid():
+                form.save()
+                return redirect('progreso_estudiante', pk_est=id_est)
+    if grupo == 'docente':
+        form = PerfilCorregidoDocenteForm(instance=sala)
+        if request.method == 'POST':
+            form = PerfilCorregidoDocenteForm(request.POST, request.FILES, instance=sala)
+            if form.is_valid():
+                form.save()
+                return redirect('progreso_estudiante', pk_est=id_est)
+        # return redirect('paso5')
+    context = {'grupo': grupo,'form':form,'sala':sala}
+    return render(request, 'proyecto/proyecto_corregido.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tutor','docente'])
+def proyectoCorregido (request, id_sala):
+    grupo = request.user.groups.get().name
+    sala = SalaRevisarProyecto.objects.get(id=id_sala)
+    id_est = sala.estudiante_rev.id
+    if grupo == 'tutor':
+        form = ProyectoCorregidoTutorForm(instance=sala)
+        if request.method == 'POST':
+            form = ProyectoCorregidoTutorForm(request.POST, request.FILES, instance=sala)
+            if form.is_valid():
+                form.save()
+                return redirect('progreso_estudiante', pk_est=id_est)
+    if grupo == 'docente':
+        form = ProyectoCorregidoDocenteForm(instance=sala)
+        if request.method == 'POST':
+            form = ProyectoCorregidoDocenteForm(request.POST, request.FILES, instance=sala)
+            if form.is_valid():
+                form.save()
+                return redirect('progreso_estudiante', pk_est=id_est)
+        # return redirect('paso5')
+    context = {'grupo': grupo,'form':form,'sala':sala}
+    return render(request, 'proyecto/proyecto_corregido.html', context)
+
 def error(request):
     return render(request, 'proyecto/error_pagina.html')
 

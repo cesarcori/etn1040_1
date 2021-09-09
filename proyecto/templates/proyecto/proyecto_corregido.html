@@ -1,0 +1,16 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+<h4>Cargar Proyecto corregido</h4>
+{% comment %}{% if sala.material_corregido_tutor%}{% endcomment %}
+{% comment %}Proyecto Corregido: <a href={{sala.material_corregido_tutor.url}}>{% endcomment %}
+    {% comment %}Subido por el Tutor</a>{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <a class="btn btn-danger" href={{request.META.HTTP_REFERER}}>Atras</a>
+    <button type="submit" name='enviar' class="btn btn-success"
+        value='enviar'>Enviar</button>
+</form>
+{% endblock %}
+

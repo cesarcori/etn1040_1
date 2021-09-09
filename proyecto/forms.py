@@ -112,7 +112,8 @@ class SalaRevisarForm(forms.ModelForm):
     class Meta:
         model = SalaRevisar
         fields = '__all__'
-        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar']
+        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar',
+                'material_corregido_docente','material_corregido_tutor']
         widgets = {
     'sala': 
     forms.TextInput(attrs={'class':'input-group input-group-lg',
@@ -128,12 +129,21 @@ class SalaRevisarForm(forms.ModelForm):
 'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
 amarillo'),
                 }
+class PerfilCorregidoTutorForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisar
+        fields = ['material_corregido_tutor']
+class PerfilCorregidoDocenteForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisar
+        fields = ['material_corregido_docente']
 
 class SalaRevisarProyectoForm(forms.ModelForm):
     class Meta:
         model = SalaRevisarProyecto
         fields = '__all__'
-        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar']
+        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar',
+                'material_corregido_docente','material_corregido_tutor']
         widgets = {
     'sala': 
     forms.TextInput(attrs={'class':'input-group input-group-lg',
@@ -148,7 +158,19 @@ class SalaRevisarProyectoForm(forms.ModelForm):
                 'texto': ('Detalles revisión:'),
 'material_estudiante': ('Subir Proyecto de Grado en pdf con los cambios resaltado en amarillo'),
                 }
+class ProyectoCorregidoTutorForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisarProyecto
+        fields = ['material_corregido_tutor']
+        # widgets = {
+    # 'material_corregido_tutor': forms.FileInput(attrs={'class':'form-control'}),
+                # }
+        # labels = {'material_corregido_tutor': ('Subir Proyecto de Grado Corredido con cambios resaltado en amarillo'),}
 
+class ProyectoCorregidoDocenteForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisarProyecto
+        fields = ['material_corregido_docente']
 class MensajeDocenteRevisarForm(forms.ModelForm):
     class Meta:
         model = MensajeDocenteRevisar
