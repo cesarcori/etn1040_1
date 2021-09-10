@@ -340,66 +340,71 @@ def estudiante(request):
     grupo = 'estudiante'
     estudiante = request.user.datosestudiante
     # si se pasa del tiempo se elimina del sistema
-    cronograma_existe = ActividadesCronograma.objects.filter(usuario=estudiante).exists()
-    if cronograma_existe:
-        cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
-            # fecha de registro del cronograma o fecha de registro del proyecto
-        fecha = RegistroPerfil.objects.get(usuario=estudiante).fecha_creacion
-            # fecha limite sistema 2 años y medio
-        # prueba modificar el 0 del delta para eliminar al usuario
-        fecha = fecha.date()#-timedelta(0)
-        fecha_limite_sistema = fecha+ timedelta(365*2.5)
-        dia_restante_sistema = fecha_limite_sistema - date.today()
-        dia_restante_sistema = dia_restante_sistema.days
-        # fecha transcurrida desde el inicio
-        dias_transcurridos = date.today() - fecha
-        dias_transcurridos = dias_transcurridos + timedelta(0)
-        # dias a semanas:
-        semanas = dias_transcurridos.days // 7# - 1
-        num_semana = dias_transcurridos.days // 7 + 1
-        dias = dias_transcurridos.days % 7
-        dias_transcurridos = dias_transcurridos.days# - 7
-        # duracion del proyecto
-        max_semana = range(1,1+max([n.semana_final for n in cronograma]))
-        semana_total = len(max_semana)
-        dia_total = 7*semana_total
-        # fecha limite cronograma
-        fecha_limite_crono = fecha + timedelta(dia_total)
-        dia_restante_crono = fecha_limite_crono - date.today()
-        dia_restante_crono = dia_restante_crono.days
-        # fecha limite sistema 2 años y medio
-        fecha_limite_sistema = fecha + timedelta(365*2.5)
-        dia_restante_sistema = fecha_limite_sistema - date.today()
-        dia_restante_sistema= dia_restante_sistema.days
-        # porcentaje
-        por_dia_crono = (dia_restante_crono* 100) / dia_total
-        por_dia_sistema = dia_restante_sistema* 100 / (365*2.5)
-        por_dia_crono = str(por_dia_crono)
-        por_dia_sistema = str(por_dia_sistema)
+    # cronograma_existe = ActividadesCronograma.objects.filter(usuario=estudiante).exists()
+    # if cronograma_existe:
+        # cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
+            # # fecha de registro del cronograma o fecha de registro del proyecto
+        # fecha = RegistroPerfil.objects.get(usuario=estudiante).fecha_creacion
+            # # fecha limite sistema 2 años y medio
+        # # prueba modificar el 0 del delta para eliminar al usuario
+        # fecha = fecha.date()#-timedelta(0)
+        # fecha_limite_sistema = fecha+ timedelta(365*2.5)
+        # dia_restante_sistema = fecha_limite_sistema - date.today()
+        # dia_restante_sistema = dia_restante_sistema.days
+        # # fecha transcurrida desde el inicio
+        # dias_transcurridos = date.today() - fecha
+        # dias_transcurridos = dias_transcurridos + timedelta(0)
+        # # dias a semanas:
+        # semanas = dias_transcurridos.days // 7# - 1
+        # num_semana = dias_transcurridos.days // 7 + 1
+        # dias = dias_transcurridos.days % 7
+        # dias_transcurridos = dias_transcurridos.days# - 7
+        # # duracion del proyecto
+        # max_semana = range(1,1+max([n.semana_final for n in cronograma]))
+        # semana_total = len(max_semana)
+        # dia_total = 7*semana_total
+        # # fecha limite cronograma
+        # fecha_limite_crono = fecha + timedelta(dia_total)
+        # dia_restante_crono = fecha_limite_crono - date.today()
+        # dia_restante_crono = dia_restante_crono.days
+        # # fecha limite sistema 2 años y medio
+        # fecha_limite_sistema = fecha + timedelta(365*2.5)
+        # dia_restante_sistema = fecha_limite_sistema - date.today()
+        # dia_restante_sistema= dia_restante_sistema.days
+        # # porcentaje
+        # por_dia_crono = (dia_restante_crono* 100) / dia_total
+        # por_dia_sistema = dia_restante_sistema* 100 / (365*2.5)
+        # por_dia_crono = str(por_dia_crono)
+        # por_dia_sistema = str(por_dia_sistema)
 
-        dia_retrazo = dia_restante_crono * -1
-        por_dia_retrazo = ( dia_restante_crono *-1* 100)/(365*2.5-dia_total) 
-        por_dia_retrazo= str(por_dia_retrazo)
+        # dia_retrazo = dia_restante_crono * -1
+        # por_dia_retrazo = ( dia_restante_crono *-1* 100)/(365*2.5-dia_total) 
+        # por_dia_retrazo= str(por_dia_retrazo)
 
-        if num_semana <= semana_total:
-            limite_cronograma = False
-        else:
-            actividades = []
-            limite_cronograma = True
-        if dia_restante_sistema <= -1:
-            estudiante.usuario.delete()
-            print('Se jodio')
-            return HttpResponse("Fuiste Eliminado del sistema.")
-    else:
-        dia_restante_crono = ''
-        dia_restante_sistema = ''
-        dia_retrazo = ''
-        semana_total = ''
-        por_dia_crono = ''
-        por_dia_sistema = ''
-        por_dia_retrazo = ''
-        limite_cronograma = ''
+        # if num_semana <= semana_total:
+            # limite_cronograma = False
+        # else:
+            # actividades = []
+            # limite_cronograma = True
+        # if dia_restante_sistema <= -1 and progreso < 100:
+            # estudiante.usuario.delete()
+            # print('Se jodio')
+            # return HttpResponse("Han pasado 2 años y medio, Fuiste Eliminado del sistema.")
+    # else:
+        # dia_restante_crono = ''
+        # dia_restante_sistema = ''
+        # dia_retrazo = ''
+        # semana_total = ''
+        # por_dia_crono = ''
+        # por_dia_sistema = ''
+        # por_dia_retrazo = ''
+        # limite_cronograma = ''
 
+    context_aux = infoCronograma(estudiante.id)
+    if not isinstance(context_aux, dict):
+        context_aux = {}
+        mensaje = infoCronograma(estudiante.id)
+        return HttpResponse(mensaje)
     if estudiante.grupo_doc == None:
         sorteo = 'no'
         if request.method == 'POST':
@@ -433,17 +438,8 @@ def estudiante(request):
             progreso = Progreso.objects.get(usuario=estudiante).nivel
         else:
             progreso = 1
-        context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante,
-                    'dia_restante_crono':dia_restante_crono,
-                    'dia_restante_sistema':dia_restante_sistema,
-                    'dia_retrazo':dia_retrazo,
-                    'semana_total':semana_total,
-                    'por_dia_crono':por_dia_crono,
-                    'por_dia_sistema':por_dia_sistema,
-                    'por_dia_retrazo':por_dia_retrazo,
-                    'limite_cronograma':limite_cronograma,
-                    'cronograma_existe':cronograma_existe,
-                'dia_restante_sistema':dia_restante_sistema}
+        context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante,}
+        context = {**context, **context_aux}
         return render(request, 'proyecto/estudiante.html', context)
 
 @login_required(login_url='login')
@@ -756,11 +752,14 @@ def progresoEstudiante(request, pk_est):
     else:
         proyecto = None
         calificacion = None
-    context_aux = infoCronograma(pk_est)
-    print(context_aux)
+    # cronograma informacion
+    context_aux = infoCronograma(estudiante.id)
+    if not isinstance(context_aux, dict):
+        context_aux = {}
+        mensaje = infoCronograma(estudiante.id)
+        return HttpResponse(mensaje)
     if grupo == 'docente':
         # evita que se un docente consulte otros estudiantes
-        
         existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
             info_estu = SalaRevisar.objects.filter(estudiante_rev=estudiante)

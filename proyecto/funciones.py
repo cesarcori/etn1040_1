@@ -3,19 +3,22 @@
 # import libreriaCartas  
 # from .libreriaCartas import *
 from datetime import date, timedelta
+from django.http import HttpResponse
 from django.http import FileResponse
 from .models import ActividadesCronograma, DatosEstudiante, RegistroPerfil
 
 def infoCronograma(id_est):
     estudiante = DatosEstudiante.objects.get(id=id_est)
     cronograma_existe = ActividadesCronograma.objects.filter(usuario=estudiante).exists()
+    progreso = estudiante.progreso
+    mensaje_limite = 'Aún tienes tiempo para elaborar el sistema'
     if cronograma_existe:
         cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
             # fecha de registro del cronograma o fecha de registro del proyecto
         fecha = RegistroPerfil.objects.get(usuario=estudiante).fecha_creacion
             # fecha limite sistema 2 años y medio
         # prueba modificar el 0 del delta para eliminar al usuario
-        fecha = fecha.date()#-timedelta(0)
+        fecha = fecha.date()-timedelta(0)
         fecha_limite_sistema = fecha+ timedelta(365*2.5)
         dia_restante_sistema = fecha_limite_sistema - date.today()
         dia_restante_sistema = dia_restante_sistema.days
@@ -54,10 +57,44 @@ def infoCronograma(id_est):
         else:
             actividades = []
             limite_cronograma = True
-        if dia_restante_sistema <= -1:
-            estudiante.usuario.delete()
+        # ********** casos de eliminacion del estudiante
+        # pasa 2 años y medio
+        if dia_restante_sistema <= -1 and progreso.nivel < 100:
+            # estudiante.usuario.delete()
             print('Se jodio')
-            return HttpResponse("Fuiste Eliminado del sistema.")
+            mensaje_limite = 'El estudiante fue eliminado del sistema por pasar los 2 años sin concluir el proyecto'
+            return (mensaje_limite)
+        # En caso de conclusion de proyecto 
+        if progreso.nivel >= 100:
+            fecha_100 = progreso.fecha_creacion
+            fecha_eliminar = fecha_100 + timedelta(100)
+            if fecha_eliminar.date() < date.today():
+                # estudiante.usuario.delete()
+                print('cuenta eliminada')
+            mensaje_limite = 'Concluiste con éxito el Proyecto de Grado, en 6 meses se eliminará tu cuenta'
+            dia_restante_crono = ''
+            dia_restante_sistema = ''
+            dia_retrazo = ''
+            semana_total = ''
+            por_dia_crono = ''
+            por_dia_sistema = ''
+            por_dia_retrazo = ''
+            limite_cronograma = ''
+        # caso de reglamento sanabria, no conclucion de perfil
+        if not estudiante.registroperfil:
+            fecha_ingreso = estudiante.fecha_inscripcion.date()
+        # se establese fecha limite del semestre de fin de septiembre y fin de marzo
+            if fecha_ingreso.month < 6: 
+                fecha_limite = date(fecha_ingreso.year,9,30)
+            else:
+                fecha_limite = date(fecha_ingreso.year+1,3,30)
+            if fecha_limite < date.today():
+                # estudiante.usuario.delete()
+                print('cuenta eliminada')
+                print('Se jodio')
+                mensaje_limite = 'El estudiante fue eliminado del sistema por no aprobar el perfil en el semestre inscrito'
+                return (mensaje_limite)
+        
     else:
         dia_restante_crono = ''
         dia_restante_sistema = ''
@@ -67,6 +104,8 @@ def infoCronograma(id_est):
         por_dia_sistema = ''
         por_dia_retrazo = ''
         limite_cronograma = ''
+        mensaje_limite = ''
+
     context = {
                 'dia_restante_crono':dia_restante_crono,
                 'dia_restante_sistema':dia_restante_sistema,
@@ -77,5 +116,8 @@ def infoCronograma(id_est):
                 'por_dia_retrazo':por_dia_retrazo,
                 'limite_cronograma':limite_cronograma,
                 'cronograma_existe':cronograma_existe,
-            'dia_restante_sistema':dia_restante_sistema}
+            'dia_restante_sistema':dia_restante_sistema,
+            'mensaje_limite':mensaje_limite}
     return context
+
+
