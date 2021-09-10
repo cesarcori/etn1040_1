@@ -32,6 +32,7 @@ class DatosDocente(models.Model):
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
     grupo = models.CharField(max_length=50, null=True, unique=True)
+    firma = models.ImageField(default='firmas/firma_default.jpg', upload_to='firmas/', null=True)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_inscripcion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
@@ -207,9 +208,9 @@ class ProyectoDeGrado(models.Model):
 
 class Auspicio(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
-    empresa = models.CharField(max_length=200, default='', null=True)
-    supervisor = models.CharField(max_length=200, default='', null=True)
-    cargo = models.CharField(max_length=200, default='', null=True)
+    empresa = models.CharField(max_length=200, default='', null=True,blank=True)
+    supervisor = models.CharField(max_length=200, default='', null=True,blank=True)
+    cargo = models.CharField(max_length=200, default='', null=True,blank=True)
 
 class Progreso(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
@@ -247,4 +248,8 @@ class Documentos(models.Model):
     firma_formulario2 = models.BooleanField(default=False)
     firma_formulario3 = models.BooleanField(default=False)
     firma_formulario4 = models.BooleanField(default=False)
+    # firma docente
+    firma_formulario1_doc= models.BooleanField(default=False)
+    firma_formulario2_doc = models.BooleanField(default=False)
+    firma_formulario4_doc = models.BooleanField(default=False)
 

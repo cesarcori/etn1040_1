@@ -1,7 +1,7 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
 
-<h4>Progreso del estudiante: {{estudiante}}</h4>
+<h5>Progreso del estudiante: {{estudiante}}</h5>
 <div class="progress">
     <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
         aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
@@ -9,7 +9,7 @@
     </div>
 </div>
 <br>
-
+{% include 'proyecto/cronograma_info.html'%}
 {% if estudiante.registrocronograma %}
 <a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.id %}>Cronograma</a>
 {% else %}

@@ -16,6 +16,7 @@ from .models import *
 from .cartas import *
 from .reportes import *
 from .formularios import *
+from .funciones import *
 
 from random import randint
 from datetime import timedelta
@@ -224,28 +225,47 @@ def tutor(request):
     return render(request, 'proyecto/tutor.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['tutor'])
+@allowed_users(allowed_roles=['tutor','docente'])
 def firmas(request):
     grupo = request.user.groups.get().name
     usuario = request.user
-    if Documentos.objects.filter(usuario=usuario).exists():
-        documento = Documentos.objects.get(usuario=usuario)
-        form = DocumentosForm(instance=documento)
-        if request.method == 'POST':
-            form = DocumentosForm(request.POST,instance=documento)
-            if form.is_valid():
-                form.save()
-                return redirect('firmas')
-    else:
-        form = DocumentosForm()
-        if request.method == 'POST':
-            form = DocumentosForm(request.POST)
-            if form.is_valid():
-                documentos = form.save(commit=False)
-                documentos.usuario = usuario
-                documentos.save()
-                return redirect('firmas')
+    if grupo == 'tutor':
+        if Documentos.objects.filter(usuario=usuario).exists():
+            documento = Documentos.objects.get(usuario=usuario)
+            form = DocumentosForm(instance=documento)
+            if request.method == 'POST':
+                form = DocumentosForm(request.POST,instance=documento)
+                if form.is_valid():
+                    form.save()
+                    return redirect('firmas')
+        else:
+            form = DocumentosForm()
+            if request.method == 'POST':
+                form = DocumentosForm(request.POST)
+                if form.is_valid():
+                    documentos = form.save(commit=False)
+                    documentos.usuario = usuario
+                    documentos.save()
+                    return redirect('firmas')
 
+    if grupo == 'docente':
+        if Documentos.objects.filter(usuario=usuario).exists():
+            documento = Documentos.objects.get(usuario=usuario)
+            form = DocumentosDocenteForm(instance=documento)
+            if request.method == 'POST':
+                form = DocumentosDocenteForm(request.POST,instance=documento)
+                if form.is_valid():
+                    form.save()
+                    return redirect('firmas')
+        else:
+            form = DocumentosDocenteForm()
+            if request.method == 'POST':
+                form = DocumentosDocenteForm(request.POST)
+                if form.is_valid():
+                    documentos = form.save(commit=False)
+                    documentos.usuario = usuario
+                    documentos.save()
+                    return redirect('firmas')
     context = {'grupo': grupo,'form':form,'usuario':usuario}
     return render(request, 'proyecto/firmas.html', context)
 
@@ -254,13 +274,22 @@ def firmas(request):
 # @permitir_paso6()
 def cargarFirma(request):
     grupo = request.user.groups.get().name
-    tutor = request.user.datostutor
-    form = FirmaTutorForm(instance=tutor)
-    if request.method == 'POST':
-        form = FirmaTutorForm(request.POST, request.FILES,instance=tutor)
-        if form.is_valid():
-            form.save()
-            return redirect('firmas')
+    if grupo == 'tutor':
+        tutor = request.user.datostutor
+        form = FirmaTutorForm(instance=tutor)
+        if request.method == 'POST':
+            form = FirmaTutorForm(request.POST, request.FILES,instance=tutor)
+            if form.is_valid():
+                form.save()
+                return redirect('firmas')
+    if grupo == 'docente':
+        docente = request.user.datosdocente
+        form = FirmaDocenteForm(instance=docente)
+        if request.method == 'POST':
+            form = FirmaDocenteForm(request.POST, request.FILES,instance=docente)
+            if form.is_valid():
+                form.save()
+                return redirect('firmas')
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/cargar_firma.html', context)
 
@@ -727,8 +756,11 @@ def progresoEstudiante(request, pk_est):
     else:
         proyecto = None
         calificacion = None
+    context_aux = infoCronograma(pk_est)
+    print(context_aux)
     if grupo == 'docente':
         # evita que se un docente consulte otros estudiantes
+        
         existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
             info_estu = SalaRevisar.objects.filter(estudiante_rev=estudiante)
@@ -744,6 +776,7 @@ def progresoEstudiante(request, pk_est):
                     'proyecto': proyecto,
                     'calificacion': calificacion,
                     }
+            context = {**context_aux, **context}
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
             return redirect('error_pagina')
@@ -763,6 +796,7 @@ def progresoEstudiante(request, pk_est):
                     'proyecto': proyecto,
                     'calificacion': calificacion,
                     }
+            context = {**context_aux, **context}
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
             return redirect('error_pagina')

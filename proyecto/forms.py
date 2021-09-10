@@ -341,9 +341,17 @@ class FirmaTutorForm(forms.ModelForm):
     class Meta:
         model = DatosTutor
         fields = ['firma']
+class FirmaDocenteForm(forms.ModelForm):
+    class Meta:
+        model = DatosTutor
+        fields = ['firma']
 
 class DocumentosForm(forms.ModelForm):
     class Meta:
         model = Documentos
         fields = '__all__'
-        exclude = ['usuario']
+        exclude = ['usuario','firma_formulario1_doc','firma_formulario2_doc','firma_formulario4_doc']
+class DocumentosDocenteForm(forms.ModelForm):
+    class Meta:
+        model = Documentos
+        fields = ['firma_formulario1_doc','firma_formulario2_doc','firma_formulario4_doc']

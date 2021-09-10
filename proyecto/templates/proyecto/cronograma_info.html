@@ -1,0 +1,20 @@
+<h5>Días restantes</h5>
+{% if limite_cronograma %}
+    Dias Retrasados{{dia_retrazo}} <br>
+    <div class="progress">
+        <div class="progress-bar bg-danger" role="progressbar" style="width: {{por_dia_retrazo}}%;"            
+            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_retrazo}}</div>
+    </div>
+{% else %}
+    Le quedan {{dia_restante_crono}} días para concluir su cronograma<br>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{por_dia_crono}}%;"            
+            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_restante_crono}}</div>
+    </div>
+{% endif %}
+Le quedan {{dia_restante_sistema}} días para sacarlo del sistema<br>
+<div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: {{por_dia_sistema}}%;" 
+        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_restante_sistema}}</div>
+</div>
+</p>
