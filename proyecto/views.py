@@ -225,6 +225,14 @@ def tutor(request):
     return render(request, 'proyecto/tutor.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['director'])
+def director(request):
+    grupo = 'director'
+    datos_est = DatosEstudiante.objects.all().order_by('apellido')
+    context = {'datos_est':datos_est,'grupo':grupo}
+    return render(request, 'proyecto/director.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor','docente'])
 def firmas(request):
     grupo = request.user.groups.get().name
@@ -492,6 +500,14 @@ def editarPerfil(request):
             if form.is_valid():
                 form.save()
                 return redirect('perfil')
+    if grupo == 'director':
+        director = usuario.datosdirector
+        form = DatosDirectorForm(instance=director)
+        if request.method == "POST":
+            form = DatosDirectorForm(request.POST, request.FILES, instance=director)
+            if form.is_valid():
+                form.save()
+                return redirect('perfil')
     context = {'grupo': grupo,'form':form}
     return render(request, 'proyecto/editar_perfil.html', context)
 
@@ -640,11 +656,11 @@ def enlaceSolicitante(request, pk_sol):
     return render(request, 'proyecto/enlace_solicitante.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor','administrador'])
+@allowed_users(allowed_roles=['docente','tutor','administrador','director'])
 def enlaceEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
-    if grupo=='administrador':
+    if grupo=='administrador' or grupo=='director':
         context = {'grupo': grupo,'estudiante':estudiante,}
         return render(request, 'proyecto/enlace_estudiante.html', context)
     elif grupo == 'docente':
@@ -664,7 +680,7 @@ def enlaceEstudiante(request, pk_est):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','administrador','docente','tutor'])
+@allowed_users(allowed_roles=['estudiante','administrador','docente','tutor','director'])
 def reporteEstudiante(request, id_est):
     grupo = request.user.groups.get().name
     estudiante = DatosEstudiante.objects.get(id=id_est)
@@ -731,7 +747,7 @@ def reporteEstudiante(request, id_est):
     return render(request, 'proyecto/reporte_estudiante.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','administrador','docente','tutor'])
+@allowed_users(allowed_roles=['estudiante','administrador','docente','tutor','director'])
 def imprimirReporteEstudiante(request, id_est):
     buffer = io.BytesIO()
     estudiante = DatosEstudiante.objects.get(id=id_est)
@@ -837,11 +853,15 @@ def vistoBuenoProyecto(request, id_est):
     return render(request, 'proyecto/visto_bueno_proyecto.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','administrador'])
+@allowed_users(allowed_roles=['estudiante','tutor','administrador','director'])
 def enlaceDocente(request, pk_doc):
     grupo = request.user.groups.get().name
     docente = DatosDocente.objects.get(id=pk_doc)
     if grupo == 'administrador':
+        estudiantes = docente.datosestudiante_set.all()
+        context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+        return render(request, 'proyecto/enlace_docente.html', context)
+    if grupo == 'director':
         estudiantes = docente.datosestudiante_set.all()
         context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
         return render(request, 'proyecto/enlace_docente.html', context)
@@ -904,9 +924,18 @@ def listaEstudiantes(request):
 
 @login_required(login_url='login')
 @admin_only
+def listaEstudiantesTitulados(request):
+    datos_est = DatosEstudiante.objects.all().order_by('apellido')
+    context = {'datos_est':datos_est}
+    return render(request, 'proyecto/lista_estudiante.html', context)
+
+@login_required(login_url='login')
+# @admin_only
+@allowed_users(allowed_roles=['director','administrador',])
 def listaDocentes(request):
+    grupo = request.user.groups.get().name
     docentes = DatosDocente.objects.all().order_by('grupo')
-    context = {'docentes':docentes}
+    context = {'grupo':grupo,'docentes':docentes}
     return render(request, 'proyecto/lista_docente.html', context)
 
 @login_required(login_url='login')

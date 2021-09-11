@@ -10,7 +10,9 @@
       <th scope="col">Grupo</th>
       <th scope="col">Docente</th>
     {%endif%}
+    {% if grupo != 'director'%}
       <th scope="col">Mensajes</th>
+    {% endif %}
       <th scope="col">Celular</th>
       <th scope="col">Correo Electrónico</th>
       <th scope="col">Info</th>
@@ -24,7 +26,7 @@
 <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
 {%endif%}
 
-{%if grupo == 'docente' %}
+{%if grupo == 'docente' or grupo == 'director'%}
 <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
 {%endif%}
 
@@ -41,7 +43,9 @@
 <th scope="row">{{est.grupo_doc.apellido}}</th>
 {%endif%}
 
+{% if not grupo == 'director' %}
 <td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
+{% endif %}
 <th scope="row">{{est.celular}}</th>
 <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
 <td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>

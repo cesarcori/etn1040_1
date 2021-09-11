@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('docente/', views.docente, name='docente'),
     path('tutor/', views.tutor, name='tutor'),
+    path('director/', views.director, name='director'),
     path('firmas/', views.firmas, name='firmas'),
     path('firmas/cargar-firma/', views.cargarFirma, name='cargar_firma'),
     path('tutor/solicitud-tutoria/<int:id_est>', views.solicitudTutoria, name='solicitud_tutoria'),

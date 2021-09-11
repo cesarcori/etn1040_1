@@ -18,7 +18,7 @@
 	<div class="col-md-9">
 		<div class="card card-body">
 
-{%if grupo == 'administrador' %}
+{%if grupo == 'administrador' or grupo == 'director'%}
 <p>Nombre: {{docente.nombre}}<br>
 Apellido: {{docente.apellido}}<br>
 Celular: {{docente.celular}}<br>
@@ -28,8 +28,9 @@ Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>
 		</div>
 	</div>
 </div>
-<div class='text-right'>
-    <a href={% url 'resetear_password' docente.usuario_id %}>Resetear Contraseña</a></div>
+{% if not grupo == 'director'%}
+<div class='text-right'><a href={% url 'resetear_password' docente.usuario_id %}>Resetear Contraseña</a></div>
+{% endif %}
 <h3>Lista de Estudiantes</h3>
 <table class="table table-striped">
   <thead>

@@ -296,6 +296,11 @@ class DatosAdministradorForm(forms.ModelForm):
     class Meta:
         model = DatosAdministrador
         fields = ['celular','imagen_perfil']
+class DatosDirectorForm(forms.ModelForm):
+    class Meta:
+        model = DatosDirector
+        fields = '__all__'
+        exclude =['usuario']
 class BusquedaProyectoForm(forms.ModelForm):
     class Meta:
         model = BusquedaProyecto
