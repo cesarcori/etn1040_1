@@ -329,18 +329,18 @@ def formulario3(buffer, estudiante, proyecto):
     # supervisor = 'Ing. Vladimir Barra Garcia'
     # cargo = 'Jefe de Carrera Ingeniería Electrónica'
     if Auspicio.objects.filter(usuario=estudiante).exists():
-        empresa = estudiante.auspicio.empresa.__str__()
-        supervisor = estudiante.auspicio.supervisor.__str__()
-        cargo = estudiante.auspicio.cargo.__str__()
+        if estudiante.auspicio.empresa:
+            empresa = estudiante.auspicio.empresa.__str__()
+        else: empresa = ''
+        if estudiante.auspicio.supervisor:
+            supervisor = estudiante.auspicio.supervisor.__str__()
+        else: supervisor = ''
+        if estudiante.auspicio.cargo:
+            cargo = estudiante.auspicio.cargo.__str__()
+        else: cargo = ''
     else:
         empresa = ''
         supervisor = ''
-        cargo = ''
-    if not estudiante.auspicio.empresa:
-        empresa = ''
-    if not estudiante.auspicio.supervisor:
-        supervisor = ''
-    if not estudiante.auspicio.cargo:
         cargo = ''
     # individual o multiple
     individual = 'V'

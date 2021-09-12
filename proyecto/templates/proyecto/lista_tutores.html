@@ -6,7 +6,9 @@
   <thead>
     <tr>
       <th scope="col">Tutor</th>
+    {% if grupo == 'administrador'%}
       <th scope="col">Eliminar</th>
+    {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -14,13 +16,18 @@
     <tr>
       <td><a class="text-underline-hover" 
     href="{% url 'enlace_tutor' tutor.id%}">Ing. {{tutor.apellido}} {{tutor.nombre}}</a></td>
+
+    {% if grupo == 'administrador'%}
       <td><a class="text-underline-hover" href="{% url 'eliminar_usuario' tutor.usuario_id %}">Eliminar</a></td>
+    {% endif %}
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
 <p><p><p>
+{% if grupo == 'administrador'%}
 <a class="btn btn-sm btn-info" href="{% url 'agregar_tutor' %}">Agregar
     Tutor</a><p>
+{% endif %}
 {% endblock %}

@@ -1,34 +1,39 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <p>Reglamentos de la Materia ETN-1040</p>
-<p>
-{%for link, titulo in dicc_link.items%}
-<a href="{{ link.archivo.url }}">{{titulo}}</a> 
-{% if progreso.nivel < 14 %}
-<i class="fas text-danger fa-graduation-cap"></i><br>
-{% else %}
-<i class="fas text-success fa-check"></i><br>
-{% endif %}
-{%endfor%}
-</p>
-<p>Introducción de la materia:<br>
-Documentos compartidos por Docente ETN-1040:
-Ing. {{request.user.datosestudiante.grupo_doc}}</p>
-<p>{%for link in material_docente %}
-<a href="{{ link.material_docente.url }}">{{link.material_docente.name}}<a>
-{% if progreso.nivel < 14 %}
-<i class="fas text-danger fa-graduation-cap"></i><br>
-{% else %}
-<i class="fas text-success fa-check"></i><br>
-{% endif %}
-{%endfor%}</p>
+    <p>
+    {%for reglamento, visto in dicc_reglamento.items%}
+        <p><a href="{{ reglamento.archivo.url }}">{{reglamento.archivo.name}}</a>
+        {% if visto %}
+            <i class="fas text-success fa-check"></i><br></p>
+        {% else %}
+            <i class="fas text-danger fa-graduation-cap"></i>
+            <a class="btn btn-warning" href={%url 'confirmar_reglamento' reglamento.id%}>Ya estudie el reglamento</a></p>
+        {% endif %}
+    {%endfor%}
+    </p>
+<p>Introducción de la materia:</p>
+    <p>
+    Documentos compartidos por Docente ETN-1040:
+    Ing. {{request.user.datosestudiante.grupo_doc}}</p>
+    <p>
+    {%for material, visto in dicc_material.items %}
+            <a href="{{ material.material_docente.url }}">{{material.material_docente.name}}<a>
+        {% if visto %}
+            <i class="fas text-success fa-check"></i><br>
+        {% else %}
+            <i class="fas text-danger fa-graduation-cap"></i>
+            <a class="btn btn-warning" href={%url 'confirmar_material_docente' material.id%}>Ya estudie el reglamento</a></p>
+        {% endif %}
+    {%endfor%}
+    </p>
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
-{% if progreso %}
-{% if progreso.nivel < 14 %}
+{% if estudiante.progreso %}
+{% if estudiante.progreso.nivel < 14 %}
 <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
 {% endif %}
-{% if progreso.nivel >= 14 %}
+{% if estudiante.progreso.nivel >= 14 %}
 <h5>Paso completado</h5>
 {% endif %}
 {% endif %}

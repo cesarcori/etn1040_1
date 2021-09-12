@@ -680,6 +680,15 @@ def enlaceEstudiante(request, pk_est):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['administrador','director'])
+def enlaceEstudianteTitulado(request, id_est_tit):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudianteTitulado.objects.get(id=id_est_tit)
+    if grupo=='administrador' or grupo=='director':
+        context = {'grupo': grupo,'estudiante':estudiante,}
+        return render(request, 'proyecto/enlace_estudiante_titulado.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','administrador','docente','tutor','director'])
 def reporteEstudiante(request, id_est):
     grupo = request.user.groups.get().name
@@ -757,7 +766,7 @@ def imprimirReporteEstudiante(request, id_est):
     return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor','administrador'])
+@allowed_users(allowed_roles=['docente','tutor','administrador','director'])
 def progresoEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
@@ -808,6 +817,18 @@ def progresoEstudiante(request, pk_est):
                     'salas':salas,
                     'info_estu_proy':info_estu_proy,
                     'salas_proy':salas_proy,
+                    'proyecto': proyecto,
+                    'calificacion': calificacion,
+                    }
+            context = {**context_aux, **context}
+            return render(request, 'proyecto/progreso_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
+    elif grupo== 'director':
+        existe_est = DatosEstudiante.objects.filter(id=pk_est).exists()
+        if existe_est:
+            context = {'grupo': grupo,'estudiante':estudiante,
+                    'progreso':progreso,
                     'proyecto': proyecto,
                     'calificacion': calificacion,
                     }
@@ -884,7 +905,7 @@ def enlaceDocente(request, pk_doc):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','administrador','estudiante'])
+@allowed_users(allowed_roles=['docente','administrador','estudiante','director'])
 def enlaceTutor(request, pk_tutor):
     grupo = str(request.user.groups.get())
     tutor = DatosTutor.objects.get(id=pk_tutor)
@@ -897,6 +918,9 @@ def enlaceTutor(request, pk_tutor):
         else:
             return redirect('error_pagina')
     elif grupo == 'administrador':
+        context = {'grupo': grupo, 'tutor':tutor}
+        return render(request, 'proyecto/enlace_tutor.html', context)
+    elif grupo == 'director':
         context = {'grupo': grupo, 'tutor':tutor}
         return render(request, 'proyecto/enlace_tutor.html', context)
     elif grupo == 'estudiante':
@@ -923,11 +947,11 @@ def listaEstudiantes(request):
     return render(request, 'proyecto/lista_estudiante.html', context)
 
 @login_required(login_url='login')
-@admin_only
-def listaEstudiantesTitulados(request):
-    datos_est = DatosEstudiante.objects.all().order_by('apellido')
+@allowed_users(allowed_roles=['director'])
+def listaEstudianteTitulado(request):
+    datos_est = DatosEstudianteTitulado.objects.all().order_by('fecha_conclusion')
     context = {'datos_est':datos_est}
-    return render(request, 'proyecto/lista_estudiante.html', context)
+    return render(request, 'proyecto/lista_estudiante_titulado.html', context)
 
 @login_required(login_url='login')
 # @admin_only
@@ -939,10 +963,12 @@ def listaDocentes(request):
     return render(request, 'proyecto/lista_docente.html', context)
 
 @login_required(login_url='login')
-@admin_only
+# @admin_only
+@allowed_users(allowed_roles=['director','administrador',])
 def listaTutores(request):
+    grupo = request.user.groups.get().name
     tutores= DatosTutor.objects.all().order_by('apellido')
-    context = {'tutores':tutores}
+    context = {'grupo':grupo,'tutores':tutores}
     return render(request, 'proyecto/lista_tutores.html', context)
 
 # Agregar docentes, tutores al sistema
@@ -1048,22 +1074,81 @@ def agregarTutor(request):
 @permitir_paso1()
 def paso1(request):
     grupo = request.user.groups.get().name
-    # link reglamentos
-    links = Reglamento.objects.all()
     estudiante = request.user.datosestudiante
-    # titulos = [' '.join(link.archivo.name.split('/')[1].split('.')[0].split('_')).title() for link in links]
-    titulos = [link.archivo.name for link in links]
-    dicc_link = {}
-    for n in range(len(links)):
-        dicc_link[links[n]] = titulos[n]
-    id_usuario_docente = request.user.datosestudiante.grupo_doc.usuario_id
-    usuario_docente = User.objects.get(pk=id_usuario_docente)
+    # link reglamentos
+    # links = Reglamento.objects.all()
+    # titulos = [link.archivo.name for link in links]
+    # dicc_link = {}
+    # for n in range(len(links)):
+        # dicc_link[links[n]] = titulos[n]
+    # progreso = Progreso.objects.get(usuario=estudiante)
+    # material estudiante
+    # id_usuario_docente = request.user.datosestudiante.grupo_doc.usuario_id
+    # usuario_docente = User.objects.get(pk=id_usuario_docente)
+
+    # vista material docente
+    usuario_docente = estudiante.grupo_doc.usuario
     material_docente = MaterialDocente.objects.filter(propietario=usuario_docente)
-    progreso = Progreso.objects.get(usuario=estudiante)
-    context = {'grupo': grupo, 'links':links, 'titulos':titulos, 
-            'dicc_link':dicc_link, 'material_docente':material_docente,
-            'progreso': progreso}
+    dicc_material = {}
+    for material in material_docente:
+        if material.vistamaterialdocente_set.filter(usuario=estudiante).exists():
+            dicc_material[material] = True
+        else:
+            dicc_material[material] = False
+
+    # vista reglamento
+    reglamentos = Reglamento.objects.all()
+    dicc_reglamento = {}
+    for reglamento in reglamentos:
+        if reglamento.vistareglamento_set.filter(usuario=estudiante).exists():
+            dicc_reglamento[reglamento] = True
+        else:
+            dicc_reglamento[reglamento] = False
+
+    context = {'grupo': grupo, 
+            # 'links':links, 'titulos':titulos, 
+            # 'dicc_link':dicc_link, 'material_docente':material_docente,
+            'material_docente':material_docente,
+            'estudiante':estudiante,
+            'dicc_reglamento':dicc_reglamento,
+            'dicc_material':dicc_material,
+            # 'progreso': progreso,
+            }
     return render(request, 'proyecto/estudiante_paso1.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso1()
+def confirmarReglamento(request,id_reg):
+    grupo = request.user.groups.get().name
+    reglamento = Reglamento.objects.get(id=id_reg)
+    estudiante = request.user.datosestudiante
+    if request.method == 'POST':
+        confirmar_estudio = request.POST['confirmar']
+        if confirmar_estudio == 'si':
+            if not VistaReglamento.objects.filter(usuario = estudiante, reglamento_visto=reglamento).exists():
+                VistaReglamento.objects.create(usuario=estudiante, reglamento_visto=reglamento)
+            return redirect('paso1')
+    context = {'grupo': grupo, 'reglamento':reglamento, }
+    return render(request, 'proyecto/confirmar_reglamento.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso1()
+def confirmarMaterialDocente(request,id_mat):
+    grupo = request.user.groups.get().name
+    material = MaterialDocente.objects.get(id=id_mat)
+    estudiante = request.user.datosestudiante
+    docente = estudiante.grupo_doc
+    if request.method == 'POST':
+        confirmar_estudio = request.POST['confirmar']
+        if confirmar_estudio == 'si':
+            if not VistaMaterialDocente.objects.filter(usuario=estudiante,
+                    docente=docente, material_docente_visto=material).exists():
+                VistaMaterialDocente.objects.create(usuario=estudiante, docente=docente, material_docente_visto=material)
+            return redirect('paso1')
+    context = {'grupo': grupo,'material': material}
+    return render(request, 'proyecto/confirmar_material_docente.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -1208,7 +1293,7 @@ def paso3(request):
     return render(request, 'proyecto/estudiante_paso3.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
 # @permitir_paso3()
 def reporteTutorAcepto(request, id_est):
     buffer = io.BytesIO()
@@ -1475,12 +1560,14 @@ def cronograma_actividad(request):
         return render(request, 'proyecto/cronograma_actividad.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor'])
+@allowed_users(allowed_roles=['docente','tutor','director'])
 # @permitir_paso4()
 def ver_cronograma(request, id_est):
     grupo = request.user.groups.get().name
     if grupo == 'tutor':
         estudiante = request.user.datostutor.datosestudiante_set.get(id=id_est)
+    elif grupo == 'director':
+        estudiante = DatosEstudiante.objects.get(id=id_est)
     elif grupo == 'docente':
         estudiante = request.user.datosdocente.datosestudiante_set.get(id=id_est)
     cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
@@ -1538,7 +1625,7 @@ def eliminar_actividad(request, id_act):
     return redirect('cronograma_actividad')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
 # @permitir_paso4()
 def formulario_1(request,id_est):
     buffer = io.BytesIO()
@@ -1824,7 +1911,7 @@ def ver_proyecto_grado(request):
     return render(request, 'proyecto/ver_proyecto_grado.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
 # @permitir_paso6()
 def carta_final_tutor(request, id_est):
     buffer = io.BytesIO()
@@ -1888,7 +1975,7 @@ def materialParaEst(request):
     return render(request, 'proyecto/material_para_estudiante.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
 # @permitir_paso6()
 def formulario_2(request, id_est):
     buffer = io.BytesIO()
@@ -1909,7 +1996,7 @@ def formulario_2(request, id_est):
     return FileResponse(buffer, as_attachment=True, filename='formulario_2.pdf')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
 # @permitir_paso6()
 def formulario_3(request, id_est):
     buffer = io.BytesIO()
@@ -1942,7 +2029,7 @@ def auspicioF3(request, id_est):
     return render(request, 'proyecto/auspicio_f3.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
 # @permitir_paso6()
 def formulario_4(request, id_est):
     buffer = io.BytesIO()
@@ -2017,6 +2104,20 @@ def confirmarPaso6(request):
         # if confirmar < 100 and confirmar >= 81:
         if 86 <= confirmar < 100:
             progreso.nivel = 100
+            # agregando a lista de titulados
+            DatosEstudianteTitulado.objects.create(
+                    correo = estudiante.correo,
+                    nombre = estudiante.nombre,
+                    apellido = estudiante.apellido,
+                    carnet = estudiante.carnet,
+                    extension = estudiante.extension,
+                    registro_uni = estudiante.registro_uni,
+                    celular = estudiante.celular, 
+                    mencion = estudiante.mencion,
+                    tutor = estudiante.tutor,
+                    docente = estudiante.grupo_doc,
+                    imagen_perfil =estudiante.imagen_perfil,
+                    )
         progreso.save()
         return redirect('estudiante')
     context = {'grupo': grupo, 'progreso': progreso}

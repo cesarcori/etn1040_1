@@ -36,6 +36,7 @@ urlpatterns = [
     path('comp-personal/', views.compartirPersonal, name='compartir_personal'),
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
+    path('info-est-tit/<int:id_est_tit>', views.enlaceEstudianteTitulado, name='enlace_estudiante_titulado'),
     path('reporte-est/<int:id_est>', views.reporteEstudiante, name='reporte_estudiante'),
     path('reporte-est/imprimir/<int:id_est>', views.imprimirReporteEstudiante, name='imprimir_reporte'),
     path('progreso-est/<int:pk_est>', views.progresoEstudiante, name='progreso_estudiante'),
@@ -49,6 +50,7 @@ urlpatterns = [
     path('info-doc/<int:pk_doc>/', views.enlaceDocente, name='enlace_docente'),
     path('info-tut/<int:pk_tutor>/', views.enlaceTutor, name='enlace_tutor'),
     path('lista_est/', views.listaEstudiantes, name='lista_estudiantes'),
+    path('lista_est_tit/', views.listaEstudianteTitulado, name='lista_estudiante_titulado'),
     path('lista_doc/', views.listaDocentes, name='lista_docentes'),
     path('lista_tut/', views.listaTutores, name='lista_tutores'),
 
@@ -56,6 +58,8 @@ urlpatterns = [
     path('agregar-tut/', views.agregarTutor, name='agregar_tutor'),
 
     path('paso1/', views.paso1, name='paso1'),
+    path('paso1/conf-reg/<int:id_reg>', views.confirmarReglamento, name='confirmar_reglamento'),
+    path('paso1/conf-mate/<int:id_mat>', views.confirmarMaterialDocente, name='confirmar_material_docente'),
     path('paso2/', views.paso2, name='paso2'),
     path('paso3/', views.paso3, name='paso3'),
     path('paso3/reporte-tutor-acepto/<int:id_est>', views.reporteTutorAcepto, name='reporte_tutor_acepto'),

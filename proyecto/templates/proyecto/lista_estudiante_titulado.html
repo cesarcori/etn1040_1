@@ -1,0 +1,24 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h5>Lista de estudiantes titulados ETN-1040, Proyecto de Grado:</h5>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Gestión</th>
+      <th scope="col">Univesitario</th>
+      <th scope="col">Docente</th>
+      <th scope="col">Tutor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+{%for est in datos_est %}
+<th scope="row">{{est.fecha_conclusion.year}}</th>
+      <td><a class="text-underline-hover" href="{% url 'enlace_estudiante_titulado' est.id %}">{{est}}</a></td>
+<th scope="row">{{est.docente}}</th>
+<th scope="row">{{est.tutor}}</th>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

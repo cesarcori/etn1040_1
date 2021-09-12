@@ -71,9 +71,9 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
 <div class="row">
     <div class="col-md-7">
 {% comment %}********* PROYECTO DE GRADO **************{% endcomment %}
-{% if progreso >= 64%}
-<h4 class='text-center'><strong>REVISIÓN DE PROYECTO DE GRADO</strong></h4>
-<div class = 'border border-4 
+{% if progreso >= 64 and not grupo == 'director'%}
+    <h4 class='text-center'><strong>REVISIÓN DE PROYECTO DE GRADO</strong></h4>
+    <div class = 'border border-4 
 {% if progreso >= 64%}
     border-success
 {% else %}
@@ -159,7 +159,7 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
 
 
 {% comment %}********* PERFIL **************{% endcomment %}
-{% if progreso < 64%}
+{% if progreso < 64 and not grupo == 'director'%}
     <h4 class='text-center'><strong>REVISIÓN DE PERFIL</strong></h4>
     <div class = 'border border-4 
     {% if progreso >= 64%}
