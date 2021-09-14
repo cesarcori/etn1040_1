@@ -791,10 +791,20 @@ def progresoEstudiante(request, pk_est):
             salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
             info_estu_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante)
             salas_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
+            # para que salga notificacion
+            dicc_salas = {}
+            for sala in salas:
+                mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala)
+                no_visto= 0
+                for mensaje_doc in mensajes_doc:
+                    if not mensaje_doc.visto_docente:
+                        no_visto += 1
+                dicc_salas[sala] = no_visto
             context = {'grupo': grupo,'estudiante':estudiante,
                     'progreso':progreso,
                     'info_estu':info_estu,
                     'salas':salas,
+                    'dicc_salas':dicc_salas,
                     'info_estu_proy':info_estu_proy,
                     'salas_proy':salas_proy,
                     'proyecto': proyecto,
@@ -811,10 +821,20 @@ def progresoEstudiante(request, pk_est):
             salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
             info_estu_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante)
             salas_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
+            # para que salga notificacion
+            dicc_salas = {}
+            for sala in salas:
+                mensajes_tut= MensajeTutorRevisar.objects.filter(sala=sala)
+                no_visto= 0
+                for mensaje_tut in mensajes_tut:
+                    if not mensaje_tut.visto_tutor:
+                        no_visto += 1
+                dicc_salas[sala] = no_visto
             context = {'grupo': grupo,'estudiante':estudiante,
                     'progreso':progreso,
                     'info_estu':info_estu,
                     'salas':salas,
+                    'dicc_salas':dicc_salas,
                     'info_estu_proy':info_estu_proy,
                     'salas_proy':salas_proy,
                     'proyecto': proyecto,
@@ -1336,8 +1356,23 @@ def entregaPerfil(request):
     docente = estudiante.grupo_doc
     tutor = estudiante.tutor
     salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
+    dicc_sala = {}
+    for sala in salas:
+        mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala)
+        mensajes_tut = MensajeTutorRevisar.objects.filter(sala=sala)
+        no_visto_docente = 0
+        for mensaje_doc in mensajes_doc:
+            if not mensaje_doc.visto_estudiante:
+                no_visto_docente += 1
+        no_visto_tutor = 0
+        for mensaje_tut in mensajes_tut:
+            if not mensaje_tut.visto_estudiante:
+                no_visto_tutor += 1
+        dicc_sala[sala] = [no_visto_docente, no_visto_tutor]
     context = {'grupo': grupo,
             'salas':salas,
+            'dicc_sala':dicc_sala,
+            'no_visto_docente':no_visto_docente,
             'estudiante':estudiante}
     return render(request, 'proyecto/entrega_perfil.html', context)
 
@@ -1380,9 +1415,15 @@ def salaRevisar(request, pk_sala):
                 file = form.save(commit=False)
                 file.sala = info_estu
                 file.usuario = usuario
+                file.visto_docente = True
                 file.save()
         else:
             form= MensajeDocenteRevisarForm
+        mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+        for mensaje_doc in mensajes_doc:
+            mensaje_doc.visto_docente= True
+            mensaje_doc.save()
+        mensajes_tut={}
     elif grupo == 'tutor':
         if request.method == "POST":
             form= MensajeTutorRevisarForm(request.POST)
@@ -1390,11 +1431,15 @@ def salaRevisar(request, pk_sala):
                 file = form.save(commit=False)
                 file.sala = info_estu
                 file.usuario = usuario
+                file.visto_tutor = True
                 file.save()
         else:
             form= MensajeTutorRevisarForm()
-    mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
-    mensajes_tut = MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+        mensajes_tut= MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+        for mensaje_tut in mensajes_tut:
+            mensaje_tut.visto_tutor = True
+            mensaje_tut.save()
+        mensajes_doc={}
     context = {'grupo': grupo, 'info_estu':info_estu,
             'form':form,
             'mensajes_doc':mensajes_doc,
@@ -1407,20 +1452,25 @@ def salaRevisar(request, pk_sala):
 def salaRevisarEstDoc(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
-    info_estu = SalaRevisar.objects.get(id=pk_sala)
+    sala = SalaRevisar.objects.get(id=pk_sala)
     if grupo == 'estudiante':
+
         if request.method == "POST":
             form= MensajeDocenteRevisarForm(request.POST)
             if form.is_valid():
                 file = form.save(commit=False)
-                file.sala = info_estu
+                file.sala = sala
                 file.usuario = usuario
+                file.visto_estudiante = True
                 file.save()
         else:
             form = MensajeDocenteRevisarForm
-    mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
-    mensajes_tut= MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
-    context = {'grupo': grupo, 'info_estu':info_estu,
+    mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala).order_by('-fecha_creacion')
+    mensajes_tut= MensajeTutorRevisar.objects.filter(sala=sala).order_by('-fecha_creacion')
+    for mensaje_tut in mensajes_tut:
+        mensaje_tut.visto_estudiante = True
+        mensaje_tut.save()
+    context = {'grupo': grupo, 'info_estu':sala,
             'form':form,
             'mensajes_doc':mensajes_doc,
             'mensajes_tut':mensajes_tut,
@@ -1445,6 +1495,9 @@ def salaRevisarEstTut(request, pk_sala):
             form = MensajeTutorRevisarForm
     mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
     mensajes_tut= MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    for mensaje_tut in mensajes_tut:
+        mensaje_tut.visto_estudiante = True
+        mensaje_tut.save()
     context = {'grupo': grupo, 'info_estu':info_estu,
             'form':form,
             'mensajes_doc':mensajes_doc,

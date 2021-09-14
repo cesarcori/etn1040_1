@@ -65,6 +65,8 @@ class VistaMaterialDocente(models.Model):
 
 class MensajeDocenteRevisar(models.Model):
     texto = models.TextField(blank=True, null=True)
+    visto_docente = models.BooleanField(default=False)
+    visto_estudiante = models.BooleanField(default=False)
     usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
@@ -77,6 +79,8 @@ class MensajeDocenteRevisarProyecto(models.Model):
 
 class MensajeTutorRevisar(models.Model):
     texto = models.TextField(blank=True, null=True)
+    visto_tutor = models.BooleanField(default=False)
+    visto_estudiante = models.BooleanField(default=False)
     usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)

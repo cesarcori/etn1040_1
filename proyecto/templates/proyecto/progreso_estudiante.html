@@ -215,7 +215,7 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
     </tr>
   </thead>
   <tbody>
-{%for s in salas%}
+{%for s,no_visto in dicc_salas.items%}
     <tr>
 <td>
     <p>{{s.sala}}</p>
@@ -238,7 +238,18 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
     <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Perfil</a>
 </td>
 <td>
-<a class="btn btn-primary" href="{% url 'sala_revisar' s.id %}">Observación</a>
+{% comment %}<a class="btn btn-primary" href="{% url 'sala_revisar' s.id %}">Observación</a>{% endcomment %}
+{% if no_visto == 0%}
+<a class="btn btn-primary position-relative" href="{% url 'sala_revisar' s.id %}">Observación</a>
+{% else %}
+<a href="{% url 'sala_revisar' s.id %}" type="button" class="btn btn-primary position-relative">
+    Observación
+  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    {{no_visto}}
+    <span class="visually-hidden">unread messages</span>
+  </span>
+</a>
+{% endif %}
 <a class="btn btn-primary" href="{% url 'perfil_corregido' s.id %}">Corrección</a>
 </td>      
 
