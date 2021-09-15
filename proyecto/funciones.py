@@ -11,14 +11,15 @@ def infoCronograma(id_est):
     estudiante = DatosEstudiante.objects.get(id=id_est)
     cronograma_existe = ActividadesCronograma.objects.filter(usuario=estudiante).exists()
     progreso = estudiante.progreso
-    mensaje_limite = 'Aún tienes tiempo para elaborar el sistema'
+    # mensaje_limite = 'Aún tienes tiempo para elaborar el sistema'
+    mensaje_limite = ''
     if cronograma_existe:
         cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
             # fecha de registro del cronograma o fecha de registro del proyecto
         fecha = RegistroPerfil.objects.get(usuario=estudiante).fecha_creacion
             # fecha limite sistema 2 años y medio
         # prueba modificar el 0 del delta para eliminar al usuario
-        fecha = fecha.date()-timedelta(0)
+        fecha = fecha.astimezone().date()#-timedelta(0)
         fecha_limite_sistema = fecha+ timedelta(365*2.5)
         dia_restante_sistema = fecha_limite_sistema - date.today()
         dia_restante_sistema = dia_restante_sistema.days
@@ -116,6 +117,7 @@ def infoCronograma(id_est):
                 'por_dia_retrazo':por_dia_retrazo,
                 'limite_cronograma':limite_cronograma,
                 'cronograma_existe':cronograma_existe,
+                'estudiante':estudiante,
             'dia_restante_sistema':dia_restante_sistema,
             'mensaje_limite':mensaje_limite}
     return context

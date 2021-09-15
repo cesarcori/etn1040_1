@@ -73,6 +73,8 @@ class MensajeDocenteRevisar(models.Model):
 
 class MensajeDocenteRevisarProyecto(models.Model):
     texto = models.TextField(blank=True, null=True)
+    visto_docente = models.BooleanField(default=False)
+    visto_estudiante = models.BooleanField(default=False)
     usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
@@ -87,6 +89,8 @@ class MensajeTutorRevisar(models.Model):
 
 class MensajeTutorRevisarProyecto(models.Model):
     texto = models.TextField(blank=True, null=True)
+    visto_tutor = models.BooleanField(default=False)
+    visto_estudiante = models.BooleanField(default=False)
     usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)

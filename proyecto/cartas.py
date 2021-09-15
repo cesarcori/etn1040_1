@@ -102,9 +102,9 @@ def reporte_tutor_acepto(buffer, estudiante):
     lugar = 'carrera de ingeniería electrónica'
     institucion = 'facultad de ingeniería'
     universidad = 'universidad mayor de san andrés'
-    parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, mi aceptación como tutor, en el desarrollo del Proyecto de Grado:'
+    parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, mi aceptación como tutor, en el desarrollo del Proyecto de Grado'
     parrafo1_2 = titulo_perfil
-    parrafo1_3 = 'A cargo del estudiante'
+    parrafo1_3 = 'del estudiante'
     parrafo1_4 = nombre_estudiante
     parrafo1_5 = 'Y doy el compromiso de supervisar el cumplimiento de cronograma propuesto en el perfil.'
     despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
