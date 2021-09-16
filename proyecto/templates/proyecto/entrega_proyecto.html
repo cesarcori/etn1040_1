@@ -2,7 +2,7 @@
 {% block content %}
 <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-replace-svg="nest"></script>
 
-{% if not estudiante.vb_proyecto_docente and not estudiante.vb_proyecto_tutor%}
+{% if not estudiante.vb_proyecto_docente or not estudiante.vb_proyecto_tutor%}
 <a class="btn btn-warning" href="{% url 'crear_sala_proyecto' %}">Crear Revisión</a><br>
 {% endif %}
 
