@@ -29,7 +29,7 @@ Grupo: {{estudiante.grupo_doc.grupo}}<br>
 Docente: <a href="{% url 'enlace_docente' estudiante.grupo_doc.id %}">
     {{estudiante.grupo_doc.nombre}} {{estudiante.grupo_doc.apellido}}</a><br>
 {% if estudiante.tutor %}
-{%if grupo == 'docente' or grupo == 'administrador'%}
+{%if grupo == 'docente' or grupo == 'administrador' or grupo == 'director'%}
 Tutor: <a href="{% url 'enlace_tutor' estudiante.tutor.id %}">
     {{estudiante.tutor.nombre}} {{estudiante.tutor.apellido}}</a><br>
 Fecha de Inscripción: {{estudiante.fecha_inscripcion}}<br>

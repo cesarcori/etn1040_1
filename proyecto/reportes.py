@@ -472,4 +472,246 @@ def docReporteIndicacionTutorEnSistema(buffer, estudiante):
     fecha_left()
     guardar(buffer)
 
+def docReporteCapitulos2(buffer, estudiante):
+    pdf = FPDF(format="letter")
+    pdf.add_page()
+    pdf.set_font("Times", size=12)
+# margen
+    pdf.set_margin(25)
+# Get default margins
+    left = pdf.l_margin
+    right = pdf.r_margin
+    top = pdf.t_margin
+    bottom = pdf.b_margin
+# Effective page width and height
+    epw = pdf.w - left - right
+    eph = pdf.h - top - bottom
+# salto de linea
+    th = pdf.font_size * 1.2
+    def fecha_right():
+        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        hoy = date.today()
+        dia = hoy.day.__str__()
+        mes = meses[hoy.month - 1]
+        year = hoy.year.__str__()
+        pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="R")
+        pdf.ln(th)
 
+    def fecha_left():
+        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        hoy = date.today()
+        dia = hoy.day.__str__()
+        mes = meses[hoy.month - 1]
+        year = hoy.year.__str__()
+        pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="L")
+        pdf.ln(th)
+
+    def text_left(text):
+        pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="L")
+        pdf.ln(th)
+
+    def text_right(text):
+        pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="R")
+        pdf.ln(th)
+
+    def text_center(text):
+        pdf.cell(0,0,txt=text, ln=1, border=0, align="C")
+        pdf.ln(th)
+
+    def text_left_lista(texto_lista):
+        for texto in texto_lista:
+            pdf.cell(0,0,txt=texto+' ', ln=1, border=0, align="L")
+            pdf.ln(th)
+
+    def negrilla():
+        pdf.set_font("Times", 'B', size=12)
+        pdf.set_font("Times", size=12)
+
+    def negrilla_subrayado():
+        pdf.set_font("Times", 'BU', size=12)
+        pdf.set_font("Times", size=12)
+
+    def linea(numero_lineas=1):
+        for n in range(numero_lineas):
+            pdf.ln(th)
+
+    def normal():
+        pdf.set_font("Times", size=12)
+    def guardar(nombre_archivo):
+        pdf.output(nombre_archivo)
+
+    def parrafo(parrafo):
+        pdf.write(th, parrafo + ' ')
+
+    def justificado(parrafo):
+        pdf.multi_cell(0,th,txt=parrafo, ln=1, border=0, align="J")
+        pdf.ln(th)
+    
+    def titulo(texto):
+        pdf.set_font("Times", 'B', size=14)
+        pdf.cell(0,0,txt=texto.upper(), ln=1, border=0, align="C")
+        pdf.set_font("Times", size=12)
+        pdf.ln(th)
+
+    def texto_negrilla(texto):
+        pdf.set_font("Times", 'B', size=12)
+        pdf.cell(0,0,txt=texto, ln=1, border=0, align="J")
+        pdf.set_font("Times", size=12)
+        pdf.ln(th)
+
+# totos estos datos vienen de la base de datos
+# ===========================================
+    nombre_estudiante = estudiante.__str__()
+    carnet_est = estudiante.carnet
+    extension_est = estudiante.extension
+    registro_est = estudiante.registro_uni
+    celular_est = estudiante.celular
+    correo_est = estudiante.correo
+    celular_tutor = estudiante.tutor.celular
+    correo_tutor = estudiante.tutor.correo
+    progreso_est = estudiante.progreso.nivel.__str__()
+    docente = estudiante.grupo_doc.__str__()
+    grupo_docente = estudiante.grupo_doc.grupo
+    tutor = estudiante.tutor.__str__()
+    usuario = 'nadie'
+    correo_usuario= 'fdsa'
+    http_host = 'http'
+# estatico, no se mueve, a menos que sea por personalizacion
+# ******************** INICIO DEL DOCUMENTO *******************
+# Titulo 
+    titulo('Plantilla de Avance')
+    linea()
+# Datos 
+    text_left('Estudiante: ' + nombre_estudiante)
+    text_left('Tutor: ' + tutor)
+    text_left('Nombre del Proyecto: ' + estudiante.proyectodegrado.titulo )
+# Tabla
+    spacing = 1
+    letra = 3
+    data = [['First Name', 'Last Name', 'email', 'zip'],
+            ['Mike', 'Driscoll', 'mike@somewhere.com', '55555'],
+            ['John', 'Doe', 'jdoe@doe.com', '12345'],
+            ['Nina', 'Ma', 'inane@where.com', '54321']
+            ]
+    col_width = pdf.w / 4.9
+    row_height = pdf.font_size
+    for row in data:
+        for item in row:
+            pdf.cell(col_width, row_height*spacing, txt=item, border=1)
+        pdf.ln(row_height*spacing)
+    col_num = letra * 4
+    ancho = 170
+    col_1 = 50
+    col_2 = 30
+    col_3 = 30
+    col_4 = 70
+    # pdf.cell(col_num, row_height*spacing, txt='Tema',border=1)
+    pdf.cell(col_1, txt='Capitulo 1: Introduccion',border=1)
+    pdf.multi_cell(w=col_2,txt='4 de marzo\n del 2021',border=1)
+    pdf.cell(col_1, txt='Capitulo 1: Introduccion',border=1)
+    pdf.multi_cell(w=col_3,txt='Firma del tutor',border=1)
+    pdf.multi_cell(w=col_4,txt='La referencia bibliografica debe estar de',border=1)
+    
+# Fecha
+    linea(2)
+    fecha_left()
+    guardar(buffer)
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter, inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph,Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.pdfgen import canvas
+from proyecto.models import MensajeTutorRevisarProyecto
+def docReporteCapitulos(buffer, estudiante):
+    # doc = SimpleDocTemplate(buffer, pagesize=letter)
+    def fecha():
+        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        hoy = date.today()
+        dia = hoy.day.__str__()
+        mes = meses[hoy.month - 1]
+        year = hoy.year.__str__()
+        fecha_hoy = dia + ' de ' + mes + ' del ' + year
+        return fecha_hoy
+    def fecha_mes(fecha):
+        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        year_mes_dia = fecha.split('-')
+        year = year_mes_dia[0]
+        mes = meses[int(year_mes_dia[1])- 1]
+        dia = year_mes_dia[2]
+        fecha_cadena = dia + ' de ' + mes + ' del ' + year
+        return fecha_cadena
+
+    styleSheet = getSampleStyleSheet()
+
+    doc = SimpleDocTemplate(buffer, pagesize=letter,leftMargin=10,
+        rightMargin=10,topMargin=20,bottomMargin=20)
+    story = []
+    style = styleSheet['BodyText']
+
+    header = Paragraph("<para align=center><b><font size=12>Plantilla de Avance</font></b></para>", style)
+
+    # p = Paragraph('* ' +'''La referencia bibliografica debe estar de acuerdo con 
+    # las nomas apa ademas se seguir escribiendo. trabajando \n mas'''+'* '+ '''otro parrafo
+    # de esos largos que no queda otra que aumentar''',style)
+
+    nombre_estudiante = estudiante.__str__()
+    nombre_tutor = estudiante.tutor.__str__()
+    titulo_perfil = estudiante.registroperfil.titulo.upper()
+    salas = estudiante.salarevisarproyecto_set.all()
+
+    data1 = [
+        [header,'','',''],                    
+        [Paragraph('<b>Estudiante: </b>'+nombre_estudiante), '',Paragraph('<b>Tutor: </b>Ing. '+nombre_tutor),''],
+        [Paragraph('<b>Proyecto de Grado: </b>'+titulo_perfil),'','',''],
+        ['Tema','Fecha','Firma Tutor','Observaciones'],
+        # [Paragraph('Capitulo 1: Introducción'), '4 de marzo de 2021', '', p],
+        # [Paragraph('Capitulo 2: Marco Teórico'), '25 de marzo de 2021', '', p],
+        # [Paragraph('Capitulo 3: Desarrollo del proyecto de grado'), fecha(), '', p],
+    ]
+    # generacion de las observaciones
+    data2 = []
+    for sala in salas:
+        mensajes_tut = MensajeTutorRevisarProyecto.objects.filter(sala=sala).order_by('-fecha_creacion')
+        observaciones = []
+        for mensaje in mensajes_tut:
+            observacion = mensaje.texto
+            observaciones.append('*'+observacion)
+            enter = "<br/><br/>"
+            obs_union = enter.join(observaciones)
+            obs_parrafo = Paragraph(obs_union)
+        fecha_ultima_obs = mensajes_tut[0].fecha_creacion.date().__str__()
+        data_aux = [Paragraph(sala.sala), fecha_mes(fecha_ultima_obs), '', obs_parrafo]
+        data2.append(data_aux)
+
+    data = data1 + data2
+
+    tblstyle = TableStyle([
+        ('SPAN', (0,0), (-1,0)),
+        ('SPAN', (0,1), (1,1)),
+        ('SPAN', (2,1), (3,1)),
+        ('SPAN', (0,2), (-1,2)),
+        ('INNERGRID', (0,3), (-1,-1), 0.3, colors.black),
+        ('BOX', (0,3), (-1,-1), 0.3, colors.black),
+        ('FONTNAME', (0,3),(-1,3),'Helvetica-Bold'),
+        ('ALIGN',(0,3),(-1,-1),'CENTER'),
+        ('VALIGN',(0,3),(-1,-1),'MIDDLE'),
+        ('BACKGROUND',(0,3),(-1,3), colors.HexColor('#f6ddea')),
+    ])
+
+    for n in range(5,len(data)+1,2):
+        tblstyle.add('BACKGROUND',(0,n),(-1,n), colors.HexColor('#f6ddea'))
+
+    t = Table(data)
+    t.setStyle(tblstyle)
+    story.append(t)
+    # write the document to disk
+    # aW = 460
+    # aH = 720
+
+    # w, h = header.wrap(aW, aH)
+    # header.drawOn(canv, 72, aH)
+    # aH = aH - h
+    # w, h = t.wrap(aW, aH)
+    # t.drawOn(canv, 72, aH-h)
+    doc.build(story)

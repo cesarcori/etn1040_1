@@ -990,8 +990,9 @@ def listaEstudiantes(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['director'])
 def listaEstudianteTitulado(request):
+    grupo = request.user.groups.get().name
     datos_est = DatosEstudianteTitulado.objects.all().order_by('fecha_conclusion')
-    context = {'datos_est':datos_est}
+    context = {'grupo':grupo,'datos_est':datos_est}
     return render(request, 'proyecto/lista_estudiante_titulado.html', context)
 
 @login_required(login_url='login')
@@ -1290,7 +1291,7 @@ def paso3(request):
             user_est.tutor = DatosTutor.objects.get(correo=correo)
             user_est.save()
             # creacion de salas tutor-estudiante
-            id_tutor = str(DatosTutor.objects.last().usuario_id)
+            id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
             id_estudiante = str(request.user.id)
             nombre_sala = id_tutor + id_estudiante
             Sala.objects.create(nombre_sala = nombre_sala)
@@ -1321,7 +1322,7 @@ def paso3(request):
             user_est.tutor = DatosTutor.objects.get(correo=correo)
             user_est.save()
             # creacion de salas tutor-estudiante
-            id_tutor = str(DatosTutor.objects.last().usuario_id)
+            id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
             id_estudiante = str(request.user.id)
             nombre_sala = id_tutor + id_estudiante
             Sala.objects.create(nombre_sala = nombre_sala)
@@ -1971,6 +1972,15 @@ def salaRevisarProyEstTut(request, pk_sala):
             'mensajes_tut':mensajes_tut,
             }
     return render(request, 'proyecto/sala_revisar_proy_est_tut.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante',])
+def reporteCapitulos(request, id_est):
+    buffer = io.BytesIO()
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    docReporteCapitulos(buffer, estudiante)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

@@ -80,6 +80,7 @@ urlpatterns = [
     path('paso4/cronograma-actividad/registrar', views.cronograma_registrar, name='cronograma_registrar'),
     path('paso5/', views.paso5, name='paso5'),
     path('paso5/cronograma-control/', views.cronograma_control, name='cronograma_control'),
+    path('plantilla-revision/<int:id_est>', views.reporteCapitulos, name='reporte_capitulos'),
     path('entrega-proyecto/', views.entregaProyecto, name='entrega_proyecto'),
     path('entrega-proyecto/crear-sala-revisar-proy', views.crearSalaRevisarProyecto, name='crear_sala_proyecto'),
     path('sala-rev-proy/<int:pk_sala>/',views.salaRevisarProyecto,name='sala_revisar_proyecto'),

@@ -1,6 +1,8 @@
 {% if grupo == 'docente' or grupo == 'tutor' %}
     {% if estudiante.progreso.nivel >= 100 %}
-<h5>El estudiante Concluyó con Exito, en 6 meses se eliminará su cuenta</h5>
+        <br>
+        <h3 class='text-center'><strong>El estudiante Concluyó con Exito, en 6 meses se eliminará su cuenta</strong></h3>
+        <br>
     {% endif %}
 {% else %}
 <h5>{{mensaje_limite}}</h5><br>

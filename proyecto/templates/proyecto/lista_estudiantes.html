@@ -26,8 +26,15 @@
 <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
 {%endif%}
 
-{%if grupo == 'docente' or grupo == 'director'%}
+{%if grupo == 'docente' %}
 <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+{%endif%}
+
+{%if grupo == 'director' and est.progreso.nivel < 100%}
+<td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+<th scope="row">{{est.celular}}</th>
+<th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
+<td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
 {%endif%}
 
 {%if grupo == 'tutor' %}
@@ -46,9 +53,13 @@
 {% if not grupo == 'director' %}
 <td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
 {% endif %}
+
+{% if grupo == 'tutor' or grupo == 'docente' or grupo == 'administrador' %}
 <th scope="row">{{est.celular}}</th>
 <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
 <td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
+{% endif %}
+
     </tr>
 {% endfor %}
   </tbody>
