@@ -20,12 +20,15 @@ from .funciones import *
 
 from random import randint
 from datetime import timedelta
+
 # busqueda
-# import pandas as pd
-# from sklearn.feature_extraction.text import TfidfVectorizer
-# from sklearn.metrics.pairwise import linear_kernel
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
+from nltk.corpus import stopwords
+
 # import nltk
-# from nltk.corpus import stopwords
+# from pandas import read_csv
 
 
 def bienvenidos(request):

@@ -13,7 +13,7 @@ class SolicitudInvitado(models.Model):
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     carnet = models.CharField(max_length=50, null=True, unique=True)
-    extension = models.CharField(max_length=50, null=True, unique=True)
+    extension = models.CharField(max_length=50, null=True)
     registro_uni = models.CharField(max_length=50, null=True, unique=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)

@@ -672,7 +672,9 @@ def docReporteCapitulos(buffer, estudiante):
     # generacion de las observaciones
     data2 = []
     for sala in salas:
-        mensajes_tut = MensajeTutorRevisarProyecto.objects.filter(sala=sala).order_by('-fecha_creacion')
+        mensajes = MensajeTutorRevisarProyecto.objects.filter(sala=sala).order_by('-fecha_creacion')
+        mensajes_tut = [mensa for mensa in mensajes if mensa.usuario == estudiante.tutor.usuario]
+        
         observaciones = []
         for mensaje in mensajes_tut:
             observacion = mensaje.texto
@@ -680,10 +682,16 @@ def docReporteCapitulos(buffer, estudiante):
             enter = "<br/><br/>"
             obs_union = enter.join(observaciones)
             obs_parrafo = Paragraph(obs_union)
-        fecha_ultima_obs = mensajes_tut[0].fecha_creacion.date().__str__()
-        data_aux = [Paragraph(sala.sala), fecha_mes(fecha_ultima_obs), '', obs_parrafo]
+        # en el caso que no exista observaciones por el tutor
+        if mensajes_tut:
+            fecha_ultima_obs = mensajes_tut[0].fecha_creacion.date().__str__()
+            data_aux = [Paragraph(sala.sala), fecha_mes(fecha_ultima_obs), '', obs_parrafo]
+        else:
+            fecha_ultima_obs = ''
+            data_aux = ['','','','']
         data2.append(data_aux)
-
+    # print(salas)
+    # print(mensajes_tut)
     data = data1 + data2
 
     tblstyle = TableStyle([

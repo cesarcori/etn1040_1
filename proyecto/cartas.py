@@ -432,7 +432,6 @@ def carta_solicitud(buffer, info_estu):
 # guardar documento
     guardar(buffer)
 
-
 def carta_final(buffer, estudiante):
     pdf = FPDF(format="letter")
     pdf.add_page()
