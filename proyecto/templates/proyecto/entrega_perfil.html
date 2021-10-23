@@ -51,20 +51,20 @@
 </td>      
 <td>
 
-{% if no_visto.0 == 0%}
-<a class="btn btn-primary position-relative" href="{% url 'sala_revisar_est_doc' s.id %}">Observación</a>
-{% else %}
-<a href="{% url 'sala_revisar_est_doc' s.id %}" type="button" class="btn btn-primary position-relative">
-    Observación
-  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-    {{no_visto.0}}
-    <span class="visually-hidden">unread messages</span>
-  </span>
-</a>
-{% endif %}
-{%if s.material_corregido_docente %}
-<a class="btn btn-primary" href="{{ s.material_corregido_docente.url }}">Perfil Corregido</a>
-{% endif %}
+    {% comment %}{% if no_visto.0 == 0%}{% endcomment %}
+    {% comment %}<a class="btn btn-primary position-relative" href="{% url 'sala_revisar_est_doc' s.id %}">Observación</a>{% endcomment %}
+    {% comment %}{% else %}{% endcomment %}
+    {% comment %}<a href="{% url 'sala_revisar_est_doc' s.id %}" type="button" class="btn btn-primary position-relative">{% endcomment %}
+        {% comment %}Observación{% endcomment %}
+    {% comment %}<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{% endcomment %}
+        {% comment %}{{no_visto.0}}{% endcomment %}
+        {% comment %}<span class="visually-hidden">unread messages</span>{% endcomment %}
+    {% comment %}</span>{% endcomment %}
+    {% comment %}</a>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{%if s.material_corregido_docente %}{% endcomment %}
+    {% comment %}<a class="btn btn-primary" href="{{ s.material_corregido_docente.url }}">Perfil Corregido</a>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
 </td>      
 <td>
 {% if no_visto.1 == 0%}
