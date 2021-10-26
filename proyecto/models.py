@@ -135,6 +135,20 @@ class DatosTutor(models.Model):
         self.nombre_completo = self.nombre + ' ' + self.apellido
         return self.nombre_completo
 
+class DatosTribunal(models.Model):
+    usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    correo = models.CharField(max_length=50, null=True, unique=True)
+    nombre = models.CharField(max_length=50, null=True)
+    apellido = models.CharField(max_length=50, null=True)
+    celular = models.CharField(max_length=50, null=True)
+    firma = models.ImageField(default='firmas/firma_default.jpg', upload_to='firmas/', null=True)
+    imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
+    fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        self.nombre_completo = self.nombre + ' ' + self.apellido
+        return self.nombre_completo
+
 class DatosEstudiante(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)

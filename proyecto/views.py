@@ -22,10 +22,10 @@ from random import randint
 from datetime import timedelta
 
 # busqueda
-import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-from nltk.corpus import stopwords
+# import pandas as pd
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.metrics.pairwise import linear_kernel
+# from nltk.corpus import stopwords
 
 # import nltk
 # from pandas import read_csv
@@ -226,6 +226,15 @@ def tutor(request):
     datos_est = request.user.datostutor.datosestudiante_set.all().order_by('apellido')
     context = {'datos_est':datos_est,'grupo':grupo}
     return render(request, 'proyecto/tutor.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tribunal'])
+def tribunal(request):
+    grupo = 'tribunal'
+    # datos_est = request.user.datostutor.datosestudiante_set.all().order_by('apellido')
+    datos_est = ''
+    context = {'datos_est':datos_est,'grupo':grupo}
+    return render(request, 'proyecto/tribunal.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['director'])
@@ -509,6 +518,14 @@ def editarPerfil(request):
         form = DatosDirectorForm(instance=director)
         if request.method == "POST":
             form = DatosDirectorForm(request.POST, request.FILES, instance=director)
+            if form.is_valid():
+                form.save()
+                return redirect('perfil')
+    if grupo == 'tribunal':
+        tribunal = usuario.datostribunal
+        form = DatosTribunalForm(instance=tribunal)
+        if request.method == "POST":
+            form = DatosTribunalForm(request.POST, request.FILES, instance=tribunal)
             if form.is_valid():
                 form.save()
                 return redirect('perfil')
@@ -976,6 +993,33 @@ def enlaceTutor(request, pk_tutor):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','administrador','estudiante','director'])
+def enlaceTribunal(request, pk_tribunal):
+    grupo = str(request.user.groups.get())
+    tribunal = DatosTribunal.objects.get(id=pk_tribunal)
+    if grupo == 'docente':
+        objeto_tutor_estu = request.user.datosdocente.datosestudiante_set
+        existe_doc = objeto_tutor_estu.filter(tutor_id=pk_tutor).exists()
+        if existe_doc:
+            context = {'grupo': grupo, 'tutor':tutor}
+            return render(request, 'proyecto/enlace_tutor.html', context)
+        else:
+            return redirect('error_pagina')
+    elif grupo == 'administrador':
+        context = {'grupo': grupo, 'tribunal':tribunal}
+        return render(request, 'proyecto/enlace_tribunal.html', context)
+    elif grupo == 'director':
+        context = {'grupo': grupo, 'tribunal':tribunal}
+        return render(request, 'proyecto/enlace_tribunal.html', context)
+    elif grupo == 'estudiante':
+        id_tutor = request.user.datosestudiante.tutor.id
+        if id_tutor == pk_tutor:
+            context = {'grupo': grupo, 'tutor':tutor}
+            return render(request, 'proyecto/enlace_tutor.html', context)
+        else:
+            return redirect('error_pagina')
+
+@login_required(login_url='login')
 @admin_only
 def registroEstudiante(request):
     grupo = str(request.user.groups.get())
@@ -1113,6 +1157,44 @@ def agregarTutor(request):
                 messages.success(request, 'Tutor Registrado con exito!!!')
     context = {'form':form}
     return render(request, 'proyecto/agregar_tutor.html', context)
+
+@login_required(login_url='login')
+@admin_only
+def agregarTribunal(request):
+    form = TribunalForm
+    if request.method == 'POST':
+        form = TribunalForm(request.POST)
+        if form.is_valid():
+            correo = form.cleaned_data.get('correo')
+            usuario = correo.split('@')[0] + "_tribunal"
+            password = usuario
+            if User.objects.filter(email=correo).exists():
+                messages.info(request,
+            'No se agregó al tribunal, un usuario usa este mismo correo\
+            electrónico')
+            else:                 
+                # creacion del usuario
+                User.objects.create_user(
+                        username = usuario,
+                        email = correo,
+                        first_name = correo,
+                        last_name = correo,
+                        password = password,
+                        )
+                group = Group.objects.get(name='tribunal')
+                user = User.objects.get(username=usuario)
+                user.groups.add(group)
+                # creacion de datos
+                DatosTribunal.objects.create(
+                        usuario = User.objects.get(username=usuario),
+                        correo = correo,
+                        nombre = correo,
+                        apellido = correo,
+                        celular = 'sin llenar',
+                        )
+                messages.success(request, 'Tribunal Registrado con exito!!!')
+    context = {'form':form}
+    return render(request, 'proyecto/agregar_tribunal.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -2285,6 +2367,14 @@ def proyectoCorregido (request, id_sala):
         # return redirect('paso5')
     context = {'grupo': grupo,'form':form,'sala':sala}
     return render(request, 'proyecto/proyecto_corregido.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['director','administrador',])
+def listaTribunales(request):
+    grupo = request.user.groups.get().name
+    tribunales = DatosTribunal.objects.all().order_by('apellido')
+    context = {'grupo':grupo, 'tribunales':tribunales}
+    return render(request, 'proyecto/lista_tribunales.html', context)
 
 def error(request):
     return render(request, 'proyecto/error_pagina.html')

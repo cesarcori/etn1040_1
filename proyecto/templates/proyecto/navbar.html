@@ -82,6 +82,19 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'lista_tutores' %}">Tutor</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'lista_tribunales' %}">Tribunales</a>
+            </li>
+        {% elif grupo == 'tribunal'%}
+            <li class="nav-item">
+                <a class="nav-link" href="/">Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'busqueda' %}">Búsqueda PG</a>
+            </li>
         {% else %}
             <li class="nav-item">
                 <a class="nav-link" href="/">Inicio</a>
@@ -101,6 +114,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'lista_tutores' %}">Tutor</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'lista_tribunales' %}">Tribunales</a>
+            </li>
         {% endif %}
     </ul>
   </div>
@@ -110,7 +126,7 @@
 {% elif grupo == 'estudiante'%}
     <span class="hello-msg">Bienvenido, Futuro(a) Ing. {{ request.user.first_name }} </span>
 {% elif grupo == 'administrador' %}
-    <span class="hello-msg">Bienvenido, Don {{ request.user.first_name }} </span>
+    <span class="hello-msg">Bienvenido, Administrador {{ request.user.first_name }} </span>
 {% elif grupo == 'director' %}
     <span class="hello-msg">Bienvenido, Director {{ request.user.first_name }} </span>
 {% endif %}

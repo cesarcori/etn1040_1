@@ -301,6 +301,11 @@ class DatosDirectorForm(forms.ModelForm):
         model = DatosDirector
         fields = '__all__'
         exclude =['usuario']
+class DatosTribunalForm(forms.ModelForm):
+    class Meta:
+        model = DatosTribunal
+        fields = '__all__'
+        exclude = ['usuario','correo','firma']
 class BusquedaProyectoForm(forms.ModelForm):
     class Meta:
         model = BusquedaProyecto
@@ -331,6 +336,12 @@ class TutorForm(forms.ModelForm):
         model = DatosTutor
         fields = '__all__'
         exclude = ['usuario','imagen_perfil','celular']
+class TribunalForm(forms.ModelForm):
+    class Meta:
+        model = DatosTribunal
+        fields = ['correo']
+        # fields = '__all__'
+        # exclude = ['usuario','imagen_perfil','celular',]
 class AuspicioForm(forms.ModelForm):
     class Meta:
         model = Auspicio

@@ -1,0 +1,6 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h2>Bienvenido Tribunal: Ing. {{request.user.datostribunal.nombre}}
+    {{request.user.datostribunal.apellido}}</h2> 
+{% include 'proyecto/lista_estudiantes.html' %}
+{%endblock%}

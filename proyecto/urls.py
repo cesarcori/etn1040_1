@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('docente/', views.docente, name='docente'),
     path('tutor/', views.tutor, name='tutor'),
+    path('tribunal/', views.tribunal, name='tribunal'),
     path('director/', views.director, name='director'),
     path('firmas/', views.firmas, name='firmas'),
     path('firmas/cargar-firma/', views.cargarFirma, name='cargar_firma'),
@@ -49,13 +50,16 @@ urlpatterns = [
         name='enlace_solicitante'),
     path('info-doc/<int:pk_doc>/', views.enlaceDocente, name='enlace_docente'),
     path('info-tut/<int:pk_tutor>/', views.enlaceTutor, name='enlace_tutor'),
+    path('info-tri/<int:pk_tribunal>/', views.enlaceTribunal, name='enlace_tribunal'),
     path('lista_est/', views.listaEstudiantes, name='lista_estudiantes'),
     path('lista_est_tit/', views.listaEstudianteTitulado, name='lista_estudiante_titulado'),
     path('lista_doc/', views.listaDocentes, name='lista_docentes'),
     path('lista_tut/', views.listaTutores, name='lista_tutores'),
+    path('lista_tri/', views.listaTribunales, name='lista_tribunales'),
 
     path('agregar-doc/', views.agregarDocente, name='agregar_docente'),
     path('agregar-tut/', views.agregarTutor, name='agregar_tutor'),
+    path('agregar-tri/', views.agregarTribunal, name='agregar_tribunal'),
 
     path('paso1/', views.paso1, name='paso1'),
     path('paso1/conf-reg/<int:id_reg>', views.confirmarReglamento, name='confirmar_reglamento'),

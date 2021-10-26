@@ -23,6 +23,8 @@
 			<img class="profile-pic" src="{{request.user.datosestudiante.imagen_perfil.url}}" >
         {% elif grupo == 'director' %}
 			<img class="profile-pic" src="{{request.user.datosdirector.imagen_perfil.url}}" >
+        {% elif grupo == 'tribunal' %}
+			<img class="profile-pic" src="{{request.user.datostribunal.imagen_perfil.url}}" >
         {% endif %}
 		</div>
 	</div>
@@ -73,6 +75,11 @@
     Apellido: {{ request.user.datosdirector.apellido }}<br>
     Celular: {{ request.user.datosdirector.celular }}<br>
     Correo Electrónico: {{ request.user.datosdirector.correo}}<br>
+{%elif grupo == 'tribunal' %}
+    Nombre: {{ request.user.datostribunal.nombre }}<br>
+    Apellido: {{ request.user.datostribunal.apellido }}<br>
+    Celular: {{ request.user.datostribunal.celular }}<br>
+    Correo Electrónico: {{ request.user.datostribunal.correo}}<br>
 {%endif%}
 		</div>
 	</div>
