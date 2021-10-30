@@ -1,0 +1,10 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h3>Solicitar a Jefatura de carrera la designacion de 2 tribunales.</h3>
+<form action='' method='POST'>
+    {% csrf_token %}
+    <a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.id %}>Cancelar</a>
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Confirmar</button>
+</form> 
+{% endblock %}

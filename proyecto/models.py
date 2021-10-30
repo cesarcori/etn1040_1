@@ -167,11 +167,21 @@ class DatosEstudiante(models.Model):
     vb_perfil_tutor = models.BooleanField(default=False)
     vb_proyecto_docente = models.BooleanField(default=False)
     vb_proyecto_tutor = models.BooleanField(default=False)
+    solicitud_tribunal_docente = models.BooleanField(default=False)
+    tribunales = models.ManyToManyField(DatosTribunal)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         self.nombre_completo = self.nombre + ' ' + self.apellido
         return self.nombre_completo
+
+class Tribunal_1_Estudiante(models.Model):
+    usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    tribunal_1 = models.ForeignKey(DatosTribunal, null=True, blank=True, on_delete=models.CASCADE)
+
+class Tribunal_2_Estudiante(models.Model):
+    usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    tribunal_2 = models.ForeignKey(DatosTribunal, null=True, blank=True, on_delete=models.CASCADE)
 
 class DatosEstudianteTitulado(models.Model):
     correo = models.CharField(max_length=50, null=True, unique=True)

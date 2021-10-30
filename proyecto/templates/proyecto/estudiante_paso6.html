@@ -1,6 +1,8 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 
+<h3>Tribunal</h3>
+<p><a href={%url 'solicitud_tribunal' estudiante.id %}>Solicitud de tribunal</a>
 <p><a href={%url 'carta_final' estudiante.id %}>Carta de Conclusión</a>
 <i class="fas text-success fa-check"></i></p>
 <p><a href={%url 'ultimos_formularios'%}>Generación de los 3 formularios</a>

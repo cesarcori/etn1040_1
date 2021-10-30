@@ -18,7 +18,27 @@
 {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
 <a class="btn btn-success" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
 {%endif%}
-{%if grupo == 'docente' and not calificacion == None%}
+{%if grupo == 'docente' and not estudiante.solicitud_tribunal_docente %}
+<a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' estudiante.id %}>Solicitar Tribunal</a>
+{% elif grupo == 'docente' and estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
+<div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura</div>
+{% elif grupo == 'docente' and estudiante.tribunales.count == 2%}
+<div class="d-inline p-2 bg-success text-white">Tribunal asignado</div><br>
+<a href={% url 'enlace_tribunal' estudiante.tribunales.all.0.id %}>{{estudiante.tribunales.all.0}}</a><br>
+<a href={% url 'enlace_tribunal' estudiante.tribunales.all.1.id %}>{{estudiante.tribunales.all.1}}</a><br>
+{% elif grupo == 'director' and estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
+<p>
+<div class="d-inline p-2 bg-danger text-white">El docente ETN 1040 Ing. 
+    {{estudiante.grupo_doc}} solicito tribunales para el estudiante:
+    {{estudiante}}</div>
+<a class="btn btn-warning" href={% url 'asignar_tribunal' estudiante.id %}>Asignar Tribunal</a>
+</p>
+{% elif grupo == 'director' or grupo == 'tutor' and estudiante.tribunales.count == 2%}
+<div class="d-inline p-2 bg-success text-white">Tribunal asignado</div><br>
+<a href={% url 'enlace_tribunal' estudiante.tribunales.all.0.id %}>{{estudiante.tribunales.all.0}}</a><br>
+<a href={% url 'enlace_tribunal' estudiante.tribunales.all.1.id %}>{{estudiante.tribunales.all.1}}</a><br>
+{%endif%}
+{%if grupo == 'docente' or grupo == 'director' and not calificacion == None%}
 <p>
 <strong>Calificación del Proyecto de Grado</strong><br>
 Tiempo Elaboración (Max. 9%): <strong>{{proyecto.nota_tiempo_elaboracion}}</strong><br>
@@ -91,7 +111,7 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
         {% if estudiante.vb_proyecto_docente%}
         <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
         {% else %}
-            {% if salas_proy%}
+            {% if salas_proy and estudiante.vb_proyecto_tutor %}
                 <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
                 data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
                 Dar Visto Bueno</a>

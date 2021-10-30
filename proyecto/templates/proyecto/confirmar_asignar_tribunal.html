@@ -1,0 +1,10 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h3>Se asignara al Ing. {{tribunal}} como tribunal para el estudiante: {{estudiante}}</h3>
+<form action='' method='POST'>
+    {% csrf_token %}
+    <a class="btn btn-danger" href={%url 'asignar_tribunal' estudiante.id %}>Cancelar</a>
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Confirmar</button>
+</form> 
+{% endblock %}

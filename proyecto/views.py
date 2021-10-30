@@ -245,6 +245,34 @@ def director(request):
     return render(request, 'proyecto/director.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['director'])
+def asignarTribunal(request, id_est):
+    grupo = 'director'
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    tribunales = DatosTribunal.objects.all().order_by('apellido')
+    context = {'grupo':grupo, 'tribunales':tribunales,
+            'estudiante':estudiante}
+    return render(request, 'proyecto/asignar_tribunal.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['director'])
+def confirmarAsignarTribunal(request, id_est, id_trib):
+    grupo = 'director'
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    tribunal = DatosTribunal.objects.get(id=id_trib)
+    if request.method == 'POST':
+        confirmar_estudio = request.POST['confirmar']
+        if confirmar_estudio == 'si':
+            if estudiante.tribunales.count() < 2:
+                estudiante.tribunales.add(tribunal)
+            else:
+                print('ya tiene dos tribunales')
+            return redirect('asignar_tribunal', id_est=id_est)
+    context = {'grupo':grupo, 'tribunal':tribunal,
+            'estudiante':estudiante}
+    return render(request, 'proyecto/confirmar_asignar_tribunal.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor','docente'])
 def firmas(request):
     grupo = request.user.groups.get().name
@@ -2081,6 +2109,15 @@ def paso6(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
+def solicitudTribunal(request, id_est):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    context = {'grupo':grupo,'estudiante':estudiante}
+    return render(request, 'proyecto/solicitud_tribunal.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
 @permitir_paso5()
 def registroProyecto(request):
     grupo = request.user.groups.get().name
@@ -2143,6 +2180,20 @@ def calificarProyecto(request, id_est):
         form = CalificarProyectoForm
     context = {'grupo': grupo,'estudiante':estudiante, 'form': form}
     return render(request, 'proyecto/calificar_proyecto.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente'])
+def solicitarTribunalDocente(request, id_est):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    if request.method == 'POST':
+        confirmar = request.POST['confirmar']
+        if confirmar == 'si':
+            estudiante.solicitud_tribunal_docente = True
+            estudiante.save()
+        return redirect('progreso_estudiante', pk_est=id_est)
+    context = {'grupo': grupo,'estudiante':estudiante}
+    return render(request, 'proyecto/confirmar_sol_trib.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

@@ -17,6 +17,8 @@ urlpatterns = [
     path('tutor/', views.tutor, name='tutor'),
     path('tribunal/', views.tribunal, name='tribunal'),
     path('director/', views.director, name='director'),
+    path('asignar-tribu/<int:id_est>', views.asignarTribunal, name='asignar_tribunal'),
+    path('confi-asign-tr/<int:id_est>/<int:id_trib>', views.confirmarAsignarTribunal, name='confirmar_asignar_tribunal'),
     path('firmas/', views.firmas, name='firmas'),
     path('firmas/cargar-firma/', views.cargarFirma, name='cargar_firma'),
     path('tutor/solicitud-tutoria/<int:id_est>', views.solicitudTutoria, name='solicitud_tutoria'),
@@ -94,6 +96,7 @@ urlpatterns = [
     path('paso5/proyecto/', views.ver_proyecto_grado, name='ver_proyecto_grado'),
 
     path('paso6/', views.paso6, name='paso6'),
+    path('paso6/solicitud-tribu/<int:id_est>', views.solicitudTribunal, name='solicitud_tribunal'),
     path('paso6/carta-final/<int:id_est>', views.carta_final_tutor, name='carta_final'),
     path('paso6/ultimos-formularios/', views.ultimosFormularios, name='ultimos_formularios'),
     path('paso6/formulario-material-proyecto-grado/<int:id_est>', views.formulario_2, name='formulario_2'),
@@ -102,6 +105,7 @@ urlpatterns = [
     path('paso6/formulario-4/<int:id_est>', views.formulario_4, name='formulario_4'),
 
     path('calificar-proyecto/<int:id_est>/', views.calificarProyecto, name='calificar_proyecto'),
+    path('solicitar-tribunal-d/<int:id_est>/', views.solicitarTribunalDocente, name='solicitar_tribunal_docente'),
     
     path('material-para-est/', views.materialParaEst, name='material_para_estudiante'),
 

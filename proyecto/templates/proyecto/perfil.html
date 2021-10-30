@@ -31,15 +31,18 @@
 	<div class="col-md-9">
 		<div class="card card-body">
 {% if grupo == 'administrador'%}
-    <p>Nombre: {{ request.user.datosadministrador.nombre }}<br>
+    <p>
+    Usuario: {{ request.user.datosadministrador.usuario }}<br> 
+    Nombre: {{ request.user.datosadministrador.nombre }}<br>
     Apellido: {{ request.user.datosadministrador.apellido }}<br>
     Celular: {{ request.user.datosadministrador.celular }}<br>
     Correo Electrónico: {{ request.user.datosadministrador.correo}}</p>
 {%elif grupo == 'estudiante' %}
-<p>Nombre: {{ request.user.datosestudiante.nombre }}<br>
+<p>
+    Usuario: {{ request.user.datosestudiante.usuario }}<br> 
+    Nombre: {{ request.user.datosestudiante.nombre }}<br>
     Apellido: {{ request.user.datosestudiante.apellido }}<br>
     Celular: {{ request.user.datosestudiante.celular }}<br> 
-    Usuario: {{ request.user.datosestudiante.usuario }}<br> 
     Correo Electrónico: {{ request.user.datosestudiante.correo}}<br> 
     Cédula de Identidad: {{ request.user.datosestudiante.carnet}} {{request.user.datosestudiante.extension}}<br> 
     Registro Universitario: {{ request.user.datosestudiante.registro_uni}}<br> 
@@ -57,6 +60,7 @@
     {% endif %}
     <a href="{% url 'reporte_estudiante' request.user.datosestudiante.id %}">Reporte Actual</a>
 {%elif grupo == 'docente' %}
+    Usuario: {{ request.user.datosdocente.usuario }}<br> 
     Nombre: {{ request.user.datosdocente.nombre }}<br>
     Apellido: {{ request.user.datosdocente.apellido }}<br>
     Celular: {{ request.user.datosdocente.celular }}<br>
@@ -65,17 +69,20 @@
     Grupo : {{ request.user.datosdocente.grupo}}<br>
     Cantidad de Estudiantes: {{ request.user.datosdocente.datosestudiante_set.count}}<br>
 {%elif grupo == 'tutor' %}
+    Usuario: {{ request.user.datostutor.usuario }}<br> 
     Nombre: {{ request.user.datostutor.nombre }}<br>
     Apellido: {{ request.user.datostutor.apellido }}<br>
     Celular: {{ request.user.datostutor.celular }}<br>
     Correo Electrónico: {{ request.user.datostutor.correo}}<br>
     Cantidad de Estudiantes: {{ request.user.datostutor.datosestudiante_set.count}}<br>
 {%elif grupo == 'director' %}
+    Usuario: {{ request.user.datosdirector.usuario }}<br> 
     Nombre: {{ request.user.datosdirector.nombre }}<br>
     Apellido: {{ request.user.datosdirector.apellido }}<br>
     Celular: {{ request.user.datosdirector.celular }}<br>
     Correo Electrónico: {{ request.user.datosdirector.correo}}<br>
 {%elif grupo == 'tribunal' %}
+    Usuario: {{ request.user.datostribunal.usuario }}<br> 
     Nombre: {{ request.user.datostribunal.nombre }}<br>
     Apellido: {{ request.user.datostribunal.apellido }}<br>
     Celular: {{ request.user.datostribunal.celular }}<br>
