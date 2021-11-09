@@ -17,12 +17,16 @@
 {% endif %}
 
 {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
-    <a class="btn btn-success" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
+    <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
 {%endif%}
 {%if grupo == 'docente' and not estudiante.solicitud_tribunal_docente and estudiante.proyectodegrado and calificacion != None%}
     <a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' estudiante.id %}>Solicitar Tribunal</a>
-{% elif grupo == 'docente' and estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
-    <div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura</div>
+{% elif grupo == 'docente' or grupo == 'tutor' %}
+    {% if estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
+        <div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura</div>
+    {% elif estudiante.tribunales.count == 2%}
+    {% include 'proyecto/lista_tribunal_asignado.html'%}
+    {% endif %}
 {% elif grupo == 'docente' and estudiante.tribunales.count == 2%}
     <div class="d-inline p-2 bg-success text-white">Tribunal asignado</div><br>
     <a href={% url 'enlace_tribunal' estudiante.tribunales.all.0.id %}>{{estudiante.tribunales.all.0}}</a><br>
@@ -358,6 +362,17 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
                     {% endif %}
                 </tr>
                 <tr>
+                    {% if estudiante.vb_proyecto_tutor %}
+                    <td class='bg-success text-white'>
+                        <a target='_blank' href={%url 'carta_final' estudiante.id %} class='text-white text-underline-hover'>
+                            Carta de Conclusión</a></td>
+                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                    {% else %}
+                    <td class='bg-danger text-white'>Carta de Conclusión</td>
+                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                    {% endif %}
+                </tr>
+                <tr>
                     {% if estudiante.proyectodegrado%}
                     <td class='bg-success text-white'>
                         <a target='_blank' href="{{ estudiante.proyectodegrado.archivo.url }}"
@@ -372,22 +387,11 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
                 <tr>
                     {% if estudiante.proyectodegrado.calificacion %}
                     <td class='bg-success text-white'>
-                        <a target='_blank' href={%url 'carta_final' estudiante.id %} class='text-white text-underline-hover'>
-                            Carta de Conclusión</a></td>
+                        <a target='_blank' href={%url 'formulario_4' estudiante.id %} class='text-white text-underline-hover'>
+                            Formulario 2<br>Solicitud Nombramiento Tribunal</a></td>
                     <td class='bg-success text-white'><i class="fas fa-check"></i></td>
                     {% else %}
-                    <td class='bg-danger text-white'>Carta de Conclusión</td>
-                    <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
-                    {% endif %}
-                </tr>
-                <tr>
-                    {% if estudiante.proyectodegrado.calificacion%}
-                    <td class='bg-success text-white'>
-                        <a target='_blank' href={%url 'formulario_2' estudiante.id %} class='text-white text-underline-hover'>
-                            Formulario 2<br>Materia: Proyecto</a></td>
-                    <td class='bg-success text-white'><i class="fas fa-check"></i></td>
-                    {% else %}
-                    <td class='bg-danger text-white'>Formulario 2<br>Materia: Proyecto</td>
+                    <td class='bg-danger text-white'>Formulario 4<br>Solicitud Nombramiento Tribunal</td>
                     <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
                     {% endif %}
                 </tr>
@@ -403,13 +407,13 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
                     {% endif %}
                 </tr>
                 <tr>
-                    {% if estudiante.proyectodegrado.calificacion %}
+                    {% if estudiante.proyectodegrado.calificacion%}
                     <td class='bg-success text-white'>
-                        <a target='_blank' href={%url 'formulario_4' estudiante.id %} class='text-white text-underline-hover'>
-                            Formulario 4<br>Solicitud Nombramiento Tribunal</a></td>
+                        <a target='_blank' href={%url 'formulario_2' estudiante.id %} class='text-white text-underline-hover'>
+                            Formulario 4<br>Materia: Proyecto, abstract</a></td>
                     <td class='bg-success text-white'><i class="fas fa-check"></i></td>
                     {% else %}
-                    <td class='bg-danger text-white'>Formulario 4<br>Solicitud Nombramiento Tribunal</td>
+                    <td class='bg-danger text-white'>Formulario 2<br>Materia: Proyecto</td>
                     <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
                     {% endif %}
                 </tr>

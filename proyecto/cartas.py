@@ -518,7 +518,8 @@ def carta_final(buffer, estudiante):
     correo_tutor = estudiante.tutor.correo
     docente = estudiante.grupo_doc.__str__()
     tutor = estudiante.tutor.__str__()
-    titulo_proyecto = estudiante.proyectodegrado.titulo
+    # titulo_proyecto = estudiante.proyectodegrado.titulo
+    titulo_proyecto = estudiante.registroperfil.titulo
 
 # ===========================================
 # estatico, no se mueve, a menos que sea por personalizacion

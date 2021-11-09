@@ -2,16 +2,40 @@
 {% block content %}
 
 <h3>Tribunal</h3>
+
 {% if estudiante.tribunales.count < 2%}
-    <p><a href={%url 'solicitud_tribunal' estudiante.id %}>Solicitud de tribunal</a>
-{% else %}
+    {% comment %}<p><a href={%url 'solicitud_tribunal' estudiante.id %}>Solicitud de tribunal</a>{% endcomment %}
     <p>
-    <div class="d-inline p-1 bg-success text-white">Tribunal asignado</div><br>
-    {% for tribunal in estudiante.tribunales.all %}
-    <a href={% url 'enlace_tribunal' tribunal.id %}>{{tribunal}}</a><br>
-    {% endfor %}
+    {% if estudiante.solicitud_tribunal_docente %}
+    <div class="d-inline p-1 bg-primary text-white">El docente ya solicitó 
+        tribunales a jefatura, esperar a que el director asigne 2 tribunales.</div><br>
+    {% endif %}
+    <a href={%url 'formulario_4' estudiante.id %}>Formulario 2 - Solicitu Nombramiento Tribunal</a>
+    &nbsp; <a href="/media/formularios/form4.pdf">En Blanco</a>
     </p>
+{% else %}
+    {% comment %}<div class="d-inline p-1 bg-success text-white">Tribunal asignado</div><br>{% endcomment %}
+    {% include 'proyecto/lista_tribunal_asignado.html'%}
+    {% comment %}<table class="table table-striped">{% endcomment %}
+    {% comment %}<thead>{% endcomment %}
+        {% comment %}<tr>{% endcomment %}
+        {% comment %}<th scope="col">Tribunal asignado</th>{% endcomment %}
+        {% comment %}<th scope="col">Revisión</th>{% endcomment %}
+        {% comment %}<th scope="col">Visto Bueno</th>{% endcomment %}
+        {% comment %}</tr>{% endcomment %}
+    {% comment %}</thead>{% endcomment %}
+        {% comment %}<tbody>{% endcomment %}
+        {% comment %}{% for tribunal in estudiante.tribunales.all %}{% endcomment %}
+            {% comment %}<tr>{% endcomment %}
+            {% comment %}<td><a href={% url 'enlace_tribunal' tribunal.id %}>{{tribunal}}</a><br></td>{% endcomment %}
+            {% comment %}<td><a href=#>Ingresar</a></td>{% endcomment %}
+            {% comment %}<td><div class="d-inline p-1 bg-danger text-white">Sin Visto Bueno</div></td>{% endcomment %}
+            {% comment %}</tr>{% endcomment %}
+        {% comment %}{% endfor %}{% endcomment %}
+        {% comment %}</tbody>{% endcomment %}
+    {% comment %}</table>{% endcomment %}
 {% endif %}
+
 <p><a href={%url 'formulario_3' estudiante.id %}>Formulario 3 - Registro y Seguimiento </a>
 &nbsp; <a href="/media/formularios/form3.pdf">En Blanco</a>
 <a class='btn btn-warning' href={%url 'auspicio_f3' estudiante.id %}>Si tienes auspicio</a></p>

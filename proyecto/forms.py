@@ -158,6 +158,29 @@ class SalaRevisarProyectoForm(forms.ModelForm):
                 'texto': ('Detalles revisión:'),
 'material_estudiante': ('Subir Proyecto de Grado en pdf con los cambios resaltado en amarillo'),
                 }
+
+class SalaRevisarTribunalForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisarTribunal
+        fields = '__all__'
+        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar',
+                'material_corregido_docente','material_corregido_tutor',
+                'tribunal_rev','visto_bueno']
+        widgets = {
+    'sala': 
+    forms.TextInput(attrs={'class':'input-group input-group-lg',
+    'placeholder':'Asunto del Proyecto de Grado...'}),
+    'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+    'placeholder':'Escribe tus modificaciones que elaboraste en el Proyecto de Grado...',}),
+    'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
+    'material_estudiante': forms.FileInput(attrs={'class':'form-control'}),
+                }
+        labels = {
+                'sala': ('Asunto de la revisión:'),
+                'texto': ('Detalles revisión:'),
+'material_estudiante': ('Subir Proyecto de Grado en pdf con los cambios resaltado en amarillo'),
+                }
+
 class ProyectoCorregidoTutorForm(forms.ModelForm):
     class Meta:
         model = SalaRevisarProyecto

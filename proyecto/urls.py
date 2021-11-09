@@ -96,7 +96,9 @@ urlpatterns = [
     path('paso5/proyecto/', views.ver_proyecto_grado, name='ver_proyecto_grado'),
 
     path('paso6/', views.paso6, name='paso6'),
-    path('paso6/solicitud-tribu/<int:id_est>', views.solicitudTribunal, name='solicitud_tribunal'),
+    path('paso6/solicitud-tribu/int:id_est>', views.solicitudTribunal, name='solicitud_tribunal'),
+    path('paso6/entrega-tribu/<int:id_trib>/<int:id_est>', views.entregaTribunal, name='entrega_tribunal'),
+    path('entrega-tribu/crear-sala-revisar-trib', views.crearSalaRevisarTribunal, name='crear_sala_tribunal'),
     path('paso6/carta-final/<int:id_est>', views.carta_final_tutor, name='carta_final'),
     path('paso6/ultimos-formularios/', views.ultimosFormularios, name='ultimos_formularios'),
     path('paso6/formulario-material-proyecto-grado/<int:id_est>', views.formulario_2, name='formulario_2'),

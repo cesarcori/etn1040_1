@@ -3,7 +3,7 @@
 <p>Reglamentos de la Materia ETN-1040</p>
     <p>
     {%for reglamento, visto in dicc_reglamento.items%}
-        <p><a href="{{ reglamento.archivo.url }}">{{reglamento.archivo.name}}</a>
+        <p><a target='_blank' href="{{ reglamento.archivo.url }}">{{reglamento.archivo.name}}</a>
         {% if visto %}
             <i class="fas text-success fa-check"></i><br></p>
         {% else %}

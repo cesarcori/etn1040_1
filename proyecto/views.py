@@ -264,6 +264,15 @@ def confirmarAsignarTribunal(request, id_est, id_trib):
         if confirmar_estudio == 'si':
             if estudiante.tribunales.count() < 2:
                 estudiante.tribunales.add(tribunal)
+                # crear primera sala de revision
+                SalaRevisarTribunal.objects.create(
+                    sala = 'Primera Revisión',
+                    tribunal_rev = tribunal,
+                    estudiante_rev = estudiante,
+                    texto = 'Ninguno',
+                    material_estudiante = estudiante.proyectodegrado.archivo,
+                    visto_bueno = False,
+                )
             else:
                 print('ya tiene dos tribunales')
             return redirect('asignar_tribunal', id_est=id_est)
@@ -2168,6 +2177,63 @@ def solicitudTribunal(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
+def crearSalaRevisarTribunal(request):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    estudiante = usuario.datosestudiante
+    docente = estudiante.grupo_doc
+    tutor = estudiante.tutor
+    if request.method == 'POST':
+        form = SalaRevisarTribunalForm(request.POST, request.FILES)
+        if form.is_valid():
+            nombre_sala = request.POST['sala']
+            file = form.save(commit=False)
+            file.docente_rev = docente
+            file.tutor_rev= tutor
+            file.estudiante_rev = estudiante
+            file.sala = nombre_sala
+            file.save()
+            return redirect('entrega_tribunal')
+    else: 
+        form = SalaRevisarTribunalForm
+    context = {'grupo': grupo,'form':form,}
+    return render(request, 'proyecto/crear_sala_revisar.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
+def entregaTribunal(request, id_trib, id_est):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    estudiante = usuario.datosestudiante
+    docente = estudiante.grupo_doc
+    tutor = estudiante.tutor
+    tribunal = estudiante.tribunales.get(id=id_trib)
+    salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
+    # visto bueno diferente filosofia
+    dicc_sala = {}
+    # for sala in salas:
+        # mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala)
+        # mensajes_tut = MensajeTutorRevisar.objects.filter(sala=sala)
+        # no_visto_docente = 0
+        # for mensaje_doc in mensajes_doc:
+            # if not mensaje_doc.visto_estudiante:
+                # no_visto_docente += 1
+        # no_visto_tutor = 0
+        # for mensaje_tut in mensajes_tut:
+            # if not mensaje_tut.visto_estudiante:
+                # no_visto_tutor += 1
+        # dicc_sala[sala] = [no_visto_docente, no_visto_tutor]
+    context = {'grupo': grupo,
+            'salas':salas,
+            # 'dicc_sala':dicc_sala,
+            'tribunal':tribunal,
+            'estudiante':estudiante}
+    return render(request, 'proyecto/entrega_tribunal.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
 @permitir_paso5()
 def registroProyecto(request):
     grupo = request.user.groups.get().name
@@ -2318,11 +2384,8 @@ def auspicioF3(request, id_est):
     if request.method == 'POST':
         form = AuspicioForm(request.POST, instance=auspicio_est)
         if form.is_valid():
-            # file = form.save(commit=false)
-            # file.usuario = estudiante
-            # file.save()
             form.save()
-            return redirect('ultimos_formularios')
+            return redirect('paso6')
     context = {'grupo': grupo,'form':form,'estudiante':estudiante}
     return render(request, 'proyecto/auspicio_f3.html', context)
 
