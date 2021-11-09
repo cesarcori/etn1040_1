@@ -2,18 +2,32 @@
 {% block content %}
 
 <h3>Tribunal</h3>
-<p><a href={%url 'solicitud_tribunal' estudiante.id %}>Solicitud de tribunal</a>
-<p><a href={%url 'carta_final' estudiante.id %}>Carta de Conclusión</a>
-<i class="fas text-success fa-check"></i></p>
-<p><a href={%url 'ultimos_formularios'%}>Generación de los 3 formularios</a>
-<i class="fas text-success fa-check"></i></p>
+{% if estudiante.tribunales.count < 2%}
+    <p><a href={%url 'solicitud_tribunal' estudiante.id %}>Solicitud de tribunal</a>
+{% else %}
+    <p>
+    <div class="d-inline p-1 bg-success text-white">Tribunal asignado</div><br>
+    {% for tribunal in estudiante.tribunales.all %}
+    <a href={% url 'enlace_tribunal' tribunal.id %}>{{tribunal}}</a><br>
+    {% endfor %}
+    </p>
+{% endif %}
+<p><a href={%url 'formulario_3' estudiante.id %}>Formulario 3 - Registro y Seguimiento </a>
+&nbsp; <a href="/media/formularios/form3.pdf">En Blanco</a>
+<a class='btn btn-warning' href={%url 'auspicio_f3' estudiante.id %}>Si tienes auspicio</a></p>
+<p><a href={%url 'formulario_2' estudiante.id %}>Formulario 4 - Materia: Proyecto </a>
+&nbsp; <a href="/media/formularios/form2.pdf">En Blanco</a></p>
+{% comment %}<p><a href={%url 'carta_final' estudiante.id %}>Carta de Conclusión</a>{% endcomment %}
+{% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
+{% comment %}<p><a href={%url 'ultimos_formularios'%}>Generación de los 3 formularios</a>{% endcomment %}
+{% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if progreso.nivel < 100 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a></p>
+    <a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a></p>
 {% endif %}
 {% if progreso.nivel >= 100 %}
-<h5 class='text-success'>Felicidades!<br>Completaste tu Proyecto de Grado!</h5>
+    <h5 class='text-success'>Felicidades!<br>Completaste tu Proyecto de Grado!</h5>
 {% endif %}
 
 {% endblock %}

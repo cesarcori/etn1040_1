@@ -60,11 +60,11 @@ Grupo: {{docente.grupo}}</p>
 </div>
 {%endif%}
 
-{%if grupo == 'tutor'%}
+{%if grupo == 'tutor' or grupo == 'tribunal'%}
 <p>Nombre: {{docente.nombre}}<br>
 Apellido: {{docente.apellido}}<br>
 Celular: {{docente.celular}}<br>
-Correo Electrónico: {{docente.celular}}<br>
+Correo Electrónico: {{docente.correo}}<br>
 Grupo: {{docente.grupo}}<br>
 {% comment %}Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>{% endcomment %}
 		</div>

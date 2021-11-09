@@ -10,7 +10,7 @@
       <th scope="col">Grupo</th>
       <th scope="col">Docente</th>
     {%endif%}
-    {% if grupo != 'director'%}
+    {% if grupo == 'estudiante' or grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor'%}
       <th scope="col">Mensajes</th>
     {% endif %}
       <th scope="col">Celular</th>
@@ -37,6 +37,7 @@
 <td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
 {%endif%}
 
+
 {%if grupo == 'tutor' %}
     {%if est.tutor_acepto%}
     <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
@@ -50,11 +51,15 @@
 <th scope="row">{{est.grupo_doc.apellido}}</th>
 {%endif%}
 
-{% if not grupo == 'director' %}
+{%if grupo == 'tribunal' %}
+<td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+{%endif%}
+
+{% if grupo == 'estudiante' or grupo == 'adminstrador' or grupo == 'docente' or grupo == 'tutor'%}
 <td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
 {% endif %}
 
-{% if grupo == 'tutor' or grupo == 'docente' or grupo == 'administrador' %}
+{% if grupo == 'tutor' or grupo == 'docente' or grupo == 'administrador' or grupo == 'tribunal'%}
 <th scope="row">{{est.celular}}</th>
 <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
 <td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>

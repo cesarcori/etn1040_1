@@ -121,6 +121,17 @@ class SalaRevisarProyecto(models.Model):
     def __str__(self):
         return self.sala
 
+class SalaRevisarTribunal(models.Model):
+    sala = models.CharField(max_length=50, null=True)
+    tribunal_rev= models.ForeignKey('DatosTribunal', null=True, blank=True, on_delete=models.CASCADE)
+    estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
+    texto = models.TextField(blank=True, null=True)
+    material_estudiante = models.FileField(upload_to='material_estudiante_proyecto/', null=True)
+    visto_bueno = models.BooleanField(default=False)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+    def __str__(self):
+        return self.sala
+
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)

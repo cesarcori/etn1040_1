@@ -231,8 +231,7 @@ def tutor(request):
 @allowed_users(allowed_roles=['tribunal'])
 def tribunal(request):
     grupo = 'tribunal'
-    # datos_est = request.user.datostutor.datosestudiante_set.all().order_by('apellido')
-    datos_est = ''
+    datos_est = request.user.datostribunal.datosestudiante_set.all().order_by('apellido')
     context = {'datos_est':datos_est,'grupo':grupo}
     return render(request, 'proyecto/tribunal.html', context)
 
@@ -705,11 +704,11 @@ def enlaceSolicitante(request, pk_sol):
     return render(request, 'proyecto/enlace_solicitante.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor','administrador','director'])
+@allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
 def enlaceEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
-    if grupo=='administrador' or grupo=='director':
+    if grupo=='administrador' or grupo=='director' or grupo=='tribunal':
         context = {'grupo': grupo,'estudiante':estudiante,}
         return render(request, 'proyecto/enlace_estudiante.html', context)
     elif grupo == 'docente':
@@ -815,7 +814,7 @@ def imprimirReporteEstudiante(request, id_est):
     return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor','administrador','director'])
+@allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
 def progresoEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
@@ -913,6 +912,46 @@ def progresoEstudiante(request, pk_est):
             return render(request, 'proyecto/progreso_estudiante.html', context)
         else:
             return redirect('error_pagina')
+    elif grupo== 'tribunal':
+        existe_est = request.user.datostribunal.datosestudiante_set.filter(id=pk_est).exists()
+        if existe_est:
+            info_estu = SalaRevisar.objects.filter(estudiante_rev=estudiante)
+            salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
+            info_estu_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante)
+            salas_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
+            # para que salga notificacion
+            dicc_salas = {}
+            for sala in salas:
+                mensajes_tut= MensajeTutorRevisar.objects.filter(sala=sala)
+                no_visto= 0
+                for mensaje_tut in mensajes_tut:
+                    if not mensaje_tut.visto_tutor:
+                        no_visto += 1
+                dicc_salas[sala] = no_visto
+            # para que salga notificacion proyecto
+            dicc_salas_proy = {}
+            for sala in salas_proy:
+                mensajes_tut= MensajeTutorRevisarProyecto.objects.filter(sala=sala)
+                no_visto= 0
+                for mensaje_tut in mensajes_tut:
+                    if not mensaje_tut.visto_tutor:
+                        no_visto += 1
+                dicc_salas_proy[sala] = no_visto
+            context = {'grupo': grupo,'estudiante':estudiante,
+                    'progreso':progreso,
+                    'info_estu':info_estu,
+                    'salas':salas,
+                    'dicc_salas':dicc_salas,
+                    'dicc_salas_proy':dicc_salas_proy,
+                    'info_estu_proy':info_estu_proy,
+                    'salas_proy':salas_proy,
+                    'proyecto': proyecto,
+                    'calificacion': calificacion,
+                    }
+            context = {**context_aux, **context}
+            return render(request, 'proyecto/progreso_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
     elif grupo== 'director':
         existe_est = DatosEstudiante.objects.filter(id=pk_est).exists()
         if existe_est:
@@ -963,7 +1002,7 @@ def vistoBuenoProyecto(request, id_est):
     return render(request, 'proyecto/visto_bueno_proyecto.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','administrador','director'])
+@allowed_users(allowed_roles=['estudiante','tutor','administrador','director','tribunal'])
 def enlaceDocente(request, pk_doc):
     grupo = request.user.groups.get().name
     docente = DatosDocente.objects.get(id=pk_doc)
@@ -986,6 +1025,15 @@ def enlaceDocente(request, pk_doc):
     elif grupo == 'tutor':
         objeto_tutor_estu = request.user.datostutor.datosestudiante_set
         existe_doc = objeto_tutor_estu.filter(grupo_doc_id=pk_doc).exists()
+        if existe_doc:
+            estudiantes = {}
+            context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+            return render(request, 'proyecto/enlace_docente.html', context)
+        else:
+            return redirect('error_pagina')
+    elif grupo == 'tribunal':
+        objeto_trib_est= request.user.datostribunal.datosestudiante_set
+        existe_doc = objeto_trib_est.filter(grupo_doc_id=pk_doc).exists()
         if existe_doc:
             estudiantes = {}
             context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
@@ -1040,10 +1088,10 @@ def enlaceTribunal(request, pk_tribunal):
         context = {'grupo': grupo, 'tribunal':tribunal}
         return render(request, 'proyecto/enlace_tribunal.html', context)
     elif grupo == 'estudiante':
-        id_tutor = request.user.datosestudiante.tutor.id
-        if id_tutor == pk_tutor:
-            context = {'grupo': grupo, 'tutor':tutor}
-            return render(request, 'proyecto/enlace_tutor.html', context)
+        trib = request.user.datosestudiante.tribunales.all()
+        if pk_tribunal == trib[0].id or pk_tribunal == trib[1].id:
+            context = {'grupo': grupo, 'tribunal':tribunal}
+            return render(request, 'proyecto/enlace_tribunal.html', context)
         else:
             return redirect('error_pagina')
 
@@ -1747,7 +1795,7 @@ def cronograma_actividad(request):
         return render(request, 'proyecto/cronograma_actividad.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor','director'])
+@allowed_users(allowed_roles=['docente','tutor','director','tribunal'])
 # @permitir_paso4()
 def ver_cronograma(request, id_est):
     grupo = request.user.groups.get().name
@@ -1757,6 +1805,8 @@ def ver_cronograma(request, id_est):
         estudiante = DatosEstudiante.objects.get(id=id_est)
     elif grupo == 'docente':
         estudiante = request.user.datosdocente.datosestudiante_set.get(id=id_est)
+    elif grupo == 'tribunal':
+        estudiante = request.user.datostribunal.datosestudiante_set.get(id=id_est)
     cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
     existe_cronograma = RegistroCronograma.objects.filter(usuario=estudiante).exists()
     if cronograma.exists():
