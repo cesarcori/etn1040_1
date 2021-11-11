@@ -15,10 +15,10 @@
       <th scope="col">Detalles</th>
       <th scope="col">
         {% if grupo == 'tribunal'%}
-            {% if estudiante.vb_proyecto_docente%}
+            {% if vb_tribunal %}
                 <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
             {% else %}
-                {% if salas_proy and estudiante.vb_proyecto_tutor %}
+                {% if salas %}
                     <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
                     data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
                     Dar Visto Bueno</a>

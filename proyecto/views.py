@@ -927,6 +927,11 @@ def progresoEstudiante(request, pk_est):
         if existe_est:
             info_estu = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante)
             salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
+            vb_tribunal = False
+            for sala in salas:
+                if sala.visto_bueno:
+                    vb_tribunal = sala.visto_bueno
+                    break
             # para que salga notificacion
             dicc_salas = {}
             for sala in salas:
@@ -943,6 +948,7 @@ def progresoEstudiante(request, pk_est):
                     'salas':salas,
                     'dicc_salas':dicc_salas,
                     'proyecto': proyecto,
+                    'vb_tribunal':vb_tribunal,
                     'calificacion': calificacion,
                     }
             context = {**context_aux, **context}
@@ -2149,8 +2155,19 @@ def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     progreso = Progreso.objects.get(usuario=estudiante)
+    tribunales = estudiante.tribunales.all()
+    dicc_vb_tribunal = {}
+    for tribunal in tribunales:
+        salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
+        vb_tribunal = False
+        for sala in salas:
+            if sala.visto_bueno:
+                vb_tribunal = sala.visto_bueno
+                break
+        dicc_vb_tribunal[tribunal] = vb_tribunal
     context = {'grupo': grupo, 
             'progreso': progreso,
+            'dicc_vb_tribunal':dicc_vb_tribunal,
             'estudiante': estudiante }
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
@@ -2170,6 +2187,7 @@ def crearSalaRevisarTribunal(request,id_trib):
     grupo = request.user.groups.get().name
     usuario = request.user
     estudiante = usuario.datosestudiante
+    id_est = estudiante.id
     tribunal = DatosTribunal.objects.get(id=id_trib)
     if request.method == 'POST':
         form = SalaRevisarTribunalForm(request.POST, request.FILES)
@@ -2180,7 +2198,7 @@ def crearSalaRevisarTribunal(request,id_trib):
             file.estudiante_rev = estudiante
             file.sala = nombre_sala
             file.save()
-            return redirect('entrega_tribunal')
+            return redirect('entrega_tribunal', id_est=id_est, id_trib=id_trib)
     else: 
         form = SalaRevisarTribunalForm
     context = {'grupo': grupo,'form':form,}
@@ -2188,10 +2206,12 @@ def crearSalaRevisarTribunal(request,id_trib):
 
 @permitir_paso6()
 @login_required(login_url='login')
-def salaRevisarEstTrib(request, pk_sala):
+def salaRevisarEstTrib(request, pk_sala,id_trib):
     grupo = request.user.groups.get().name
     usuario = request.user
     info_estu = SalaRevisarTribunal.objects.get(id=pk_sala)
+    estudiante = usuario.datosestudiante
+    tribunal = DatosTribunal.objects.get(id=id_trib)
     if grupo == 'estudiante':
         if request.method == "POST":
             form= MensajeTribunalRevisarForm(request.POST)
@@ -2208,6 +2228,8 @@ def salaRevisarEstTrib(request, pk_sala):
         mensaje_trib.save()
     context = {'grupo': grupo, 'info_estu':info_estu,
             'form':form,
+            'estudiante':estudiante,
+            'tribunal':tribunal,
             'mensajes_trib':mensajes_trib,
             }
     return render(request, 'proyecto/sala_revisar_est_trib.html', context)
@@ -2251,6 +2273,11 @@ def entregaTribunal(request, id_trib, id_est):
     tribunal = estudiante.tribunales.get(id=id_trib)
     salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
     # visto bueno diferente filosofia
+    vb_tribunal = False
+    for sala in salas:
+        if sala.visto_bueno:
+            vb_tribunal = sala.visto_bueno
+            break
     dicc_salas = {}
     for sala in salas:
         mensajes_trib = MensajeTribunalRevisar.objects.filter(sala=sala)
@@ -2263,6 +2290,7 @@ def entregaTribunal(request, id_trib, id_est):
             'salas':salas,
             'dicc_salas':dicc_salas,
             'tribunal':tribunal,
+            'vb_tribunal':vb_tribunal,
             'estudiante':estudiante}
     return render(request, 'proyecto/entrega_tribunal.html', context)
 

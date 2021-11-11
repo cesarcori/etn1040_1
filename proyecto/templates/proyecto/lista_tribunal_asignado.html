@@ -7,11 +7,15 @@
     </tr>
 </thead>
     <tbody>
-    {% for tribunal in estudiante.tribunales.all %}
+    {% for tribunal, vb in dicc_vb_tribunal.items %}
         <tr>
         <td><a href={% url 'enlace_tribunal' tribunal.id %}>{{tribunal}}</a><br></td>
         <td><a href={% url 'entrega_tribunal' tribunal.id estudiante.id%}>Ingresar</a></td>
-        <td><div class="d-inline p-1 bg-danger text-white">Sin Visto Bueno</div></td>
+        {% if vb %}
+            <td><div class="d-inline p-1 bg-success text-white">Visto Bueno</div></td>
+        {% else %}
+            <td><div class="d-inline p-1 bg-danger text-white">Sin Visto Bueno</div></td>
+        {% endif %}
         </tr>
     {% endfor %}
     </tbody>
