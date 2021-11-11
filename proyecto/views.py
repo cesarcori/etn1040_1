@@ -923,37 +923,25 @@ def progresoEstudiante(request, pk_est):
             return redirect('error_pagina')
     elif grupo== 'tribunal':
         existe_est = request.user.datostribunal.datosestudiante_set.filter(id=pk_est).exists()
+        tribunal = request.user.datostribunal
         if existe_est:
-            info_estu = SalaRevisar.objects.filter(estudiante_rev=estudiante)
-            salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
-            info_estu_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante)
-            salas_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
+            info_estu = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante)
+            salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
             # para que salga notificacion
             dicc_salas = {}
             for sala in salas:
-                mensajes_tut= MensajeTutorRevisar.objects.filter(sala=sala)
-                no_visto= 0
-                for mensaje_tut in mensajes_tut:
-                    if not mensaje_tut.visto_tutor:
+                mensajes_trib = MensajeTribunalRevisar.objects.filter(sala=sala)
+                no_visto = 0
+                for mensaje_trib in mensajes_trib:
+                    if not mensaje_trib.visto_tribunal:
                         no_visto += 1
                 dicc_salas[sala] = no_visto
             # para que salga notificacion proyecto
-            dicc_salas_proy = {}
-            for sala in salas_proy:
-                mensajes_tut= MensajeTutorRevisarProyecto.objects.filter(sala=sala)
-                no_visto= 0
-                for mensaje_tut in mensajes_tut:
-                    if not mensaje_tut.visto_tutor:
-                        no_visto += 1
-                dicc_salas_proy[sala] = no_visto
             context = {'grupo': grupo,'estudiante':estudiante,
                     'progreso':progreso,
                     'info_estu':info_estu,
                     'salas':salas,
                     'dicc_salas':dicc_salas,
-                    'dicc_salas_proy':dicc_salas_proy,
-                    'info_estu_proy':info_estu_proy,
-                    'salas_proy':salas_proy,
                     'proyecto': proyecto,
                     'calificacion': calificacion,
                     }
@@ -2178,19 +2166,17 @@ def solicitudTribunal(request, id_est):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 @permitir_paso6()
-def crearSalaRevisarTribunal(request):
+def crearSalaRevisarTribunal(request,id_trib):
     grupo = request.user.groups.get().name
     usuario = request.user
     estudiante = usuario.datosestudiante
-    docente = estudiante.grupo_doc
-    tutor = estudiante.tutor
+    tribunal = DatosTribunal.objects.get(id=id_trib)
     if request.method == 'POST':
         form = SalaRevisarTribunalForm(request.POST, request.FILES)
         if form.is_valid():
             nombre_sala = request.POST['sala']
             file = form.save(commit=False)
-            file.docente_rev = docente
-            file.tutor_rev= tutor
+            file.tribunal_rev = tribunal
             file.estudiante_rev = estudiante
             file.sala = nombre_sala
             file.save()
@@ -2199,6 +2185,59 @@ def crearSalaRevisarTribunal(request):
         form = SalaRevisarTribunalForm
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/crear_sala_revisar.html', context)
+
+@permitir_paso6()
+@login_required(login_url='login')
+def salaRevisarEstTrib(request, pk_sala):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    info_estu = SalaRevisarTribunal.objects.get(id=pk_sala)
+    if grupo == 'estudiante':
+        if request.method == "POST":
+            form= MensajeTribunalRevisarForm(request.POST)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.sala = info_estu
+                file.usuario = usuario
+                file.save()
+        else:
+            form = MensajeTribunalRevisarForm
+    mensajes_trib= MensajeTribunalRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    for mensaje_trib in mensajes_trib:
+        mensaje_trib.visto_estudiante = True
+        mensaje_trib.save()
+    context = {'grupo': grupo, 'info_estu':info_estu,
+            'form':form,
+            'mensajes_trib':mensajes_trib,
+            }
+    return render(request, 'proyecto/sala_revisar_est_trib.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','docente','tutor','tribunal'])
+def salaRevisarTribunal(request, pk_sala):
+    grupo = request.user.groups.get().name
+    usuario = request.user
+    info_estu = SalaRevisarTribunal.objects.get(id=pk_sala)
+    if grupo == 'tribunal':
+        if request.method == "POST":
+            form= MensajeTribunalRevisarForm(request.POST)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.sala = info_estu
+                file.usuario = usuario
+                file.visto_docente = True
+                file.save()
+        else:
+            form= MensajeTribunalRevisarForm
+    mensajes_trib = MensajeTribunalRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
+    for mensaje_trib in mensajes_trib:
+        mensaje_trib.visto_tribunal = True
+        mensaje_trib.save()
+    context = {'grupo': grupo, 'info_estu':info_estu,
+            'form':form,
+            'mensajes_trib':mensajes_trib,
+    }
+    return render(request, 'proyecto/sala_revisar.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -2212,22 +2251,17 @@ def entregaTribunal(request, id_trib, id_est):
     tribunal = estudiante.tribunales.get(id=id_trib)
     salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
     # visto bueno diferente filosofia
-    dicc_sala = {}
-    # for sala in salas:
-        # mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala)
-        # mensajes_tut = MensajeTutorRevisar.objects.filter(sala=sala)
-        # no_visto_docente = 0
-        # for mensaje_doc in mensajes_doc:
-            # if not mensaje_doc.visto_estudiante:
-                # no_visto_docente += 1
-        # no_visto_tutor = 0
-        # for mensaje_tut in mensajes_tut:
-            # if not mensaje_tut.visto_estudiante:
-                # no_visto_tutor += 1
-        # dicc_sala[sala] = [no_visto_docente, no_visto_tutor]
+    dicc_salas = {}
+    for sala in salas:
+        mensajes_trib = MensajeTribunalRevisar.objects.filter(sala=sala)
+        no_visto_trib = 0
+        for mensaje_trib in mensajes_trib:
+            if not mensaje_trib.visto_estudiante:
+                no_visto_trib += 1
+        dicc_salas[sala] = no_visto_trib
     context = {'grupo': grupo,
             'salas':salas,
-            # 'dicc_sala':dicc_sala,
+            'dicc_salas':dicc_salas,
             'tribunal':tribunal,
             'estudiante':estudiante}
     return render(request, 'proyecto/entrega_tribunal.html', context)

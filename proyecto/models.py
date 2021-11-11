@@ -95,6 +95,14 @@ class MensajeTutorRevisarProyecto(models.Model):
     sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
+class MensajeTribunalRevisar(models.Model):
+    texto = models.TextField(blank=True, null=True)
+    visto_tribunal= models.BooleanField(default=False)
+    visto_estudiante = models.BooleanField(default=False)
+    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    sala = models.ForeignKey('SalaRevisarTribunal', null=True, blank=True, on_delete=models.CASCADE)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+
 class SalaRevisar(models.Model):
     sala = models.CharField(max_length=50, null=True)
     docente_rev= models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)

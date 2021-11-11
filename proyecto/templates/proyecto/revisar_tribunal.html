@@ -15,34 +15,34 @@
       <th scope="col">Detalles</th>
       <th scope="col">
         {% if grupo == 'tribunal'%}
-        {% if estudiante.vb_proyecto_docente%}
-        <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
-        {% else %}
-            {% if salas_proy and estudiante.vb_proyecto_tutor %}
-                <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
-                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-                Dar Visto Bueno</a>
+            {% if estudiante.vb_proyecto_docente%}
+                <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
             {% else %}
-                <a href=# type="button" class="btn btn-outline-danger btn-sm disabled" 
-                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-                Dar Visto Bueno</a>
+                {% if salas_proy and estudiante.vb_proyecto_tutor %}
+                    <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                    Dar Visto Bueno</a>
+                {% else %}
+                    <a href=# type="button" class="btn btn-outline-danger btn-sm disabled" 
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                    Dar Visto Bueno</a>
+                {% endif %}
             {% endif %}
         {% endif %}
-        {% endif %}
-        {% if grupo == 'tutor'%}
-        {% if estudiante.vb_proyecto_tutor%}
-        <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
-        {% else %}
-            {% if salas_proy %}
-                <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
-                data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
-                Dar Visto Bueno</a>
-            {% else %}
-            <a href=# type="button" class="btn btn-outline-danger btn-sm disabled"> 
-                Dar Visto Bueno</a>
-            {% endif %}
-        {% endif %}
-        {% endif %}
+        <!--{% if grupo == 'tutor'%}-->
+            <!--{% if estudiante.vb_proyecto_tutor%}-->
+                <!--<div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>-->
+            <!--{% else %}-->
+                <!--{% if salas_proy %}-->
+                    <!--<a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" -->
+                    <!--data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">-->
+                    <!--Dar Visto Bueno</a>-->
+                <!--{% else %}-->
+                <!--<a href=# type="button" class="btn btn-outline-danger btn-sm disabled"> -->
+                    <!--Dar Visto Bueno</a>-->
+                <!--{% endif %}-->
+            <!--{% endif %}-->
+        <!--{% endif %}-->
       </th>
       {% if grupo == 'tribunal' %}
         <th scope="col">Revisar</th>
@@ -50,7 +50,7 @@
     </tr>
   </thead>
   <tbody>
-{%for s, no_visto in dicc_salas_proy.items%}
+    {%for s, no_visto in dicc_salas.items%}
     <tr>
 <td>
 {{s.sala}}
@@ -75,15 +75,15 @@
 <td>
 {% if grupo == 'tribunal' %}
     {% if no_visto == 0%}
-    <a class="btn btn-primary position-relative" href="{% url 'sala_revisar_proyecto' s.id %}">Observación</a>
+        <a class="btn btn-primary position-relative" href="{% url 'sala_revisar_tribunal' s.id %}">Observación</a>
     {% else %}
-    <a href="{% url 'sala_revisar_proyecto' s.id %}" type="button" class="btn btn-primary position-relative">
-        Observación
-    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-        {{no_visto}}
-        <span class="visually-hidden">unread messages</span>
-    </span>
-    </a>
+        <a href="{% url 'sala_revisar_tribunal' s.id %}" type="button" class="btn btn-primary position-relative">
+            Observación
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{no_visto}}
+            <span class="visually-hidden">unread messages</span>
+        </span>
+        </a>
     {% endif %}
     {% comment %}<a class="btn btn-primary" href="{% url 'proyecto_corregido' s.id %}">Corrección</a>{% endcomment %}
 {% endif %}

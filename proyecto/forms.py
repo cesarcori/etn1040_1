@@ -229,6 +229,18 @@ class MensajeTutorRevisarForm(forms.ModelForm):
         labels = {
                 'texto': ''
                 }
+
+class MensajeTribunalRevisarForm(forms.ModelForm):
+    class Meta:
+        model = MensajeTribunalRevisar
+        fields = ['texto']
+        widgets = {
+                'texto': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Correcciones que debe realizar...'}), 
+                }
+        labels = {
+                'texto': ''
+                }
         
 class MensajeTutorRevisarProyectoForm(forms.ModelForm):
     class Meta:

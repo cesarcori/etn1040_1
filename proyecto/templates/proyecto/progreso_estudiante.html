@@ -99,9 +99,11 @@ Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
 
 <div class="row">
     <div class="col-md-7">
+
 {% if grupo == 'tribunal'%}
     {% include 'proyecto/revisar_tribunal.html' %}
 {% endif %}
+
 {% comment %}********* PROYECTO DE GRADO **************{% endcomment %}
 {% if progreso >= 64 and progreso <= 86 and not grupo == 'director'%}
     <h4 class='text-center'><strong>REVISIÓN DE PROYECTO DE GRADO</strong></h4>
