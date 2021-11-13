@@ -2,7 +2,9 @@
 <thead>
     <tr>
     <th scope="col">Tribunal asignado</th>
-    <th scope="col">Revisión</th>
+    {% if grupo == 'estudiante'%}
+        <th scope="col">Revisión</th>
+    {% endif %}
     <th scope="col">Visto Bueno</th>
     </tr>
 </thead>
@@ -10,7 +12,9 @@
     {% for tribunal, vb in dicc_vb_tribunal.items %}
         <tr>
         <td><a href={% url 'enlace_tribunal' tribunal.id %}>{{tribunal}}</a><br></td>
-        <td><a href={% url 'entrega_tribunal' tribunal.id estudiante.id%}>Ingresar</a></td>
+        {% if grupo == 'estudiante'%}
+            <td><a href={% url 'entrega_tribunal' tribunal.id estudiante.id%}>Ingresar</a></td>
+        {% endif %}
         {% if vb %}
             <td><div class="d-inline p-1 bg-success text-white">Visto Bueno</div></td>
         {% else %}

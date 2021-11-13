@@ -1,0 +1,11 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+<h3>¿Seguro que quiere dar el visto bueno al <strong>Proyecto:</strong>?</h3>
+<form action='' method='POST'>
+    {% csrf_token %}
+    <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Cancelar</a>
+    <button type="submit" name='visto_bueno' class="btn btn-success" 
+    value='si'>Confirmar</button>
+</form> 
+{% endblock %}
+

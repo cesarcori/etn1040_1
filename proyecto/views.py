@@ -828,6 +828,16 @@ def progresoEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
     progreso = Progreso.objects.get(usuario=estudiante).nivel
+    tribunales = estudiante.tribunales.all()
+    dicc_vb_tribunal = {}
+    for tribunal in tribunales:
+        salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
+        vb_tribunal = False
+        for sala in salas:
+            if sala.visto_bueno:
+                vb_tribunal = sala.visto_bueno
+                break
+        dicc_vb_tribunal[tribunal] = vb_tribunal
     if ProyectoDeGrado.objects.filter(usuario=estudiante).exists():
         proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
         calificacion = proyecto.calificacion
@@ -875,6 +885,7 @@ def progresoEstudiante(request, pk_est):
                     'info_estu_proy':info_estu_proy,
                     'salas_proy':salas_proy,
                     'proyecto': proyecto,
+                    'dicc_vb_tribunal':dicc_vb_tribunal,
                     'calificacion': calificacion,
                     }
             context = {**context_aux, **context}
@@ -1003,6 +1014,23 @@ def vistoBuenoProyecto(request, id_est):
         return redirect('progreso_estudiante',pk_est=id_est)
     context = {'grupo': grupo}
     return render(request, 'proyecto/visto_bueno_proyecto.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tribunal'])
+def vistoBuenoTribunal(request, id_est):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    tribunal = request.user.datostribunal
+    visto_bueno = 'no'
+    if request.method == 'POST':
+        visto_bueno = request.POST['visto_bueno']
+    if visto_bueno == 'si':
+        sala = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal).last() 
+        vb_tribunal = sala.visto_bueno = True
+        sala.save()
+        return redirect('progreso_estudiante',pk_est=id_est)
+    context = {'grupo': grupo}
+    return render(request, 'proyecto/visto_bueno_tribunal.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','administrador','director','tribunal'])

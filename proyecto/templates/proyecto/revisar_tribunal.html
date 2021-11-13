@@ -1,12 +1,13 @@
 {% comment %}********* TRIBUNAL **************{% endcomment %}
+
 {% if progreso >= 86 and not grupo == 'director'%}
     <h4 class='text-center'><strong>REVISIÓN TRIBUNAL</strong></h4>
     <div class = 'border border-4 
-{% if progreso >= 64%}
-    border-success
-{% else %}
-    border-secondary
-{% endif %}
+    {% if progreso >= 64%}
+        border-success
+    {% else %}
+        border-secondary
+    {% endif %}
     '>
 <table class="table table-striped table-hover ">
   <thead>
@@ -19,7 +20,7 @@
                 <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
             {% else %}
                 {% if salas %}
-                    <a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+                    <a href="{% url 'visto_bueno_tribunal' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" 
                     data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
                     Dar Visto Bueno</a>
                 {% else %}
@@ -29,20 +30,6 @@
                 {% endif %}
             {% endif %}
         {% endif %}
-        <!--{% if grupo == 'tutor'%}-->
-            <!--{% if estudiante.vb_proyecto_tutor%}-->
-                <!--<div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>-->
-            <!--{% else %}-->
-                <!--{% if salas_proy %}-->
-                    <!--<a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" -->
-                    <!--data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">-->
-                    <!--Dar Visto Bueno</a>-->
-                <!--{% else %}-->
-                <!--<a href=# type="button" class="btn btn-outline-danger btn-sm disabled"> -->
-                    <!--Dar Visto Bueno</a>-->
-                <!--{% endif %}-->
-            <!--{% endif %}-->
-        <!--{% endif %}-->
       </th>
       {% if grupo == 'tribunal' %}
         <th scope="col">Revisar</th>
