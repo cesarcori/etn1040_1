@@ -308,11 +308,30 @@ class ProyectoDeGradoForm(forms.ModelForm):
                 'resumen': 'Resumen del Proyecto de Grado',
                 }
 
+class RegistroProyectoTribunalForm(forms.ModelForm):
+    class Meta:
+        model = RegistroProyectoTribunal
+        fields = '__all__'
+        exclude = ['usuario','nota', 'nota_final']
+        widgets = {
+                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        'placeholder':'Copia el título del Proyecto de Grado...'}),
+                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Copia el resumen del Proyecto de Grado...'}), 
+                }
+        labels = {
+                'titulo': 'Titulo del Proyecto de Grado',
+                'resumen': 'Resumen del Proyecto de Grado',
+                }
+
 class CalificarProyectoForm(forms.Form):
     nota1= forms.IntegerField(min_value=0, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
     nota2= forms.IntegerField(min_value=0, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
     nota3= forms.IntegerField(min_value=0, max_value=22,label='Informes de Trabajo (Max. 22%)')
     nota4= forms.IntegerField(min_value=0, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
+
+class CalificarProyectoTribunalForm(forms.Form):
+    nota = forms.IntegerField(min_value=0, max_value=60,label='Nota Final (Max. 60%)')
 
 class DatosTutorForm(forms.ModelForm):
     class Meta:

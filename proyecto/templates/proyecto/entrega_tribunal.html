@@ -1,9 +1,9 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h3>Tribunal: Ing. {{tribunal}}</h3>
-{% comment %}{% if not estudiante.vb_proyecto_docente or not estudiante.vb_proyecto_tutor%}{% endcomment %}
-<a class="btn btn-warning" href="{% url 'crear_sala_tribunal' tribunal.id %}">Crear Revisión</a><br>
-{% comment %}{% endif %}{% endcomment %}
+{% if not vb_tribunal %}
+    <a class="btn btn-warning" href="{% url 'crear_sala_tribunal' tribunal.id %}">Crear Revisión</a><br>
+{% endif %}
 
 <table class="table table-striped table-hover">
   <thead>

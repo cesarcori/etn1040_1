@@ -39,47 +39,48 @@
   <tbody>
     {%for s, no_visto in dicc_salas.items%}
     <tr>
-<td>
-{{s.sala}}
-</td>      
+    <td>
+    {{s.sala}}
+    </td>      
 
-<td>
-<p>
-  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-      Detalles
-  </button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-      {{s.texto}}
-  </div>
-</div>
-</td>      
+    <td>
+    <p>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Detalles
+    </button>
+    </p>
+    <div class="collapse" id="collapseExample">
+    <div class="card card-body">
+        {{s.texto}}
+    </div>
+    </div>
+    </td>      
 
-<td>
-    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Proyecto</a>
-</td>
-<td>
-{% if grupo == 'tribunal' %}
-    {% if no_visto == 0%}
-        <a class="btn btn-primary position-relative" href="{% url 'sala_revisar_tribunal' s.id %}">Observación</a>
-    {% else %}
-        <a href="{% url 'sala_revisar_tribunal' s.id %}" type="button" class="btn btn-primary position-relative">
-            Observación
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            {{no_visto}}
-            <span class="visually-hidden">unread messages</span>
-        </span>
-        </a>
+    <td>
+        <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Proyecto</a>
+    </td>
+    <td>
+    {% if grupo == 'tribunal' %}
+        {% if no_visto == 0%}
+            <a class="btn btn-primary position-relative" href="{% url 'sala_revisar_tribunal' s.id %}">Observación</a>
+        {% else %}
+            <a href="{% url 'sala_revisar_tribunal' s.id %}" type="button" class="btn btn-primary position-relative">
+                Observación
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{no_visto}}
+                <span class="visually-hidden">unread messages</span>
+            </span>
+            </a>
+        {% endif %}
+        {% comment %}<a class="btn btn-primary" href="{% url 'proyecto_corregido' s.id %}">Corrección</a>{% endcomment %}
     {% endif %}
-    {% comment %}<a class="btn btn-primary" href="{% url 'proyecto_corregido' s.id %}">Corrección</a>{% endcomment %}
-{% endif %}
-</td>      
+    </td>      
 
     </tr>
-{%endfor%}
+    {%endfor%}
   </tbody>
 </table>
+
 </div>
 <br>
 

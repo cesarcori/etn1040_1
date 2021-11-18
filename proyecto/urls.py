@@ -108,6 +108,9 @@ urlpatterns = [
     path('paso6/formulario-3/<int:id_est>', views.formulario_3, name='formulario_3'),
     path('paso6/formulario-3/auspicio/<int:id_est>', views.auspicioF3, name='auspicio_f3'),
     path('paso6/formulario-4/<int:id_est>', views.formulario_4, name='formulario_4'),
+    path('paso6/registro-proyecto-trib/', views.registroProyectoTribunal, name='registro_proyecto_tribunal'),
+    path('paso6/proyecto-trib/', views.ver_proyecto_tribunal, name='ver_proyecto_tribunal'),
+    path('calificar-proyecto-tri/<int:id_est>/', views.calificarProyectoTribunal, name='calificar_proyecto_tribunal'),
 
     path('calificar-proyecto/<int:id_est>/', views.calificarProyecto, name='calificar_proyecto'),
     path('solicitar-tribunal-d/<int:id_est>/', views.solicitarTribunalDocente, name='solicitar_tribunal_docente'),

@@ -529,16 +529,23 @@ def editarPerfil(request):
             form = DatosDocenteForm(request.POST, request.FILES, instance=docente)
             if form.is_valid():
                 form.save()
+                nombre = request.POST.get('nombre')
+                apellido = request.POST.get('apellido')
+                usuario.first_name = nombre
+                usuario.last_name = apellido
+                usuario.save()
                 return redirect('perfil')
     if grupo == 'estudiante':
         estudiante = usuario.datosestudiante
         form = DatosEstudianteForm(instance=estudiante)
         if request.method == "POST":
             form = DatosEstudianteForm(request.POST, request.FILES, instance=estudiante)
-            print(form.instance.celular)
-            print(form.instance.imagen_perfil)
             if form.is_valid():
                 form.save()
+                nombre = request.POST.get('nombre')
+                apellido = request.POST.get('apellido')
+                usuario.first_name = nombre
+                usuario.last_name = apellido
                 usuario.save()
                 return redirect('perfil')
     if grupo == 'administrador':
@@ -548,6 +555,11 @@ def editarPerfil(request):
             form = DatosAdministradorForm(request.POST, request.FILES, instance=administrador)
             if form.is_valid():
                 form.save()
+                nombre = request.POST.get('nombre')
+                apellido = request.POST.get('apellido')
+                usuario.first_name = nombre
+                usuario.last_name = apellido
+                usuario.save()
                 return redirect('perfil')
     if grupo == 'director':
         director = usuario.datosdirector
@@ -555,6 +567,11 @@ def editarPerfil(request):
         if request.method == "POST":
             form = DatosDirectorForm(request.POST, request.FILES, instance=director)
             if form.is_valid():
+                nombre = request.POST.get('nombre')
+                apellido = request.POST.get('apellido')
+                usuario.first_name = nombre
+                usuario.last_name = apellido
+                usuario.save()
                 form.save()
                 return redirect('perfil')
     if grupo == 'tribunal':
@@ -564,6 +581,11 @@ def editarPerfil(request):
             form = DatosTribunalForm(request.POST, request.FILES, instance=tribunal)
             if form.is_valid():
                 form.save()
+                nombre = request.POST.get('nombre')
+                apellido = request.POST.get('apellido')
+                usuario.first_name = nombre
+                usuario.last_name = apellido
+                usuario.save()
                 return redirect('perfil')
     context = {'grupo': grupo,'form':form}
     return render(request, 'proyecto/editar_perfil.html', context)
@@ -926,6 +948,7 @@ def progresoEstudiante(request, pk_est):
                     'info_estu_proy':info_estu_proy,
                     'salas_proy':salas_proy,
                     'proyecto': proyecto,
+                    'dicc_vb_tribunal':dicc_vb_tribunal,
                     'calificacion': calificacion,
                     }
             context = {**context_aux, **context}
@@ -972,6 +995,7 @@ def progresoEstudiante(request, pk_est):
             context = {'grupo': grupo,'estudiante':estudiante,
                     'progreso':progreso,
                     'proyecto': proyecto,
+                    'dicc_vb_tribunal':dicc_vb_tribunal,
                     'calificacion': calificacion,
                     }
             context = {**context_aux, **context}
@@ -1100,16 +1124,24 @@ def enlaceTutor(request, pk_tutor):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','administrador','estudiante','director'])
+@allowed_users(allowed_roles=['docente','administrador','estudiante','director','tutor'])
 def enlaceTribunal(request, pk_tribunal):
     grupo = str(request.user.groups.get())
     tribunal = DatosTribunal.objects.get(id=pk_tribunal)
     if grupo == 'docente':
-        objeto_tutor_estu = request.user.datosdocente.datosestudiante_set
-        existe_doc = objeto_tutor_estu.filter(tutor_id=pk_tutor).exists()
+        docente = request.user.datosdocente
+        existe_doc = tribunal.datosestudiante_set.filter(grupo_doc=docente).exists()
         if existe_doc:
-            context = {'grupo': grupo, 'tutor':tutor}
-            return render(request, 'proyecto/enlace_tutor.html', context)
+            context = {'grupo': grupo, 'tribunal':tribunal}
+            return render(request, 'proyecto/enlace_tribunal.html', context)
+        else:
+            return redirect('error_pagina')
+    elif grupo == 'tutor':
+        tutor = request.user.datostutor
+        existe_doc = tribunal.datosestudiante_set.filter(tutor=tutor).exists()
+        if existe_doc:
+            context = {'grupo': grupo, 'tribunal':tribunal}
+            return render(request, 'proyecto/enlace_tribunal.html', context)
         else:
             return redirect('error_pagina')
     elif grupo == 'administrador':
@@ -1569,7 +1601,7 @@ def entregaPerfil(request):
     estudiante = usuario.datosestudiante
     docente = estudiante.grupo_doc
     tutor = estudiante.tutor
-    salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
+    salas = SalaRevisar.objects.filter(estudiante_rev=estudiante).order_by('-fecha_creacion')
     dicc_sala = {}
     for sala in salas:
         mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala)
@@ -2193,9 +2225,17 @@ def paso6(request):
                 vb_tribunal = sala.visto_bueno
                 break
         dicc_vb_tribunal[tribunal] = vb_tribunal
+    vb_tribunales = []
+    for tribunal, vb in dicc_vb_tribunal.items():
+        vb_tribunales.append(vb)
+    if vb_tribunales == []:
+        vb_tribunal_total = False
+    else:
+        vb_tribunal_total = all(vb_tribunales)
     context = {'grupo': grupo, 
             'progreso': progreso,
             'dicc_vb_tribunal':dicc_vb_tribunal,
+            'vbt': vb_tribunal_total,
             'estudiante': estudiante }
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
@@ -2324,6 +2364,34 @@ def entregaTribunal(request, id_trib, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
+def registroProyectoTribunal(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    if request.method == 'POST':
+        form = RegistroProyectoTribunalForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = form.save(commit=False)
+            file.usuario = estudiante
+            file.save()
+        return redirect('paso6')
+    else: 
+        form = RegistroProyectoTribunalForm
+    context = {'grupo': grupo,'form':form,}
+    return render(request, 'proyecto/registro_proyecto_tribunal.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_paso6()
+def ver_proyecto_tribunal(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    proyecto = RegistroProyectoTribunal.objects.get(usuario=estudiante)
+    context = {'grupo': grupo,'proyecto':proyecto,'estudiante':estudiante}
+    return render(request, 'proyecto/ver_proyecto_tribunal.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
 @permitir_paso5()
 def registroProyecto(request):
     grupo = request.user.groups.get().name
@@ -2384,6 +2452,26 @@ def calificarProyecto(request, id_est):
         return redirect('progreso_estudiante',pk_est=id_est)
     else: 
         form = CalificarProyectoForm
+    context = {'grupo': grupo,'estudiante':estudiante, 'form': form}
+    return render(request, 'proyecto/calificar_proyecto.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tribunal'])
+def calificarProyectoTribunal(request, id_est):
+    grupo = request.user.groups.get().name
+    usuario = request.user.datostribunal
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    nota_docente = ProyectoDeGrado.objects.get(usuario=estudiante).calificacion
+    if request.method == 'POST':
+        form = CalificarProyectoTribunalForm(request.POST)
+        nota = request.POST['nota']
+        proyecto = RegistroProyectoTribunal.objects.get(usuario=estudiante)
+        proyecto.nota = nota
+        proyecto.nota_final = int(nota) + nota_docente
+        proyecto.save()
+        return redirect('progreso_estudiante',pk_est=id_est)
+    else: 
+        form = CalificarProyectoTribunalForm
     context = {'grupo': grupo,'estudiante':estudiante, 'form': form}
     return render(request, 'proyecto/calificar_proyecto.html', context)
 

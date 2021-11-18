@@ -34,16 +34,29 @@
         {% comment %}</tbody>{% endcomment %}
     {% comment %}</table>{% endcomment %}
 {% endif %}
+{% if estudiante.registroproyectotribunal %}
+    <p><a href={%url 'ver_proyecto_tribunal'%}>Registro Proyecto Tribunal</a>
+    <i class="fas text-success fa-check"></i></p>
+{% elif vbt %}
+    <p><a href={%url 'registro_proyecto_tribunal'%}>Registro Proyecto Tribunal</a>
+    <i class="fas text-danger fa-graduation-cap"></i></p>
+{% else %}
+    <p><a class="btn disabled" href=#>Registro Proyecto Tribunal</a>
+    <i class="fas text-danger fa-graduation-cap"></i></p>
+{% endif %}
 
 <p><a href={%url 'formulario_3' estudiante.id %}>Formulario 3 - Registro y Seguimiento </a>
 &nbsp; <a href="/media/formularios/form3.pdf">En Blanco</a>
 <a class='btn btn-warning' href={%url 'auspicio_f3' estudiante.id %}>Si tienes auspicio</a></p>
-<p><a href={%url 'formulario_2' estudiante.id %}>Formulario 4 - Materia: Proyecto </a>
-&nbsp; <a href="/media/formularios/form2.pdf">En Blanco</a></p>
-{% comment %}<p><a href={%url 'carta_final' estudiante.id %}>Carta de Conclusión</a>{% endcomment %}
-{% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
-{% comment %}<p><a href={%url 'ultimos_formularios'%}>Generación de los 3 formularios</a>{% endcomment %}
-{% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
+
+{% if estudiante.registroproyectotribunal %}
+    <p><a href={%url 'formulario_2' estudiante.id %}>Formulario 4 - Materia: Proyecto Abstract</a>
+    &nbsp; <a href="/media/formularios/form2.pdf">En Blanco</a></p>
+{% else %}
+    <p><a class="btn disabled" href=#>Formulario 4 - Materia: Proyecto, Abstract</a>
+    <i class="fas text-danger fa-graduation-cap"></i></p>
+{% endif %}
+
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if progreso.nivel < 100 %}
