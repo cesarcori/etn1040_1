@@ -1,0 +1,19 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<p>
+<div class="mb-3">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
+        <button type="submit" name='enviar' class="btn btn-success"
+            value='enviar'>Enviar</button>
+    </form>
+</div>
+{% for message in messages %}
+    <div class="alert alert-success text-center" role="alert">
+        {{ message }}
+    </div>
+{% endfor %}
+<p>
+{% endblock %}

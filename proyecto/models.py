@@ -322,10 +322,10 @@ class Progreso(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class BusquedaProyecto(models.Model):
-    documento = {
+    documento = [
             ('perfil','Perfil'),
             ('proyecto','Proyecto'),
-            }
+            ]
     autor = models.CharField(max_length=200, null=True)
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(blank=True, null=True)

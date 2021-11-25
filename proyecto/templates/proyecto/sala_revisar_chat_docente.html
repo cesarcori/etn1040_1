@@ -16,8 +16,8 @@
                     data-bs-parent="#accordionExample">
       <div class="accordion-body">
 {%for m in mensajes_doc%}
-<strong>{{m.usuario.first_name}}</strong>: {{m.texto}}
-<div class="card-subtitle mb-2 text-muted">{{m.fecha_creacion}}</div>
+    <strong>{{m.usuario.first_name}}</strong>: {{m.texto}}
+    <div class="card-subtitle mb-2 text-muted">{{m.fecha_creacion}}</div>
 {%endfor%}
       </div>
     </div>

@@ -1,0 +1,71 @@
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Asunto</th>
+      <th scope="col">Detalle</th>
+      <th scope="col">
+        {% if grupo == 'estudiante'%}
+            Documento
+        {% else %}
+            {% if sala_doc.visto_bueno %}
+                <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
+            {% else %}
+                {% if salas %}
+                    <a href="{% url 'revisar:dar_visto_bueno' sala_doc.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                    Dar Visto Bueno</a>
+                {% else %}
+                    <a href=# type="button" class="btn btn-outline-danger btn-sm disabled" 
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
+                    Dar Visto Bueno</a>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+      </th>
+      {% if grupo == 'estudiante' %}
+      <th scope="col">{{sala_doc.grupo_revisor.name.title}}</th>
+      {% else %}
+        <th scope="col">Revisar</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {%for sala, no_visto in dicc_salas.items %}
+        <tr>
+            <td>
+                {{sala.asunto}}
+            </td>      
+            <td>
+                <p>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample{{sala.id}}" aria-expanded="false"
+                    aria-controls="collapseExample{{sala.id}}">
+                    Detalle
+                </button>
+                </p>
+                <div class="collapse" id="collapseExample{{sala.id}}">
+                    <div class="card card-body">
+                        {{sala.detalle}}
+                    </div>
+                </div>
+            </td>      
+            <td>
+                <a class="btn btn-primary" target=_blank href="{{ sala.archivo_corregir.url }}">Perfil</a>
+            </td>      
+                <td>
+                <a class="btn btn-primary position-relative" href={% url 'revisar:mensajes' sala.id %} type="button">
+                    Observación
+                {% if no_visto == 0 %}
+                    </a>
+                {% else %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{no_visto}}
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                    </a>
+                {% endif %}
+                </td>      
+        </tr>
+    {%endfor%}
+  </tbody>
+</table>

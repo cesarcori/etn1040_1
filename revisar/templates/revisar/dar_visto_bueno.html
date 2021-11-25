@@ -1,0 +1,10 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+<h3>Seguro que desea dar el visto bueno al {{sala_doc.tipo|capfirst}} del estudiante: {{sala_doc.estudiante}} </h3>
+<form method="POST">
+    {% csrf_token %}
+    <a class="btn btn-danger" href={% url 'progreso_estudiante' sala_doc.estudiante.id %}>Aún no</a>
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Si</button>
+</form>
+{% endblock content%}

@@ -1,5 +1,6 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
+<a href={% url 'revisar:revisar_documento' 'perfil' 178 %}>revisar perfil</a>
 {% include 'proyecto/lista_docente_tutor.html' %}
 {% if progreso >= 100%}
 {% include 'proyecto/felicidades.html' %}

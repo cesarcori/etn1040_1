@@ -1,0 +1,42 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if grupo == 'estudiante'%}
+        <a class="btn btn-danger" 
+            href={%url 'revisar:revisar_documento' sala.sala_documento.tipo sala.sala_documento.revisor.id %}> Atras</a>
+    {% else %}
+        <a class="btn btn-danger" 
+            href={%url 'progreso_estudiante' sala.sala_documento.estudiante.id %}>Atras</a>
+    {% endif %}
+    <button type="submit" name='enviar' class="btn btn-success"
+        value='enviar'>Enviar</button>
+</form>
+
+<p>
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+      <h2 class="accordion-header" id="headingDocente">
+      <button class="accordion-button" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseDocente" 
+                    aria-expanded="true"
+                    aria-controls="collapseDocente">
+          <strong>Mensaje con: {{sala.sala_documento.grupo_revisor.name.title}}</strong>
+          
+      </button>
+    </h2>
+    <div id="collapseDocente" class="accordion-collapse collapse show"
+                    aria-labelledby="headingDocente" 
+                    data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+{%for mensaje in mensajes%}
+    <strong>{{mensaje.usuario.first_name}}</strong>: {{mensaje.mensaje}}
+    <div class="card-subtitle mb-2 text-muted">{{mensaje.fecha_creacion}}</div>
+{%endfor%}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content%}

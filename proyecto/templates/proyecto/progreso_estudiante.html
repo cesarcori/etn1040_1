@@ -101,7 +101,7 @@
 
 <div class="row">
     <div class="col-md-7">
-
+        {% include 'revisar/vista_revisor.html'%}
 {% comment %}********* PROYECTO TRIBUNAL **************{% endcomment %}
 {% if progreso >= 86 and grupo == 'tribunal'%}
     {% if estudiante.registroproyectotribunal and estudiante.registroproyectotribunal.nota %}

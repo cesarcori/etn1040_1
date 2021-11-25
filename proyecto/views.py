@@ -13,6 +13,7 @@ from .decorators import unauthenticated_user, allowed_users, admin_only, permiti
 from .decorators import *
 from .forms import *
 from .models import *
+from revisar.models import *
 from .cartas import *
 from .reportes import *
 from .formularios import *
@@ -939,6 +940,25 @@ def progresoEstudiante(request, pk_est):
                     if not mensaje_tut.visto_tutor:
                         no_visto += 1
                 dicc_salas_proy[sala] = no_visto
+            revisor = request.user
+            documento = 'perfil'
+            usuario = request.user
+            sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
+                grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
+            salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+            dicc_salas = {}
+            for sala in salas_revisar:
+                mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
+                no_visto = 0
+                for mensaje in mensajes:
+                    if not mensaje.visto:
+                        no_visto += 1
+                dicc_salas[sala] = no_visto
+            # context = {
+                    # 'sala_doc':sala_doc,
+                    # 'dicc_salas':dicc_salas,
+                    # 'grupo':grupo.name,
+                    # }
             context = {'grupo': grupo,'estudiante':estudiante,
                     'progreso':progreso,
                     'info_estu':info_estu,
@@ -950,6 +970,9 @@ def progresoEstudiante(request, pk_est):
                     'proyecto': proyecto,
                     'dicc_vb_tribunal':dicc_vb_tribunal,
                     'calificacion': calificacion,
+                    'sala_doc':sala_doc,
+                    'dicc_salas':dicc_salas,
+                    'grupo':grupo,
                     }
             context = {**context_aux, **context}
             return render(request, 'proyecto/progreso_estudiante.html', context)
