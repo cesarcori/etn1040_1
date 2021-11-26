@@ -1,65 +1,17 @@
 {% extends 'proyecto/main.html'%}
 {% block content%}
-
-{% comment %}{% include 'revisar/vista_revisor.html'%}{% endcomment %}
+<h4>Revisor: {{sala_doc.grupo_revisor|title}}, Ing. {{sala_doc.revisor.first_name}} {{sala_doc.revisor.last_name}}<br></h4>
 {% if sala_doc.visto_bueno%}
-    <div class="d-inline p-2 bg-success text-white">El Tutor ya dio visto bueno al perfil</div><br><br>
+    <div class="d-inline p-2 bg-success text-white">
+        El {{sala_doc.grupo_revisor}} ya dió el visto bueno al {{sala_doc.tipo}}</div><br><br>
 {% else %}
     <a class="btn btn-warning" 
         href={% url 'revisar:crear_sala_revisar' 'perfil' sala_doc.revisor.id sala_doc.id%}>
         Crear Revisión</a>
-    <div class="d-inline p-2 bg-danger text-white">El {{sala_doc.grupo_revisor.name.title}} aún no dio el visto bueno</div><br><br>
+    <div class="d-inline p-2 bg-danger text-white">
+        El {{sala_doc.grupo_revisor.name.title}} aún no dio el visto bueno al {{sala_doc.tipo}}</div><br><br>
 {% endif %}
     {% include 'revisar/vista_revisor.html'%}
-{% comment %}<table class="table table-striped table-hover">{% endcomment %}
-  {% comment %}<thead>{% endcomment %}
-    {% comment %}<tr>{% endcomment %}
-      {% comment %}<th scope="col">Asunto</th>{% endcomment %}
-      {% comment %}<th scope="col">Detalle</th>{% endcomment %}
-      {% comment %}<th scope="col">Documento</th>{% endcomment %}
-      {% comment %}<th scope="col">{{sala_doc.grupo_revisor.name.title}}</th>{% endcomment %}
-    {% comment %}</tr>{% endcomment %}
-  {% comment %}</thead>{% endcomment %}
-  {% comment %}<tbody>{% endcomment %}
-    {% comment %}{%for sala, no_visto in dicc_salas.items %}{% endcomment %}
-        {% comment %}<tr>{% endcomment %}
-            {% comment %}<td>{% endcomment %}
-                {% comment %}{{sala.asunto}}{% endcomment %}
-            {% comment %}</td>      {% endcomment %}
-            {% comment %}<td>{% endcomment %}
-                {% comment %}<p>{% endcomment %}
-                {% comment %}<button class="btn btn-primary" type="button" data-bs-toggle="collapse"{% endcomment %}
-                    {% comment %}data-bs-target="#collapseExample{{sala.id}}" aria-expanded="false"{% endcomment %}
-                    {% comment %}aria-controls="collapseExample{{sala.id}}">{% endcomment %}
-                    {% comment %}Detalle{% endcomment %}
-                {% comment %}</button>{% endcomment %}
-                {% comment %}</p>{% endcomment %}
-                {% comment %}<div class="collapse" id="collapseExample{{sala.id}}">{% endcomment %}
-                    {% comment %}<div class="card card-body">{% endcomment %}
-                        {% comment %}{{sala.detalle}}{% endcomment %}
-                    {% comment %}</div>{% endcomment %}
-                {% comment %}</div>{% endcomment %}
-            {% comment %}</td>      {% endcomment %}
-            {% comment %}<td>{% endcomment %}
-                {% comment %}<a class="btn btn-primary" target=_blank href="{{ sala.archivo_corregir.url }}">Perfil</a>{% endcomment %}
-            {% comment %}</td>      {% endcomment %}
-                {% comment %}<td>{% endcomment %}
-                {% comment %}<a class="btn btn-primary position-relative" href={% url 'revisar:mensajes' sala.id %} type="button">{% endcomment %}
-                    {% comment %}Observación{% endcomment %}
-                {% comment %}{% if no_visto == 0%}{% endcomment %}
-                    {% comment %}</a>{% endcomment %}
-                {% comment %}{% else %}{% endcomment %}
-                    {% comment %}<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{% endcomment %}
-                        {% comment %}{{no_visto}}{% endcomment %}
-                        {% comment %}<span class="visually-hidden">unread messages</span>{% endcomment %}
-                    {% comment %}</span>{% endcomment %}
-                    {% comment %}</a>{% endcomment %}
-                {% comment %}{% endif %}{% endcomment %}
-                {% comment %}</td>      {% endcomment %}
-        {% comment %}</tr>{% endcomment %}
-    {% comment %}{%endfor%}{% endcomment %}
-  {% comment %}</tbody>{% endcomment %}
-{% comment %}</table>{% endcomment %}
 <a class="btn btn-danger" href={%url 'paso4'%}>Atras</a>
 <p>
 {% endblock content%}

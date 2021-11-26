@@ -1,21 +1,26 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h4>Elaboración del Proyecto de Grado y Revisión</h4>
-{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor %}
+{% comment %}{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor %}{% endcomment %}
+{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
     <p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>
     <i class="fas text-success fa-check"></i></p>
-    <p><a href={%url 'entrega_proyecto' %}>Revisión Proyecto</a>
+    {% comment %}<p><a href={%url 'entrega_proyecto' %}>Revisión Proyecto</a>{% endcomment %}
+    <p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>
     <i class="fas text-success fa-check"></i></p>
 {% else %}
     <p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>
     <i class="fas text-danger fa-graduation-cap"></i><br>
-    <p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a>
+    {% comment %}<p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a>{% endcomment %}
+    <p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>
     <i class="fas text-danger fa-graduation-cap"></i></p>
     <p><a class="btn disabled" href=#>Registro Proyecto de Grado</a>
     <i class="fas text-danger fa-graduation-cap"></i></p>
 {% endif %}
 
-{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor and not proyecto_grado%}
+{% comment %}{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor and not proyecto_grado%}{% endcomment %}
+{% comment %}{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno and not proyecto_grado %}{% endcomment %}
+{% if not proyecto_grado %}
     <p><a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>
     <i class="fas text-danger fa-graduation-cap"></i></p>
 {% endif %}
@@ -32,7 +37,8 @@
 
 {% comment %}{% if proyecto_grado and proyecto.0.calificacion%}{% endcomment %}
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
-{% if proyecto_grado and estudiante.vb_proyecto_tutor and estudiante.vb_proyecto_docente and proyecto.0.calificacion%}
+{% comment %}{% if proyecto_grado and estudiante.vb_proyecto_tutor and estudiante.vb_proyecto_docente and proyecto.0.calificacion%}{% endcomment %}
+{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno and proyecto.0.calificacion and proyecto_grado%}
     {% if progreso.nivel < 86 %}
     <a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a></p>
     {% endif %}

@@ -374,6 +374,7 @@ def solicitudTutoria(request, id_est):
     estudiante = DatosEstudiante.objects.get(id=id_est)
     aceptar = 'no'
     rechazar = 'no'
+    usuario = request.user
     if request.method == 'POST':
         aceptar = request.POST.get('confirmar')
         rechazar = request.POST.get('rechazar') 
@@ -383,6 +384,13 @@ def solicitudTutoria(request, id_est):
         progreso = Progreso.objects.get(usuario=estudiante)
         progreso.nivel = 35
         progreso.save()
+        # crear sala de revision perfil
+        SalaDocumentoApp.objects.create(
+            revisor = usuario,    
+            grupo_revisor = usuario.groups.get(),
+            estudiante = estudiante,
+            tipo = 'perfil',
+            )
         return redirect('tutor')
     if rechazar == 'si':
         estudiante.tutor = None
@@ -848,6 +856,90 @@ def imprimirReporteEstudiante(request, id_est):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
 def progresoEstudiante(request, pk_est):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=pk_est)
+    progreso = Progreso.objects.get(usuario=estudiante).nivel
+    tribunales = estudiante.tribunales.all()
+    dicc_vb_tribunal = {}
+    for tribunal in tribunales:
+        salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
+        vb_tribunal = False
+        for sala in salas:
+            if sala.visto_bueno:
+                vb_tribunal = sala.visto_bueno
+                break
+        dicc_vb_tribunal[tribunal] = vb_tribunal
+    if ProyectoDeGrado.objects.filter(usuario=estudiante).exists():
+        proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+        calificacion = proyecto.calificacion
+    else:
+        proyecto = None
+        calificacion = None
+    # cronograma informacion
+    context_aux = infoCronograma(estudiante.id)
+    if not isinstance(context_aux, dict):
+        context_aux = {}
+        mensaje = infoCronograma(estudiante.id)
+        return HttpResponse(mensaje)
+    if grupo == 'docente':
+        # evita que se un docente consulte otros estudiantes
+        existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
+        if not existe_est:
+            return redirect('error_pagina')
+    elif grupo== 'tutor':
+        existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
+        if not existe_est:
+            return redirect('error_pagina')
+    elif grupo== 'tribunal':
+        existe_est = request.user.datostribunal.datosestudiante_set.filter(id=pk_est).exists()
+        if not existe_est:
+            # para que salga notificacion proyecto
+            return redirect('error_pagina')
+    elif grupo== 'director':
+        existe_est = DatosEstudiante.objects.filter(id=pk_est).exists()
+        if existe_est:
+            context = {'grupo': grupo,'estudiante':estudiante,
+                    'progreso':progreso,
+                    'proyecto': proyecto,
+                    'dicc_vb_tribunal':dicc_vb_tribunal,
+                    'calificacion': calificacion,
+                    }
+            context = {**context_aux, **context}
+            return render(request, 'proyecto/progreso_estudiante.html', context)
+        else:
+            return redirect('error_pagina')
+    revisor = request.user
+    usuario = request.user
+    # documento = 'perfil'
+    # sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
+        # grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
+    salas_doc_est = SalaDocumentoApp.objects.filter(estudiante=estudiante).exclude(revisor=revisor)
+    sala_doc = SalaDocumentoApp.objects.filter(revisor=revisor, 
+        grupo_revisor=revisor.groups.get(), estudiante=estudiante).last()
+    salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+    dicc_salas = {}
+    for sala in salas_revisar:
+        mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
+        no_visto = 0
+        for mensaje in mensajes:
+            if not mensaje.visto:
+                no_visto += 1
+        dicc_salas[sala] = no_visto
+    context = {'grupo': grupo,
+            'estudiante':estudiante,
+            'progreso':progreso,
+            'proyecto': proyecto,
+            'calificacion': calificacion,
+            'sala_doc':sala_doc,
+            'dicc_salas':dicc_salas,
+            'salas_doc_est':salas_doc_est,
+            }
+    context = {**context_aux, **context}
+    return render(request, 'proyecto/progreso_estudiante.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
+def progresoEstudianteBackup(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
     progreso = Progreso.objects.get(usuario=estudiante).nivel
@@ -899,6 +991,20 @@ def progresoEstudiante(request, pk_est):
                     if not mensaje_doc.visto_docente:
                         no_visto += 1
                 dicc_salas_proy[sala] = no_visto
+            revisor = request.user
+            documento = 'perfil'
+            usuario = request.user
+            sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
+                grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
+            salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+            dicc_salas = {}
+            for sala in salas_revisar:
+                mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
+                no_visto = 0
+                for mensaje in mensajes:
+                    if not mensaje.visto:
+                        no_visto += 1
+                dicc_salas[sala] = no_visto
             context = {'grupo': grupo,'estudiante':estudiante,
                     'progreso':progreso,
                     'info_estu':info_estu,
@@ -910,6 +1016,8 @@ def progresoEstudiante(request, pk_est):
                     'proyecto': proyecto,
                     'dicc_vb_tribunal':dicc_vb_tribunal,
                     'calificacion': calificacion,
+                    'sala_doc':sala_doc,
+                    'dicc_salas':dicc_salas,
                     }
             context = {**context_aux, **context}
             return render(request, 'proyecto/progreso_estudiante.html', context)
@@ -972,7 +1080,6 @@ def progresoEstudiante(request, pk_est):
                     'calificacion': calificacion,
                     'sala_doc':sala_doc,
                     'dicc_salas':dicc_salas,
-                    'grupo':grupo,
                     }
             context = {**context_aux, **context}
             return render(request, 'proyecto/progreso_estudiante.html', context)
@@ -1608,11 +1715,25 @@ def reporteIndicacionesTutor(request, id_est):
 def paso4(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    tutor = estudiante.tutor
+    docente = estudiante.grupo_doc
     registro_perfil_existe = RegistroPerfil.objects.filter(usuario=estudiante).exists()
     progreso = Progreso.objects.get(usuario=estudiante)
     perfil = RegistroPerfil.objects.filter(usuario=estudiante)
+    # nueva app revision
+    sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=tutor.usuario, tipo='perfil')
+    if sala_doc.visto_bueno:
+        sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=docente.usuario, tipo='perfil')
+        if not sala_doc:
+            SalaDocumentoApp.objects.create(
+                revisor = docente.usuario,    
+                grupo_revisor = docente.usuario.groups.get(),
+                estudiante = estudiante,
+                tipo = 'perfil',
+                )
     context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,
-            'progreso': progreso,'perfil':perfil,'estudiante':estudiante}
+            'progreso': progreso,'perfil':perfil,'estudiante':estudiante,
+            'sala_doc': sala_doc}
     return render(request, 'proyecto/estudiante_paso4.html', context)
 
 @login_required(login_url='login')
@@ -1976,11 +2097,21 @@ def formulario_1(request,id_est):
 def paso5(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    tutor = estudiante.tutor
+    docente = estudiante.grupo_doc
     proyecto_grado = ProyectoDeGrado.objects.filter(usuario=estudiante).exists()
     proyecto = ProyectoDeGrado.objects.filter(usuario=estudiante)
     progreso = Progreso.objects.get(usuario=estudiante)
+    registro_perfil_existe = RegistroPerfil.objects.filter(usuario=estudiante).exists()
+    progreso = Progreso.objects.get(usuario=estudiante)
+    perfil = RegistroPerfil.objects.filter(usuario=estudiante)
+    # nueva app revision
+    sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=tutor.usuario, tipo='proyecto')
+    if sala_doc.visto_bueno:
+        sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=docente.usuario, tipo='proyecto')
     context = {'grupo': grupo, 'progreso': progreso,'proyecto_grado':proyecto_grado,
-            'proyecto':proyecto,'estudiante':estudiante}
+            'proyecto':proyecto,'estudiante':estudiante,
+            'sala_doc':sala_doc}
     return render(request, 'proyecto/estudiante_paso5.html', context)
 
 @login_required(login_url='login')
@@ -2622,14 +2753,19 @@ def confirmarPaso1(request):
             progreso.nivel = 21
         if 35 <= confirmar < 64:
             progreso.nivel = 64
-        # if confirmar < 19 and confirmar >= 1:
-            # progreso.nivel = 19
-        # elif confirmar < 25 and confirmar >= 19:
-            # progreso.nivel = 25
-        # elif confirmar < 25 and confirmar >= 19:
-            # progreso.nivel = 25
-        # elif confirmar < 69 and confirmar >= 25:
-            # progreso.nivel = 69
+            # crear sala de revision perfil
+            SalaDocumentoApp.objects.create(
+                revisor = estudiante.tutor.usuario,    
+                grupo_revisor = estudiante.tutor.usuario.groups.get(),
+                estudiante = estudiante,
+                tipo = 'proyecto',
+                )
+            SalaDocumentoApp.objects.create(
+                revisor = estudiante.grupo_doc.usuario,    
+                grupo_revisor = estudiante.grupo_doc.usuario.groups.get(),
+                estudiante = estudiante,
+                tipo = 'proyecto',
+                )
         progreso.save()
         return redirect('estudiante')
     context = {'grupo': grupo, 'progreso': progreso}

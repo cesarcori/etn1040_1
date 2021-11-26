@@ -48,7 +48,7 @@ def crearSalaRevisar(request, documento, id_revisor, id_sala_doc):
             file = form.save(commit=False)
             file.sala_documento = sala_doc
             file.save()
-            return redirect('revisar:revisar_documento', documento='perfil', id_revisor=178)
+            return redirect('revisar:revisar_documento', documento=sala_doc.tipo, id_revisor=sala_doc.revisor.id)
     context = {'form':form,}
     return render(request, 'revisar/crear_sala_revisar.html', context)
 

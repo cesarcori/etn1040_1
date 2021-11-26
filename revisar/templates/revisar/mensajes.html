@@ -23,7 +23,11 @@
                     data-bs-target="#collapseDocente" 
                     aria-expanded="true"
                     aria-controls="collapseDocente">
-          <strong>Mensaje con: {{sala.sala_documento.grupo_revisor.name.title}}</strong>
+          {% if grupo == 'estudiante' %}
+            <strong>Mensaje con: {{sala.sala_documento.grupo_revisor.name.title}}</strong>
+          {% else %}
+            <strong>Mensaje con: {{sala.sala_documento.estudiante.usuario.groups.get|title}}</strong>
+          {% endif %}
           
       </button>
     </h2>
