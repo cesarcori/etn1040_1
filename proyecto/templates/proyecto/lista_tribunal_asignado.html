@@ -9,13 +9,15 @@
     </tr>
 </thead>
     <tbody>
-    {% for tribunal, vb in dicc_vb_tribunal.items %}
+    {% for sala_doc in salas_doc %}
         <tr>
-        <td><a href={% url 'enlace_tribunal' tribunal.id %}>{{tribunal}}</a><br></td>
+        <td><a href={% url 'enlace_tribunal' sala_doc.revisor.datostribunal.id %}>{{sala_doc.revisor.datostribunal}}</a><br></td>
         {% if grupo == 'estudiante'%}
-            <td><a href={% url 'entrega_tribunal' tribunal.id estudiante.id%}>Ingresar</a></td>
+            <!--<td><a href={% url 'entrega_tribunal' sala_doc.revisor.datostribunal.id estudiante.id%}>Ingresar</a></td>-->
+            <td><a href={% url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>
+                    Ingresar</a></td>
         {% endif %}
-        {% if vb %}
+        {% if sala_doc.visto_bueno %}
             <td><div class="d-inline p-1 bg-success text-white">Visto Bueno</div></td>
         {% else %}
             <td><div class="d-inline p-1 bg-danger text-white">Sin Visto Bueno</div></td>

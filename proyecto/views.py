@@ -274,6 +274,13 @@ def confirmarAsignarTribunal(request, id_est, id_trib):
                     material_estudiante = estudiante.proyectodegrado.archivo,
                     visto_bueno = False,
                 )
+                # crear sala documento para tribunal
+                SalaDocumentoApp.objects.create(
+                    revisor = tribunal.usuario,    
+                    grupo_revisor = tribunal.usuario.groups.get(),
+                    estudiante = estudiante,
+                    tipo = 'tribunal',
+                    )
             else:
                 print('ya tiene dos tribunales')
             return redirect('asignar_tribunal', id_est=id_est)
@@ -917,6 +924,7 @@ def progresoEstudiante(request, pk_est):
     sala_doc = SalaDocumentoApp.objects.filter(revisor=revisor, 
         grupo_revisor=revisor.groups.get(), estudiante=estudiante).last()
     salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+    salas_doc = SalaDocumentoApp.objects.filter(estudiante=estudiante, tipo='tribunal')
     dicc_salas = {}
     for sala in salas_revisar:
         mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
@@ -925,6 +933,7 @@ def progresoEstudiante(request, pk_est):
             if not mensaje.visto:
                 no_visto += 1
         dicc_salas[sala] = no_visto
+    # lista de tribunal:
     context = {'grupo': grupo,
             'estudiante':estudiante,
             'progreso':progreso,
@@ -933,6 +942,8 @@ def progresoEstudiante(request, pk_est):
             'sala_doc':sala_doc,
             'dicc_salas':dicc_salas,
             'salas_doc_est':salas_doc_est,
+            'dicc_vb_tribunal': dicc_vb_tribunal,
+            'salas_doc':salas_doc,
             }
     context = {**context_aux, **context}
     return render(request, 'proyecto/progreso_estudiante.html', context)
@@ -2369,28 +2380,31 @@ def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     progreso = Progreso.objects.get(usuario=estudiante)
-    tribunales = estudiante.tribunales.all()
-    dicc_vb_tribunal = {}
-    for tribunal in tribunales:
-        salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
-        vb_tribunal = False
-        for sala in salas:
-            if sala.visto_bueno:
-                vb_tribunal = sala.visto_bueno
-                break
-        dicc_vb_tribunal[tribunal] = vb_tribunal
-    vb_tribunales = []
-    for tribunal, vb in dicc_vb_tribunal.items():
-        vb_tribunales.append(vb)
-    if vb_tribunales == []:
-        vb_tribunal_total = False
-    else:
-        vb_tribunal_total = all(vb_tribunales)
+    # tribunales = estudiante.tribunales.all()
+    # dicc_vb_tribunal = {}
+    # for tribunal in tribunales:
+        # salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
+        # vb_tribunal = False
+        # for sala in salas:
+            # if sala.visto_bueno:
+                # vb_tribunal = sala.visto_bueno
+                # break
+        # dicc_vb_tribunal[tribunal] = vb_tribunal
+    # vb_tribunales = []
+    # for tribunal, vb in dicc_vb_tribunal.items():
+        # vb_tribunales.append(vb)
+    # if vb_tribunales == []:
+        # vb_tribunal_total = False
+    # else:
+        # vb_tribunal_total = all(vb_tribunales)
+    # nueva app revision
+    vector_sala_doc = SalaDocumentoApp.objects.filter(estudiante=estudiante, tipo='tribunal')
     context = {'grupo': grupo, 
             'progreso': progreso,
-            'dicc_vb_tribunal':dicc_vb_tribunal,
-            'vbt': vb_tribunal_total,
-            'estudiante': estudiante }
+            'estudiante': estudiante,
+            # 'dicc_vb_tribunal':dicc_vb_tribunal,
+            # 'vbt': vb_tribunal_total,
+            'salas_doc':vector_sala_doc,}
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
