@@ -379,6 +379,7 @@ def documentosFirma(request):
 def solicitudTutoria(request, id_est):
     grupo = 'tutor'
     estudiante = DatosEstudiante.objects.get(id=id_est)
+    docente = estudiante.grupo_doc
     aceptar = 'no'
     rechazar = 'no'
     usuario = request.user
@@ -391,10 +392,17 @@ def solicitudTutoria(request, id_est):
         progreso = Progreso.objects.get(usuario=estudiante)
         progreso.nivel = 35
         progreso.save()
-        # crear sala de revision perfil
+        # crear sala de documento perfil tutor
         SalaDocumentoApp.objects.create(
             revisor = usuario,    
             grupo_revisor = usuario.groups.get(),
+            estudiante = estudiante,
+            tipo = 'perfil',
+            )
+        # creacion sala documento perfil docente
+        SalaDocumentoApp.objects.create(
+            revisor = docente.usuario,    
+            grupo_revisor = docente.usuario.groups.get(),
             estudiante = estudiante,
             tipo = 'perfil',
             )
@@ -920,7 +928,7 @@ def progresoEstudiante(request, pk_est):
     # documento = 'perfil'
     # sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
         # grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
-    salas_doc_est = SalaDocumentoApp.objects.filter(estudiante=estudiante).exclude(revisor=revisor)
+    salas_doc_est = SalaDocumentoApp.objects.filter(estudiante=estudiante).exclude(revisor=revisor).order_by('-fecha_creacion')
     sala_doc = SalaDocumentoApp.objects.filter(revisor=revisor, 
         grupo_revisor=revisor.groups.get(), estudiante=estudiante).last()
     salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
@@ -1735,13 +1743,6 @@ def paso4(request):
     sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=tutor.usuario, tipo='perfil')
     if sala_doc.visto_bueno:
         sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=docente.usuario, tipo='perfil')
-        if not sala_doc:
-            SalaDocumentoApp.objects.create(
-                revisor = docente.usuario,    
-                grupo_revisor = docente.usuario.groups.get(),
-                estudiante = estudiante,
-                tipo = 'perfil',
-                )
     context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,
             'progreso': progreso,'perfil':perfil,'estudiante':estudiante,
             'sala_doc': sala_doc}

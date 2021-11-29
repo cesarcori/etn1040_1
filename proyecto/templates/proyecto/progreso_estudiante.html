@@ -98,11 +98,11 @@
 {% comment %}{% endif %}{% endcomment %}
 {% for sala_doc_est in salas_doc_est %}
     {% if sala_doc_est.visto_bueno %}
-        <div class="d-inline p-2 bg-success text-white">
-            El {{sala_doc_est.grupo_revisor|title}} ya dio visto bueno al {{sala_doc_est.tipo|title}}</div>
+    <p><div class="d-inline p-2 bg-success text-white">
+        El {{sala_doc_est.grupo_revisor|title}} ya dio visto bueno al {{sala_doc_est.tipo|title}}</div></p>
     {% else %}
-        <div class="d-inline p-2 bg-danger text-white">
-            El {{sala_doc_est.grupo_revisor|upper}} aún no dio el visto bueno al {{sala_doc_est.tipo|upper}}</div>
+    <p><div class="d-inline p-2 bg-danger text-white">
+        El {{sala_doc_est.grupo_revisor|upper}} aún no dio el visto bueno al {{sala_doc_est.tipo|upper}}</div></p>
     {% endif %}
 {% endfor %}
 </p>

@@ -13,6 +13,7 @@ class SalaDocumentoApp(models.Model):
     estudiante = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     visto_bueno = models.BooleanField(default=False)
     tipo = models.CharField(max_length=50, choices=TIPO_REVISAR, null=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         self.titulo = self.revisor.first_name
         return f'Documento: {self.tipo}, Revisor: {self.titulo}-{self.grupo_revisor}, Est: {self.estudiante.nombre}'
