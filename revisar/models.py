@@ -5,7 +5,7 @@ from proyecto.models import DatosEstudiante
 TIPO_REVISAR= [
     ('perfil','Perfil'),
     ('proyecto','Proyecto'),
-    ('tribunal','Tribunal'),
+    ('tribunal','Proyecto Tribunal'),
     ]
 class SalaDocumentoApp(models.Model):
     revisor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -22,7 +22,7 @@ class SalaRevisarApp(models.Model):
     sala_documento = models.ForeignKey(SalaDocumentoApp, null=True, blank=True, on_delete=models.CASCADE)
     asunto = models.CharField(max_length=200, null=True)
     detalle = models.TextField(blank=True, null=True)
-    archivo_corregir = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
+    archivo_corregir = models.FileField(upload_to='material_estudiante_perfil/', null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return f'Sala Asunto: {self.asunto}'

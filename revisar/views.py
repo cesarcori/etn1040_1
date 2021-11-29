@@ -22,6 +22,7 @@ def revisarDocumento(request, documento, id_revisor):
     revisor = User.objects.get(id=id_revisor)
     grupo_revisor = revisor.groups.get()
     sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, grupo_revisor=grupo_revisor, estudiante=estudiante, tipo=documento)
+    salas_doc = SalaDocumentoApp.objects.filter(estudiante=estudiante, tipo=documento)
     salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
     dicc_salas = {}
     for sala in salas_revisar:
@@ -34,6 +35,7 @@ def revisarDocumento(request, documento, id_revisor):
     context = {
             'sala_doc':sala_doc,
             'dicc_salas':dicc_salas,
+            'salas_doc': salas_doc,
             'grupo':grupo.name}
     return render(request, 'revisar/revisar_documento.html', context)
 

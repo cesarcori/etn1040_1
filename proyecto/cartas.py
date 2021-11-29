@@ -531,7 +531,7 @@ def carta_final(buffer, estudiante):
     parrafo1_2 = titulo_proyecto
     parrafo1_3 = 'A cargo del estudiante'
     parrafo1_4 = nombre
-    parrafo1_5 = 'Doy total fe y conformidad el presente Proyecto de Grado cuenta con las características necesarias para ser defendido y presentado ante el Tribunal de Docentes.'
+    parrafo1_5 = 'Doy total conformidad al mencionado Proyecto de Grado que cuenta con las características necesarias para ser defendido y presentado ante el Tribunal de Docentes.'
     despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
 
 # Fecha

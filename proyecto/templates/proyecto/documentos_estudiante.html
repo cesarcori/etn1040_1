@@ -45,7 +45,7 @@
                 {% endif %}
             </tr>
             <tr>
-                {% if estudiante.vb_proyecto_tutor %}
+                {% if visto_bueno_tutor_proyecto %}
                 <td class='bg-success text-white'>
                     <a target='_blank' href={%url 'carta_final' estudiante.id %} class='text-white text-underline-hover'>
                         Carta de Conclusión</a></td>
@@ -90,6 +90,17 @@
                 {% endif %}
             </tr>
             <tr>
+                {% if estudiante.proyectodegrado.calificacion%}
+                <td class='bg-success text-white'>
+                    <a target='_blank' href={%url 'formulario_2' estudiante.id %} class='text-white text-underline-hover'>
+                        Formulario 4<br>Materia: Proyecto, abstract</a></td>
+                <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+                {% else %}
+                <td class='bg-danger text-white'>Formulario 4<br>Materia: Proyecto</td>
+                <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+                {% endif %}
+            </tr>
+            <tr>
                 {% if estudiante.registroproyectotribunal%}
                 <td class='bg-success text-white'>
                     <a target='_blank' href={{ estudiante.registroproyectotribunal.archivo.url }} 
@@ -98,17 +109,6 @@
                 <td class='bg-success text-white'><i class="fas fa-check"></i></td>
                 {% else %}
                 <td class='bg-danger text-white'>Proyecto de Grado<br>corregido por tribunal</td>
-                <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
-                {% endif %}
-            </tr>
-            <tr>
-                {% if estudiante.registroproyectotribunal.nota_final%}
-                <td class='bg-success text-white'>
-                    <a target='_blank' href={%url 'formulario_2' estudiante.id %} class='text-white text-underline-hover'>
-                        Formulario 4<br>Materia: Proyecto, abstract</a></td>
-                <td class='bg-success text-white'><i class="fas fa-check"></i></td>
-                {% else %}
-                <td class='bg-danger text-white'>Formulario 2<br>Materia: Proyecto</td>
                 <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
                 {% endif %}
             </tr>

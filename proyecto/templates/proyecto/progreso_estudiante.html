@@ -17,13 +17,17 @@
     <a class="btn btn-warning disabled" href=#>Cronograma</a>
 {% endif %}
 
+{% comment %}Calificarcion{% endcomment %}
 {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
     <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
 {%endif%}
+{% if grupo == 'tribunal' and estudiante.registroproyectotribunal and not estudiante.registroproyectotribunal.nota %}
+    <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' estudiante.id %}>Calificar Proyecto Final</a>
+{% endif %}
 
 {%if grupo == 'docente' and not estudiante.solicitud_tribunal_docente and estudiante.proyectodegrado and calificacion != None%}
     <a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' estudiante.id %}>Solicitar Tribunal</a>
-{% elif grupo == 'docente' or grupo == 'tutor'%}
+{% elif grupo == 'docente' or grupo == 'tutor' %}
     {% if estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
         <div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura</div>
     {% elif estudiante.tribunales.count == 2%}
@@ -42,9 +46,10 @@
     </p>
 {% elif grupo == 'director' or grupo == 'tutor' %}
     {% if estudiante.tribunales.count == 2%}
-        <div class="d-inline p-2 bg-success text-white">Tribunal asignado</div><br>
-        <a href={% url 'enlace_tribunal' estudiante.tribunales.all.0.id %}>{{estudiante.tribunales.all.0}}</a><br>
-        <a href={% url 'enlace_tribunal' estudiante.tribunales.all.1.id %}>{{estudiante.tribunales.all.1}}</a><br>
+        {% comment %}<div class="d-inline p-2 bg-success text-white">Tribunal asignado</div><br>{% endcomment %}
+        {% comment %}<a href={% url 'enlace_tribunal' estudiante.tribunales.all.0.id %}>{{estudiante.tribunales.all.0}}</a><br>{% endcomment %}
+        {% comment %}<a href={% url 'enlace_tribunal' estudiante.tribunales.all.1.id %}>{{estudiante.tribunales.all.1}}</a><br>{% endcomment %}
+        {% include 'proyecto/lista_tribunal_asignado.html'%}
     {% endif %}
 {%endif%}
 
@@ -62,8 +67,11 @@
     {%endif%}
 {%endif%}
 
+{%if grupo == 'tribunal' and not calificacion == None %}
+    {% include 'proyecto/ver_nota.html' %}
+{% endif %}
 {%if grupo == 'tutor' and not calificacion == None%}
-        {% include 'proyecto/ver_nota.html' %}
+    {% include 'proyecto/ver_nota.html' %}
     {% comment %}<p>{% endcomment %}
     {% comment %}<strong>Calificación del Proyecto de Grado</strong><br>{% endcomment %}
     {% comment %}Tiempo Elaboración (Max. 9%): <strong>{{proyecto.nota_tiempo_elaboracion}}</strong><br>{% endcomment %}
@@ -102,7 +110,7 @@
         El {{sala_doc_est.grupo_revisor|title}} ya dio visto bueno al {{sala_doc_est.tipo|title}}</div></p>
     {% else %}
     <p><div class="d-inline p-2 bg-danger text-white">
-        El {{sala_doc_est.grupo_revisor|upper}} aún no dio el visto bueno al {{sala_doc_est.tipo|upper}}</div></p>
+        El {{sala_doc_est.grupo_revisor|title}} aún no dio el visto bueno al {{sala_doc_est.tipo|title}}</div></p>
     {% endif %}
 {% endfor %}
 </p>

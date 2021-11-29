@@ -912,16 +912,7 @@ def progresoEstudiante(request, pk_est):
             return redirect('error_pagina')
     elif grupo== 'director':
         existe_est = DatosEstudiante.objects.filter(id=pk_est).exists()
-        if existe_est:
-            context = {'grupo': grupo,'estudiante':estudiante,
-                    'progreso':progreso,
-                    'proyecto': proyecto,
-                    'dicc_vb_tribunal':dicc_vb_tribunal,
-                    'calificacion': calificacion,
-                    }
-            context = {**context_aux, **context}
-            return render(request, 'proyecto/progreso_estudiante.html', context)
-        else:
+        if not existe_est:
             return redirect('error_pagina')
     revisor = request.user
     usuario = request.user
@@ -941,7 +932,11 @@ def progresoEstudiante(request, pk_est):
             if not mensaje.visto:
                 no_visto += 1
         dicc_salas[sala] = no_visto
-    # lista de tribunal:
+    query_visto_bueno_tutor_proyecto = estudiante.saladocumentoapp_set.filter(revisor=estudiante.tutor.usuario, tipo='proyecto')
+    if query_visto_bueno_tutor_proyecto:
+        visto_bueno_tutor_proyecto = query_visto_bueno_tutor_proyecto[0].visto_bueno
+    else:
+        visto_bueno_tutor_proyecto = False
     context = {'grupo': grupo,
             'estudiante':estudiante,
             'progreso':progreso,
@@ -952,6 +947,7 @@ def progresoEstudiante(request, pk_est):
             'salas_doc_est':salas_doc_est,
             'dicc_vb_tribunal': dicc_vb_tribunal,
             'salas_doc':salas_doc,
+            'visto_bueno_tutor_proyecto':visto_bueno_tutor_proyecto,
             }
     context = {**context_aux, **context}
     return render(request, 'proyecto/progreso_estudiante.html', context)
@@ -2121,8 +2117,10 @@ def paso5(request):
     sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=tutor.usuario, tipo='proyecto')
     if sala_doc.visto_bueno:
         sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=docente.usuario, tipo='proyecto')
+    salas_doc = SalaDocumentoApp.objects.filter(estudiante=estudiante, tipo='proyecto')
     context = {'grupo': grupo, 'progreso': progreso,'proyecto_grado':proyecto_grado,
             'proyecto':proyecto,'estudiante':estudiante,
+            'salas_doc': salas_doc,
             'sala_doc':sala_doc}
     return render(request, 'proyecto/estudiante_paso5.html', context)
 
@@ -2400,12 +2398,18 @@ def paso6(request):
         # vb_tribunal_total = all(vb_tribunales)
     # nueva app revision
     vector_sala_doc = SalaDocumentoApp.objects.filter(estudiante=estudiante, tipo='tribunal')
+    vec_visto_bueno = [v.visto_bueno for v in vector_sala_doc]
+    if vec_visto_bueno == []:
+        visto_bueno = False
+    else:
+        visto_bueno = all(vec_visto_bueno)
     context = {'grupo': grupo, 
             'progreso': progreso,
             'estudiante': estudiante,
             # 'dicc_vb_tribunal':dicc_vb_tribunal,
             # 'vbt': vb_tribunal_total,
-            'salas_doc':vector_sala_doc,}
+            'salas_doc':vector_sala_doc,
+            'visto_bueno':visto_bueno}
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
