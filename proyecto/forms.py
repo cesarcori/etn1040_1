@@ -261,13 +261,15 @@ class RegistroPerfilForm(forms.ModelForm):
         exclude = ['usuario',]
         widgets = {
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Copia el título del perfil...'}),
+                        'placeholder':'Título del perfil...'}),
                 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Copia el resumen del perfil...'}), 
+                    'placeholder':'Resumen del perfil...'}), 
+                'perfil': forms.FileInput(attrs={'class':'form-control'}),
                 }
         labels = {
-                'titulo': 'Titulo del Perfil',
-                'resumen': 'Resumen del Perfil',
+                'titulo': '',
+                'resumen': '',
+                'perfil': 'Subir archivo del perfil',
                 }
 
 class ActividadesCronogramaForm(forms.ModelForm):
@@ -299,13 +301,15 @@ class ProyectoDeGradoForm(forms.ModelForm):
                 'nota_cumplimiento_cronograma']
         widgets = {
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Copia el título del Proyecto de Grado...'}),
+                        'placeholder':'Título del Proyecto de Grado...'}),
                 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Copia el resumen del Proyecto de Grado...'}), 
+                    'placeholder':'Resumen del Proyecto de Grado...'}), 
+                'archivo': forms.FileInput(attrs={'class':'form-control',}),
                 }
         labels = {
-                'titulo': 'Titulo del Proyecto de Grado',
-                'resumen': 'Resumen del Proyecto de Grado',
+                'titulo': '',
+                'resumen': '',
+                'archivo': 'Subir archivo del Proyecto de Grado',
                 }
 
 class RegistroProyectoTribunalForm(forms.ModelForm):
@@ -315,13 +319,15 @@ class RegistroProyectoTribunalForm(forms.ModelForm):
         exclude = ['usuario','nota', 'nota_final']
         widgets = {
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Copia el título del Proyecto de Grado...'}),
+                        'placeholder':'Título del Proyecto de Grado...'}),
                 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Copia el resumen del Proyecto de Grado...'}), 
+                    'placeholder':'Resumen del Proyecto de Grado...'}), 
+                'archivo': forms.FileInput(attrs={'class':'form-control',}),
                 }
         labels = {
-                'titulo': 'Titulo del Proyecto de Grado',
-                'resumen': 'Resumen del Proyecto de Grado',
+                'titulo': '',
+                'resumen': '',
+                'archivo': '',
                 }
 
 class CalificarProyectoForm(forms.Form):

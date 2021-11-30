@@ -95,7 +95,6 @@ def infoCronograma(id_est):
                 print('Se jodio')
                 mensaje_limite = 'El estudiante fue eliminado del sistema por no aprobar el perfil en el semestre inscrito'
                 return (mensaje_limite)
-        
     else:
         dia_restante_crono = ''
         dia_restante_sistema = ''
@@ -106,7 +105,6 @@ def infoCronograma(id_est):
         por_dia_retrazo = ''
         limite_cronograma = ''
         mensaje_limite = ''
-
     context = {
                 'dia_restante_crono':dia_restante_crono,
                 'dia_restante_sistema':dia_restante_sistema,

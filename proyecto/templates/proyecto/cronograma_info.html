@@ -1,31 +1,31 @@
-{% if grupo == 'docente' or grupo == 'tutor' %}
+{% if grupo != 'estudiante'%}
     {% if estudiante.progreso.nivel >= 100 %}
         <br>
         <h3 class='text-center'><strong>El estudiante Concluyó con Exito, en 6 meses se eliminará su cuenta</strong></h3>
         <br>
     {% endif %}
 {% else %}
-<h5>{{mensaje_limite}}</h5><br>
+    <h5>{{mensaje_limite}}</h5><br>
 {% endif %}
 {% if estudiante.progreso.nivel < 100 %}
-<h5>Días restantes</h5>
-{% if limite_cronograma %}
-    Dias Retrasados{{dia_retrazo}} <br>
+    <h5>Días restantes</h5>
+    {% if limite_cronograma %}
+        Dias Retrasados{{dia_retrazo}} <br>
+        <div class="progress">
+            <div class="progress-bar bg-danger" role="progressbar" style="width: {{por_dia_retrazo}}%;"            
+                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_retrazo}}</div>
+        </div>
+    {% else %}
+        Le quedan {{dia_restante_crono}} días para concluir su cronograma<br>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{por_dia_crono}}%;"            
+                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_restante_crono}}</div>
+        </div>
+    {% endif %}
+    Le quedan {{dia_restante_sistema}} días para sacarlo del sistema<br>
     <div class="progress">
-        <div class="progress-bar bg-danger" role="progressbar" style="width: {{por_dia_retrazo}}%;"            
-            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_retrazo}}</div>
+        <div class="progress-bar" role="progressbar" style="width: {{por_dia_sistema}}%;" 
+            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_restante_sistema}}</div>
     </div>
-{% else %}
-    Le quedan {{dia_restante_crono}} días para concluir su cronograma<br>
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: {{por_dia_crono}}%;"            
-            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_restante_crono}}</div>
-    </div>
-{% endif %}
-Le quedan {{dia_restante_sistema}} días para sacarlo del sistema<br>
-<div class="progress">
-    <div class="progress-bar" role="progressbar" style="width: {{por_dia_sistema}}%;" 
-        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_restante_sistema}}</div>
-</div>
-</p>
+    </p>
 {% endif %}

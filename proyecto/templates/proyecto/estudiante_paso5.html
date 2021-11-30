@@ -55,9 +55,9 @@
     {% if progreso.nivel >= 86 %}
         <h5>Paso Completado</h5>
     {% endif %}
-{% else %}
-    <a class="btn btn-success disabled" href={%url 'confirmar_paso_5' %}>Completado</a>
-    Aún no se tiene Visto Bueno, No se registro el proyecto de grado o no se calificó.
+{% comment %}{% else %}{% endcomment %}
+    {% comment %}<a class="btn btn-success disabled" href={%url 'confirmar_paso_5' %}>Completado</a>{% endcomment %}
+    {% comment %}Aún no se tiene Visto Bueno, No se registro el proyecto de grado o no se calificó.{% endcomment %}
 {% endif %}
 
 

@@ -249,7 +249,9 @@ def director(request):
 def asignarTribunal(request, id_est):
     grupo = 'director'
     estudiante = DatosEstudiante.objects.get(id=id_est)
-    tribunales = DatosTribunal.objects.all().order_by('apellido')
+    tribunal_estudiante = estudiante.tribunales.all()
+    tribunales_todos = DatosTribunal.objects.all()
+    tribunales = tribunales_todos.difference(tribunal_estudiante).order_by('apellido')
     context = {'grupo':grupo, 'tribunales':tribunales,
             'estudiante':estudiante}
     return render(request, 'proyecto/asignar_tribunal.html', context)
@@ -419,73 +421,11 @@ def solicitudTutoria(request, id_est):
 def estudiante(request):
     grupo = 'estudiante'
     estudiante = request.user.datosestudiante
-    # si se pasa del tiempo se elimina del sistema
-    # cronograma_existe = ActividadesCronograma.objects.filter(usuario=estudiante).exists()
-    # if cronograma_existe:
-        # cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
-            # # fecha de registro del cronograma o fecha de registro del proyecto
-        # fecha = RegistroPerfil.objects.get(usuario=estudiante).fecha_creacion
-            # # fecha limite sistema 2 años y medio
-        # # prueba modificar el 0 del delta para eliminar al usuario
-        # fecha = fecha.date()#-timedelta(0)
-        # fecha_limite_sistema = fecha+ timedelta(365*2.5)
-        # dia_restante_sistema = fecha_limite_sistema - date.today()
-        # dia_restante_sistema = dia_restante_sistema.days
-        # # fecha transcurrida desde el inicio
-        # dias_transcurridos = date.today() - fecha
-        # dias_transcurridos = dias_transcurridos + timedelta(0)
-        # # dias a semanas:
-        # semanas = dias_transcurridos.days // 7# - 1
-        # num_semana = dias_transcurridos.days // 7 + 1
-        # dias = dias_transcurridos.days % 7
-        # dias_transcurridos = dias_transcurridos.days# - 7
-        # # duracion del proyecto
-        # max_semana = range(1,1+max([n.semana_final for n in cronograma]))
-        # semana_total = len(max_semana)
-        # dia_total = 7*semana_total
-        # # fecha limite cronograma
-        # fecha_limite_crono = fecha + timedelta(dia_total)
-        # dia_restante_crono = fecha_limite_crono - date.today()
-        # dia_restante_crono = dia_restante_crono.days
-        # # fecha limite sistema 2 años y medio
-        # fecha_limite_sistema = fecha + timedelta(365*2.5)
-        # dia_restante_sistema = fecha_limite_sistema - date.today()
-        # dia_restante_sistema= dia_restante_sistema.days
-        # # porcentaje
-        # por_dia_crono = (dia_restante_crono* 100) / dia_total
-        # por_dia_sistema = dia_restante_sistema* 100 / (365*2.5)
-        # por_dia_crono = str(por_dia_crono)
-        # por_dia_sistema = str(por_dia_sistema)
-
-        # dia_retrazo = dia_restante_crono * -1
-        # por_dia_retrazo = ( dia_restante_crono *-1* 100)/(365*2.5-dia_total) 
-        # por_dia_retrazo= str(por_dia_retrazo)
-
-        # if num_semana <= semana_total:
-            # limite_cronograma = False
-        # else:
-            # actividades = []
-            # limite_cronograma = True
-        # if dia_restante_sistema <= -1 and progreso < 100:
-            # estudiante.usuario.delete()
-            # print('Se jodio')
-            # return HttpResponse("Han pasado 2 años y medio, Fuiste Eliminado del sistema.")
-    # else:
-        # dia_restante_crono = ''
-        # dia_restante_sistema = ''
-        # dia_retrazo = ''
-        # semana_total = ''
-        # por_dia_crono = ''
-        # por_dia_sistema = ''
-        # por_dia_retrazo = ''
-        # limite_cronograma = ''
-
     context_aux = infoCronograma(estudiante.id)
     if not isinstance(context_aux, dict):
         context_aux = {}
         mensaje = infoCronograma(estudiante.id)
         return HttpResponse(mensaje)
-
     if estudiante.grupo_doc == None:
         sorteo = 'no'
         if request.method == 'POST':
@@ -932,11 +872,7 @@ def progresoEstudiante(request, pk_est):
             if not mensaje.visto:
                 no_visto += 1
         dicc_salas[sala] = no_visto
-    query_visto_bueno_tutor_proyecto = estudiante.saladocumentoapp_set.filter(revisor=estudiante.tutor.usuario, tipo='proyecto')
-    if query_visto_bueno_tutor_proyecto:
-        visto_bueno_tutor_proyecto = query_visto_bueno_tutor_proyecto[0].visto_bueno
-    else:
-        visto_bueno_tutor_proyecto = False
+    todo_salas_doc = SalaDocumentoApp.objects.filter(estudiante=estudiante)
     context = {'grupo': grupo,
             'estudiante':estudiante,
             'progreso':progreso,
@@ -947,7 +883,7 @@ def progresoEstudiante(request, pk_est):
             'salas_doc_est':salas_doc_est,
             'dicc_vb_tribunal': dicc_vb_tribunal,
             'salas_doc':salas_doc,
-            'visto_bueno_tutor_proyecto':visto_bueno_tutor_proyecto,
+            'todo_salas_doc':todo_salas_doc,
             }
     context = {**context_aux, **context}
     return render(request, 'proyecto/progreso_estudiante.html', context)

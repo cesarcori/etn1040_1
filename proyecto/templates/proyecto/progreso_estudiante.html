@@ -53,6 +53,10 @@
     {% endif %}
 {%endif%}
 
+{%if grupo != 'tribunal' and not estudiante.registroproyectotribunal.nota %}
+    <h5 class='text-center'>El Tribunal aún no puso la nota</h5>
+    <h5 class='text-center'>Se espera la defensa de Proyecto de Grado</h5>
+{%endif%}
 {%if grupo == 'docente' or grupo == 'director' %}
     {%if calificacion != None %}
         {% include 'proyecto/ver_nota.html' %}
@@ -87,6 +91,7 @@
     <h5 class='text-center'>Pero el estudiante ya registró el Proyecto de Grado </h5>
 {%endif%}
 
+
 {% comment %}******** visto bueno ********{% endcomment %}
 <p>
 {% comment %}{% if grupo == 'docente' and not estudiante.proyectodegrado %}{% endcomment %}
@@ -117,7 +122,7 @@
 
 <div class="row">
     <div class="col-md-7">
-        {% include 'revisar/vista_revisor.html'%}
+    {% include 'revisar/vista_revisor.html'%}
 {% comment %}********* PROYECTO TRIBUNAL **************{% endcomment %}
 {% comment %}{% if progreso >= 86 and grupo == 'tribunal'%}{% endcomment %}
     {% comment %}{% if estudiante.registroproyectotribunal and estudiante.registroproyectotribunal.nota %}{% endcomment %}
@@ -128,7 +133,6 @@
         {% comment %}{% include 'proyecto/revisar_tribunal.html' %}{% endcomment %}
     {% comment %}{% endif %}{% endcomment %}
 {% comment %}{% endif %}{% endcomment %}
-
 {% comment %}********* PROYECTO DE GRADO **************{% endcomment %}
 {% comment %}{% if progreso >= 64 and progreso < 86 and not grupo == 'director' and not estudiante.proyectodegrado %}{% endcomment %}
     {% comment %}<h4 class='text-center'><strong>REVISIÓN DE PROYECTO DE GRADO</strong></h4>{% endcomment %}
@@ -225,8 +229,6 @@
     {% comment %}</div>{% endcomment %}
     {% comment %}<br>{% endcomment %}
 {% comment %}{% endif %}{% endcomment %}
-
-
 {% comment %}********* PERFIL **************{% endcomment %}
 {% comment %}{% if progreso < 64 and not grupo == 'director'%}{% endcomment %}
     {% comment %}{% if grupo == 'tutor' and not estudiante.vb_perfil_tutor %}{% endcomment %}
@@ -237,10 +239,8 @@
         {% comment %}<div class="d-inline p-2 bg-danger text-white">El Docente ETN-1040 dará visto bueno al perfil.</div>{% endcomment %}
     {% comment %}{% endif %}{% endcomment %}
 {% comment %}{% endif %}{% endcomment %}
-
     </div>
     {% include 'proyecto/documentos_estudiante.html'%}
-
 </div>
 
 <a class="btn btn-danger" href='/'> Atras</a>
