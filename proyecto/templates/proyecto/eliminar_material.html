@@ -1,0 +1,11 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+<h3>Seguro que desea eliminar el archivo {{material}}:</h3>
+<form method="POST">
+    {% csrf_token %}
+    <a class="btn btn-danger" href={% url 'material_para_estudiante' %}>Cancelar</a>
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Si</button>
+</form>
+{% endblock %}
+

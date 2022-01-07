@@ -4,6 +4,7 @@
 <form method='post' >
     {% csrf_token %}
     {{form.as_p}}
+    <a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.id %}>Cancelar</a>
     <button class="btn btn-success" type="submit">Calificar</button>
 </form>
 

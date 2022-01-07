@@ -116,6 +116,7 @@ urlpatterns = [
     path('solicitar-tribunal-d/<int:id_est>/', views.solicitarTribunalDocente, name='solicitar_tribunal_docente'),
     
     path('material-para-est/', views.materialParaEst, name='material_para_estudiante'),
+    path('material-para-est/eliminar/<int:id_material>', views.eliminarMaterialParaEst, name='eliminar_material'),
 
     path('confirmar-paso-1/', views.confirmarPaso1, name='confirmar_paso_1'),
     path('confirmar-paso-5/', views.confirmarPaso5, name='confirmar_paso_5'),

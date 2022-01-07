@@ -54,6 +54,8 @@ class DatosDirector(models.Model):
 class MaterialDocente(models.Model):
     propietario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     material_docente = models.FileField(upload_to='material_docente/', null=True)
+    def __str__(self):
+        return str(self.material_docente)
 
 class VistaMaterialDocente(models.Model):
     usuario = models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
@@ -270,7 +272,7 @@ class VistaReglamento(models.Model):
 class RegistroPerfil(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
-    resumen = models.TextField(blank=True, null=True)
+    resumen = models.TextField(null=True)
     perfil = models.FileField(upload_to='perfiles/', null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -292,7 +294,7 @@ class RegistroCronograma(models.Model):
 class ProyectoDeGrado(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
-    resumen = models.TextField(blank=True, null=True)
+    resumen = models.TextField(null=True)
     archivo = models.FileField(upload_to='proyectos/', null=True)
     nota_tiempo_elaboracion = models.PositiveSmallIntegerField(null=True, blank=True)
     nota_expos_seminarios = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -304,7 +306,7 @@ class ProyectoDeGrado(models.Model):
 class RegistroProyectoTribunal(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
-    resumen = models.TextField(blank=True, null=True)
+    resumen = models.TextField(null=True)
     archivo = models.FileField(upload_to='proyectos/', null=True)
     nota = models.PositiveSmallIntegerField(null=True, blank=True)
     nota_final = models.PositiveSmallIntegerField(null=True, blank=True)

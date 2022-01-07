@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
 from django.contrib import messages
@@ -2609,21 +2609,31 @@ def ultimosFormularios(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor'])
-# @permitir_paso6()
 def materialParaEst(request):
     grupo = request.user.groups.get().name
     usuario = request.user
+    form = MaterialDocenteForm
     if request.method == 'POST':
         form = MaterialDocenteForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.save(commit=False)
             file.propietario = usuario
             file.save()
-    else: 
-        form = MaterialDocenteForm
-    material = MaterialDocente.objects.filter(propietario=request.user)
-    context = {'grupo': grupo,'form':form, 'material':material}
+    materiales = MaterialDocente.objects.filter(propietario=request.user)
+    context = {'grupo': grupo,'form':form, 'materiales':materiales}
     return render(request, 'proyecto/material_para_estudiante.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
+def eliminarMaterialParaEst(request, id_material):
+    material = get_object_or_404(MaterialDocente, id=id_material)
+    id_usuario = material.propietario.id
+    if request.method == 'POST':
+        material.delete()
+        return redirect('material_para_estudiante')
+    context = {'material':material}
+    return render(request, 'proyecto/eliminar_material.html', context)
+
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','docente','director'])

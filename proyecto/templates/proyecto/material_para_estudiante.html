@@ -10,11 +10,11 @@ Subir material para todos los estudiantes
     </form>
 {%endif%}
 
-{%for m in material%}
-<a href="{{ m.material_docente.url }}">{{m.material_docente.name}}<a>
-{% if grupo == 'docente' %}
-Eliminar<p>
-{% endif %}
+{%for m in materiales%}
+    <a href="{{ m.material_docente.url }}">{{m.material_docente.name}}</a>
+    {% if grupo == 'docente' %}
+    <a href={% url 'eliminar_material' m.id %}>Eliminar</a><br>
+    {% endif %}
 {% endfor %}
 {% comment %}{%include 'proyecto/ver_material.html'%}{% endcomment %}
 {% endblock %}
