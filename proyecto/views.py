@@ -592,8 +592,18 @@ def misComunicados(request):
     docente = User.objects.get(id=request.user.id)
     comunicados = docente.comunicado_set.all().order_by('-fecha_creacion')
     context = {'grupo': grupo, 'comunicados':comunicados}
-
     return render(request, 'proyecto/mis_comunicados.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','estudiante'])
+def eliminarComunicado(request, id_comunicado):
+    comunicado = get_object_or_404(Comunicado, id=id_comunicado)
+    id_usuario = comunicado.autor.id
+    if request.method == 'POST':
+        comunicado.delete()
+        return redirect('mis_comunicados')
+    context = {'comunicado':comunicado}
+    return render(request, 'proyecto/eliminar_comunicado.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','estudiante'])

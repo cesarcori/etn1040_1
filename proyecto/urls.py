@@ -32,6 +32,7 @@ urlpatterns = [
     path('busqueda/', views.busquedaProyectos, name='busqueda'),
     path('busqueda/agregar/', views.agregarProyecto, name='agregar_proyecto'),
     path('mis_comun/', views.misComunicados, name='mis_comunicados'),
+    path('mis_comun/eliminar/<int:id_comunicado>', views.eliminarComunicado, name='eliminar_comunicado'),
     path('crear-comun/', views.crearComunicado, name='crear_comunicado'),
     path('mensaje-personal/<int:pk_doc_tut_est>', views.mensajePersonal, name='mensaje_personal'),
     path('comun-doc-est/', views.comunicadosDocEst, name='comunicados_doc_est'),

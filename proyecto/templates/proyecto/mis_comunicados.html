@@ -36,6 +36,7 @@
           {% comment %}<p><strong>Fecha de{% endcomment %}
               {% comment %}publicación:</strong>&nbsp;{{comunicado.fecha_creacion}}</p> {% endcomment %}
         <div class="card-subtitle mb-2 text-muted">Publicación: {{comunicado.fecha_creacion}}</div>
+        <div class='text-right'><a href={% url 'eliminar_comunicado' comunicado.id %}>Eliminar</a></div>
       </div>
     </div>
   </div>

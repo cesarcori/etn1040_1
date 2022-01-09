@@ -237,9 +237,8 @@ class DatosAdministrador(models.Model):
 class Comunicado(models.Model):
     autor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     tema = models.CharField(max_length=50, null=True)
-    texto = models.TextField(blank=True, null=True)
+    texto = models.TextField(null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-
     def __str__(self):
         return self.tema
 
