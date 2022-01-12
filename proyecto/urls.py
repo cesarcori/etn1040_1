@@ -17,6 +17,7 @@ urlpatterns = [
     path('tutor/', views.tutor, name='tutor'),
     path('tribunal/', views.tribunal, name='tribunal'),
     path('director/', views.director, name='director'),
+    path('solicitud/', views.solicitud, name='solicitud'),
     path('asignar-tribu/<int:id_est>', views.asignarTribunal, name='asignar_tribunal'),
     path('confi-asign-tr/<int:id_est>/<int:id_trib>', views.confirmarAsignarTribunal, name='confirmar_asignar_tribunal'),
     path('firmas/', views.firmas, name='firmas'),

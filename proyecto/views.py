@@ -58,9 +58,9 @@ def registerPage(request):
             elif User.objects.filter(email=correo).exists():
                 messages.info(request,
             'No se envió la solicitud, un estudiante ya usa este correo electrónico')
-            elif SolicitudInvitado.objects.filter(usuario=usuario).exists():
-                messages.info(request, 
-            'No se envió la solicitud, un solicitante usa este mismo nombre de usuario')
+            # elif SolicitudInvitado.objects.filter(usuario.userna=usuario).exists():
+                # messages.info(request, 
+            # 'No se envió la solicitud, un solicitante usa este mismo nombre de usuario')
             elif SolicitudInvitado.objects.filter(correo=correo).exists():
                 messages.info(request, 
             'No se envió la solicitud, un solicitante usa este mismo correo electrónico')
@@ -85,18 +85,32 @@ def registerPage(request):
             'No se envió la solicitud, un estudiante usa este mismo número de \
             registro universitario')
             else:
+                # creacion del usuario
+                User.objects.create_user(
+                    username = usuario,
+                    email = correo,
+                    first_name = nombre,
+                    last_name = apellido,
+                    password = password,
+                    )
+                # creacion del grupo
+                group = Group.objects.get(name='solicitud')
+                user = User.objects.get(username=usuario)
+                user.groups.add(group)
+                # creacion de datos del solicitante
+                usuario_solicitud = User.objects.get(username=usuario)
                 SolicitudInvitado.objects.create(
-                        usuario = usuario,
-                        correo = correo,
-                        nombre = nombre,
-                        apellido = apellido,
-                        carnet = carnet,
-                        extension = extension,
-                        registro_uni = registro_uni,
-                        celular = celular,
-                        mencion = mencion,
-                        password = password
-                        )
+                    usuario = usuario_solicitud,
+                    correo = correo,
+                    nombre = nombre,
+                    apellido = apellido,
+                    carnet = carnet,
+                    extension = extension,
+                    registro_uni = registro_uni,
+                    celular = celular,
+                    mencion = mencion,
+                    # password = password
+                    )
                 messages.success(request, 'La solicitud se envió con exito!!!')
     context = {'usuarios':usuarios, 'form':form}
     return render(request, 'proyecto/registro_estudiante.html', context)
@@ -107,8 +121,7 @@ def loginPage(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-
-        if user is not None:
+        if user is not None: 
             login(request, user)
             return redirect('home')
         else:
@@ -147,14 +160,6 @@ def home(request):
                 docente_asignado = doc_mencion[1]
 
             docente = doc_mencion[0]                   
-            # creacion del usuario
-            User.objects.create_user(
-                    username = info_usuario.usuario,
-                    email = info_usuario.correo,
-                    first_name = info_usuario.nombre,
-                    last_name = info_usuario.apellido,
-                    password = info_usuario.password,
-                    )
 
             # creacion de datos del usuario
             # sin_tutor = User.objects.get(username='sin_tutor')
@@ -181,10 +186,12 @@ def home(request):
             id_estudiante = str(DatosEstudiante.objects.last().usuario_id)
             nombre_sala = id_docente + id_estudiante
             Sala.objects.create(nombre_sala = nombre_sala)
-            # creacion de grupo
+            # cambiar de grupo
             group = Group.objects.get(name='estudiante')
+            group2 = Group.objects.get(name='solicitud')
             user = User.objects.get(username=info_usuario.usuario)
             user.groups.add(group)
+            user.groups.remove(group2)
             
             SolicitudInvitado.objects.get(pk=usuario_habi).delete()
 
@@ -192,7 +199,7 @@ def home(request):
             info_usuario = SolicitudInvitado.objects.get(pk=usuario_elim)
             info = 'Se eliminó al estudiante: ' + info_usuario.apellido + ' ' \
             + info_usuario.nombre
-            SolicitudInvitado.objects.get(pk=usuario_elim).delete()
+            SolicitudInvitado.objects.get(pk=usuario_elim).usuario.delete()
     solicitudes = SolicitudInvitado.objects.all()
     aviso = 'Tiene: ' + str(solicitudes.count()) + ' solicitudes'
     context = {'grupo': grupo, 'solicitudes':solicitudes,
@@ -243,6 +250,15 @@ def director(request):
     datos_est = DatosEstudiante.objects.all().order_by('apellido')
     context = {'datos_est':datos_est,'grupo':grupo}
     return render(request, 'proyecto/director.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['solicitud'])
+def solicitud(request):
+    grupo = 'solicitud'
+    usuario = request.user.solicitudinvitado
+    context = {'usuario':usuario,'grupo':grupo}
+    return render(request, 'proyecto/solicitud.html', context)
+    # return HttpResponse(f'Hola {usuario} su solicitud fue enviada con éxito')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['director'])
@@ -464,12 +480,14 @@ def estudiante(request):
         return render(request, 'proyecto/estudiante.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','estudiante','tribunal','director','administrador'])
 def perfilUsuarios(request):
     grupo = request.user.groups.get().name
     context = {'grupo': grupo}
     return render(request, 'proyecto/perfil.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','estudiante','tribunal','director','administrador'])
 def editarPerfil(request):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -555,6 +573,7 @@ def editarPerfil(request):
     return render(request, 'proyecto/editar_perfil.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','estudiante','tribunal','director','administrador'])
 def editarPassword(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -571,6 +590,7 @@ def editarPassword(request):
     return render(request, 'proyecto/editar_password.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','estudiante','tribunal','director','administrador'])
 @admin_only
 def resetearPassword(request, id_user):
     grupo = request.user.groups.get().name

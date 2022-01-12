@@ -87,6 +87,12 @@
     Apellido: {{ request.user.datostribunal.apellido }}<br>
     Celular: {{ request.user.datostribunal.celular }}<br>
     Correo Electrónico: {{ request.user.datostribunal.correo}}<br>
+{%elif grupo == 'solicitud' %}
+    Usuario: {{ request.user.solicitudinvitado.usuario }}<br> 
+    Nombre: {{ request.user.solicitudinvitado.nombre }}<br>
+    Apellido: {{ request.user.solicitudinvitado.apellido }}<br>
+    Celular: {{ request.user.solicitudinvitado.celular }}<br>
+    Correo Electrónico: {{ request.user.solicitudinvitado.correo}}<br>
 {%endif%}
 		</div>
 	</div>

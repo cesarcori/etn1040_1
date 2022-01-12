@@ -8,7 +8,8 @@ def validate_file_extension(value):
         raise ValidationError(u'Solo Pdf')
 
 class SolicitudInvitado(models.Model):
-    usuario = models.CharField(max_length=50, null=True, unique=True)
+    # usuario = models.CharField(max_length=50, null=True, unique=True)
+    usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
@@ -17,9 +18,8 @@ class SolicitudInvitado(models.Model):
     registro_uni = models.CharField(max_length=50, null=True, unique=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
-    password = models.CharField(max_length=50, null=True)
+    # password = models.CharField(max_length=50, null=True)
     fecha_solicitud = models.DateTimeField(auto_now_add=True, null=True)
-
     def __str__(self):
         self.nombre_completo = self.nombre + ' ' + self.apellido
         return self.nombre_completo
