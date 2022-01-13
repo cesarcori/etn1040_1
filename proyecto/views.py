@@ -1323,9 +1323,9 @@ def agregarDocente(request):
             elif DatosDocente.objects.filter(grupo=grupo).exists():
                 messages.info(request, 
             'No se agregó al docente, otro docente ya se asigno a este grupo')
-            elif 2==DatosDocente.objects.filter(mencion=mencion).count():
-                messages.info(request, 
-            'No se agregó al docente, Solo se admite 2 docentes por mencion')
+            # elif 2==DatosDocente.objects.filter(mencion=mencion).count():
+                # messages.info(request, 
+            # 'No se agregó al docente, Solo se admite 2 docentes por mencion')
 
             else:                 
                 # creacion del usuario
