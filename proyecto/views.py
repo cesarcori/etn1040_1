@@ -147,20 +147,7 @@ def home(request):
             info = 'Se habilito al estudiante: ' + info_usuario.apellido + ' ' \
             + info_usuario.nombre
             # sorteo de grupo_docente
-            mencion = info_usuario.mencion
-            doc_mencion = DatosDocente.objects.filter(mencion=mencion)
-            cantidad_est1 = doc_mencion[0].datosestudiante_set.count()
-            cantidad_est2 = doc_mencion[1].datosestudiante_set.count()
-            if cantidad_est1 == cantidad_est2:
-                sorteo = randint(0,1)
-                docente_asignado = doc_mencion[sorteo]
-            elif cantidad_est1 < cantidad_est2:
-                docente_asignado = doc_mencion[0]
-            else:
-                docente_asignado = doc_mencion[1]
-
-            docente = doc_mencion[0]                   
-
+            docente_asignado = sorteoDocente(info_usuario)
             # creacion de datos del usuario
             # sin_tutor = User.objects.get(username='sin_tutor')
             DatosEstudiante.objects.create(

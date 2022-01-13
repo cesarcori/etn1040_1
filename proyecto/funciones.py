@@ -5,7 +5,8 @@
 from datetime import date, timedelta
 from django.http import HttpResponse
 from django.http import FileResponse
-from .models import ActividadesCronograma, DatosEstudiante, RegistroPerfil
+from .models import ActividadesCronograma, DatosEstudiante, RegistroPerfil, DatosDocente
+from random import choice
 
 def infoCronograma(id_est):
     estudiante = DatosEstudiante.objects.get(id=id_est)
@@ -120,4 +121,24 @@ def infoCronograma(id_est):
             'mensaje_limite':mensaje_limite}
     return context
 
-
+def sorteoDocente(estudiante):
+    ''' Lo que realiza el algoritmo es:
+        1: Encontrar docentes de la mencion del estudiante
+        2: Encontrar los docentes con menor cantidad de estudiantes
+        3: Sortear entre los que quienen un menor cantidad de estudiantes.'''
+    mencion_estudiante = estudiante.mencion
+    docentes_mencion = DatosDocente.objects.filter(mencion=mencion_estudiante)
+    # diccionario, docente-numero de estudiantes
+    docente_numEst = {}
+    for docente in docentes_mencion:
+        docente_numEst[docente] = docente.datosestudiante_set.count()
+    # ordenando diccionario por valor, de menor a mayor
+    sort_docente_numEst = sorted(docente_numEst.items(), key=lambda x:x[1])
+    # extraer los menores:
+    numero_menor_estudiantes = sort_docente_numEst[0][1]
+    docentes_menor_estudiantes = []
+    for doc_numEst in sort_docente_numEst:
+        if doc_numEst[1] == numero_menor_estudiantes:
+            docentes_menor_estudiantes.append(doc_numEst[0])
+    docente_asignado = choice(docentes_menor_estudiantes)
+    return docente_asignado
