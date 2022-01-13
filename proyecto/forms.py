@@ -64,8 +64,8 @@ class FormDocente(forms.Form):
         (t, t),
         (c, c),
     ] 
-    solo_grupo= RegexValidator(r'^[A-F]$', 'Ingresar una sola letra mayúscula,\
-            hasta grupo F')
+    solo_grupo= RegexValidator(r'^[A-Z]$', 'Ingresar una sola letra mayúscula,\
+            hasta grupo Z')
     solo_letra= RegexValidator(r'^[a-zA-ZÀ-ÿ\u00f1\u00d1 a-zA-ZÀ-ÿ\u00f1\u00d1]*$', 'Ingresar solo letras')
     nombre = forms.CharField(max_length = 50, validators=[solo_letra])
     apellido = forms.CharField(max_length = 50, validators=[solo_letra])
