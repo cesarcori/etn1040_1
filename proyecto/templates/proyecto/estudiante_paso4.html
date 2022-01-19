@@ -2,7 +2,103 @@
 {% block content %}
 <p>Revisión del Perfil de Proyecto de Grado por el Docente ETN-1040 y el Tutor<br> 
 para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto de Grado<p>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Actividad</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Perfil</a>
+      </td>
+      <td>
+        {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+            <i class="fas text-success fa-check"></i> Cumplido
+        {% else %}
+            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {% if registro_perfil_existe %}
+            <a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a>
+        {% else %}
+            {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+                <a href={%url 'registro_perfil'%}>Registrar Perfil</a>
+            {% else %}
+                <a class="btn disabled" href#=>Registrar Perfil</a>
+            {% endif %}
+        {% endif %}
+      </td>
+      <td>
+        {% if registro_perfil_existe %}
+            <i class="fas text-success fa-check"></i> Cumplido
+        {% else %}
+            {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {% if registro_perfil_existe%}
+            {% if estudiante.registrocronograma%}
+                <a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a>
+            {% else %}
+                <a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a>
+            {%endif%}
+        {% else %}
+            <a class="btn disabled" href=#>Registro de Cronograma</a>
+        {% endif %}
+      </td>
+      <td>
+        {% if registro_perfil_existe%}
+            {% if estudiante.registrocronograma%}
+                <i class="fas text-success fa-check "></i> Cumplido
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {%endif%}
+        {% else %}
+            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {% if registro_perfil_existe %}
+            {% if estudiante.registrocronograma%}
+                <a target='_blank' href={%url 'formulario_1' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
+                <a target='_blank' href="/media/formularios/form1.pdf">Formulario en blanco</a>
+            {% else %}
+                <a class="btn disabled" href=#>Formulario de Aprobación</a>
+            {%endif%}
+        {% else %}
+            <a class="btn disabled" href=#>Formulario 1 - Aprobación de Perfil</a>
+        {% endif %}
+      </td>
+      <td>
+        {% if registro_perfil_existe %}
+            {% if estudiante.registrocronograma%}
+                <i class="fas text-success fa-check "></i> Cumplido
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {%endif%}
+        {% else %}
+            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
+<!--
 <p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Perfil</a>
 
 {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
@@ -15,7 +111,6 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
     <p><a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a>
     <i class="fas text-success fa-check"></i></p>
 {% else %}
-    {% comment %}{% if estudiante.vb_perfil_docente and estudiante.vb_perfil_tutor %}{% endcomment %}
     {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
         <p><a href={%url 'registro_perfil'%}>Registro de Perfil</a>
         <i class="fas text-danger fa-graduation-cap"></i></p>
@@ -34,17 +129,16 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
     <i class="fas text-danger fa-graduation-cap"></i></p>
     {%endif%}
 {% else %}
-<p><a class="btn disabled" href=#>Registro de Cronograma</a>
-<i class="fas text-danger fa-graduation-cap"></i></p>
-{% comment %}<p><a href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>{% endcomment %}
-{% comment %}<p><a href={%url 'carta_aceptacion_tutor'%}>Carta aceptacion de tutoría</a></p>{% endcomment %}
+    <p><a class="btn disabled" href=#>Registro de Cronograma</a>
+    <i class="fas text-danger fa-graduation-cap"></i></p>
 {% endif %}
-{{form1_blanco}}
+
+{% comment %}{{form1_blanco}}{% endcomment %}
 {% if registro_perfil_existe %}
     {% if estudiante.registrocronograma%}
         <p><a href={%url 'formulario_1' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
         <i class="fas text-success fa-check "></i>
-        <a href="/media/formularios/form1.pdf">En blanco</a></p>
+        <a target='_blank' href="/media/formularios/form1.pdf">En blanco</a></p>
     {% else %}
         <p><a class="btn disabled" href=#>Formulario de Aprobación</a>
         <i class="fas text-danger fa-graduation-cap"></i></p>
@@ -55,6 +149,7 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
     <p><a class="btn disabled" href=#>Formulario 1 - Aprobación de Perfil</a>
     <i class="fas text-danger fa-graduation-cap"></i></p>
 {% endif %}
+-->
 
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
@@ -70,4 +165,4 @@ para obtener el <strong>Visto Bueno</strong> y registro del Perfil de Proyecto d
     {% comment %}No se registro aún el perfil y el cronograma{% endcomment %}
 {% endif %}
 
-{% endblock %}
+{% endblock %} 
