@@ -622,7 +622,7 @@ from reportlab.lib.pagesizes import letter, inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph,Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen import canvas
-from proyecto.models import MensajeTutorRevisarProyecto
+# from proyecto.models import MensajeTutorRevisarProyecto
 def docReporteCapitulos(buffer, estudiante):
     # doc = SimpleDocTemplate(buffer, pagesize=letter)
     def fecha():

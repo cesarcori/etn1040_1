@@ -65,82 +65,82 @@ class VistaMaterialDocente(models.Model):
         self.identificador = self.usuario.__str__() +' - '+ self.material_docente_visto.__str__()
         return self.identificador
 
-class MensajeDocenteRevisar(models.Model):
-    texto = models.TextField(blank=True, null=True)
-    visto_docente = models.BooleanField(default=False)
-    visto_estudiante = models.BooleanField(default=False)
-    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+# class MensajeDocenteRevisar(models.Model):
+    # texto = models.TextField(blank=True, null=True)
+    # visto_docente = models.BooleanField(default=False)
+    # visto_estudiante = models.BooleanField(default=False)
+    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    # sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
-class MensajeDocenteRevisarProyecto(models.Model):
-    texto = models.TextField(blank=True, null=True)
-    visto_docente = models.BooleanField(default=False)
-    visto_estudiante = models.BooleanField(default=False)
-    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+# class MensajeDocenteRevisarProyecto(models.Model):
+    # texto = models.TextField(blank=True, null=True)
+    # visto_docente = models.BooleanField(default=False)
+    # visto_estudiante = models.BooleanField(default=False)
+    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    # sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
-class MensajeTutorRevisar(models.Model):
-    texto = models.TextField(blank=True, null=True)
-    visto_tutor = models.BooleanField(default=False)
-    visto_estudiante = models.BooleanField(default=False)
-    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+# class MensajeTutorRevisar(models.Model):
+    # texto = models.TextField(blank=True, null=True)
+    # visto_tutor = models.BooleanField(default=False)
+    # visto_estudiante = models.BooleanField(default=False)
+    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    # sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
-class MensajeTutorRevisarProyecto(models.Model):
-    texto = models.TextField(blank=True, null=True)
-    visto_tutor = models.BooleanField(default=False)
-    visto_estudiante = models.BooleanField(default=False)
-    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+# class MensajeTutorRevisarProyecto(models.Model):
+    # texto = models.TextField(blank=True, null=True)
+    # visto_tutor = models.BooleanField(default=False)
+    # visto_estudiante = models.BooleanField(default=False)
+    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    # sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
-class MensajeTribunalRevisar(models.Model):
-    texto = models.TextField(blank=True, null=True)
-    visto_tribunal= models.BooleanField(default=False)
-    visto_estudiante = models.BooleanField(default=False)
-    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    sala = models.ForeignKey('SalaRevisarTribunal', null=True, blank=True, on_delete=models.CASCADE)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+# class MensajeTribunalRevisar(models.Model):
+    # texto = models.TextField(blank=True, null=True)
+    # visto_tribunal= models.BooleanField(default=False)
+    # visto_estudiante = models.BooleanField(default=False)
+    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    # sala = models.ForeignKey('SalaRevisarTribunal', null=True, blank=True, on_delete=models.CASCADE)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
-class SalaRevisar(models.Model):
-    sala = models.CharField(max_length=50, null=True)
-    docente_rev= models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)
-    tutor_rev= models.ForeignKey('DatosTutor', null=True, blank=True, on_delete=models.CASCADE)
-    estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
-    texto = models.TextField(blank=True, null=True)
-    material_estudiante = models.FileField(upload_to='material_estudiante_perfil/', null=True)
-    material_corregido_docente = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
-    material_corregido_tutor  = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-    def __str__(self):
-        return self.sala
+# class SalaRevisar(models.Model):
+    # sala = models.CharField(max_length=50, null=True)
+    # docente_rev= models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)
+    # tutor_rev= models.ForeignKey('DatosTutor', null=True, blank=True, on_delete=models.CASCADE)
+    # estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
+    # texto = models.TextField(blank=True, null=True)
+    # material_estudiante = models.FileField(upload_to='material_estudiante_perfil/', null=True)
+    # material_corregido_docente = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
+    # material_corregido_tutor  = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+    # def __str__(self):
+        # return self.sala
 
-class SalaRevisarProyecto(models.Model):
-    sala = models.CharField(max_length=50, null=True)
-    docente_rev= models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)
-    tutor_rev= models.ForeignKey('DatosTutor', null=True, blank=True, on_delete=models.CASCADE)
-    estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
-    texto = models.TextField(blank=True, null=True)
-    material_estudiante = models.FileField(upload_to='material_estudiante_proyecto/', null=True)
-    material_corregido_docente = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
-    material_corregido_tutor  = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-    def __str__(self):
-        return self.sala
+# class SalaRevisarProyecto(models.Model):
+    # sala = models.CharField(max_length=50, null=True)
+    # docente_rev= models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)
+    # tutor_rev= models.ForeignKey('DatosTutor', null=True, blank=True, on_delete=models.CASCADE)
+    # estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
+    # texto = models.TextField(blank=True, null=True)
+    # material_estudiante = models.FileField(upload_to='material_estudiante_proyecto/', null=True)
+    # material_corregido_docente = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
+    # material_corregido_tutor  = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+    # def __str__(self):
+        # return self.sala
 
-class SalaRevisarTribunal(models.Model):
-    sala = models.CharField(max_length=50, null=True)
-    tribunal_rev= models.ForeignKey('DatosTribunal', null=True, blank=True, on_delete=models.CASCADE)
-    estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
-    texto = models.TextField(blank=True, null=True)
-    material_estudiante = models.FileField(upload_to='material_estudiante_proyecto/', null=True)
-    visto_bueno = models.BooleanField(default=False)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-    def __str__(self):
-        return self.sala
+# class SalaRevisarTribunal(models.Model):
+    # sala = models.CharField(max_length=50, null=True)
+    # tribunal_rev= models.ForeignKey('DatosTribunal', null=True, blank=True, on_delete=models.CASCADE)
+    # estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
+    # texto = models.TextField(blank=True, null=True)
+    # material_estudiante = models.FileField(upload_to='material_estudiante_proyecto/', null=True)
+    # visto_bueno = models.BooleanField(default=False)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+    # def __str__(self):
+        # return self.sala
 
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)

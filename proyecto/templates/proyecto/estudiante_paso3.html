@@ -11,7 +11,7 @@ Ingrese el e-mail del tutor y espere que acepte su solicitud.</p>
     {% csrf_token %}
     <input name="agregar_tutor" class="form-control me-2" type="email"
     placeholder="Registrar Email Tutor" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit">Enviar</button>
+    <button class="btn btn-outline-success" type="submit" name='enviar'>Enviar</button>
 </form>
 </p>
 {% endif %}

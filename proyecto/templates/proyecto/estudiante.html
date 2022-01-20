@@ -10,15 +10,14 @@
     {%if progreso == 1%}
       <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       {% comment %}<a class="btn btn-colorido" href={%url 'paso2'%}>Paso 2</a>{% endcomment %}
-        <a class="btn btn-warning" href={%url 'paso1'%}>Paso 1</a>
+        <a class="btn btn-warning" href={%url 'paso1'%}>Paso 1 fd</a>
         </div>
       </div>
     {% endif %}
     {%if progreso > 1%}
       <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-            <a class="btn btn-success" href={%url 'paso1'%}>Paso 1</a>
+            <a class="btn btn-success" href={%url 'paso1'%} name='paso1'>Paso 1</a>
         </div>
       </div>    
     {% endif %}

@@ -1,8 +1,8 @@
 from django.contrib import admin
 from .models import *
 
-admin.site.register(SalaRevisar)
-admin.site.register(SalaRevisarProyecto)
+# admin.site.register(SalaRevisar)
+# admin.site.register(SalaRevisarProyecto)
 admin.site.register(SolicitudInvitado)
 admin.site.register(DatosEstudiante)
 admin.site.register(DatosDocente)
@@ -11,8 +11,8 @@ admin.site.register(VistaMaterialDocente)
 admin.site.register(DatosTutor)
 admin.site.register(DatosDirector)
 admin.site.register(DatosEstudianteTitulado)
-admin.site.register(MensajeDocenteRevisar)
-admin.site.register(MensajeTutorRevisar)
+# admin.site.register(MensajeDocenteRevisar)
+# admin.site.register(MensajeTutorRevisar)
 admin.site.register(DatosAdministrador)
 admin.site.register(Comunicado)
 admin.site.register(Reglamento)
