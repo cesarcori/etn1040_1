@@ -1,12 +1,13 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<p>Búsqueda de proyectos de grado<br>
-Ingrese el título de su perfil o proyecto de grado,<br>
-no debe ser igual mayor al <strong>95% de similitud</strong>.
+<h4>Búsqueda de Proyectos de Grado</h4>
+{% comment %}Ingrese el título de su perfil o proyecto de grado,<br>{% endcomment %}
+{% comment %}no debe ser igual mayor al <strong>95% de similitud</strong>.{% endcomment %}
+<p class="h6">Ingrese el título de su proyecto de grado y obtendrá proyectos similares.
 {% if progreso.nivel < 21 %}
-<i class="fas text-danger fa-graduation-cap"></i><br>
+    <i class="fas text-danger fa-graduation-cap"></i><br>
 {% else %}
-<i class="fas text-success fa-check"></i><br>
+    <i class="fas text-success fa-check"></i><br>
 {% endif %}
 </p>
 <p>

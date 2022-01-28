@@ -1,32 +1,84 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<p>Reglamentos de la Materia ETN-1040</p>
-    <p>
+<h4>Reglamentos de la Materia ETN-1040</h4>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Documento</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
     {%for reglamento, visto in dicc_reglamento.items%}
-        <p><a target='_blank' href="{{ reglamento.archivo.url }}">{{reglamento.archivo.name}}</a>
-        {% if visto %}
-            <i class="fas text-success fa-check"></i><br></p>
-        {% else %}
-            <i class="fas text-danger fa-graduation-cap"></i>
-            <a class="btn btn-warning" href={%url 'confirmar_reglamento' reglamento.id%}>Ya estudie el reglamento</a></p>
-        {% endif %}
+    <tr>
+        <td>
+            <a target='_blank' href="{{ reglamento.archivo.url }}">{{reglamento.archivo.name}}</a>
+        </td>
+        <td>
+            {% if visto %}
+                <i class="fas text-success fa-check"></i> Estudiado
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i>
+                <a class="btn btn-warning" href={%url 'confirmar_reglamento' reglamento.id%}>Sin estudiar</a>
+            {% endif %}
+        </td>
+    </tr>
     {%endfor%}
-    </p>
-<p>Introducción de la materia:</p>
-    <p>
-    Documentos compartidos por Docente ETN-1040:
-    Ing. {{request.user.datosestudiante.grupo_doc}}</p>
-    <p>
+  </tbody>
+</table>
+
+    {% comment %}<p>{% endcomment %}
+    {% comment %}{%for reglamento, visto in dicc_reglamento.items%}{% endcomment %}
+        {% comment %}<p><a target='_blank' href="{{ reglamento.archivo.url }}">{{reglamento.archivo.name}}</a>{% endcomment %}
+        {% comment %}{% if visto %}{% endcomment %}
+            {% comment %}<i class="fas text-success fa-check"></i><br></p>{% endcomment %}
+        {% comment %}{% else %}{% endcomment %}
+            {% comment %}<i class="fas text-danger fa-graduation-cap"></i>{% endcomment %}
+            {% comment %}<a class="btn btn-warning" href={%url 'confirmar_reglamento' reglamento.id%}>Ya estudie el reglamento</a></p>{% endcomment %}
+        {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{%endfor%}{% endcomment %}
+    {% comment %}</p>{% endcomment %}
+
+<h4>Introducción de la materia</h4>
+<p class="h6">
+Documentos compartidos por Docente ETN-1040:
+<strong>Ing. {{request.user.datosestudiante.grupo_doc}}</strong></p>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Documento</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
     {%for material, visto in dicc_material.items %}
-            <a href="{{ material.material_docente.url }}">{{material.material_docente.name}}<a>
-        {% if visto %}
-            <i class="fas text-success fa-check"></i><br>
-        {% else %}
-            <i class="fas text-danger fa-graduation-cap"></i>
-            <a class="btn btn-warning" href={%url 'confirmar_material_docente' material.id%}>Ya estudie el documento</a></p>
-        {% endif %}
+    <tr>
+        <td>
+            <a target=_blank href="{{ material.material_docente.url }}">{{material.material_docente.name}}</a>
+        </td>
+        <td>
+            {% if visto %}
+                <i class="fas text-success fa-check"></i> Estudiado
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i>
+                <a class="btn btn-warning" href={%url 'confirmar_material_docente' material.id%}>Sin estudiar</a>
+            {% endif %}
+        </td>
+    </tr>
     {%endfor%}
-    </p>
+  </tbody>
+</table>
+
+    {% comment %}{%for material, visto in dicc_material.items %}{% endcomment %}
+            {% comment %}<a href="{{ material.material_docente.url }}">{{material.material_docente.name}}<a>{% endcomment %}
+        {% comment %}{% if visto %}{% endcomment %}
+            {% comment %}<i class="fas text-success fa-check"></i><br>{% endcomment %}
+        {% comment %}{% else %}{% endcomment %}
+            {% comment %}<i class="fas text-danger fa-graduation-cap"></i>{% endcomment %}
+            {% comment %}<a class="btn btn-warning" href={%url 'confirmar_material_docente' material.id%}>Ya estudie el documento</a></p>{% endcomment %}
+        {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{%endfor%}{% endcomment %}
+    {% comment %}</p>{% endcomment %}
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if estudiante.progreso %}

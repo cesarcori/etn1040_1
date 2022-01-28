@@ -5,7 +5,7 @@
     {{ form.as_p }}
     {% if grupo == 'estudiante'%}
         <a class="btn btn-danger" 
-            href={%url 'revisar:revisar_documento' sala.sala_documento.tipo sala.sala_documento.revisor.id %}> Atras</a>
+            href={%url 'revisar:revisar_documento' sala.sala_documento.tipo sala.sala_documento.revisor.id %} name='atras'> Atras</a>
     {% else %}
         <a class="btn btn-danger" 
             href={%url 'progreso_estudiante' sala.sala_documento.estudiante.id %}>Atras</a>

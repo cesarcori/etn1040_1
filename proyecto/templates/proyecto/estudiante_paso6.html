@@ -1,56 +1,110 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 
-<h3>Tribunal</h3>
+<h4>Revisión Tribunal</h4>
+
 {% if estudiante.tribunales.count < 2%}
     {% comment %}<p><a href={%url 'solicitud_tribunal' estudiante.id %}>Solicitud de tribunal</a>{% endcomment %}
-    <p>
-    {% if estudiante.solicitud_tribunal_docente %}
-        <div class="d-inline p-1 bg-primary text-white">El docente ya solicitó 
-            tribunales a jefatura, esperar a que el director asigne 2 tribunales.</div><br>
-    {% endif %}
-    <a href={%url 'formulario_4' estudiante.id %}>Formulario 2 - Solicitu Nombramiento Tribunal</a>
-    &nbsp; <a href="/media/formularios/form4.pdf">En Blanco</a></p>
-    <p><a href={%url 'formulario_3' estudiante.id %}>Formulario 3 - Registro y Seguimiento </a>
-    &nbsp; <a href="/media/formularios/form3.pdf">En Blanco</a>
-    <a class='btn btn-warning' href={%url 'auspicio_f3' estudiante.id %}>Si tienes auspicio</a></p>
-    <p><a href={%url 'formulario_2' estudiante.id %}>Formulario 4 - Materia: Proyecto Abstract</a>
-    &nbsp; <a href="/media/formularios/form2.pdf">En Blanco</a></p>
+    {% comment %}<p>{% endcomment %}
+    {% comment %}{% if estudiante.solicitud_tribunal_docente %}{% endcomment %}
+        {% comment %}<div class="d-inline p-1 bg-primary text-white">El docente ya solicitó {% endcomment %}
+            {% comment %}tribunales a jefatura, esperar a que el director asigne 2 tribunales.</div><br>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+    {% comment %}<a href={%url 'formulario_4' estudiante.id %}>Formulario 2 - Solicitu Nombramiento Tribunal</a>{% endcomment %}
+    {% comment %}&nbsp; <a href="/media/formularios/form4.pdf">En Blanco</a></p>{% endcomment %}
+    {% comment %}<p><a href={%url 'formulario_3' estudiante.id %}>Formulario 3 - Registro y Seguimiento </a>{% endcomment %}
+    {% comment %}&nbsp; <a href="/media/formularios/form3.pdf">En Blanco</a>{% endcomment %}
+    {% comment %}<a class='btn btn-warning' href={%url 'auspicio_f3' estudiante.id %}>Si tienes auspicio</a></p>{% endcomment %}
+    {% comment %}<p><a href={%url 'formulario_2' estudiante.id %}>Formulario 4 - Materia: Proyecto Abstract</a>{% endcomment %}
+    {% comment %}&nbsp; <a href="/media/formularios/form2.pdf">En Blanco</a></p>{% endcomment %}
 {% else %}
-    {% comment %}<div class="d-inline p-1 bg-success text-white">Tribunal asignado</div><br>{% endcomment %}
     {% include 'proyecto/lista_tribunal_asignado.html'%}
-    {% comment %}<table class="table table-striped">{% endcomment %}
-    {% comment %}<thead>{% endcomment %}
-        {% comment %}<tr>{% endcomment %}
-        {% comment %}<th scope="col">Tribunal asignado</th>{% endcomment %}
-        {% comment %}<th scope="col">Revisión</th>{% endcomment %}
-        {% comment %}<th scope="col">Visto Bueno</th>{% endcomment %}
-        {% comment %}</tr>{% endcomment %}
-    {% comment %}</thead>{% endcomment %}
-        {% comment %}<tbody>{% endcomment %}
-        {% comment %}{% for tribunal in estudiante.tribunales.all %}{% endcomment %}
-            {% comment %}<tr>{% endcomment %}
-            {% comment %}<td><a href={% url 'enlace_tribunal' tribunal.id %}>{{tribunal}}</a><br></td>{% endcomment %}
-            {% comment %}<td><a href=#>Ingresar</a></td>{% endcomment %}
-            {% comment %}<td><div class="d-inline p-1 bg-danger text-white">Sin Visto Bueno</div></td>{% endcomment %}
-            {% comment %}</tr>{% endcomment %}
-        {% comment %}{% endfor %}{% endcomment %}
-        {% comment %}</tbody>{% endcomment %}
-    {% comment %}</table>{% endcomment %}
 {% endif %}
-{% if estudiante.registroproyectotribunal.nota %}
-    <p><a href={%url 'ver_proyecto_tribunal'%}>Proyecto de Grado Final Revisado por tribunal</a>
-    <i class="fas text-success fa-check"></i></p>
-{% elif estudiante.registroproyectotribunal%}
-    <p><a href={%url 'ver_proyecto_tribunal'%}>Proyecto Registrado, Esperando nota</a>
-    <i class="fas text-warning fa-graduation-cap"></i></p>
-{% elif visto_bueno %}
-    <p><a href={%url 'registro_proyecto_tribunal'%}>Registrar Proyecto Tribunal</a>
-    <i class="fas text-danger fa-graduation-cap"></i></p>
-{% else %}
-    <p><a class="btn disabled" href=#>Registro Proyecto Tribunal</a>
-    <i class="fas text-danger fa-graduation-cap"></i></p>
-{% endif %}
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Formulario</th>
+      <th scope="col">Sin Llenar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+        <td>
+            <a target=_blank href={%url 'formulario_4' estudiante.id %}>Formulario 2 - Solicitu Nombramiento Tribunal</a>
+        </td>
+        <td>
+            &nbsp; <a target=_blank href="/media/formularios/form4.pdf">En Blanco</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a target=_blank href={%url 'formulario_3' estudiante.id %}>Formulario 3 - Registro y Seguimiento </a>
+            &nbsp;
+            <a class='btn btn-warning' href={%url 'auspicio_f3' estudiante.id %}>Si tienes auspicio</a>
+        </td>
+        <td>
+            &nbsp; <a target=_blank href="/media/formularios/form3.pdf">En Blanco</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a target=_blank href={%url 'formulario_2' estudiante.id %}>Formulario 4 - Materia: Proyecto Abstract</a>
+        </td>
+        <td>
+            &nbsp; <a target=_blank href="/media/formularios/form2.pdf">En Blanco</a>
+        </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Actividad</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+        <td>
+            {% if estudiante.registroproyectotribunal.nota %}
+                <a href={%url 'ver_proyecto_tribunal'%}>Proyecto de Grado Final Revisado por tribunal</a>
+            {% elif estudiante.registroproyectotribunal%}
+                <a href={%url 'ver_proyecto_tribunal'%}>Proyecto Registrado, Esperando nota</a>
+            {% elif visto_bueno %}
+                <a href={%url 'registro_proyecto_tribunal'%}>Registrar Proyecto Tribunal</a>
+            {% else %}
+                <a class="btn disabled" href=#>Registro Proyecto Tribunal</a>
+            {% endif %}
+        </td>
+        <td>
+            {% if estudiante.registroproyectotribunal.nota %}
+                <i class="fas text-success fa-check"></i> Cumplido
+            {% elif estudiante.registroproyectotribunal%}
+                <i class="fas text-warning fa-graduation-cap"></i> Pendiente
+            {% elif visto_bueno %}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {% endif %}
+        </td>
+    </tr>
+  </tbody>
+</table>
+{% comment %}{% if estudiante.registroproyectotribunal.nota %}{% endcomment %}
+    {% comment %}<p><a href={%url 'ver_proyecto_tribunal'%}>Proyecto de Grado Final Revisado por tribunal</a>{% endcomment %}
+    {% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
+{% comment %}{% elif estudiante.registroproyectotribunal%}{% endcomment %}
+    {% comment %}<p><a href={%url 'ver_proyecto_tribunal'%}>Proyecto Registrado, Esperando nota</a>{% endcomment %}
+    {% comment %}<i class="fas text-warning fa-graduation-cap"></i></p>{% endcomment %}
+{% comment %}{% elif visto_bueno %}{% endcomment %}
+    {% comment %}<p><a href={%url 'registro_proyecto_tribunal'%}>Registrar Proyecto Tribunal</a>{% endcomment %}
+    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
+{% comment %}{% else %}{% endcomment %}
+    {% comment %}<p><a class="btn disabled" href=#>Registro Proyecto Tribunal</a>{% endcomment %}
+    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
 
 {% comment %}<p><a href={%url 'formulario_3' estudiante.id %}>Formulario 3 - Registro y Seguimiento </a>{% endcomment %}
 {% comment %}&nbsp; <a href="/media/formularios/form3.pdf">En Blanco</a>{% endcomment %}

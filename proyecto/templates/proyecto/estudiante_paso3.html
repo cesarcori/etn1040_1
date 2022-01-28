@@ -1,8 +1,13 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-replace-svg="nest"></script>
-<p>Registrar al tutor para que ingrese al sistema.<br>
-Ingrese el e-mail del tutor y espere que acepte su solicitud.</p>
+{% if not tutor and not estudiante.tutor_acepto %}
+    <h4>Registrar al Tutor para que ingrese al sistema.</h4>
+    <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
+{% elif tutor and not estudiante.tutor_acepto %}
+    <h4>Se envió la solicitud al Tutor</h4>
+{% elif tutor and estudiante.tutor_acepto %}
+    <h4>El Tutor aceptó la solicitud</h4>
+{% endif %}
 {% comment %}{% if tutor.nombre == 'sin_tutor' %}{% endcomment %}
 {% if not tutor and not estudiante.tutor_acepto %}
 <p>
@@ -17,20 +22,20 @@ Ingrese el e-mail del tutor y espere que acepte su solicitud.</p>
 {% endif %}
 
 {% if tutor and not estudiante.tutor_acepto %}
-<p>Se solicitó tutoria a:
-<a href="{% url 'enlace_tutor' tutor.id %}">{{tutor.nombre}} {{tutor.apellido}}</a><br>
-Espere hasta que acepte su solicitud
-<i class="fas fa-user-clock text-primary"></i><br>
-<a href="{% url 'indicaciones_tutor' estudiante.id %}">Imprimir Indicaciones a Tutor</a><br>
-</p>
+    <p>Se solicitó tutoria a:
+    <a href="{% url 'enlace_tutor' tutor.id %}">{{tutor.nombre}} {{tutor.apellido}}</a><br>
+    Espere hasta que acepte su solicitud
+    <i class="fas fa-user-clock text-primary"></i><br>
+    <a href="{% url 'indicaciones_tutor' estudiante.id %}">Imprimir Indicaciones a Tutor</a><br>
+    </p>
 {% endif %}
 
 {% if tutor and estudiante.tutor_acepto%}
-<p>El <strong>Ing. {{tutor}}</strong> aceptó la solicitud de tutoría
-<i class="fas fa-user-check text-success"></i>
-</p>
-<p><a href={%url 'reporte_tutor_acepto' estudiante.id %}>Carta de Aceptación para Docente ETN-1040</a>
-<i class="fas text-success fa-check"></i></p>
+    <p>El <strong>Ing. {{tutor}}</strong> aceptó la solicitud de tutoría
+    <i class="fas fa-user-check text-success"></i>
+    </p>
+    <p><a href={%url 'reporte_tutor_acepto' estudiante.id %}>Carta de Aceptación para Docente ETN-1040</a>
+    <i class="fas text-success fa-check"></i></p>
 {% endif %}
 
 <a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a><p>

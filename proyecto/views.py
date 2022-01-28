@@ -498,10 +498,10 @@ def editarPerfil(request):
             form = DatosDocenteForm(request.POST, request.FILES, instance=docente)
             if form.is_valid():
                 form.save()
-                nombre = request.POST.get('nombre')
-                apellido = request.POST.get('apellido')
-                usuario.first_name = nombre
-                usuario.last_name = apellido
+                # nombre = request.POST.get('nombre')
+                # apellido = request.POST.get('apellido')
+                # usuario.first_name = nombre
+                # usuario.last_name = apellido
                 usuario.save()
                 return redirect('perfil')
     if grupo == 'estudiante':

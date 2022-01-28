@@ -8,25 +8,92 @@
         <div class='text-right'><a href={%url 'carta_final' sala_doc.estudiante.id %}>Carta de Conclusión</a></div>
     {% endif %}
 {% endif %}
-{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
-    <p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>
-    <i class="fas text-success fa-check"></i></p>
-    {% comment %}<p><a href={%url 'entrega_proyecto' %}>Revisión Proyecto</a>{% endcomment %}
-    <p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>
-    <i class="fas text-success fa-check"></i></p>
-    {% if not proyecto_grado %}
-        <p><a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>
-        <i class="fas text-danger fa-graduation-cap"></i></p>
-    {% endif %}
-{% else %}
-    <p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>
-    <i class="fas text-danger fa-graduation-cap"></i><br>
-    {% comment %}<p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a>{% endcomment %}
-    <p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>
-    <i class="fas text-danger fa-graduation-cap"></i></p>
-    <p><a class="btn disabled" href=#>Registro Proyecto de Grado</a>
-    <i class="fas text-danger fa-graduation-cap"></i></p>
-{% endif %}
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Actividad</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+        <td>
+            <a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>
+        </td>
+        <td>
+            {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+                <i class="fas text-success fa-check"></i> Cumplido
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>
+        </td>
+        <td>
+            {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+                <i class="fas text-success fa-check"></i> Cumplido
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+                {% if not proyecto_grado %}
+                    <a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>
+                {% endif %}
+            {% else %}
+                <a class="btn disabled" href=#>Registro Proyecto de Grado</a>
+            {% endif %}
+            {% if proyecto_grado and proyecto.0.calificacion %}
+                <a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado y Calificado</a>
+            {% endif %}
+            {% if proyecto and not proyecto.0.calificacion %}
+                <a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado, Esperando Nota</a>
+            {% endif %}
+        </td>
+        <td>
+            {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+                {% if not proyecto_grado %}
+                    <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+                {% endif %}
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+            {% endif %}
+            {% if proyecto_grado and proyecto.0.calificacion %}
+                <i class="fas text-success fa-check"></i> Cumplido
+            {% endif %}
+            {% if proyecto and not proyecto.0.calificacion %}
+                <i class="fas text-warning fa-graduation-cap"></i> Pendiente
+            {% endif %}
+        </td>
+    </tr>
+  </tbody>
+</table>
+{% comment %}{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}{% endcomment %}
+    {% comment %}<p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>{% endcomment %}
+    {% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
+    {% comment %}[><p><a href={%url 'entrega_proyecto' %}>Revisión Proyecto</a><]{% endcomment %}
+    {% comment %}<p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>{% endcomment %}
+    {% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
+    {% comment %}{% if not proyecto_grado %}{% endcomment %}
+        {% comment %}<p><a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>{% endcomment %}
+        {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+{% comment %}{% else %}{% endcomment %}
+    {% comment %}<p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>{% endcomment %}
+    {% comment %}<i class="fas text-danger fa-graduation-cap"></i><br>{% endcomment %}
+    {% comment %}[><p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a><]{% endcomment %}
+    {% comment %}<p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>{% endcomment %}
+    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
+    {% comment %}<p><a class="btn disabled" href=#>Registro Proyecto de Grado</a>{% endcomment %}
+    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
 
 {% comment %}{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor and not proyecto_grado%}{% endcomment %}
 {% comment %}{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno and not proyecto_grado %}{% endcomment %}
@@ -35,15 +102,15 @@
     {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
 {% comment %}{% endif %}{% endcomment %}
 
-{% if proyecto_grado and proyecto.0.calificacion %}
-    <p><a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado y Calificado</a>
-    <i class="fas text-success fa-check"></i></p>
-{% endif %}
+{% comment %}{% if proyecto_grado and proyecto.0.calificacion %}{% endcomment %}
+    {% comment %}<p><a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado y Calificado</a>{% endcomment %}
+    {% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
 
-{% if proyecto and not proyecto.0.calificacion %}
-    <p><a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado, Esperando Nota</a>
-    <i class="fas text-warning fa-graduation-cap"></i></p>
-{% endif %}
+{% comment %}{% if proyecto and not proyecto.0.calificacion %}{% endcomment %}
+    {% comment %}<p><a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado, Esperando Nota</a>{% endcomment %}
+    {% comment %}<i class="fas text-warning fa-graduation-cap"></i></p>{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
 
 {% comment %}{% if proyecto_grado and proyecto.0.calificacion%}{% endcomment %}
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>

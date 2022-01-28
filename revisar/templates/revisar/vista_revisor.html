@@ -56,7 +56,7 @@
                 <a class="btn btn-primary" target=_blank href="{{ sala.archivo_corregir.url }}">{{sala_doc.tipo|title}}</a>
             </td>      
                 <td>
-                <a class="btn btn-primary position-relative" href={% url 'revisar:mensajes' sala.id %} type="button">
+                <a class="btn btn-primary position-relative" href={% url 'revisar:mensajes' sala.id %} type="button" name="observacion">
                     Observación
                 {% if no_visto == 0 %}
                     </a>

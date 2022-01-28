@@ -42,7 +42,7 @@
     {%if est.tutor_acepto%}
     <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
     {% else %}
-    <td><a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.id %}"><strong>Solicitud</strong> {{est.apellido}}, {{est.nombre}}</a></td>
+    <td><a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est.apellido}}, {{est.nombre}}</a></td>
     {% endif %}
 {%endif%}
 
