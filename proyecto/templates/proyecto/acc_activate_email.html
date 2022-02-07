@@ -1,0 +1,22 @@
+{% autoescape off %}  
+
+Universidad Mayor de San Andrés
+Facultad de Ingeniería
+Carrera de Ingeniería Electrónica
+
+{% if user.first_name == 'sin llenar'%}
+    Hola! {{ user.email }}
+{% else %}    
+    Hola! {{ user.first_name }} {{ user.last_name }}.  
+{% endif %}
+Se está registrando como *** {{ user.groups.get.name | capfirst }} *** en el sistema ETN - 1040, http://{{ domain }}
+Para concluir con el registro, debe dar click en el siguiente enlace:
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}  
+Si esto no es tuyo, entonces ignora este email.
+
+Para el ingreso al sistema se le asignó el siguiente usuario y contraseña
+Usuario: {{user.username}}
+Contraseña: {{user.username}}
+
+Nota: El nombre usuario no se puede modificar, pero si la contraseña.
+{% endautoescape %}

@@ -9,6 +9,12 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
+# modulos de activacion por email
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+UserModel = get_user_model()
+
 from .decorators import unauthenticated_user, allowed_users, admin_only, permitir_paso1
 from .decorators import *
 from .forms import *
@@ -22,7 +28,7 @@ from .funciones import *
 from random import randint
 from datetime import timedelta
 
-# busqueda
+# # busqueda
 # import pandas as pd
 # from sklearn.feature_extraction.text import TfidfVectorizer
 # from sklearn.metrics.pairwise import linear_kernel
@@ -54,16 +60,13 @@ def registerPage(request):
             mencion = form.cleaned_data.get('mencion')
             if User.objects.filter(username=usuario).exists():
                 messages.info(request, 
-            'No se envió la solicitud, un estudiante ya usa este nombre de usuario')
+            'No se envió la solicitud, un usuario ya usa este nombre de usuario')
             elif User.objects.filter(email=correo).exists():
                 messages.info(request,
-            'No se envió la solicitud, un estudiante ya usa este correo electrónico')
-            # elif SolicitudInvitado.objects.filter(usuario.userna=usuario).exists():
+            'No se envió la solicitud, un usuario ya usa este correo electrónico')
+            # elif SolicitudInvitado.objects.filter(correo=correo).exists():
                 # messages.info(request, 
-            # 'No se envió la solicitud, un solicitante usa este mismo nombre de usuario')
-            elif SolicitudInvitado.objects.filter(correo=correo).exists():
-                messages.info(request, 
-            'No se envió la solicitud, un solicitante usa este mismo correo electrónico')
+            # 'No se envió la solicitud, un solicitante usa este mismo correo electrónico')
             elif SolicitudInvitado.objects.filter(carnet=carnet).exists():
                 messages.info(request, 
             'No se envió la solicitud, un solicitante usa este mismo número de carnet')
@@ -71,12 +74,9 @@ def registerPage(request):
                 messages.info(request, 
             'No se envió la solicitud, un solicitante usa este mismo número de \
             registro universitario')
-            # elif DatosEstudiante.objects.filter(usuario=usuario).exists():
+            # elif DatosEstudiante.objects.filter(correo=correo).exists():
                 # messages.info(request, 
-            # 'No se envió la solicitud, un estudiante usa este mismo nombre de usuario')
-            elif DatosEstudiante.objects.filter(correo=correo).exists():
-                messages.info(request, 
-            'No se envió la solicitud, un estudiante usa este mismo correo electrónico')
+            # 'No se envió la solicitud, un estudiante usa este mismo correo electrónico')
             elif DatosEstudiante.objects.filter(carnet=carnet).exists():
                 messages.info(request, 
             'No se envió la solicitud, un estudiante usa este mismo número de carnet')
@@ -96,7 +96,9 @@ def registerPage(request):
                 # creacion del grupo
                 group = Group.objects.get(name='solicitud')
                 user = User.objects.get(username=usuario)
+                user.is_active = False
                 user.groups.add(group)
+                user.save()
                 # creacion de datos del solicitante
                 usuario_solicitud = User.objects.get(username=usuario)
                 SolicitudInvitado.objects.create(
@@ -111,9 +113,24 @@ def registerPage(request):
                     mencion = mencion,
                     # password = password
                     )
-                messages.success(request, 'La solicitud se envió con exito!!!')
+                email_activacion(request, user, correo)
+                messages.success(request, 'La solicitud se envió con exito!!! para activar tu cuenta debes de ingresar a tu correo electrónico y dar click en el enlace de activación: ')
     context = {'usuarios':usuarios, 'form':form}
     return render(request, 'proyecto/registro_estudiante.html', context)
+
+@unauthenticated_user
+def activate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = UserModel._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return HttpResponse('Gracias por confirmar tu registro, ahora puedes ingresar al sistema.')
+    else:
+        return HttpResponse('Activación de link invalido!')
 
 @unauthenticated_user
 def loginPage(request):
@@ -1259,7 +1276,7 @@ def enlaceTribunal(request, pk_tribunal):
 @login_required(login_url='login')
 @admin_only
 def registroEstudiante(request):
-    grupo = str(request.user.groups.get())
+    grupo = request.user.groups.get().name
     context = {'grupo': grupo}
     return render(request, 'proyecto/registro_estudiante.html', context)
 
@@ -1309,23 +1326,36 @@ def agregarDocente(request):
             apellido = form.cleaned_data.get('apellido')
             grupo = form.cleaned_data.get('grupo')
             mencion = form.cleaned_data.get('mencion')
-            primer_apellido= apellido.split()[0].lower()
-            usuario = primer_apellido+'_docente'
-            correo = primer_apellido+'_docente@gmail.com'
-            password = primer_apellido+'_docente'
-            if User.objects.filter(username=usuario).exists():
-                messages.info(request, 
-            'No se agregó al docente, un docente usa este nombre de usuario')
-            elif User.objects.filter(email=correo).exists():
+            # primer_apellido= apellido.split()[0].lower()
+            # correo = primer_apellido+'_docente@gmail.com'
+            # usuario = primer_apellido+'_docente'
+            # password = primer_apellido+'_docente'
+
+            correo = form.cleaned_data.get('correo')
+            usuario = correo.split('@')[0] + "_docente"
+            password = usuario
+
+            est = DatosEstudiante.objects.filter(correo=correo).exists()
+            sol = SolicitudInvitado.objects.filter(correo=correo).exists()
+            di = DatosDirector.objects.filter(correo=correo).exists()
+            adm = DatosAdministrador.objects.filter(correo=correo).exists()
+            do = DatosDocente.objects.filter(correo=correo).exists()
+
+            if est or sol or di or adm or do:
                 messages.info(request,
-            'No se agregó al docente, un docente usa este mismo correo\
-            electrónico')
+            'No se agregó al Docente. Un docente, estudiante, director, administrador o solicitante; usa este mismo correo electrónico.')
+
+
+            # if User.objects.filter(username=usuario).exists():
+                # messages.info(request, 
+            # 'No se agregó al docente, un docente usa este nombre de usuario')
+            # elif User.objects.filter(email=correo).exists():
+                # messages.info(request,
+            # 'No se agregó al docente, un docente usa este mismo correo\
+            # electrónico')
             elif DatosDocente.objects.filter(grupo=grupo).exists():
                 messages.info(request, 
             'No se agregó al docente, otro docente ya se asigno a este grupo')
-            # elif 2==DatosDocente.objects.filter(mencion=mencion).count():
-                # messages.info(request, 
-            # 'No se agregó al docente, Solo se admite 2 docentes por mencion')
 
             else:                 
                 # creacion del usuario
@@ -1334,22 +1364,24 @@ def agregarDocente(request):
                         email = correo,
                         first_name = nombre,
                         last_name = apellido,
-                        password = password,
+                        password = usuario,
                         )
                 group = Group.objects.get(name='docente')
                 user = User.objects.get(username=usuario)
                 user.groups.add(group)
+                user.is_active = False
+                user.save()
                 # creacion de datos
                 DatosDocente.objects.create(
-                        usuario = User.objects.get(username=usuario),
+                        usuario = user,
                         correo = correo,
                         nombre = nombre,
                         apellido = apellido,
-                        celular = 'llenar',
+                        celular = 'sin llenar',
                         grupo = grupo,
                         mencion = mencion,
                         )
-
+                email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con exito!!!')
     context = {'form':form}
     return render(request, 'proyecto/agregar_docente.html', context)
@@ -1362,36 +1394,41 @@ def agregarTutor(request):
         form = TutorForm(request.POST)
         if form.is_valid():
             correo = form.cleaned_data.get('correo')
-            nombre = form.cleaned_data.get('nombre')
-            apellido = form.cleaned_data.get('apellido')
             usuario = correo.split('@')[0] + "_tutor"
             password = usuario
-            if User.objects.filter(email=correo).exists():
-                messages.info(request,
-            'No se agregó al tutor, un usuario usa este mismo correo\
-            electrónico')
 
+            est = DatosEstudiante.objects.filter(correo=correo).exists()
+            sol = SolicitudInvitado.objects.filter(correo=correo).exists()
+            di = DatosDirector.objects.filter(correo=correo).exists()
+            adm = DatosAdministrador.objects.filter(correo=correo).exists()
+
+            if est or sol or di or adm:
+                messages.info(request,
+            'No se agregó al tutor. Un estudiante, docente, administrador o solicitante; usa este mismo correo electrónico.')
             else:                 
                 # creacion del usuario
                 User.objects.create_user(
                         username = usuario,
                         email = correo,
-                        first_name = nombre,
-                        last_name = apellido,
+                        first_name = 'sin llenar',
+                        last_name = 'sin llenar',
                         password = password,
                         )
                 group = Group.objects.get(name='tutor')
                 user = User.objects.get(username=usuario)
                 user.groups.add(group)
+                user.is_active = False
+                user.save()
                 # creacion de datos
                 DatosTutor.objects.create(
-                        usuario = User.objects.get(username=usuario),
+                        usuario = user,
                         correo = correo,
-                        nombre = nombre,
-                        apellido = apellido,
-                        celular = 'llenar',
+                        nombre = 'sin llenar',
+                        apellido = 'sin llenar',
+                        celular = 'sin llenar',
                         )
-                messages.success(request, 'Tutor Registrado con exito!!!')
+                email_activacion(request, user, correo)
+                messages.success(request, 'La solicitud se envió con éxito!!!')
     context = {'form':form}
     return render(request, 'proyecto/agregar_tutor.html', context)
 
@@ -1405,31 +1442,43 @@ def agregarTribunal(request):
             correo = form.cleaned_data.get('correo')
             usuario = correo.split('@')[0] + "_tribunal"
             password = usuario
-            if User.objects.filter(email=correo).exists():
+            # if User.objects.filter(email=correo).exists():
+                # messages.info(request,
+            # 'No se agregó al tribunal, un usuario usa este mismo correo\
+            # electrónico')
+
+            est = DatosEstudiante.objects.filter(correo=correo).exists()
+            sol = SolicitudInvitado.objects.filter(correo=correo).exists()
+            di = DatosDirector.objects.filter(correo=correo).exists()
+            adm = DatosAdministrador.objects.filter(correo=correo).exists()
+
+            if est or sol or di or adm:
                 messages.info(request,
-            'No se agregó al tribunal, un usuario usa este mismo correo\
-            electrónico')
+            'No se agregó al Tribunal. Un estudiante, docente, administrador o solicitante; usa este mismo correo electrónico.')
             else:                 
                 # creacion del usuario
                 User.objects.create_user(
                         username = usuario,
                         email = correo,
-                        first_name = correo,
-                        last_name = correo,
-                        password = password,
+                        first_name = 'sin llenar',
+                        last_name = 'sin llenar',
+                        password = usuario,
                         )
                 group = Group.objects.get(name='tribunal')
                 user = User.objects.get(username=usuario)
                 user.groups.add(group)
+                user.is_active = False
+                user.save()
                 # creacion de datos
                 DatosTribunal.objects.create(
-                        usuario = User.objects.get(username=usuario),
+                        usuario = user,
                         correo = correo,
-                        nombre = correo,
-                        apellido = correo,
+                        nombre = user.first_name,
+                        apellido = user.last_name,
                         celular = 'sin llenar',
                         )
-                messages.success(request, 'Tribunal Registrado con exito!!!')
+                email_activacion(request, user, correo)
+                messages.success(request, 'La solicitud se envió con éxito!!!')
     context = {'form':form}
     return render(request, 'proyecto/agregar_tribunal.html', context)
 
@@ -1607,50 +1656,62 @@ def paso3(request):
     # registro de tutor
     if request.method == 'POST':
         correo = request.POST['agregar_tutor']
-        # si el tutor ya fue registrado
-        if DatosTutor.objects.filter(correo=correo).exists():
-            user_est = request.user.datosestudiante
-            user_est.tutor = DatosTutor.objects.get(correo=correo)
-            user_est.save()
-            # creacion de salas tutor-estudiante
-            id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
-            id_estudiante = str(request.user.id)
-            nombre_sala = id_tutor + id_estudiante
-            Sala.objects.create(nombre_sala = nombre_sala)
+
+        est = DatosEstudiante.objects.filter(correo=correo).exists()
+        sol = SolicitudInvitado.objects.filter(correo=correo).exists()
+        di = DatosDirector.objects.filter(correo=correo).exists()
+        adm = DatosAdministrador.objects.filter(correo=correo).exists()
+
+        if est or sol or di or adm:
+            messages.info(request,
+        'No se agregó al Tutor. Un estudiante, director, administrador o solicitante; usa este mismo correo electrónico.')
         else: 
-            usuario = correo.split('@')[0]
-            # creacion de usuario tutor
-            User.objects.create_user(
-                    username = usuario + '_tutor',
-                    email = correo,
-                    first_name = usuario + '_sin_llenar',
-                    last_name = 'sin_llenar',
-                    password = usuario + '_tutor',
-                    )
-            # agregando a grupo tutor
-            group = Group.objects.get(name='tutor')
-            user = User.objects.get(email=correo)
-            user.groups.add(group)
-            # creacion de datos tutor
-            dato_tutor = DatosTutor()
-            dato_tutor.usuario = User.objects.get(email=correo)
-            dato_tutor.correo = correo
-            dato_tutor.nombre = usuario + '_nombre'
-            dato_tutor.apellido= 'sin_llenar'
-            dato_tutor.celular= 'sin_llenar'
-            dato_tutor.save()
-            # relacionando estudiante al tutor
-            user_est = request.user.datosestudiante
-            user_est.tutor = DatosTutor.objects.get(correo=correo)
-            user_est.save()
-            # creacion de salas tutor-estudiante
-            id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
-            id_estudiante = str(request.user.id)
-            nombre_sala = id_tutor + id_estudiante
-            Sala.objects.create(nombre_sala = nombre_sala)
-        # progreso = Progreso.objects.get(usuario=estudiante)
-        # progreso.nivel = 35
-        # progreso.save()
+            # si el tutor ya fue registrado
+            if DatosTutor.objects.filter(correo=correo).exists():
+                user_est = request.user.datosestudiante
+                user_est.tutor = DatosTutor.objects.get(correo=correo)
+                user_est.save()
+                # creacion de salas tutor-estudiante
+                id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
+                id_estudiante = str(request.user.id)
+                nombre_sala = id_tutor + id_estudiante
+                Sala.objects.create(nombre_sala = nombre_sala)
+            else: 
+                usuario = correo.split('@')[0] + '_tutor'
+                # creacion de usuario tutor
+                User.objects.create_user(
+                        username = usuario,
+                        email = correo,
+                        first_name = 'sin llenar',
+                        last_name = 'sin llenar',
+                        password = usuario,
+                        )
+                # agregando a grupo tutor
+                group = Group.objects.get(name='tutor')
+                user = User.objects.get(email=correo)
+                user.groups.add(group)
+                user.is_active = False
+                user.save()
+                # creacion de datos tutor
+                dato_tutor = DatosTutor()
+                dato_tutor.usuario = user
+                dato_tutor.correo = correo
+                dato_tutor.nombre = user.first_name
+                dato_tutor.apellido= user.last_name
+                dato_tutor.celular= 'sin llenar'
+                dato_tutor.save()
+                # relacionando estudiante al tutor
+                user_est = request.user.datosestudiante
+                user_est.tutor = DatosTutor.objects.get(correo=correo)
+                user_est.save()
+                # creacion de salas tutor-estudiante
+                id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
+                id_estudiante = str(request.user.id)
+                nombre_sala = id_tutor + id_estudiante
+                Sala.objects.create(nombre_sala = nombre_sala)
+                # activacion por email
+                email_activacion(request, user, correo)
+                messages.success(request, 'La solicitud se envió con éxito!!!')
         return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
     context = {'grupo': grupo, 'tutor':tutor, 'estudiante':estudiante}

@@ -69,6 +69,7 @@ class FormDocente(forms.Form):
     solo_letra= RegexValidator(r'^[a-zA-ZÀ-ÿ\u00f1\u00d1 a-zA-ZÀ-ÿ\u00f1\u00d1]*$', 'Ingresar solo letras')
     nombre = forms.CharField(max_length = 50, validators=[solo_letra])
     apellido = forms.CharField(max_length = 50, validators=[solo_letra])
+    correo = forms.EmailField(max_length=100)
     grupo = forms.CharField(max_length = 50, validators=[solo_grupo])
     mencion = forms.ChoiceField(choices=MENCION)
 
@@ -394,8 +395,7 @@ class BusquedaProyectoForm(forms.ModelForm):
 class TutorForm(forms.ModelForm):
     class Meta:
         model = DatosTutor
-        fields = '__all__'
-        exclude = ['usuario','imagen_perfil','celular']
+        fields = ['correo']
 class TribunalForm(forms.ModelForm):
     class Meta:
         model = DatosTribunal

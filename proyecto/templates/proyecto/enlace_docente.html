@@ -26,7 +26,7 @@
     Nombre: {{docente.nombre}}<br>
     Apellido: {{docente.apellido}}<br>
     Celular: {{docente.celular}}<br>
-    Correo Electrónico: {{docente.celular}}<br>
+    Correo Electrónico: <a target=_blank href="mailto:{{docente.correo}}?Subject=Asunto">{{docente.correo}}</a><br>
     Grupo: {{docente.grupo}}<br>
     Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>
             </div>
@@ -53,26 +53,25 @@
 {%endif%}
 
 {%if grupo == 'estudiante'%}
-<p>Nombre: {{docente.nombre}}<br>
-Apellido: {{docente.apellido}}<br>
-Celular: {{docente.celular}}<br>
-Correo Electrónico: {{docente.celular}}<br>
-Grupo: {{docente.grupo}}</p>
-		</div>
-	</div>
-</div>
+    <p>Nombre: {{docente.nombre}}<br>
+    Apellido: {{docente.apellido}}<br>
+    Celular: {{docente.celular}}<br>
+    Correo Electrónico: <a target=_blank href="mailto:{{docente.correo}}?Subject=Asunto">{{docente.correo}}</a><br>
+    Grupo: {{docente.grupo}}</p>
+            </div>
+        </div>
+    </div>
 {%endif%}
 
 {%if grupo == 'tutor' or grupo == 'tribunal'%}
-<p>Nombre: {{docente.nombre}}<br>
-Apellido: {{docente.apellido}}<br>
-Celular: {{docente.celular}}<br>
-Correo Electrónico: {{docente.correo}}<br>
-Grupo: {{docente.grupo}}<br>
-{% comment %}Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>{% endcomment %}
-		</div>
-	</div>
-</div>
+    <p>Nombre: {{docente.nombre}}<br>
+    Apellido: {{docente.apellido}}<br>
+    Celular: {{docente.celular}}<br>
+    Correo Electrónico: <a target=_blank href="mailto:{{docente.correo}}?Subject=Asunto">{{docente.correo}}</a><br>
+    Grupo: {{docente.grupo}}<br>
+            </div>
+        </div>
+    </div>
 {%endif%}
 
 {% endblock %}
