@@ -1,17 +1,22 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
+
 {% for message in messages %}
     <p id="messages">{{ message }}</p>
 {% endfor %}
+
 {% if not tutor and not estudiante.tutor_acepto %}
     <h4>Registrar al Tutor para que ingrese al sistema.</h4>
+    <p>En el caso de que el tutor recomiende más de un integrante, debe de realizarse la solicitud
+    al docente ETN-1040 para que autorice la participación múltiple en el proyecto.</p>
+    <p>En caso que se realice en modalidad individual, ingrese el correo electrónico </p>
     <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
 {% elif tutor and not estudiante.tutor_acepto %}
     <h4>Se envió la solicitud al Tutor</h4>
 {% elif tutor and estudiante.tutor_acepto %}
     <h4>El Tutor aceptó la solicitud</h4>
 {% endif %}
-{% comment %}{% if tutor.nombre == 'sin_tutor' %}{% endcomment %}
+
 {% if not tutor and not estudiante.tutor_acepto %}
 <p>
 <form class="d-flex" style="margin:auto;max-width:300px" method='post'

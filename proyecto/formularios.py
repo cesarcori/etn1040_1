@@ -1,4 +1,5 @@
 #!/usr/bin/env python3 
+# instalar fpdf2 porque fpdf no tiene algunas funcionalidades
 from fpdf import FPDF
 from os import remove
 from datetime import date

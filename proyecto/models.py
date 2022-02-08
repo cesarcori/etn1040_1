@@ -8,7 +8,6 @@ def validate_file_extension(value):
         raise ValidationError(u'Solo Pdf')
 
 class SolicitudInvitado(models.Model):
-    # usuario = models.CharField(max_length=50, null=True, unique=True)
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
@@ -18,7 +17,6 @@ class SolicitudInvitado(models.Model):
     registro_uni = models.CharField(max_length=50, null=True, unique=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
-    # password = models.CharField(max_length=50, null=True)
     fecha_solicitud = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         self.nombre_completo = self.nombre + ' ' + self.apellido
@@ -47,100 +45,6 @@ class DatosDirector(models.Model):
     celular = models.CharField(max_length=50, null=True, blank=True)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_inscripcion = models.DateTimeField(auto_now_add=True, null=True)
-    # def __str__(self):
-        # self.nombre_completo = self.nombre + ' ' + self.apellido
-        # return self.nombre_completo
-
-class MaterialDocente(models.Model):
-    propietario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    material_docente = models.FileField(upload_to='material_docente/', null=True)
-    def __str__(self):
-        return str(self.material_docente)
-
-class VistaMaterialDocente(models.Model):
-    usuario = models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
-    docente = models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)
-    material_docente_visto = models.ForeignKey(MaterialDocente, null=True, blank=True, on_delete=models.CASCADE)
-    def __str__(self):
-        self.identificador = self.usuario.__str__() +' - '+ self.material_docente_visto.__str__()
-        return self.identificador
-
-# class MensajeDocenteRevisar(models.Model):
-    # texto = models.TextField(blank=True, null=True)
-    # visto_docente = models.BooleanField(default=False)
-    # visto_estudiante = models.BooleanField(default=False)
-    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    # sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-
-# class MensajeDocenteRevisarProyecto(models.Model):
-    # texto = models.TextField(blank=True, null=True)
-    # visto_docente = models.BooleanField(default=False)
-    # visto_estudiante = models.BooleanField(default=False)
-    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    # sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-
-# class MensajeTutorRevisar(models.Model):
-    # texto = models.TextField(blank=True, null=True)
-    # visto_tutor = models.BooleanField(default=False)
-    # visto_estudiante = models.BooleanField(default=False)
-    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    # sala = models.ForeignKey('SalaRevisar', null=True, blank=True, on_delete=models.CASCADE)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-
-# class MensajeTutorRevisarProyecto(models.Model):
-    # texto = models.TextField(blank=True, null=True)
-    # visto_tutor = models.BooleanField(default=False)
-    # visto_estudiante = models.BooleanField(default=False)
-    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    # sala = models.ForeignKey('SalaRevisarProyecto', null=True, blank=True, on_delete=models.CASCADE)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-
-# class MensajeTribunalRevisar(models.Model):
-    # texto = models.TextField(blank=True, null=True)
-    # visto_tribunal= models.BooleanField(default=False)
-    # visto_estudiante = models.BooleanField(default=False)
-    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    # sala = models.ForeignKey('SalaRevisarTribunal', null=True, blank=True, on_delete=models.CASCADE)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-
-# class SalaRevisar(models.Model):
-    # sala = models.CharField(max_length=50, null=True)
-    # docente_rev= models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)
-    # tutor_rev= models.ForeignKey('DatosTutor', null=True, blank=True, on_delete=models.CASCADE)
-    # estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
-    # texto = models.TextField(blank=True, null=True)
-    # material_estudiante = models.FileField(upload_to='material_estudiante_perfil/', null=True)
-    # material_corregido_docente = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
-    # material_corregido_tutor  = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-    # def __str__(self):
-        # return self.sala
-
-# class SalaRevisarProyecto(models.Model):
-    # sala = models.CharField(max_length=50, null=True)
-    # docente_rev= models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)
-    # tutor_rev= models.ForeignKey('DatosTutor', null=True, blank=True, on_delete=models.CASCADE)
-    # estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
-    # texto = models.TextField(blank=True, null=True)
-    # material_estudiante = models.FileField(upload_to='material_estudiante_proyecto/', null=True)
-    # material_corregido_docente = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
-    # material_corregido_tutor  = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-    # def __str__(self):
-        # return self.sala
-
-# class SalaRevisarTribunal(models.Model):
-    # sala = models.CharField(max_length=50, null=True)
-    # tribunal_rev= models.ForeignKey('DatosTribunal', null=True, blank=True, on_delete=models.CASCADE)
-    # estudiante_rev= models.ForeignKey('DatosEstudiante', null=True, blank=True, on_delete=models.CASCADE)
-    # texto = models.TextField(blank=True, null=True)
-    # material_estudiante = models.FileField(upload_to='material_estudiante_proyecto/', null=True)
-    # visto_bueno = models.BooleanField(default=False)
-    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-    # def __str__(self):
-        # return self.sala
 
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -180,29 +84,39 @@ class DatosEstudiante(models.Model):
     registro_uni = models.CharField(max_length=50, null=True, unique=True)
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
-    grupo_doc = models.ForeignKey(DatosDocente,on_delete=models.SET(''), null=True)
-    tutor = models.ForeignKey(DatosTutor,on_delete=models.SET(''), null=True, blank=True)
+    grupo_doc = models.ForeignKey(DatosDocente,on_delete=models.SET_NULL, null=True)
+    tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
     tutor_acepto = models.BooleanField(default=False)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
-    vb_perfil_docente = models.BooleanField(default=False)
-    vb_perfil_tutor = models.BooleanField(default=False)
-    vb_proyecto_docente = models.BooleanField(default=False)
-    vb_proyecto_tutor = models.BooleanField(default=False)
     solicitud_tribunal_docente = models.BooleanField(default=False)
     tribunales = models.ManyToManyField(DatosTribunal)
+    grupo_est = models.ForeignKey('GrupoEstudiante', null=True, blank=True, on_delete=models.SET_NULL)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         self.nombre_completo = self.nombre + ' ' + self.apellido
         return self.nombre_completo
 
-class Tribunal_1_Estudiante(models.Model):
-    usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    tribunal_1 = models.ForeignKey(DatosTribunal, null=True, blank=True, on_delete=models.CASCADE)
+class GrupoEstudiante(models.Model):
+    nombre = models.CharField(max_length=50, null=True, unique=True)
+    perfil = models.OneToOneField('RegistroPerfil', null=True, blank=True, on_delete=models.SET_NULL)
+    def __str__(self):
+        return f'Grupo: {self.nombre}'
 
-class Tribunal_2_Estudiante(models.Model):
-    usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    tribunal_2 = models.ForeignKey(DatosTribunal, null=True, blank=True, on_delete=models.CASCADE)
+
+class MaterialDocente(models.Model):
+    propietario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    material_docente = models.FileField(upload_to='material_docente/', null=True)
+    def __str__(self):
+        return str(self.material_docente)
+
+class VistaMaterialDocente(models.Model):
+    usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    docente = models.ForeignKey(DatosDocente, null=True, blank=True, on_delete=models.CASCADE)
+    material_docente_visto = models.ForeignKey(MaterialDocente, null=True, blank=True, on_delete=models.CASCADE)
+    def __str__(self):
+        self.identificador = self.usuario.__str__() +' - '+ self.material_docente_visto.__str__()
+        return self.identificador
 
 class DatosEstudianteTitulado(models.Model):
     correo = models.CharField(max_length=50, null=True, unique=True)
@@ -340,10 +254,6 @@ class Mencion(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return self.nombre
-
-# class Firmas(models.Model):
-    # usuario = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    # firma = models.ImageField(default='firmas/firma_default.jpg', upload_to='firmas/', null=True)
 
 class Documentos(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
