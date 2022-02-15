@@ -443,7 +443,7 @@ def solicitudTutoria(request, id_est):
 def estudiante(request):
     grupo = 'estudiante'
     estudiante = request.user.datosestudiante
-    solicitud_invitado = estudiante.invitado.filter(rechazar=False)
+    solicitud_invitado = estudiante.invitado.filter(estado=None)
     context_aux = infoCronograma(estudiante.id)
     if not isinstance(context_aux, dict):
         context_aux = {}

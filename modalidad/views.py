@@ -174,7 +174,7 @@ def aprobarSolicitud(request, id_obj):
                 file.save()
                 estudiante.equipo = Equipo.objects.get(nombre=estudiante.correo)
                 estudiante.save()
-                solicitud.aprobar = True
+                solicitud.estado = 'aprobar'
                 solicitud.save()
                 return redirect('progreso_estudiante', pk_est=estudiante.id)
         context = {'grupo': grupo, 'estudiante':estudiante,
@@ -187,8 +187,9 @@ def aprobarSolicitud(request, id_obj):
 def agregarIntegrantes(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    solicitud_mandar = estudiante.equipo.cantidad -1 - estudiante.interesado.filter(rechazar=False).count()
-    solicitudes = estudiante.interesado.filter(rechazar=False)
+    equipo = estudiante.equipo
+    solicitud_mandar = equipo.cantidad -1 - equipo.interesado.filter(estado=None).count() - equipo.interesado.filter(estado='aprobar').count()
+    solicitudes = equipo.interesado.filter(estado=None)
     if request.method == 'POST':
         correo = request.POST['agregar_integrante']
         # verificar que el correo pertencece a un estudiante que no tiene aun tutor
@@ -203,20 +204,20 @@ def agregarIntegrantes(request):
             messages.error(request, 'No puedes enviar la solicitud a ti mismo.')
         elif DatosEstudiante.objects.get(correo=correo).modalidad:
             messages.error(request, 'El estudiante ya tiene una modalidad de trabajo.')
-        elif estudiante.interesado.filter(correo_invitado=correo, rechazar=False).exists():
+        elif equipo.interesado.filter(correo_invitado=correo, estado=None).exists():
             messages.error(request, 'Ya enviaste solicitud a este estudiante.')
         else: 
             estudiante_invitado = DatosEstudiante.objects.get(correo=correo)
             # enviar solicitud al estudiante
             SolicitudIntegrante.objects.create(
-                estudiante_interesado = estudiante,
+                equipo_interesado = equipo,
                 estudiante_invitado = estudiante_invitado,
                 correo_invitado = correo,
                     )
             messages.success(request, f"Se envió la solicitud a {estudiante_invitado}")
             # mostrar solicitud enviada
             return redirect('modalidad:agregar_integrantes')
-    context = {'grupo':grupo, 'estudiante':estudiante,
+    context = {'grupo':grupo, 'estudiante':estudiante, 'equipo':equipo,
             'solicitud_mandar':solicitud_mandar, 'solicitudes':solicitudes 
             }
     return render(request, 'modalidad/agregar_integrantes.html', context)
@@ -226,7 +227,9 @@ def agregarIntegrantes(request):
 def verSolicitudInvitado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    solicitudes = estudiante.invitado.filter(rechazar=False)
+    solicitudes = estudiante.invitado.filter(estado=None)
+    if estudiante.modalidad:
+        return HttpResponse('error')
     context = {'grupo':grupo, 'estudiante':estudiante,'solicitudes':solicitudes
         }
     return render(request, 'modalidad/ver_solicitud_invitado.html', context)
@@ -238,11 +241,13 @@ def rechazarSolicitudInvitado(request,pk):
     estudiante = request.user.datosestudiante
     solicitud = get_object_or_404(SolicitudIntegrante, id=pk)
     if not solicitud.estudiante_invitado == estudiante:
-        return redirect('error_pagina')
-    mensaje = f'¿Está seguro rechazar la solicitud del estudiante: {solicitud.estudiante_interesado}, para ser parte de su grupo?'
+        return HttpResponse('error')
+    if estudiante.modalidad:
+        return HttpResponse('error')
+    mensaje = f'¿Está seguro rechazar la solicitud del estudiante: {solicitud.equipo_interesado}, para ser parte de su grupo?'
     link = ['modalidad:ver_solicitudes_invitado']
     if request.method == 'POST':
-        solicitud.rechazar = True
+        solicitud.estado = 'rechazar'
         solicitud.save()
         return redirect('home')
     context = {'grupo': grupo, 'estudiante':estudiante,
@@ -257,16 +262,28 @@ def aprobarSolicitudInvitado(request, pk):
     estudiante = request.user.datosestudiante
     solicitud = get_object_or_404(SolicitudIntegrante, id=pk)
     if not solicitud.estudiante_invitado == estudiante:
-        return redirect('error_pagina')
-    mensaje = f'¿Está seguro de ser parte del grupo del estudiante: {solicitud.estudiante_interesado}? No hay marcha atras luego de aceptar ser parte del equipo.'
+        return HttpResponse('error')
+    if estudiante.modalidad:
+        return HttpResponse('error')
+    mensaje = f'¿Está seguro de ser parte del grupo del estudiante: {solicitud.equipo_interesado}? No hay marcha atras luego de aceptar ser parte del equipo.'
     link = ['modalidad:ver_solicitudes_invitado']
     if request.method == 'POST':
-        solicitud.aprobar= True
+        actividad = Actividad.objects.get(nombre='elegir modalidad')
+        solicitud.estado = 'aprobar'
         solicitud.save()
         # asignar al equipo.
+        estudiante.equipo = solicitud.equipo_interesado
         # asignar modalidad multiple
+        estudiante.modalidad = 'multiple'
         # asignar elegir modalidad
-
+        estudiante.actividad.add(actividad)
+        # guardar todos los cambios
+        estudiante.save()
+        # rechazar a todas las demas solicitudes.
+        solicitudes = estudiante.invitado.all().exclude(equipo_interesado=solicitud.equipo_interesado)
+        for solicitud in solicitudes:
+            solicitud.estado = 'rechazar'
+            solicitud.save()
         return redirect('home')
 
     context = {'grupo': grupo, 'estudiante':estudiante,

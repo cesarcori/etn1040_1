@@ -6,6 +6,11 @@
     </div>
     <br>
 {% endif %}
+{% if estudiante.modalidad %}
+    <div class="d-flex justify-content-evenly">
+        <h3>MODALIDAD: {{estudiante.get_modalidad_display|upper}}</h3>
+    </div>
+{% endif %}
 {% include 'proyecto/lista_docente_tutor.html' %}
 {% if progreso >= 100%}
 {% include 'proyecto/felicidades.html' %}

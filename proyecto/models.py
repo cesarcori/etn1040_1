@@ -75,7 +75,7 @@ class DatosTribunal(models.Model):
 class DatosEstudiante(models.Model):
     MODALIDAD = [
             ('individual','Individual'),
-            ('multiple','Multiple'),
+            ('multiple','Múltiple'),
             ]
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)
