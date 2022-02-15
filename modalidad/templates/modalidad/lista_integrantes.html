@@ -1,0 +1,25 @@
+<h5>Integrantes:</h5>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Estudiante</th>
+      <th scope="col">Celular</th>
+      <th scope="col">Correo Electrónico</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for estudiante in estudiante.equipo.datosestudiante_set.all %}
+    <tr>
+        <td>
+            {{estudiante}}
+        </td>
+        <td>
+            {{estudiante.celular}}
+        </td>
+        <td>
+            <a href="mailto:{{estudiante.correo}}?Subject=">{{estudiante.correo}}</a><br>
+        </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>

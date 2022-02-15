@@ -1,0 +1,26 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">
+    {{solicitud.asunto}}
+  </h5>
+  <div class="card-body">
+      <h5 class="card-title">De: {{solicitud.estudiante}} - Para: Ing. {{solicitud.docente}}</h5>
+      <p class="card-text">{{solicitud.detalle}}</p>
+  </div>
+</div>
+<br>
+{% if grupo == 'docente'%}
+<div class="d-flex justify-content-evenly">
+    <a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.id %}>Cancelar</a>
+    <a href={% url 'modalidad:rechazar_solicitud' solicitud.id %} class="btn btn-primary">Rechazar</a>
+    <a href={% url 'modalidad:aprobar_solicitud' solicitud.id %} class="btn btn-success">Aprobar Solicitud</a>
+</div>
+{% endif %}
+{% if grupo == 'estudiante' %}
+<div class="d-flex justify-content-evenly">
+    <a class="btn btn-danger" href={%url 'paso3' %}>Atras</a>
+</div>
+{% endif %}
+{% endblock %}

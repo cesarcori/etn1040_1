@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
+from actividades.models import *
 
 def validate_file_extension(value):
     if not value.name.endswith('.pdf'):
@@ -19,8 +20,7 @@ class SolicitudInvitado(models.Model):
     mencion = models.CharField(max_length=50, null=True)
     fecha_solicitud = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
-        self.nombre_completo = self.nombre + ' ' + self.apellido
-        return self.nombre_completo
+        return f"{self.nombre} {self.apellido}"
 
 class DatosDocente(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -34,8 +34,7 @@ class DatosDocente(models.Model):
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_inscripcion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
-        self.nombre_completo = self.nombre + ' ' + self.apellido
-        return self.nombre_completo
+        return f"{self.nombre} {self.apellido}"
 
 class DatosDirector(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -45,6 +44,8 @@ class DatosDirector(models.Model):
     celular = models.CharField(max_length=50, null=True, blank=True)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_inscripcion = models.DateTimeField(auto_now_add=True, null=True)
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
 
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -55,10 +56,8 @@ class DatosTutor(models.Model):
     firma = models.ImageField(default='firmas/firma_default.jpg', upload_to='firmas/', null=True)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
-
     def __str__(self):
-        self.nombre_completo = self.nombre + ' ' + self.apellido
-        return self.nombre_completo
+        return f"{self.nombre} {self.apellido}"
 
 class DatosTribunal(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -71,10 +70,13 @@ class DatosTribunal(models.Model):
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        self.nombre_completo = self.nombre + ' ' + self.apellido
-        return self.nombre_completo
+        return f"{self.nombre} {self.apellido}"
 
 class DatosEstudiante(models.Model):
+    MODALIDAD = [
+            ('individual','Individual'),
+            ('multiple','Multiple'),
+            ]
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     correo = models.CharField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
@@ -89,26 +91,26 @@ class DatosEstudiante(models.Model):
     tutor_acepto = models.BooleanField(default=False)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     solicitud_tribunal_docente = models.BooleanField(default=False)
-    tribunales = models.ManyToManyField(DatosTribunal)
-    grupo_est = models.ForeignKey('GrupoEstudiante', null=True, blank=True, on_delete=models.SET_NULL)
+    tribunales = models.ManyToManyField(DatosTribunal, blank=True)
+    modalidad = models.CharField(max_length=200, choices=MODALIDAD, null=True, blank=True)
+    equipo = models.ForeignKey('Equipo', null=True, blank=True, on_delete=models.SET_NULL)
+    actividad = models.ManyToManyField(Actividad, blank=True)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        self.nombre_completo = self.nombre + ' ' + self.apellido
-        return self.nombre_completo
+        return f"{self.nombre} {self.apellido}"
 
-class GrupoEstudiante(models.Model):
+class Equipo(models.Model):
     nombre = models.CharField(max_length=50, null=True, unique=True)
-    perfil = models.OneToOneField('RegistroPerfil', null=True, blank=True, on_delete=models.SET_NULL)
+    cantidad = models.PositiveSmallIntegerField(null=True,)
     def __str__(self):
-        return f'Grupo: {self.nombre}'
-
+        return f'Equipo: {self.nombre}'
 
 class MaterialDocente(models.Model):
     propietario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     material_docente = models.FileField(upload_to='material_docente/', null=True)
     def __str__(self):
-        return str(self.material_docente)
+        return f"{self.material_docente}"
 
 class VistaMaterialDocente(models.Model):
     usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
@@ -132,8 +134,7 @@ class DatosEstudianteTitulado(models.Model):
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_conclusion= models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
-        self.nombre_completo = self.nombre + ' ' + self.apellido
-        return self.nombre_completo
+        return f"{self.nombre} {self.apellido}"
 
 class DatosAdministrador(models.Model):
     usuario = models.OneToOneField(User, null=True, on_delete=models.CASCADE)

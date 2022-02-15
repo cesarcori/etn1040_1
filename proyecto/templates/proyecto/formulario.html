@@ -1,0 +1,12 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h3>{{mensaje}}</h3>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-flex justify-content-evenly">
+        <a class="btn btn-danger" href={%url url_cancelar %}>Cancelar</a>
+        <button type="submit" class="btn btn-success">Enviar</button>
+    </div>
+</form> 
+{% endblock %}

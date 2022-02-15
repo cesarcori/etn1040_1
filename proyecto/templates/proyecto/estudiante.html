@@ -1,9 +1,16 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
+{% if solicitud_invitado and not tutor and not estudiante.modalidad == 'individual'%}
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <a class="btn btn-danger btn-lg" href={% url 'modalidad:ver_solicitudes_invitado' %}>Solicitudes de participación múltiple</a>
+    </div>
+    <br>
+{% endif %}
 {% include 'proyecto/lista_docente_tutor.html' %}
 {% if progreso >= 100%}
 {% include 'proyecto/felicidades.html' %}
 {% endif %}
+
 <div class="container">
   <div class="row row-cols-2 row-cols-lg-3 g-2 g-lg-3">
     <div class="col">

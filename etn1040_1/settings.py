@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'proyecto',
     'mensaje',
     'revisar',
+    'actividades',
+    'modalidad',
 ]
 
 MIDDLEWARE = [

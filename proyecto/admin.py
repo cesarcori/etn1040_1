@@ -18,5 +18,5 @@ admin.site.register(RegistroPerfil)
 admin.site.register(Formularios)
 admin.site.register(Mencion)
 admin.site.register(Documentos)
-admin.site.register(GrupoEstudiante)
+admin.site.register(Equipo)
 

@@ -165,4 +165,8 @@ def email_activacion(request, user, to_email):
     )
     email.send()
 
-
+# verificar que no haya ingreso a otros estudiantes por url id
+# hacer para docente, tutor, tribunal.
+# existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
+# if not existe_est:
+    # return redirect('error')

@@ -1,0 +1,18 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">
+    {{rechazo.asunto}}
+  </h5>
+  <div class="card-body">
+      <h5 class="card-title">De: Ing. {{rechazo.docente}} - Para: {{rechazo.estudiante}}</h5>
+      <p class="card-text">{{rechazo.detalle}}</p>
+  </div>
+</div>
+<br>
+<div class="d-flex justify-content-evenly">
+    <a class="btn btn-danger" href={%url 'paso3' %}>Atras</a>
+</div>
+
+{% endblock %}

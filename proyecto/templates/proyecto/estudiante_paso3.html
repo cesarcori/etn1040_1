@@ -7,26 +7,59 @@
 
 {% if not tutor and not estudiante.tutor_acepto %}
     <h4>Registrar al Tutor para que ingrese al sistema.</h4>
-    <p>En el caso de que el tutor recomiende más de un integrante, debe de realizarse la solicitud
-    al docente ETN-1040 para que autorice la participación múltiple en el proyecto.</p>
-    <p>En caso que se realice en modalidad individual, ingrese el correo electrónico </p>
-    <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
+    {% if not modalidad_hecha %}
+        <p>Para este punto debe de conversar con un posible Tutor y confirmar su participación
+        en el desarrollo del proyecto.</p>
+        <p>En el caso de que el tutor recomiende más de un integrante, debe de realizarse la solicitud
+        al docente ETN-1040 para que autorice la participación múltiple en el proyecto.
+        Deberá espera una respuesta favorable del docente para que se habilite esta modalidad.</p>
+        <p>En caso de que se realice en modalidad individual, sólo debe seleccionar la modalidad
+        individual y registrar al Tutor.</p>
+    {% endif %}
+    {% if rechazo and not modalidad_hecha %}
+        <p>La solicitud fue rechazada,
+        <a href={% url 'modalidad:ver_rechazo' rechazo.pk %}>ver detalles</a>.</p>
+    {% endif %}
+    {% if not modalidad_hecha %}
+        <div class="d-flex justify-content-evenly">
+            <a class="btn btn-outline-success" href={% url 'modalidad:individual' %}>Individual</a>
+            <a class="btn btn-outline-success" href={% url 'modalidad:multiple'%}>Múltiple</a>
+        </div>
+    {% elif estudiante.modalidad == 'multiple' and not estudiante.equipo %}
+        <p>Se envió la 
+        <a href={% url 'modalidad:ver_solicitud' estudiante.solicitud_set.last.pk %}>solicitud </a>
+         al docente, espere una respuesta favorable</p>
+    {% elif estudiante.modalidad == 'multiple' and estudiante.equipo%}
+        <p>El docente aceptó la solicitud modalidad múltiple</p>
+    {% endif %}
+
 {% elif tutor and not estudiante.tutor_acepto %}
     <h4>Se envió la solicitud al Tutor</h4>
 {% elif tutor and estudiante.tutor_acepto %}
     <h4>El Tutor aceptó la solicitud</h4>
 {% endif %}
 
-{% if not tutor and not estudiante.tutor_acepto %}
-<p>
-<form class="d-flex" style="margin:auto;max-width:300px" method='post'
-                     action="" >
-    {% csrf_token %}
-    <input name="agregar_tutor" class="form-control me-2" type="email"
-    placeholder="Registrar Email Tutor" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit" name='enviar'>Enviar</button>
-</form>
-</p>
+{% if modalidad_hecha and not estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad %}
+    <div class="d-flex justify-content-evenly">
+        <a class="btn btn-success" href={% url 'modalidad:agregar_integrantes' %}>Agregar Compañeros de Equipo</a>
+    </div>
+{% endif %}
+
+{% comment %}cumprueba que el estudiante ya tenga una modalidad{% endcomment %}
+{% comment %}y en el caso que se asigno ya un grupo, que este este completo{% endcomment %}
+{% if modalidad_hecha and estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad and estudiante.equipo %}
+    {% if not tutor and not estudiante.tutor_acepto %}
+    <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
+    <p>
+    <form class="d-flex" style="margin:auto;max-width:300px" method='post'
+                        action="" >
+        {% csrf_token %}
+        <input name="agregar_tutor" class="form-control me-2" type="email"
+        placeholder="Registrar Email Tutor" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit" name='enviar'>Enviar</button>
+    </form>
+    </p>
+    {% endif %}
 {% endif %}
 
 {% if tutor and not estudiante.tutor_acepto %}

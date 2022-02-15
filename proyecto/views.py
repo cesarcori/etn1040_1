@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -20,6 +21,7 @@ from .decorators import *
 from .forms import *
 from .models import *
 from revisar.models import *
+from actividades.models import *
 from .cartas import *
 from .reportes import *
 from .formularios import *
@@ -441,6 +443,7 @@ def solicitudTutoria(request, id_est):
 def estudiante(request):
     grupo = 'estudiante'
     estudiante = request.user.datosestudiante
+    solicitud_invitado = estudiante.invitado.filter(rechazar=False)
     context_aux = infoCronograma(estudiante.id)
     if not isinstance(context_aux, dict):
         context_aux = {}
@@ -479,7 +482,8 @@ def estudiante(request):
             progreso = Progreso.objects.get(usuario=estudiante).nivel
         else:
             progreso = 1
-        context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante,}
+        context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante,
+                'solicitud_invitado':solicitud_invitado}
         context = {**context, **context_aux}
         return render(request, 'proyecto/estudiante.html', context)
 
@@ -849,15 +853,6 @@ def progresoEstudiante(request, pk_est):
     estudiante = DatosEstudiante.objects.get(id=pk_est)
     progreso = Progreso.objects.get(usuario=estudiante).nivel
     tribunales = estudiante.tribunales.all()
-    # dicc_vb_tribunal = {}
-    # for tribunal in tribunales:
-        # salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
-        # vb_tribunal = False
-        # for sala in salas:
-            # if sala.visto_bueno:
-                # vb_tribunal = sala.visto_bueno
-                # break
-        # dicc_vb_tribunal[tribunal] = vb_tribunal
     if ProyectoDeGrado.objects.filter(usuario=estudiante).exists():
         proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
         calificacion = proyecto.calificacion
@@ -874,7 +869,7 @@ def progresoEstudiante(request, pk_est):
         # evita que se un docente consulte otros estudiantes
         existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
         if not existe_est:
-            return redirect('error_pagina')
+            return redirect('error')
     elif grupo== 'tutor':
         existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
         if not existe_est:
@@ -915,7 +910,6 @@ def progresoEstudiante(request, pk_est):
             'sala_doc':sala_doc,
             'dicc_salas':dicc_salas,
             'salas_doc_est':salas_doc_est,
-            # 'dicc_vb_tribunal': dicc_vb_tribunal,
             'salas_doc':salas_doc,
             'todo_salas_doc':todo_salas_doc,
             }
@@ -1170,28 +1164,34 @@ def vistoBuenoTribunal(request, id_est):
         return redirect('progreso_estudiante',pk_est=id_est)
     context = {'grupo': grupo}
     return render(request, 'proyecto/visto_bueno_tribunal.html', context)
-
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','administrador','director','tribunal'])
 def enlaceDocente(request, pk_doc):
     grupo = request.user.groups.get().name
-    docente = DatosDocente.objects.get(id=pk_doc)
+    # docente = DatosDocente.objects.get(id=pk_doc)
+    docente = get_object_or_404(DatosDocente, id=pk_doc)
     if grupo == 'administrador':
         estudiantes = docente.datosestudiante_set.all()
         context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
         return render(request, 'proyecto/enlace_docente.html', context)
-    if grupo == 'director':
+    elif grupo == 'director':
         estudiantes = docente.datosestudiante_set.all()
         context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
         return render(request, 'proyecto/enlace_docente.html', context)
     elif grupo == 'estudiante':
-        existe_doc = request.user.datosestudiante.grupo_doc.id
-        if existe_doc == docente.id:
-            estudiantes = {}
-            context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-            return render(request, 'proyecto/enlace_docente.html', context)
-        else:
-            return redirect('error_pagina')
+        # user_request = request.user.datosestudiante.grupo_doc.id
+        # obj_pk = docente.id
+        # if user_request == obj_pk:
+            # estudiantes = {}
+            # context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+            # return render(request, 'proyecto/enlace_docente.html', context)
+        # else:
+            # # return redirect('error_pagina')
+            # raise PermissionDenied
+        docente = request.user.datosestudiante.grupo_doc
+        estudiantes = {}
+        context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+        return render(request, 'proyecto/enlace_docente.html', context)
     elif grupo == 'tutor':
         objeto_tutor_estu = request.user.datostutor.datosestudiante_set
         existe_doc = objeto_tutor_estu.filter(grupo_doc_id=pk_doc).exists()
@@ -1653,6 +1653,8 @@ def paso3(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     tutor = estudiante.tutor
+    modalidad_hecha = estudiante.actividad.filter(nombre="elegir modalidad").exists()
+    rechazo = estudiante.rechazarsolicitud_set.last()
     # registro de tutor
     if request.method == 'POST':
         correo = request.POST['agregar_tutor']
@@ -1714,7 +1716,8 @@ def paso3(request):
                 messages.success(request, 'La solicitud se envió con éxito!!!')
         return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
-    context = {'grupo': grupo, 'tutor':tutor, 'estudiante':estudiante}
+    context = {'grupo': grupo, 'tutor':tutor, 'estudiante':estudiante,
+            'modalidad_hecha':modalidad_hecha, 'rechazo':rechazo}
     return render(request, 'proyecto/estudiante_paso3.html', context)
 
 @login_required(login_url='login')
