@@ -103,6 +103,9 @@ class DatosEstudiante(models.Model):
 class Equipo(models.Model):
     nombre = models.CharField(max_length=50, null=True, unique=True)
     cantidad = models.PositiveSmallIntegerField(null=True,)
+    tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
+    docente = models.ForeignKey(DatosDocente,on_delete=models.SET_NULL, null=True, blank=True)
+    tutor_acepto = models.BooleanField(default=False)
     def __str__(self):
         return f'Equipo: {self.nombre}'
 

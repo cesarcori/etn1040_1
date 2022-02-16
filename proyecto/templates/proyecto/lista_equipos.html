@@ -1,0 +1,30 @@
+<h5>Lista de equipos</h5>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Equipo</th>
+      <th scope="col">Integrantes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+{%for equipo in equipos %}
+
+    {%if equipo.tutor_acepto%}
+        <td>
+            <a class="text-underline-hover" href="{% url 'progreso_estudiante' equipo.id %}">{{equipo}}</a>
+        </td>
+    {% else %}
+        <td>
+            <a class="text-underline-hover" href="{% url 'solicitud_tutoria' equipo.id %}" 
+                name='solicitud_tutoria'><strong>Solicitud</strong> {{equipo}}</a>
+        </td>
+    {% endif %}
+
+        <td>
+            {{equipo.cantidad}}
+        </td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>

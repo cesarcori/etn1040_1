@@ -23,7 +23,7 @@ urlpatterns = [
     path('confi-asign-tr/<int:id_est>/<int:id_trib>', views.confirmarAsignarTribunal, name='confirmar_asignar_tribunal'),
     path('firmas/', views.firmas, name='firmas'),
     path('firmas/cargar-firma/', views.cargarFirma, name='cargar_firma'),
-    path('tutor/solicitud-tutoria/<int:id_est>', views.solicitudTutoria, name='solicitud_tutoria'),
+    path('tutor/solicitud-tutoria/<int:pk>', views.solicitudTutoria, name='solicitud_tutoria'),
     path('estudiante/', views.estudiante, name='estudiante'),
 
     path('passcontra/', views.editarPassword, name='editar_password'),

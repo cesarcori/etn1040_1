@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
-from proyecto.models import DatosEstudiante
+from proyecto.models import DatosEstudiante, Equipo
 
 TIPO_REVISAR= [
     ('perfil','Perfil'),
@@ -10,7 +10,8 @@ TIPO_REVISAR= [
 class SalaDocumentoApp(models.Model):
     revisor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     grupo_revisor = models.ForeignKey(Group, null=True, blank=True, on_delete=models.CASCADE)
-    estudiante = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    # estudiante = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    equipo = models.ForeignKey(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     visto_bueno = models.BooleanField(default=False)
     tipo = models.CharField(max_length=50, choices=TIPO_REVISAR, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)

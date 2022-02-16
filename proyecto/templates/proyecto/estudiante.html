@@ -7,6 +7,11 @@
     <br>
 {% endif %}
 {% if estudiante.modalidad %}
+    {% if estudiante.modalidad == "multiple" %}
+    <div class="d-flex flex-row-reverse bd-highlight">
+        <a href=#>Ver Equipo</a>
+    </div>
+    {% endif %}
     <div class="d-flex justify-content-evenly">
         <h3>MODALIDAD: {{estudiante.get_modalidad_display|upper}}</h3>
     </div>

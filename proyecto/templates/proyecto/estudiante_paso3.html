@@ -30,12 +30,11 @@
         <a href={% url 'modalidad:ver_solicitud' estudiante.solicitud_set.last.pk %}>solicitud </a>
          al docente, espere una respuesta favorable</p>
     {% elif estudiante.modalidad == 'multiple' and estudiante.equipo%}
-        <p>El docente aceptó la solicitud modalidad múltiple</p>
+        <p>El docente aceptó la solicitud de modalidad múltiple</p>
     {% endif %}
-
-{% elif tutor and not estudiante.tutor_acepto %}
+{% elif estudiante.equipo.tutor and not estudiante.equipo.tutor_acepto %}
     <h4>Se envió la solicitud al Tutor</h4>
-{% elif tutor and estudiante.tutor_acepto %}
+{% elif estudiante.equipo.tutor and estudiante.equipo.tutor_acepto %}
     <h4>El Tutor aceptó la solicitud</h4>
 {% endif %}
 
@@ -48,7 +47,7 @@
 {% comment %}cumprueba que el estudiante ya tenga una modalidad{% endcomment %}
 {% comment %}y en el caso que se asigno ya un grupo, que este este completo{% endcomment %}
 {% if modalidad_hecha and estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad and estudiante.equipo %}
-    {% if not tutor and not estudiante.tutor_acepto %}
+    {% if not tutor and estudiante.equipo.tutor_acepto %}
     <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
     <p>
     <form class="d-flex" style="margin:auto;max-width:300px" method='post'
@@ -62,7 +61,7 @@
     {% endif %}
 {% endif %}
 
-{% if tutor and not estudiante.tutor_acepto %}
+{% if tutor and not estudiante.equipo.tutor_acepto %}
     <p>Se solicitó tutoria a:
     {% if tutor.nombre == 'sin llenar'%}
         <a href="{% url 'enlace_tutor' tutor.id %}">{{tutor.correo}}</a><br>
@@ -75,7 +74,7 @@
     </p>
 {% endif %}
 
-{% if tutor and estudiante.tutor_acepto%}
+{% if tutor and estudiante.equipo.tutor_acepto%}
     <p>El <strong>Ing. {{tutor}}</strong> aceptó la solicitud de tutoría
     <i class="fas fa-user-check text-success"></i>
     </p>

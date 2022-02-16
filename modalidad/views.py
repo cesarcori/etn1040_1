@@ -198,6 +198,8 @@ def agregarIntegrantes(request):
             messages.error(request, 'Ya tienes se completo el numero de solicitudes.')
         elif not DatosEstudiante.objects.filter(correo=correo).exists():
             messages.error(request, 'El correo ingresado no pertenece a un estudiante registrado en el sistema.')
+        elif not DatosEstudiante.objects.filter(correo=correo, grupo_doc=estudiante.grupo_doc).exists():
+            messages.error(request, 'El estudiante no se encuentra en el mismo paraleo del docente.')
         elif not estudiantes_permitidos.filter(correo=correo).exists():
             messages.error(request, 'El estudiante ya tiene tutor')
         elif estudiante.correo==correo:

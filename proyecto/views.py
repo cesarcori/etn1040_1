@@ -236,9 +236,11 @@ def docente(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor'])
 def tutor(request):
-    grupo = 'tutor'
-    datos_est = request.user.datostutor.datosestudiante_set.all().order_by('apellido')
-    context = {'datos_est':datos_est,'grupo':grupo}
+    grupo = request.user.groups.get().name
+    tutor = request.user.datostutor
+    datos_est = tutor.datosestudiante_set.all().order_by('apellido')
+    equipos = Equipo.objects.filter(tutor=tutor)
+    context = {'datos_est':datos_est,'grupo':grupo,'equipos':equipos}
     return render(request, 'proyecto/tutor.html', context)
 
 @login_required(login_url='login')
@@ -400,42 +402,47 @@ def documentosFirma(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor'])
-def solicitudTutoria(request, id_est):
-    grupo = 'tutor'
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    docente = estudiante.grupo_doc
+def solicitudTutoria(request, pk):
+    grupo = request.user.groups.get().name
+    tutor = request.user.datostutor
+    equipo = get_object_or_404(Equipo, id=pk)
+    # confirmar que el equipo pertenece al tutor
+    if not tutor == equipo.tutor:
+        return HttpResponse('error')
+    docente = equipo.docente
+    integrantes = equipo.datosestudiante_set.all()
     aceptar = 'no'
     rechazar = 'no'
-    usuario = request.user
     if request.method == 'POST':
         aceptar = request.POST.get('confirmar')
         rechazar = request.POST.get('rechazar') 
     if aceptar == 'si':
-        estudiante.tutor_acepto = True
-        estudiante.save()
-        progreso = Progreso.objects.get(usuario=estudiante)
-        progreso.nivel = 35
-        progreso.save()
+        equipo.tutor_acepto = True
+        equipo.save()
+        for integrante in integrantes:
+            progreso = Progreso.objects.get(usuario=integrante)
+            progreso.nivel = 35
+            progreso.save()
         # crear sala de documento perfil tutor
         SalaDocumentoApp.objects.create(
-            revisor = usuario,    
-            grupo_revisor = usuario.groups.get(),
-            estudiante = estudiante,
+            revisor = tutor.usuario,    
+            grupo_revisor = tutor.usuario.groups.get(),
+            equipo = equipo,
             tipo = 'perfil',
             )
         # creacion sala documento perfil docente
         SalaDocumentoApp.objects.create(
             revisor = docente.usuario,    
             grupo_revisor = docente.usuario.groups.get(),
-            estudiante = estudiante,
+            equipo = equipo,
             tipo = 'perfil',
             )
         return redirect('tutor')
     if rechazar == 'si':
-        estudiante.tutor = None
-        estudiante.save()
+        # estudiante.tutor = None
+        # estudiante.save()
         return redirect('tutor')
-    context = {'grupo':grupo,'estudiante':estudiante}
+    context = {'grupo':grupo,'equipo':equipo}
     return render(request, 'proyecto/solicitud_tutoria.html', context)
 
 @login_required(login_url='login')
@@ -1652,9 +1659,10 @@ def agregarProyecto(request):
 def paso3(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    tutor = estudiante.tutor
+    tutor = estudiante.equipo.tutor
     modalidad_hecha = estudiante.actividad.filter(nombre="elegir modalidad").exists()
     rechazo = estudiante.rechazarsolicitud_set.last()
+    integrantes = estudiante.equipo.datosestudiante_set.all()
     # registro de tutor
     if request.method == 'POST':
         correo = request.POST['agregar_tutor']
@@ -1670,14 +1678,15 @@ def paso3(request):
         else: 
             # si el tutor ya fue registrado
             if DatosTutor.objects.filter(correo=correo).exists():
-                user_est = request.user.datosestudiante
-                user_est.tutor = DatosTutor.objects.get(correo=correo)
-                user_est.save()
+                equipo = estudiante.equipo
+                equipo.tutor = DatosTutor.objects.get(correo=correo)
+                equipo.save()
                 # creacion de salas tutor-estudiante
-                id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
-                id_estudiante = str(request.user.id)
-                nombre_sala = id_tutor + id_estudiante
-                Sala.objects.create(nombre_sala = nombre_sala)
+                for integrante in integrantes:
+                    id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
+                    id_estudiante = str(integrante.usuario.id)
+                    nombre_sala = id_tutor + id_estudiante
+                    Sala.objects.create(nombre_sala = nombre_sala)
             else: 
                 usuario = correo.split('@')[0] + '_tutor'
                 # creacion de usuario tutor
@@ -1692,25 +1701,37 @@ def paso3(request):
                 group = Group.objects.get(name='tutor')
                 user = User.objects.get(email=correo)
                 user.groups.add(group)
-                user.is_active = False
+                user.is_active = True
                 user.save()
                 # creacion de datos tutor
-                dato_tutor = DatosTutor()
-                dato_tutor.usuario = user
-                dato_tutor.correo = correo
-                dato_tutor.nombre = user.first_name
-                dato_tutor.apellido= user.last_name
-                dato_tutor.celular= 'sin llenar'
-                dato_tutor.save()
+                # dato_tutor = DatosTutor()
+                # dato_tutor.usuario = user
+                # dato_tutor.correo = correo
+                # dato_tutor.nombre = user.first_name
+                # dato_tutor.apellido= user.last_name
+                # dato_tutor.celular= 'sin llenar'
+                # dato_tutor.save()
+                DatosTutor.objects.create(
+                    usuario = user,
+                    correo = correo,
+                    nombre = user.first_name,
+                    apellido= user.last_name,
+                    celular= 'sin llenar',
+                        )
                 # relacionando estudiante al tutor
-                user_est = request.user.datosestudiante
-                user_est.tutor = DatosTutor.objects.get(correo=correo)
-                user_est.save()
+                # user_est = request.user.datosestudiante
+                # user_est.tutor = DatosTutor.objects.get(correo=correo)
+                # user_est.save()
+                # relacionando equipo con tutor
+                equipo = estudiante.equipo
+                equipo.tutor = DatosTutor.objects.get(correo=correo)
+                equipo.save()
                 # creacion de salas tutor-estudiante
-                id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
-                id_estudiante = str(request.user.id)
-                nombre_sala = id_tutor + id_estudiante
-                Sala.objects.create(nombre_sala = nombre_sala)
+                for integrante in integrantes:
+                    id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
+                    id_estudiante = str(integrante.usuario.id)
+                    nombre_sala = id_tutor + id_estudiante
+                    Sala.objects.create(nombre_sala = nombre_sala)
                 # activacion por email
                 email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')

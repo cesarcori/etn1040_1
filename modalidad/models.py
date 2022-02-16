@@ -31,8 +31,6 @@ class SolicitudIntegrante(models.Model):
     estudiante_invitado = models.ForeignKey(DatosEstudiante, related_name="invitado", null=True, blank=True, on_delete=models.CASCADE)
     correo_invitado = models.EmailField(max_length=100, null=True)
     visto = models.BooleanField(default=False)
-    # aprobar = models.BooleanField(default=False)
-    # rechazar = models.BooleanField(default=False)
     estado = models.CharField(max_length=50, choices=ESTADO, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
