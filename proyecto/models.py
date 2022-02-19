@@ -103,9 +103,10 @@ class DatosEstudiante(models.Model):
 class Equipo(models.Model):
     nombre = models.CharField(max_length=50, null=True, unique=True)
     cantidad = models.PositiveSmallIntegerField(null=True,)
-    tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
     docente = models.ForeignKey(DatosDocente,on_delete=models.SET_NULL, null=True, blank=True)
+    tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
     tutor_acepto = models.BooleanField(default=False)
+    tribunales = models.ManyToManyField(DatosTribunal, blank=True)
     def __str__(self):
         return f'Equipo: {self.nombre}'
 
@@ -198,7 +199,8 @@ class Formularios(models.Model):
             blank=True, validators=[validate_file_extension])
 
 class ActividadesCronograma(models.Model):
-    usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    # usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    equipo = models.ForeignKey(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     actividad = models.CharField(max_length=200, null=True)
     semana_inicial = models.PositiveSmallIntegerField(null=True, blank=True)
     semana_final= models.PositiveSmallIntegerField(null=True, blank=True)
@@ -209,7 +211,8 @@ class RegistroCronograma(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class ProyectoDeGrado(models.Model):
-    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    # usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(null=True)
     archivo = models.FileField(upload_to='proyectos/', null=True)
@@ -236,7 +239,8 @@ class Auspicio(models.Model):
     cargo = models.CharField(max_length=200, default='', null=True,blank=True)
 
 class Progreso(models.Model):
-    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    # usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     nivel = models.PositiveSmallIntegerField(null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 

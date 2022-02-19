@@ -21,8 +21,8 @@ def revisarDocumento(request, documento, id_revisor):
     estudiante = request.user.datosestudiante
     revisor = User.objects.get(id=id_revisor)
     grupo_revisor = revisor.groups.get()
-    sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, grupo_revisor=grupo_revisor, estudiante=estudiante, tipo=documento)
-    salas_doc = SalaDocumentoApp.objects.filter(estudiante=estudiante, tipo=documento)
+    sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, grupo_revisor=grupo_revisor, equipo=estudiante.equipo, tipo=documento)
+    salas_doc = SalaDocumentoApp.objects.filter(equipo=estudiante.equipo, tipo=documento)
     salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
     dicc_salas = {}
     for sala in salas_revisar:
@@ -47,9 +47,9 @@ def crearSalaRevisar(request, documento, id_revisor, id_sala_doc):
     if request.method == 'POST':
         form = SalaRevisarAppForm(request.POST, request.FILES)
         if form.is_valid():
-            file = form.save(commit=False)
-            file.sala_documento = sala_doc
-            file.save()
+            form.instance.sala_documento = sala_doc
+            form.instance.creado_por = request.user.datosestudiante
+            form.save()
             return redirect('revisar:revisar_documento', documento=sala_doc.tipo, id_revisor=sala_doc.revisor.id)
     context = {'form':form,}
     return render(request, 'revisar/crear_sala_revisar.html', context)

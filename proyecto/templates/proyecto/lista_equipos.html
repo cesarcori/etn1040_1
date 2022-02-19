@@ -12,7 +12,7 @@
 
     {%if equipo.tutor_acepto%}
         <td>
-            <a class="text-underline-hover" href="{% url 'progreso_estudiante' equipo.id %}">{{equipo}}</a>
+            <a class="text-underline-hover" href="{% url 'progreso_estudiante' equipo.pk %}">{{equipo}}</a>
         </td>
     {% else %}
         <td>

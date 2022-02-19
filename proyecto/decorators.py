@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from .models import Progreso
+from actividades.funciones import *
 
 def unauthenticated_user(view_func):
     def wrapper_func(request, *args, **kwargs):
@@ -44,14 +45,29 @@ def admin_only(view_func):
             return view_func(request, *args, **kwargs )
     return wrapper_function
 
+def permitir_con(pasos=[]):
+    def decorator(view_func):
+        def wrapper_function(request, *args, **kwargs):
+            pp = pasosRealizados(request.user.datosestudiante)
+            c_pp = set(pp)
+            c_pasos = set(pasos)
+            print(c_pp, c_pasos)
+            if c_pp <= c_pasos:
+                return view_func(request, *args, **kwargs)
+            else:
+                return HttpResponse('error')
+        return wrapper_function
+    return decorator
+
 def permitir_paso1():
     def decorator(view_func):
         def wrapper_function(request, *args, **kwargs):
             estudiante = request.user.datosestudiante
-            if Progreso.objects.filter(usuario=estudiante).exists():
-                progreso = Progreso.objects.get(usuario=estudiante).nivel
-            else:
-                progreso = 1
+            # if Progreso.objects.filter(usuario=estudiante).exists():
+                # progreso = Progreso.objects.get(usuario=estudiante).nivel
+            # else:
+                # progreso = 1
+            progreso = progress(estudiante)
             if progreso >= 1:
                 return view_func(request, *args, **kwargs)
             else:
@@ -63,10 +79,11 @@ def permitir_paso2():
     def decorator(view_func):
         def wrapper_function(request, *args, **kwargs):
             estudiante = request.user.datosestudiante
-            if Progreso.objects.filter(usuario=estudiante).exists():
-                progreso = Progreso.objects.get(usuario=estudiante).nivel
-            else:
-                progreso = 1
+            # if Progreso.objects.filter(usuario=estudiante).exists():
+                # progreso = Progreso.objects.get(usuario=estudiante).nivel
+            # else:
+                # progreso = 1
+            progreso = progress(estudiante)
             if progreso >= 14:
                 return view_func(request, *args, **kwargs)
             else:
@@ -78,10 +95,11 @@ def permitir_paso3():
     def decorator(view_func):
         def wrapper_function(request, *args, **kwargs):
             estudiante = request.user.datosestudiante
-            if Progreso.objects.filter(usuario=estudiante).exists():
-                progreso = Progreso.objects.get(usuario=estudiante).nivel
-            else:
-                progreso = 1
+            # if Progreso.objects.filter(usuario=estudiante).exists():
+                # progreso = Progreso.objects.get(usuario=estudiante).nivel
+            # else:
+                # progreso = 1
+            progreso = progress(estudiante)
             if progreso >= 21:
                 return view_func(request, *args, **kwargs)
             else:
@@ -93,10 +111,11 @@ def permitir_paso4():
     def decorator(view_func):
         def wrapper_function(request, *args, **kwargs):
             estudiante = request.user.datosestudiante
-            if Progreso.objects.filter(usuario=estudiante).exists():
-                progreso = Progreso.objects.get(usuario=estudiante).nivel
-            else:
-                progreso = 1
+            # if Progreso.objects.filter(usuario=estudiante).exists():
+                # progreso = Progreso.objects.get(usuario=estudiante).nivel
+            # else:
+                # progreso = 1
+            progreso = progress(estudiante)
             if progreso >= 35:
                 return view_func(request, *args, **kwargs)
             else:
@@ -108,10 +127,11 @@ def permitir_paso5():
     def decorator(view_func):
         def wrapper_function(request, *args, **kwargs):
             estudiante = request.user.datosestudiante
-            if Progreso.objects.filter(usuario=estudiante).exists():
-                progreso = Progreso.objects.get(usuario=estudiante).nivel
-            else:
-                progreso = 1
+            # if Progreso.objects.filter(usuario=estudiante).exists():
+                # progreso = Progreso.objects.get(usuario=estudiante).nivel
+            # else:
+                # progreso = 1
+            progreso = progress(estudiante)
             if progreso >= 64:
                 return view_func(request, *args, **kwargs)
             else:
@@ -123,10 +143,11 @@ def permitir_paso6():
     def decorator(view_func):
         def wrapper_function(request, *args, **kwargs):
             estudiante = request.user.datosestudiante
-            if Progreso.objects.filter(usuario=estudiante).exists():
-                progreso = Progreso.objects.get(usuario=estudiante).nivel
-            else:
-                progreso = 1
+            # if Progreso.objects.filter(usuario=estudiante).exists():
+                # progreso = Progreso.objects.get(usuario=estudiante).nivel
+            # else:
+                # progreso = 1
+            progreso = progress(estudiante)
             if progreso >= 86:
                 return view_func(request, *args, **kwargs)
             else:

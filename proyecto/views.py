@@ -22,6 +22,7 @@ from .forms import *
 from .models import *
 from revisar.models import *
 from actividades.models import *
+from actividades.funciones import *
 from .cartas import *
 from .reportes import *
 from .formularios import *
@@ -450,8 +451,10 @@ def solicitudTutoria(request, pk):
 def estudiante(request):
     grupo = 'estudiante'
     estudiante = request.user.datosestudiante
+    pasos_realizados = len(pasosRealizados(estudiante))
+    print(pasos_realizados)
     solicitud_invitado = estudiante.invitado.filter(estado=None)
-    context_aux = infoCronograma(estudiante.id)
+    context_aux = infoCronograma(estudiante.equipo.id, estudiante)
     if not isinstance(context_aux, dict):
         context_aux = {}
         mensaje = infoCronograma(estudiante.id)
@@ -485,12 +488,13 @@ def estudiante(request):
             return redirect('estudiante')
         return render(request, 'proyecto/sorteo_docente.html')
     else:
-        if Progreso.objects.filter(usuario=estudiante).exists():
-            progreso = Progreso.objects.get(usuario=estudiante).nivel
-        else:
-            progreso = 1
+        # if Progreso.objects.filter(usuario=estudiante).exists():
+            # progreso = Progreso.objects.get(usuario=estudiante).nivel
+        # else:
+            # progreso = 1
+        progreso = progress(estudiante)
         context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante,
-                'solicitud_invitado':solicitud_invitado}
+                'solicitud_invitado':solicitud_invitado,'pasos_realizados':pasos_realizados}
         context = {**context, **context_aux}
         return render(request, 'proyecto/estudiante.html', context)
 
@@ -855,39 +859,39 @@ def imprimirReporteEstudiante(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
-def progresoEstudiante(request, pk_est):
+def progresoEstudiante(request, pk):
     grupo = request.user.groups.get().name
-    estudiante = DatosEstudiante.objects.get(id=pk_est)
-    progreso = Progreso.objects.get(usuario=estudiante).nivel
-    tribunales = estudiante.tribunales.all()
-    if ProyectoDeGrado.objects.filter(usuario=estudiante).exists():
+    equipo = Equipo.objects.get(id=pk)
+    progreso = Progreso.objects.get(equipo=equipo).nivel
+    tribunales = equipo.tribunales.all()
+    if ProyectoDeGrado.objects.filter(equipo=equipo).exists():
         proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
         calificacion = proyecto.calificacion
     else:
         proyecto = None
         calificacion = None
     # cronograma informacion
-    context_aux = infoCronograma(estudiante.id)
+    context_aux = infoCronograma(equipo.id)
     if not isinstance(context_aux, dict):
         context_aux = {}
         mensaje = infoCronograma(estudiante.id)
         return HttpResponse(mensaje)
     if grupo == 'docente':
         # evita que se un docente consulte otros estudiantes
-        existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
+        existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk).exists()
         if not existe_est:
             return redirect('error')
     elif grupo== 'tutor':
-        existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
+        existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk).exists()
         if not existe_est:
             return redirect('error_pagina')
     elif grupo== 'tribunal':
-        existe_est = request.user.datostribunal.datosestudiante_set.filter(id=pk_est).exists()
+        existe_est = request.user.datostribunal.datosestudiante_set.filter(id=pk).exists()
         if not existe_est:
             # para que salga notificacion proyecto
             return redirect('error_pagina')
     elif grupo== 'director':
-        existe_est = DatosEstudiante.objects.filter(id=pk_est).exists()
+        existe_est = DatosEstudiante.objects.filter(id=pk).exists()
         if not existe_est:
             return redirect('error_pagina')
     revisor = request.user
@@ -1491,7 +1495,7 @@ def agregarTribunal(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso1()
+# @permitir_paso1()
 def paso1(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -1538,7 +1542,7 @@ def paso1(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso1()
+# @permitir_paso1()
 def confirmarReglamento(request,id_reg):
     grupo = request.user.groups.get().name
     reglamento = Reglamento.objects.get(id=id_reg)
@@ -1554,7 +1558,7 @@ def confirmarReglamento(request,id_reg):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso1()
+# @permitir_paso1()
 def confirmarMaterialDocente(request,id_mat):
     grupo = request.user.groups.get().name
     material = MaterialDocente.objects.get(id=id_mat)
@@ -1572,11 +1576,13 @@ def confirmarMaterialDocente(request,id_mat):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso2()
+# @permitir_paso2()
+@permitir_con(pasos=[1])
 def paso2(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    progreso = Progreso.objects.get(usuario=estudiante)
+    # progreso = Progreso.objects.get(usuario=estudiante)
+    progreso = progress(estudiante)
     if request.method == 'POST':
         buscado = request.POST['buscado']
         frase_busqueda = request.POST.get('habilitar')
@@ -1655,7 +1661,8 @@ def agregarProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso3()
+# @permitir_paso3()
+@permitir_con(pasos=[1,2])
 def paso3(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -1771,10 +1778,11 @@ def paso4(request):
     tutor = estudiante.tutor
     docente = estudiante.grupo_doc
     registro_perfil_existe = RegistroPerfil.objects.filter(usuario=estudiante).exists()
-    progreso = Progreso.objects.get(usuario=estudiante)
+    # progreso = Progreso.objects.get(usuario=estudiante)
+    progreso = progress(estudiante)
     perfil = RegistroPerfil.objects.filter(usuario=estudiante)
     # nueva app revision
-    sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=tutor.usuario, tipo='perfil')
+    sala_doc = SalaDocumentoApp.objects.get(equipo=estudiante.equipo, revisor=estudiante.equipo.tutor.usuario, tipo='perfil')
     if sala_doc.visto_bueno:
         sala_doc = SalaDocumentoApp.objects.get(estudiante=estudiante, revisor=docente.usuario, tipo='perfil')
     context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,

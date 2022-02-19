@@ -3,6 +3,9 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
+        {% if sala_doc.equipo.cantidad > 1%}
+      <th scope="col">Creador</th>
+        {% endif %}
       <th scope="col">Asunto</th>
       <th scope="col">Detalle</th>
       <th scope="col">
@@ -34,6 +37,9 @@
   <tbody>
     {%for sala, no_visto in dicc_salas.items %}
         <tr>
+        {% if sala_doc.equipo.cantidad > 1%}
+            <td> {{sala.creado_por}} </td>      
+        {% endif %}
             <td>
                 {{sala.asunto}}
             </td>      

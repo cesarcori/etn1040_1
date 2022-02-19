@@ -155,10 +155,10 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if perfil and estudiante.registrocronograma %}
-    {% if progreso.nivel < 64 %}
+    {% if progreso < 64 %}
         <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
     {% endif %}
-    {% if progreso.nivel >= 64 %}
+    {% if progreso >= 64 %}
         <h5>Paso Completado</h5>
     {% endif %}
 {% comment %}{% else %}{% endcomment %}

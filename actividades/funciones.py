@@ -1,19 +1,40 @@
-#!/usr/bin/env python3 
-# from fpdf import FPDF
-# import libreriaCartas  
-# from .libreriaCartas import *
 from datetime import date, timedelta
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from django.http import FileResponse
-from .models import ActividadesCronograma, Equipo, RegistroPerfil, DatosDocente
-from actividades.funciones import progress
-from random import choice
+from .models import Actividad
+from proyecto.models import ActividadesCronograma, Equipo, RegistroPerfil
 
-def infoCronograma(pk, estudiante):
-    equipo = get_object_or_404(Equipo, id=pk)
+def progress(estudiante):
+    actividades = Actividad.objects.all()
+    actividades_estudiante = estudiante.actividad.all()
+    suma_valores = 0
+    for actividad in actividades:
+        suma_valores += actividad.valor
+    porcentaje_por_unidad = 100/suma_valores
+    suma_valores_estudiante = 0
+    for actividad in actividades_estudiante:
+        suma_valores_estudiante += actividad.valor
+    progreso_sobre_100 = int(suma_valores_estudiante * porcentaje_por_unidad)
+    return progreso_sobre_100
+
+def pasosRealizados(estudiante):
+
+    pasos = {1:2, 2:3, 3:7, 4:13, 5:18, 6:29}
+    cantidad_actividades = estudiante.actividad.all().count()
+    pasos_realizados = []
+    print(cantidad_actividades)
+
+    for paso, actividad in pasos.items():
+        if cantidad_actividades >= actividad:
+            pasos_realizados.append(paso)
+    print(pasos_realizados)
+
+    return pasos_realizados
+
+def infoCronograma(pk):
+    equipo = Equipo.objects.get(id=pk)
     cronograma_existe = ActividadesCronograma.objects.filter(equipo=equipo).exists()
-    progreso = progress(estudiante)
+    progreso = equipo.progreso
     # mensaje_limite = 'Aún tienes tiempo para elaborar el sistema'
     mensaje_limite = ''
     if cronograma_existe:
@@ -123,52 +144,3 @@ def infoCronograma(pk, estudiante):
             'mensaje_limite':mensaje_limite}
     return context
 
-def sorteoDocente(estudiante):
-    ''' Lo que realiza el algoritmo es:
-        1: Encontrar docentes de la mencion del estudiante
-        2: Encontrar los docentes con menor cantidad de estudiantes
-        3: Sortear entre los que quienen un menor cantidad de estudiantes.'''
-    mencion_estudiante = estudiante.mencion
-    docentes_mencion = DatosDocente.objects.filter(mencion=mencion_estudiante)
-    # diccionario, docente-numero de estudiantes
-    docente_numEst = {}
-    for docente in docentes_mencion:
-        docente_numEst[docente] = docente.datosestudiante_set.count()
-    # ordenando diccionario por valor, de menor a mayor
-    sort_docente_numEst = sorted(docente_numEst.items(), key=lambda x:x[1])
-    # extraer los menores:
-    numero_menor_estudiantes = sort_docente_numEst[0][1]
-    docentes_menor_estudiantes = []
-    for doc_numEst in sort_docente_numEst:
-        if doc_numEst[1] == numero_menor_estudiantes:
-            docentes_menor_estudiantes.append(doc_numEst[0])
-    docente_asignado = choice(docentes_menor_estudiantes)
-    return docente_asignado
-
-from django.core.mail import EmailMessage
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
-
-# email de activacion
-def email_activacion(request, user, to_email):
-    current_site = get_current_site(request)
-    mail_subject = 'Activa tu cuenta.'
-    message = render_to_string('proyecto/acc_activate_email.html', {
-        'user': user,
-        'domain': current_site.domain,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': default_token_generator.make_token(user),
-    })
-    email = EmailMessage(
-        mail_subject, message, to=[to_email]
-    )
-    email.send()
-
-# verificar que no haya ingreso a otros estudiantes por url id
-# hacer para docente, tutor, tribunal.
-# existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
-# if not existe_est:
-    # return redirect('error')

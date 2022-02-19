@@ -5,7 +5,7 @@ class SalaRevisarAppForm(forms.ModelForm):
     class Meta:
         model = SalaRevisarApp
         fields = '__all__'
-        exclude = ['sala_documento']
+        exclude = ['sala_documento','creado_por']
         widgets = {
             'asunto': 
             forms.TextInput(attrs={'class':'input-group input-group-lg',

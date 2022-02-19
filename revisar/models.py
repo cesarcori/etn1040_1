@@ -21,6 +21,7 @@ class SalaDocumentoApp(models.Model):
 
 class SalaRevisarApp(models.Model):
     sala_documento = models.ForeignKey(SalaDocumentoApp, null=True, blank=True, on_delete=models.CASCADE)
+    creado_por = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     asunto = models.CharField(max_length=200, null=True)
     detalle = models.TextField(blank=True, null=True)
     archivo_corregir = models.FileField(upload_to='material_estudiante_perfil/', null=True)
