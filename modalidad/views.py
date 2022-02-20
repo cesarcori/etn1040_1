@@ -9,24 +9,21 @@ from actividades.models import *
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso3()
+@permitir_con(pasos=[1,2])
 def individual(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    # actividad = Actividad.objects.get(nombre='elegir modalidad')
-    # act_est= estudiante.realizaractividad_set.get(actividad=actividad)
     mensaje = f'¿Está seguro de que desea trabajar en la modalidad INDIVIDUAL?'
     link = ['paso3']
     if not estudiante.actividad.filter(nombre="elegir modalidad").exists():
         actividad = Actividad.objects.get(nombre='elegir modalidad')
         if request.method == 'POST':
-            estudiante.modalidad = 'individual'
-            estudiante.actividad.add(actividad)
-            estudiante.save()
-            Equipo.objects.create(nombre=estudiante.correo, cantidad=1)
+            Equipo.objects.create(nombre=estudiante.correo, cantidad=1, docente=estudiante.grupo_doc)
             equipo_est = Equipo.objects.get(nombre=estudiante.correo)
             equipo_est.cantidad = 1
             equipo_est.save()
+            estudiante.modalidad = 'individual'
+            estudiante.actividad.add(actividad)
             estudiante.equipo = equipo_est
             estudiante.save()
             return redirect('paso3')
@@ -39,12 +36,10 @@ def individual(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso3()
+@permitir_con(pasos=[1,2])
 def multiple(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    # actividad = Actividad.objects.get(nombre='eleccion de modalidad')
-    # act_est = estudiante.realizaractividad_set.get(actividad=actividad)
     mensaje = f'¿Está seguro de que desea trabajar en la modalidad MÚLTIPLE?'
     link = ['paso3']
     if not estudiante.actividad.filter(nombre="elegir modalidad").exists():
@@ -60,12 +55,10 @@ def multiple(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso3()
+@permitir_con(pasos=[1,2])
 def solicitud(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    # actividad = Actividad.objects.get(nombre='eleccion de modalidad')
-    # act_est = estudiante.realizaractividad_set.get(actividad=actividad)
     if estudiante.actividad.filter(nombre="elegir modalidad").exists():
         return HttpResponse('error')
     if estudiante.equipo == None:

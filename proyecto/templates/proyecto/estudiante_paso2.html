@@ -4,10 +4,10 @@
 {% comment %}Ingrese el título de su perfil o proyecto de grado,<br>{% endcomment %}
 {% comment %}no debe ser igual mayor al <strong>95% de similitud</strong>.{% endcomment %}
 <p class="h6">Ingrese el título de su proyecto de grado y obtendrá proyectos similares.
-{% if progreso.nivel < 21 %}
-    <i class="fas text-danger fa-graduation-cap"></i><br>
-{% else %}
+{% if busqueda_proyecto %}
     <i class="fas text-success fa-check"></i><br>
+{% else %}
+    <i class="fas text-danger fa-graduation-cap"></i><br>
 {% endif %}
 </p>
 <p>
@@ -23,13 +23,15 @@
 {{score}}% {{titulo}}<br>
 {%endfor%}</p>
 
-<p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+    <div class="d-flex justify-content-evenly">
+<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
-{% if progreso.nivel < 21 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
+{% if not busqueda_proyecto %}
+    <a class="btn btn-success" href={%url 'confirmar_paso_2' %}>Completar</a>
 {% endif %}
+    </div>
 
-{% if progreso.nivel >= 21 %}
+{% if busqueda_proyecto %}
 <h5>Paso Completado</h5>
 {% endif %}
 

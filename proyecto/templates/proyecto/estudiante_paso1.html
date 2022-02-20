@@ -81,12 +81,17 @@ Documentos compartidos por Docente ETN-1040:
     {% comment %}</p>{% endcomment %}
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
-{% if estudiante.progreso %}
-    {% if estudiante.progreso.nivel < 14 %}
-        <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
-    {% endif %}
-    {% if estudiante.progreso.nivel >= 14 %}
-        <h5>Paso completado</h5>
-    {% endif %}
+{% comment %}{% if estudiante.progreso %}{% endcomment %}
+    {% comment %}{% if estudiante.progreso.nivel < 14 %}{% endcomment %}
+        {% comment %}<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{% if estudiante.progreso.nivel >= 14 %}{% endcomment %}
+        {% comment %}<h5>Paso completado</h5>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
+
+{% if estudiante.progreso.nivel >= 14 %}
+    <h5>Paso completado</h5>
 {% endif %}
+
 {% endblock %}

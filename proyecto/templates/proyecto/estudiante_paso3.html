@@ -7,7 +7,7 @@
 
 {% if not tutor and not estudiante.tutor_acepto %}
     <h4>Registrar al Tutor para que ingrese al sistema.</h4>
-    {% if not modalidad_hecha %}
+    {% if not elegir_modalidad %}
         <p>Para este punto debe de conversar con un posible Tutor y confirmar su participación
         en el desarrollo del proyecto.</p>
         <p>En el caso de que el tutor recomiende más de un integrante, debe de realizarse la solicitud
@@ -16,11 +16,11 @@
         <p>En caso de que se realice en modalidad individual, sólo debe seleccionar la modalidad
         individual y registrar al Tutor.</p>
     {% endif %}
-    {% if rechazo and not modalidad_hecha %}
+    {% if rechazo and not elegir_modalidad %}
         <p>La solicitud fue rechazada,
         <a href={% url 'modalidad:ver_rechazo' rechazo.pk %}>ver detalles</a>.</p>
     {% endif %}
-    {% if not modalidad_hecha %}
+    {% if not elegir_modalidad %}
         <div class="d-flex justify-content-evenly">
             <a class="btn btn-outline-success" href={% url 'modalidad:individual' %}>Individual</a>
             <a class="btn btn-outline-success" href={% url 'modalidad:multiple'%}>Múltiple</a>
@@ -38,7 +38,7 @@
     <h4>El Tutor aceptó la solicitud</h4>
 {% endif %}
 
-{% if modalidad_hecha and not estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad %}
+{% if elegir_modalidad and not estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad %}
     <div class="d-flex justify-content-evenly">
         <a class="btn btn-success" href={% url 'modalidad:agregar_integrantes' %}>Agregar Compañeros de Equipo</a>
     </div>
@@ -46,18 +46,18 @@
 
 {% comment %}cumprueba que el estudiante ya tenga una modalidad{% endcomment %}
 {% comment %}y en el caso que se asigno ya un grupo, que este este completo{% endcomment %}
-{% if modalidad_hecha and estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad and estudiante.equipo %}
-    {% if not tutor and estudiante.equipo.tutor_acepto %}
-    <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
-    <p>
-    <form class="d-flex" style="margin:auto;max-width:300px" method='post'
-                        action="" >
-        {% csrf_token %}
-        <input name="agregar_tutor" class="form-control me-2" type="email"
-        placeholder="Registrar Email Tutor" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit" name='enviar'>Enviar</button>
-    </form>
-    </p>
+{% if elegir_modalidad and estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad and estudiante.equipo %}
+    {% if not tutor and not estudiante.equipo.tutor_acepto %}
+        <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
+        <p>
+        <form class="d-flex" style="margin:auto;max-width:300px" method='post'
+                            action="" >
+            {% csrf_token %}
+            <input name="agregar_tutor" class="form-control me-2" type="email"
+            placeholder="Registrar Email Tutor" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit" name='enviar'>Enviar</button>
+        </form>
+        </p>
     {% endif %}
 {% endif %}
 
@@ -70,7 +70,7 @@
     {% endif %}
     Espere hasta que acepte su solicitud
     <i class="fas fa-user-clock text-primary"></i><br>
-    <a href="{% url 'indicaciones_tutor' estudiante.id %}">Imprimir Indicaciones a Tutor</a><br>
+    <a href="{% url 'reportes:indicaciones_tutor' estudiante.id %}">Imprimir Indicaciones a Tutor</a><br>
     </p>
 {% endif %}
 
@@ -79,7 +79,9 @@
     <i class="fas fa-user-check text-success"></i>
     </p>
     <p><a href={%url 'reportes:carta-tutor-acepto' estudiante.id %}>Carta de Aceptación para Docente ETN-1040</a>
-    <i class="fas text-success fa-check"></i></p>
+    <i class="fas text-success fa-check"></i>
+    <a class="btn btn-warning" href={%url 'confirmar_paso_3' %}>Ya imprimí la carta</a></p>
+
 {% endif %}
 
 <a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a><p>

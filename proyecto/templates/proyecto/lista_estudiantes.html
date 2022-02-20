@@ -39,10 +39,10 @@
 
 
 {%if grupo == 'tutor' %}
-    {%if est.tutor_acepto%}
-    <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+    {%if est.equipo.tutor_acepto%}
+        <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
     {% else %}
-    <td><a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est.apellido}}, {{est.nombre}}</a></td>
+        <td><a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.equipo.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est}}</a></td>
     {% endif %}
 {%endif%}
 
@@ -62,7 +62,7 @@
 {% if grupo == 'tutor' or grupo == 'docente' or grupo == 'administrador' or grupo == 'tribunal'%}
 <th scope="row">{{est.celular}}</th>
 <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
-<td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
+<td scope="row"><a href="{% url 'enlace_estudiante' est.id %}">Info</a></td>
 {% endif %}
 
     </tr>

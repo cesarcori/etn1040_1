@@ -16,7 +16,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 UserModel = get_user_model()
 
-from .decorators import unauthenticated_user, allowed_users, admin_only, permitir_paso1
+from .decorators import unauthenticated_user, allowed_users, admin_only 
 from .decorators import *
 from .forms import *
 from .models import *
@@ -99,7 +99,7 @@ def registerPage(request):
                 # creacion del grupo
                 group = Group.objects.get(name='solicitud')
                 user = User.objects.get(username=usuario)
-                user.is_active = False
+                user.is_active = True
                 user.groups.add(group)
                 user.save()
                 # creacion de datos del solicitante
@@ -184,10 +184,6 @@ def home(request):
                     # tutor = DatosTutor.objects.get(nombre='sin_tutor')
                     )
             estudiante = DatosEstudiante.objects.get(correo=info_usuario.correo)
-            Progreso.objects.create(
-                    usuario = estudiante,
-                    nivel = 1
-                    )
             # creacion de salas docente-estudiante
             id_docente = str(DatosEstudiante.objects.last().grupo_doc.usuario_id)
             id_estudiante = str(DatosEstudiante.objects.last().usuario_id)
@@ -239,8 +235,9 @@ def docente(request):
 def tutor(request):
     grupo = request.user.groups.get().name
     tutor = request.user.datostutor
-    datos_est = tutor.datosestudiante_set.all().order_by('apellido')
-    equipos = Equipo.objects.filter(tutor=tutor)
+    datos_est = tutor.datosestudiante_set.filter(modalidad='individual').order_by('apellido')
+    equipos = Equipo.objects.filter(tutor=tutor).exclude(cantidad=1)
+    datos_est = [n.datosestudiante_set.get() for n in Equipo.objects.filter(tutor=tutor, cantidad=1)]
     context = {'datos_est':datos_est,'grupo':grupo,'equipos':equipos}
     return render(request, 'proyecto/tutor.html', context)
 
@@ -420,10 +417,10 @@ def solicitudTutoria(request, pk):
     if aceptar == 'si':
         equipo.tutor_acepto = True
         equipo.save()
-        for integrante in integrantes:
-            progreso = Progreso.objects.get(usuario=integrante)
-            progreso.nivel = 35
-            progreso.save()
+        for estudiante in integrantes:
+            actividad = Actividad.objects.get(nombre="tutor acepto")
+            estudiante.actividad.add(actividad)
+            estudiante.save()
         # crear sala de documento perfil tutor
         SalaDocumentoApp.objects.create(
             revisor = tutor.usuario,    
@@ -452,33 +449,35 @@ def estudiante(request):
     grupo = 'estudiante'
     estudiante = request.user.datosestudiante
     pasos_realizados = len(pasosRealizados(estudiante))
-    print(pasos_realizados)
     solicitud_invitado = estudiante.invitado.filter(estado=None)
-    context_aux = infoCronograma(estudiante.equipo.id, estudiante)
-    if not isinstance(context_aux, dict):
-        context_aux = {}
-        mensaje = infoCronograma(estudiante.id)
-        return HttpResponse(mensaje)
+    context_aux = {}
+    if estudiante.actividad.filter(nombre='registro cronograma').exists():
+        context_aux = infoCronograma(estudiante.equipo.id, estudiante)
+        if not isinstance(context_aux, dict):
+            context_aux = {}
+            mensaje = infoCronograma(estudiante.id)
+            return HttpResponse(mensaje)
     if estudiante.grupo_doc == None:
         sorteo = 'no'
         if request.method == 'POST':
             sorteo = request.POST['sorteo']
         if sorteo == 'si':
             # sorteo docente
-            mencion = estudiante.mencion
-            doc_mencion = DatosDocente.objects.filter(mencion=mencion)
-            cantidad_est1 = doc_mencion[0].datosestudiante_set.count()
-            cantidad_est2 = doc_mencion[1].datosestudiante_set.count()
-            if cantidad_est1 == cantidad_est2:
-                sorteo = randint(0,1)
-                docente_asignado = doc_mencion[sorteo]
-            elif cantidad_est1 < cantidad_est2:
-                docente_asignado = doc_mencion[0]
-            else:
-                docente_asignado = doc_mencion[1]
-            docente = doc_mencion[0]                   
+            docente_asignado = sorteoDocente(estudiante)
+            # mencion = estudiante.mencion
+            # doc_mencion = DatosDocente.objects.filter(mencion=mencion)
+            # cantidad_est1 = doc_mencion[0].datosestudiante_set.count()
+            # cantidad_est2 = doc_mencion[1].datosestudiante_set.count()
+            # if cantidad_est1 == cantidad_est2:
+                # sorteo = randint(0,1)
+                # docente_asignado = doc_mencion[sorteo]
+            # elif cantidad_est1 < cantidad_est2:
+                # docente_asignado = doc_mencion[0]
+            # else:
+                # docente_asignado = doc_mencion[1]
+            # docente = doc_mencion[0]                   
             # guardar docente
-            estudiante.grupo_doc = docente
+            estudiante.grupo_doc = docente_asignado
             estudiante.save()
             # creacion de salas docente-estudiante
             id_docente = estudiante.grupo_doc.usuario_id.__str__()
@@ -488,10 +487,6 @@ def estudiante(request):
             return redirect('estudiante')
         return render(request, 'proyecto/sorteo_docente.html')
     else:
-        # if Progreso.objects.filter(usuario=estudiante).exists():
-            # progreso = Progreso.objects.get(usuario=estudiante).nivel
-        # else:
-            # progreso = 1
         progreso = progress(estudiante)
         context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante,
                 'solicitud_invitado':solicitud_invitado,'pasos_realizados':pasos_realizados}
@@ -762,14 +757,14 @@ def enlaceEstudiante(request, pk_est):
             context = {'grupo': grupo,'estudiante':estudiante,}
             return render(request, 'proyecto/enlace_estudiante.html', context)
         else:
-            return redirect('error_pagina')
+            return HttpResponse('error')
     else:           
-        existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
-        if existe_est:
+        tutor = request.user.datostutor
+        if tutor.equipo_set.filter(tutor=tutor).exists():
             context = {'grupo': grupo,'estudiante':estudiante,}
             return render(request, 'proyecto/enlace_estudiante.html', context)
         else:
-            return redirect('error_pagina')
+            return HttpResponse('error')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['administrador','director'])
@@ -1234,7 +1229,7 @@ def enlaceTutor(request, pk_tutor):
             context = {'grupo': grupo, 'tutor':tutor}
             return render(request, 'proyecto/enlace_tutor.html', context)
         else:
-            return redirect('error_pagina')
+            return HttpResponse('error')
     elif grupo == 'administrador':
         context = {'grupo': grupo, 'tutor':tutor}
         return render(request, 'proyecto/enlace_tutor.html', context)
@@ -1242,12 +1237,12 @@ def enlaceTutor(request, pk_tutor):
         context = {'grupo': grupo, 'tutor':tutor}
         return render(request, 'proyecto/enlace_tutor.html', context)
     elif grupo == 'estudiante':
-        id_tutor = request.user.datosestudiante.tutor.id
+        id_tutor = request.user.datosestudiante.equipo.tutor.id
         if id_tutor == pk_tutor:
             context = {'grupo': grupo, 'tutor':tutor}
             return render(request, 'proyecto/enlace_tutor.html', context)
         else:
-            return redirect('error_pagina')
+            return HttpResponse('error')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','administrador','estudiante','director','tutor'])
@@ -1495,20 +1490,9 @@ def agregarTribunal(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso1()
 def paso1(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    # link reglamentos
-    # links = Reglamento.objects.all()
-    # titulos = [link.archivo.name for link in links]
-    # dicc_link = {}
-    # for n in range(len(links)):
-        # dicc_link[links[n]] = titulos[n]
-    # progreso = Progreso.objects.get(usuario=estudiante)
-    # material estudiante
-    # id_usuario_docente = request.user.datosestudiante.grupo_doc.usuario_id
-    # usuario_docente = User.objects.get(pk=id_usuario_docente)
 
     # vista material docente
     usuario_docente = estudiante.grupo_doc.usuario
@@ -1528,21 +1512,35 @@ def paso1(request):
             dicc_reglamento[reglamento] = True
         else:
             dicc_reglamento[reglamento] = False
+    
+    # estudiar todos reglamentos
+    leido = []
+    for reglamento, estudiar in dicc_reglamento.items():
+        leido.append(estudiar)
+    estudio_reglamento_completado = all(leido)
+    if all(leido):
+        actividad = Actividad.objects.get(nombre='estudiar reglamentos')
+        estudiante.actividad.add(actividad)
+
+    # estudiar todos materiales del docente
+    leido = []
+    for material, estudiar in dicc_material.items():
+        leido.append(estudiar)
+    estudio_reglamento_completado = all(leido)
+    if all(leido):
+        actividad = Actividad.objects.get(nombre='material docente')
+        estudiante.actividad.add(actividad)
 
     context = {'grupo': grupo, 
-            # 'links':links, 'titulos':titulos, 
-            # 'dicc_link':dicc_link, 'material_docente':material_docente,
             'material_docente':material_docente,
             'estudiante':estudiante,
             'dicc_reglamento':dicc_reglamento,
             'dicc_material':dicc_material,
-            # 'progreso': progreso,
             }
     return render(request, 'proyecto/estudiante_paso1.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso1()
 def confirmarReglamento(request,id_reg):
     grupo = request.user.groups.get().name
     reglamento = Reglamento.objects.get(id=id_reg)
@@ -1558,7 +1556,6 @@ def confirmarReglamento(request,id_reg):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso1()
 def confirmarMaterialDocente(request,id_mat):
     grupo = request.user.groups.get().name
     material = MaterialDocente.objects.get(id=id_mat)
@@ -1581,8 +1578,8 @@ def confirmarMaterialDocente(request,id_mat):
 def paso2(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    # progreso = Progreso.objects.get(usuario=estudiante)
     progreso = progress(estudiante)
+    busqueda_proyecto = estudiante.actividad.filter(nombre='busqueda proyecto').exists()
     if request.method == 'POST':
         buscado = request.POST['buscado']
         frase_busqueda = request.POST.get('habilitar')
@@ -1607,9 +1604,10 @@ def paso2(request):
         for score_titulo in ordenado_score:
             dicc_score[score_titulo[0]] = score_titulo[1]
         context = {'grupo': grupo,'dicc_score':dicc_score,
-                'buscado':buscado,'progreso':progreso}
+                'buscado':buscado,'progreso':progreso,
+                'busqueda_proyecto':busqueda_proyecto}
     else:
-        context = {'grupo': grupo,'progreso': progreso}
+        context = {'grupo': grupo,'busqueda_proyecto':busqueda_proyecto}
     return render(request, 'proyecto/estudiante_paso2.html', context)
 
 @login_required(login_url='login')
@@ -1646,6 +1644,20 @@ def busquedaProyectos(request):
     return render(request, 'proyecto/busqueda.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_con(pasos=[1])
+def confirmarPaso2(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    if request.method == 'POST':
+        actividad = Actividad.objects.get(nombre='busqueda proyecto')
+        estudiante.actividad.add(actividad)
+        estudiante.save()
+        return redirect('paso2')
+    context = {'grupo': grupo,}
+    return render(request, 'proyecto/confirmar_paso.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['administrador'])
 def agregarProyecto(request):
     grupo = request.user.groups.get().name
@@ -1661,15 +1673,19 @@ def agregarProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso3()
 @permitir_con(pasos=[1,2])
 def paso3(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    tutor = estudiante.equipo.tutor
-    modalidad_hecha = estudiante.actividad.filter(nombre="elegir modalidad").exists()
+    # tutor = estudiante.equipo.tutor
+    if estudiante.equipo: 
+        tutor = estudiante.equipo.tutor
+        integrantes = estudiante.equipo.datosestudiante_set.all()
+    else: 
+        tutor = None 
+        integrantes = None
+    elegir_modalidad = estudiante.actividad.filter(nombre="elegir modalidad").exists()
     rechazo = estudiante.rechazarsolicitud_set.last()
-    integrantes = estudiante.equipo.datosestudiante_set.all()
     # registro de tutor
     if request.method == 'POST':
         correo = request.POST['agregar_tutor']
@@ -1687,6 +1703,7 @@ def paso3(request):
             if DatosTutor.objects.filter(correo=correo).exists():
                 equipo = estudiante.equipo
                 equipo.tutor = DatosTutor.objects.get(correo=correo)
+                equipo.docente = estudiante.grupo_doc
                 equipo.save()
                 # creacion de salas tutor-estudiante
                 for integrante in integrantes:
@@ -1694,6 +1711,8 @@ def paso3(request):
                     id_estudiante = str(integrante.usuario.id)
                     nombre_sala = id_tutor + id_estudiante
                     Sala.objects.create(nombre_sala = nombre_sala)
+                    actividad = Actividad.objects.get(nombre='solicitud tutoria')
+                    integrante.actividad.add(actividad)
             else: 
                 usuario = correo.split('@')[0] + '_tutor'
                 # creacion de usuario tutor
@@ -1710,14 +1729,6 @@ def paso3(request):
                 user.groups.add(group)
                 user.is_active = True
                 user.save()
-                # creacion de datos tutor
-                # dato_tutor = DatosTutor()
-                # dato_tutor.usuario = user
-                # dato_tutor.correo = correo
-                # dato_tutor.nombre = user.first_name
-                # dato_tutor.apellido= user.last_name
-                # dato_tutor.celular= 'sin llenar'
-                # dato_tutor.save()
                 DatosTutor.objects.create(
                     usuario = user,
                     correo = correo,
@@ -1725,13 +1736,10 @@ def paso3(request):
                     apellido= user.last_name,
                     celular= 'sin llenar',
                         )
-                # relacionando estudiante al tutor
-                # user_est = request.user.datosestudiante
-                # user_est.tutor = DatosTutor.objects.get(correo=correo)
-                # user_est.save()
                 # relacionando equipo con tutor
                 equipo = estudiante.equipo
                 equipo.tutor = DatosTutor.objects.get(correo=correo)
+                equipo.docente = estudiante.grupo_doc
                 equipo.save()
                 # creacion de salas tutor-estudiante
                 for integrante in integrantes:
@@ -1739,18 +1747,19 @@ def paso3(request):
                     id_estudiante = str(integrante.usuario.id)
                     nombre_sala = id_tutor + id_estudiante
                     Sala.objects.create(nombre_sala = nombre_sala)
+                    actividad = Actividad.objects.get(nombre='solicitud tutoria')
+                    integrante.actividad.add(actividad)
                 # activacion por email
                 email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')
         return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
     context = {'grupo': grupo, 'tutor':tutor, 'estudiante':estudiante,
-            'modalidad_hecha':modalidad_hecha, 'rechazo':rechazo}
+            'elegir_modalidad':elegir_modalidad, 'rechazo':rechazo}
     return render(request, 'proyecto/estudiante_paso3.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','docente','director','tribunal'])
-# @permitir_paso3()
 def reporteTutorAcepto(request, id_est):
     buffer = io.BytesIO()
     estudiante = DatosEstudiante.objects.get(id=id_est)
@@ -1759,19 +1768,24 @@ def reporteTutorAcepto(request, id_est):
     return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor',])
-# @permitir_paso3()
-def reporteIndicacionesTutor(request, id_est):
-    buffer = io.BytesIO()
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    http_host = request.META.get('HTTP_HOST')
-    docReporteIndicacionTutor(buffer, estudiante, http_host)
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
+@allowed_users(allowed_roles=['estudiante'])
+@permitir_con(pasos=[1,2])
+def confirmarPaso3(request):
+    grupo = request.user.groups.get().name
+    estudiante = request.user.datosestudiante
+    if not estudiante.actividad.filter(nombre='tutor acepto'):
+        return HttpResponse('error')
+    if request.method == 'POST':
+        actividad = Actividad.objects.get(nombre='imprimir carta tutoria')
+        estudiante.actividad.add(actividad)
+        estudiante.save()
+        return redirect('estudiante')
+    context = {'grupo': grupo,}
+    return render(request, 'proyecto/confirmar_paso.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso4()
+@permitir_con(pasos=[1,2,3])
 def paso4(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -1790,165 +1804,7 @@ def paso4(request):
             'sala_doc': sala_doc}
     return render(request, 'proyecto/estudiante_paso4.html', context)
 
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso4()
-# def entregaPerfil(request):
-    # grupo = request.user.groups.get().name
-    # usuario = request.user
-    # estudiante = usuario.datosestudiante
-    # docente = estudiante.grupo_doc
-    # tutor = estudiante.tutor
-    # salas = SalaRevisar.objects.filter(estudiante_rev=estudiante).order_by('-fecha_creacion')
-    # dicc_sala = {}
-    # for sala in salas:
-        # mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala)
-        # mensajes_tut = MensajeTutorRevisar.objects.filter(sala=sala)
-        # no_visto_docente = 0
-        # for mensaje_doc in mensajes_doc:
-            # if not mensaje_doc.visto_estudiante:
-                # no_visto_docente += 1
-        # no_visto_tutor = 0
-        # for mensaje_tut in mensajes_tut:
-            # if not mensaje_tut.visto_estudiante:
-                # no_visto_tutor += 1
-        # dicc_sala[sala] = [no_visto_docente, no_visto_tutor]
-    # context = {'grupo': grupo,
-            # 'salas':salas,
-            # 'dicc_sala':dicc_sala,
-            # # 'no_visto_docente':no_visto_docente,
-            # 'estudiante':estudiante}
-    # return render(request, 'proyecto/entrega_perfil.html', context)
-
-# @permitir_paso4()
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['estudiante'])
-# def crearSalaRevisar(request):
-    # grupo = request.user.groups.get().name
-    # usuario = request.user
-    # estudiante = usuario.datosestudiante
-    # docente = estudiante.grupo_doc
-    # tutor = estudiante.tutor
-    # if request.method == 'POST':
-        # form = SalaRevisarForm(request.POST, request.FILES)
-        # if form.is_valid():
-            # nombre_sala = request.POST['sala']
-            # file = form.save(commit=False)
-            # file.docente_rev = docente
-            # file.tutor_rev= tutor
-            # file.estudiante_rev = estudiante
-            # file.sala = nombre_sala
-            # file.save()
-            # return redirect('entrega_perfil')
-            # # messages.success(request, 'Se creó la sala revisión con éxito!!!')
-    # else: 
-        # form = SalaRevisarForm
-    # context = {'grupo': grupo,'form':form,}
-    # return render(request, 'proyecto/crear_sala_revisar.html', context)
-
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['estudiante','docente','tutor'])
-# def salaRevisar(request, pk_sala):
-    # grupo = request.user.groups.get().name
-    # usuario = request.user
-    # info_estu = SalaRevisar.objects.get(id=pk_sala)
-    # if grupo == 'docente':
-        # if request.method == "POST":
-            # form= MensajeDocenteRevisarForm(request.POST)
-            # if form.is_valid():
-                # file = form.save(commit=False)
-                # file.sala = info_estu
-                # file.usuario = usuario
-                # file.visto_docente = True
-                # file.save()
-        # else:
-            # form= MensajeDocenteRevisarForm
-        # mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
-        # for mensaje_doc in mensajes_doc:
-            # mensaje_doc.visto_docente= True
-            # mensaje_doc.save()
-        # mensajes_tut={}
-    # elif grupo == 'tutor':
-        # if request.method == "POST":
-            # form= MensajeTutorRevisarForm(request.POST)
-            # if form.is_valid():
-                # file = form.save(commit=False)
-                # file.sala = info_estu
-                # file.usuario = usuario
-                # file.visto_tutor = True
-                # file.save()
-        # else:
-            # form= MensajeTutorRevisarForm()
-        # mensajes_tut= MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
-        # for mensaje_tut in mensajes_tut:
-            # mensaje_tut.visto_tutor = True
-            # mensaje_tut.save()
-        # mensajes_doc={}
-    # context = {'grupo': grupo, 'info_estu':info_estu,
-            # 'form':form,
-            # 'mensajes_doc':mensajes_doc,
-            # 'mensajes_tut':mensajes_tut,
-    # }
-    # return render(request, 'proyecto/sala_revisar.html', context)
-
-# @permitir_paso4()
-# @login_required(login_url='login')
-# def salaRevisarEstDoc(request, pk_sala):
-    # grupo = request.user.groups.get().name
-    # usuario = request.user
-    # sala = SalaRevisar.objects.get(id=pk_sala)
-    # if grupo == 'estudiante':
-        # if request.method == "POST":
-            # form= MensajeDocenteRevisarForm(request.POST)
-            # if form.is_valid():
-                # file = form.save(commit=False)
-                # file.sala = sala
-                # file.usuario = usuario
-                # file.visto_estudiante = True
-                # file.save()
-        # else:
-            # form = MensajeDocenteRevisarForm
-    # mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala).order_by('-fecha_creacion')
-    # mensajes_tut= MensajeTutorRevisar.objects.filter(sala=sala).order_by('-fecha_creacion')
-    # for mensaje_doc in mensajes_doc:
-        # mensaje_doc.visto_estudiante = True
-        # mensaje_doc.save()
-    # context = {'grupo': grupo, 'info_estu':sala,
-            # 'form':form,
-            # 'mensajes_doc':mensajes_doc,
-            # 'mensajes_tut':mensajes_tut,
-            # }
-    # return render(request, 'proyecto/sala_revisar_est_doc.html', context)
-
-# @permitir_paso4()
-# @login_required(login_url='login')
-# def salaRevisarEstTut(request, pk_sala):
-    # grupo = request.user.groups.get().name
-    # usuario = request.user
-    # info_estu = SalaRevisar.objects.get(id=pk_sala)
-    # if grupo == 'estudiante':
-        # if request.method == "POST":
-            # form= MensajeTutorRevisarForm(request.POST)
-            # if form.is_valid():
-                # file = form.save(commit=False)
-                # file.sala = info_estu
-                # file.usuario = usuario
-                # file.save()
-        # else:
-            # form = MensajeTutorRevisarForm
-    # mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
-    # mensajes_tut= MensajeTutorRevisar.objects.filter(sala=info_estu).order_by('-fecha_creacion')
-    # for mensaje_tut in mensajes_tut:
-        # mensaje_tut.visto_estudiante = True
-        # mensaje_tut.save()
-    # context = {'grupo': grupo, 'info_estu':info_estu,
-            # 'form':form,
-            # 'mensajes_doc':mensajes_doc,
-            # 'mensajes_tut':mensajes_tut,
-            # }
-    # return render(request, 'proyecto/sala_revisar_est_tut.html', context)
-
-@permitir_paso4()
+@permitir_con(pasos=[1,2,3])
 @login_required(login_url='login')
 def carta_aceptacion_tutor(request):
     buffer = io.BytesIO()
@@ -1957,7 +1813,7 @@ def carta_aceptacion_tutor(request):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
 
-@permitir_paso4()
+@permitir_con(pasos=[1,2,3])
 @login_required(login_url='login')
 def carta_solicitud_tutor(request):
     buffer = io.BytesIO()
@@ -1983,7 +1839,8 @@ def carta_solicitud_tutor(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso4()
+# @permitir_paso4()
+@permitir_con(pasos=[1,2,3])
 def registro_perfil(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2001,7 +1858,8 @@ def registro_perfil(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso4()
+# @permitir_paso4()
+@permitir_con(pasos=[1,2,3])
 def ver_perfil_registrado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2011,7 +1869,8 @@ def ver_perfil_registrado(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso4()
+# @permitir_paso4()
+@permitir_con(pasos=[1,2,3])
 def cronograma_actividad(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2100,7 +1959,8 @@ def ver_cronograma(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso4()
+# @permitir_paso4()
+@permitir_con(pasos=[1,2,3])
 def cronograma_registrar(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2117,7 +1977,8 @@ def cronograma_registrar(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso4()
+# @permitir_paso4()
+@permitir_con(pasos=[1,2,3])
 def eliminar_actividad(request, id_act):
     ActividadesCronograma.objects.get(id=id_act).delete()
     return redirect('cronograma_actividad')
@@ -2133,7 +1994,8 @@ def formulario_1(request,id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def paso5(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2158,7 +2020,8 @@ def paso5(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def cronograma_control(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2240,7 +2103,8 @@ def cronograma_control(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def entregaProyecto(request):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -2269,7 +2133,8 @@ def entregaProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def crearSalaRevisarProyecto(request):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -2337,7 +2202,8 @@ def salaRevisarProyecto(request, pk_sala):
     return render(request, 'proyecto/sala_revisar.html', context)
 
 @login_required(login_url='login')
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def salaRevisarProyEstDoc(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -2367,7 +2233,8 @@ def salaRevisarProyEstDoc(request, pk_sala):
     return render(request, 'proyecto/sala_revisar_proy_est_doc.html', context)
 
 @login_required(login_url='login')
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def salaRevisarProyEstTut(request, pk_sala):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -2406,7 +2273,8 @@ def reporteCapitulos(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2446,7 +2314,8 @@ def paso6(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 def solicitudTribunal(request, id_est):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2455,7 +2324,8 @@ def solicitudTribunal(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 def crearSalaRevisarTribunal(request,id_trib):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -2477,7 +2347,8 @@ def crearSalaRevisarTribunal(request,id_trib):
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/crear_sala_revisar.html', context)
 
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 @login_required(login_url='login')
 def salaRevisarEstTrib(request, pk_sala,id_trib):
     grupo = request.user.groups.get().name
@@ -2536,7 +2407,8 @@ def salaRevisarTribunal(request, pk_sala):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 def entregaTribunal(request, id_trib, id_est):
     grupo = request.user.groups.get().name
     usuario = request.user
@@ -2569,7 +2441,8 @@ def entregaTribunal(request, id_trib, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 def registroProyectoTribunal(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2587,7 +2460,8 @@ def registroProyectoTribunal(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 def ver_proyecto_tribunal(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2597,7 +2471,8 @@ def ver_proyecto_tribunal(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def registroProyecto(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2615,7 +2490,8 @@ def registroProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def ver_proyecto_grado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2696,7 +2572,8 @@ def solicitarTribunalDocente(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 def ultimosFormularios(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2800,7 +2677,6 @@ def formulario_4(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso1()
 def confirmarPaso1(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2834,7 +2710,8 @@ def confirmarPaso1(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso5()
+# @permitir_paso5()
+@permitir_con(pasos=[1,2,3,4])
 def confirmarPaso5(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
@@ -2852,7 +2729,8 @@ def confirmarPaso5(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_paso6()
+# @permitir_paso6()
+@permitir_con(pasos=[1,2,3,4,5])
 def confirmarPaso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante

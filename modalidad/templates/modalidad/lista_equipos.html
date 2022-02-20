@@ -9,6 +9,7 @@
   <tbody>
     <tr>
 {%for equipo in equipos %}
+    {% if equipo.cantidad != 1%}
 
     {%if equipo.tutor_acepto%}
         <td>
@@ -25,6 +26,8 @@
             {{equipo.cantidad}}
         </td>
     </tr>
+
+    {% endif %}
 {% endfor %}
   </tbody>
 </table>

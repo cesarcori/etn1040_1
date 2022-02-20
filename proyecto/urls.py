@@ -72,8 +72,8 @@ urlpatterns = [
     path('paso1/conf-mate/<int:id_mat>', views.confirmarMaterialDocente, name='confirmar_material_docente'),
     path('paso2/', views.paso2, name='paso2'),
     path('paso3/', views.paso3, name='paso3'),
-    path('paso3/reporte-tutor-acepto/<int:id_est>', views.reporteTutorAcepto, name='reporte_tutor_acepto'),
-    path('paso3/indicaciones-tutor/<int:id_est>', views.reporteIndicacionesTutor, name='indicaciones_tutor'),
+    # path('paso3/reporte-tutor-acepto/<int:id_est>', views.reporteTutorAcepto, name='reporte_tutor_acepto'),
+    # path('paso3/indicaciones-tutor/<int:id_est>', views.reporteIndicacionesTutor, name='indicaciones_tutor'),
     path('paso4/', views.paso4, name='paso4'),
     # path('paso4/entrega-perfil', views.entregaPerfil, name='entrega_perfil'),
     # path('paso4/entrega-perfil/crear-sala-revisar', views.crearSalaRevisar, name='crear_sala'),
@@ -122,6 +122,9 @@ urlpatterns = [
     path('material-para-est/eliminar/<int:id_material>', views.eliminarMaterialParaEst, name='eliminar_material'),
 
     path('confirmar-paso-1/', views.confirmarPaso1, name='confirmar_paso_1'),
+    path('confirmar-paso-2/', views.confirmarPaso2, name='confirmar_paso_2'),
+    path('confirmar-paso-3/', views.confirmarPaso3, name='confirmar_paso_3'),
+    # path('confirmar-paso-4/', views.confirmarPaso4, name='confirmar_paso_4'),
     path('confirmar-paso-5/', views.confirmarPaso5, name='confirmar_paso_5'),
     path('confirmar-paso-6/', views.confirmarPaso6, name='confirmar_paso_6'),
 
