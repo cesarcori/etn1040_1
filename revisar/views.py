@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, Group
 
 from proyecto.decorators import *
 from .forms import *
+from actividades.funciones import *
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor','docente','tribunal','estudiante'])
@@ -45,21 +46,15 @@ def crearSalaRevisar(request, documento, id_revisor, id_sala_doc):
     sala_doc = SalaDocumentoApp.objects.get(id=id_sala_doc)
     equipo = sala_doc.equipo
     primer_estudiante = equipo.datosestudiante_set.first()
-    if documento=='perfil':
-        if not primer_estudiante.actividad.filter(nombre='revisar perfil').exists():
-            actividad = Actividad.objects.get(nombre='revisar perfil')
-            estudiante.actividad.add(actividad)
-            estudiante.save()
-    elif documento=='proyecto':
-        if not primer_estudiante.actividad.filter(nombre='revisar proyecto').exists():
-            actividad = Actividad.objects.get(nombre='revisar proyecto')
-            estudiante.actividad.add(actividad)
-            estudiante.save()
-    elif documento=='tribunal':
-        if not primer_estudiante.actividad.filter(nombre='revisar tribunal').exists():
-            actividad = Actividad.objects.get(nombre='revisar tribunal')
-            estudiante.actividad.add(actividad)
-            estudiante.save()
+    if sala_doc.tipo=='perfil':
+        if not actividadRealizadaEstudiante('revisar perfil', primer_estudiante):
+            agregarActividadEstudiante('revisar perfil', primer_estudiante)
+    elif sala_doc.tipo=='proyecto':
+        if not actividadRealizadaEstudiante('revisar proyecto', primer_estudiante):
+            agregarActividadEstudiante('revisar proyecto', primer_estudiante)
+    elif sala_doc.tipo=='tribunal':
+        if not actividadRealizadaEstudiante('revisar tribunal', primer_estudiante):
+            agregarActividadEstudiante('revisar tribunal', primer_estudiante)
     form = SalaRevisarAppForm
     if request.method == 'POST':
         form = SalaRevisarAppForm(request.POST, request.FILES)
@@ -103,11 +98,12 @@ def mensajes(request, id_sala_rev):
 @allowed_users(allowed_roles=['tutor','docente','tribunal'])
 def darVistoBueno(request, id_sala_doc):
     sala_doc = get_object_or_404(SalaDocumentoApp, id=id_sala_doc)
-    id_equi = sala_doc.equipo.id
+    texto_actividad = f"visto bueno {sala_doc.tipo} {sala_doc.revisor.groups.get()}"
+    agregarActividadEquipo(texto_actividad, sala_doc.equipo)
     if request.method == 'POST':
         sala_doc.visto_bueno = True
         sala_doc.save()
-        return redirect('progreso_estudiante', pk=id_equi)
+        return redirect('progreso_estudiante', pk=sala_doc.equipo.id)
     context = {'sala_doc':sala_doc}
     return render(request, 'revisar/dar_visto_bueno.html', context)
 

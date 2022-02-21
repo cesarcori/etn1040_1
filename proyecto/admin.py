@@ -19,5 +19,5 @@ admin.site.register(Formularios)
 admin.site.register(Mencion)
 admin.site.register(Documentos)
 admin.site.register(Equipo)
-admin.site.register(Progreso)
+admin.site.register(ProyectoDeGrado)
 

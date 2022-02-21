@@ -3,9 +3,9 @@
 <h4>Elaboración del Proyecto de Grado y Revisión</h4>
 
 {% if sala_doc.tipo == 'proyecto'%}
-    <div class='text-right'><a href={% url 'reporte_capitulos' sala_doc.equipo.id %}>Imprimir Plantilla Observación Tutor</a></div>
+    <div class='text-right'><a target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %}>Imprimir Plantilla Observación Tutor</a></div>
     {% if salas_doc.0.visto_bueno %}
-        <div class='text-right'><a href={%url 'carta_final' sala_doc.equipo.id %}>Carta de Conclusión</a></div>
+        <div class='text-right'><a target=_blank href={%url 'reportes:carta_final' sala_doc.equipo.id %}>Carta de Conclusión</a></div>
     {% endif %}
 {% endif %}
 
@@ -77,14 +77,14 @@
 </table>
 
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
-{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno and proyecto.0.calificacion and proyecto_grado%}
-    {% if progreso < 86 %}
-        <a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a></p>
-    {% endif %}
-    {% if progreso >= 86 %}
-        <h5>Paso Completado</h5>
-    {% endif %}
-{% endif %}
+{% comment %}{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno and proyecto.0.calificacion and proyecto_grado%}{% endcomment %}
+    {% comment %}{% if progreso < 86 %}{% endcomment %}
+        {% comment %}<a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a></p>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{% if progreso >= 86 %}{% endcomment %}
+        {% comment %}<h5>Paso Completado</h5>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
 
 
 {% endblock %}

@@ -4,8 +4,10 @@
 <form method='post' >
     {% csrf_token %}
     {{form.as_p}}
-    <a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.id %}>Cancelar</a>
-    <button class="btn btn-success" type="submit">Calificar</button>
+    <div class="d-flex justify-content-evenly">
+        <a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.equipo.id %}>Cancelar</a>
+        <button class="btn btn-success" type="submit">Calificar</button>
+    </div>
 </form>
 
 {% endblock %}

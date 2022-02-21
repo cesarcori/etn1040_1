@@ -4,21 +4,13 @@
 {{proyecto.titulo.upper}}
 <h3>Resumen</h3>
 {{proyecto.resumen}}<br>
-<p><a href="{{ proyecto.archivo.url }}">Proyecto de Grado Aprobado<a></p>
+<p><a target=_blank href="{{ proyecto.archivo.url }}">Proyecto de Grado Aprobado<a></p>
 
-{% comment %} calificacion{% endcomment %}
 {% if proyecto.calificacion %}
-{% include 'proyecto/ver_nota.html'%}
-{% comment %}<h5><strong>Calificación del Proyecto de Grado</strong></h5>{% endcomment %}
-{% comment %}<p>{% endcomment %}
-{% comment %}Tiempo Elaboración (Max. 9%): <strong>{{proyecto.nota_tiempo_elaboracion}}</strong><br>{% endcomment %}
-{% comment %}Exposiciones/Seminarios (Max. 6%): <strong>{{proyecto.nota_expos_seminarios}}</strong><br>{% endcomment %}
-{% comment %}Informes de Trabajos (Max. 22%): <strong>{{proyecto.nota_informes_trabajo}}</strong><br>{% endcomment %}
-{% comment %}Cumplimiento de Cronograma (Max. 3%): <strong>{{proyecto.nota_cumplimiento_cronograma}}</strong><br>{% endcomment %}
-{% comment %}Total Calificación (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>{% endcomment %}
-{% comment %}</p>{% endcomment %}
+    {% include 'proyecto/ver_nota.html'%}
 {% else %}
-<h4 class="text-center">El docente aún no calificó el Proyecto de Grado</h4>
+    <h4 class="text-center">El docente aún no calificó el Proyecto de Grado</h4>
 {% endif %}
 <a class="btn btn-danger" href={%url 'paso5'%}>Atras</a>
+
 {% endblock %}

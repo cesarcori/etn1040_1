@@ -423,7 +423,7 @@ def carta_solicitud(buffer, info_estu):
 # guardar documento
     guardar(buffer)
 
-def carta_final(buffer, estudiante):
+def generarCartaFinal(buffer, equipo):
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
@@ -484,33 +484,14 @@ def carta_final(buffer, estudiante):
         pdf.ln(th)
 # totos estos datos vienen de la base de datos
 # ===========================================
-    # nombre = 'Julio Cesar Cori Ochoa'
-    # carnet = '6002358'
-    # extension = 'L.P.'
-    # celular = '73009217'
-    # correo = 'ingeumsacori@gmail.com'
-    # docente = 'Jorge Mario León Gómez'
-    # tutor = 'Freddy Valle Velasquez'
-    # titulo_perfil = 'Diseño e implementación de un sistema de información para el seguimiento y administración de proyectos de grado para la materia ETN-1040. '
-# ===========================================
-# de la base de datos
-# ===========================================
-    # nombre = info_estu[0]
-    # carnet = info_estu[1] 
-    # extension = info_estu[2] 
-    # celular = info_estu[3] 
-    # correo = info_estu[4] 
-    # docente = info_estu[5] 
-    # tutor = info_estu[6] 
-    # titulo_perfil = info_estu[7] 
-    # objeto
+    estudiante = equipo.datosestudiante_set.get()
     nombre = estudiante.__str__()
-    celular_tutor = estudiante.equipo.tutor.celular
-    correo_tutor = estudiante.equipo.tutor.correo
-    docente = estudiante.grupo_doc.__str__()
-    tutor = estudiante.equipo.tutor.__str__()
+    celular_tutor = equipo.tutor.celular
+    correo_tutor = equipo.tutor.correo
+    docente = equipo.docente.__str__()
+    tutor = equipo.tutor.__str__()
     # titulo_proyecto = estudiante.proyectodegrado.titulo
-    titulo_proyecto = estudiante.registroperfil.titulo
+    titulo_proyecto = equipo.registroperfil.titulo
 
 # ===========================================
 # estatico, no se mueve, a menos que sea por personalizacion

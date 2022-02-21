@@ -452,7 +452,7 @@ def estudiante(request):
     solicitud_invitado = estudiante.invitado.filter(estado=None)
     context_aux = {}
     if estudiante.actividad.filter(nombre='registro cronograma').exists():
-        context_aux = informarCronograma(estudiante.equipo.id, estudiante)
+        context_aux = informarCronograma(estudiante.equipo.id)
         if not isinstance(context_aux, dict):
             context_aux = {}
             mensaje = infoCronograma(estudiante.id)
@@ -861,7 +861,7 @@ def progresoEstudiante(request, pk):
     progreso = progress(estudiante)
     tribunales = equipo.tribunales.all()
     if ProyectoDeGrado.objects.filter(equipo=equipo).exists():
-        proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+        proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
         calificacion = proyecto.calificacion
     else:
         proyecto = None
@@ -2050,7 +2050,6 @@ def paso5(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso5()
 @permitir_con(pasos=[1,2,3,4])
 def cronograma_control(request):
     grupo = request.user.groups.get().name
@@ -2133,7 +2132,6 @@ def cronograma_control(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso5()
 @permitir_con(pasos=[1,2,3,4])
 def entregaProyecto(request):
     grupo = request.user.groups.get().name
@@ -2163,7 +2161,6 @@ def entregaProyecto(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso5()
 @permitir_con(pasos=[1,2,3,4])
 def crearSalaRevisarProyecto(request):
     grupo = request.user.groups.get().name
@@ -2232,7 +2229,6 @@ def salaRevisarProyecto(request, pk_sala):
     return render(request, 'proyecto/sala_revisar.html', context)
 
 @login_required(login_url='login')
-# @permitir_paso5()
 @permitir_con(pasos=[1,2,3,4])
 def salaRevisarProyEstDoc(request, pk_sala):
     grupo = request.user.groups.get().name
@@ -2263,7 +2259,6 @@ def salaRevisarProyEstDoc(request, pk_sala):
     return render(request, 'proyecto/sala_revisar_proy_est_doc.html', context)
 
 @login_required(login_url='login')
-# @permitir_paso5()
 @permitir_con(pasos=[1,2,3,4])
 def salaRevisarProyEstTut(request, pk_sala):
     grupo = request.user.groups.get().name
@@ -2490,7 +2485,6 @@ def registroProyectoTribunal(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso6()
 @permitir_con(pasos=[1,2,3,4,5])
 def ver_proyecto_tribunal(request):
     grupo = request.user.groups.get().name
@@ -2501,66 +2495,53 @@ def ver_proyecto_tribunal(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso5()
 @permitir_con(pasos=[1,2,3,4])
 def registroProyecto(request):
     grupo = request.user.groups.get().name
-    estudiante = request.user.datosestudiante
+    equipo = request.user.datosestudiante.equipo
+    form = ProyectoDeGradoForm
     if request.method == 'POST':
         form = ProyectoDeGradoForm(request.POST, request.FILES)
         if form.is_valid():
-            file = form.save(commit=False)
-            file.usuario = estudiante
-            file.save()
+            form.instance.equipo = equipo
+            form.save()
+            agregarActividadEquipo('registro proyecto', equipo)
         return redirect('paso5')
-    else: 
-        form = ProyectoDeGradoForm
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/registro_proyecto.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso5()
 @permitir_con(pasos=[1,2,3,4])
 def ver_proyecto_grado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+    proyecto = ProyectoDeGrado.objects.get(equipo=estudiante.equipo)
     context = {'grupo': grupo,'proyecto':proyecto}
     return render(request, 'proyecto/ver_proyecto_grado.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
-# @permitir_paso6()
-def carta_final_tutor(request, id_est):
-    buffer = io.BytesIO()
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    # lo siguiente hay que hagregar de alguna forma a la base de datos
-    carta_final(buffer, estudiante)
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='carta_final.pdf')
-
-@login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
-# @permitir_paso6()
-def calificarProyecto(request, id_est):
+def calificarProyecto(request, pk):
     grupo = request.user.groups.get().name
     usuario = request.user.datosdocente
-    estudiante = DatosEstudiante.objects.get(id=id_est)
+    estudiante = DatosEstudiante.objects.get(id=pk)
+    equipo = estudiante.equipo
     if request.method == 'POST':
         form = CalificarProyectoForm(request.POST)
         nota1 = request.POST['nota1']
         nota2 = request.POST['nota2']
         nota3 = request.POST['nota3']
         nota4 = request.POST['nota4']
-        proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+        proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
         proyecto.nota_tiempo_elaboracion = nota1
         proyecto.nota_expos_seminarios = nota2
         proyecto.nota_informes_trabajo = nota3
         proyecto.nota_cumplimiento_cronograma = nota4
         proyecto.calificacion = int(nota1)+int(nota2)+int(nota3)+int(nota4)
         proyecto.save()
-        return redirect('progreso_estudiante',pk_est=id_est)
+        agregarActividadEquipo('nota docente proyecto', equipo)
+        return redirect('progreso_estudiante',pk=equipo.pk)
     else: 
         form = CalificarProyectoForm
     context = {'grupo': grupo,'estudiante':estudiante, 'form': form}

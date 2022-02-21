@@ -342,285 +342,13 @@ def generarReporteIndicacionTutor(buffer, estudiante, http_host):
     fecha_left()
     guardar(buffer)
 
-def generarReporteIndicacionTutorEnSistema(buffer, estudiante):
-    pdf = FPDF(format="letter")
-    pdf.add_page()
-    pdf.set_font("Times", size=12)
-# margen
-    pdf.set_margin(25)
-# Get default margins
-    left = pdf.l_margin
-    right = pdf.r_margin
-    top = pdf.t_margin
-    bottom = pdf.b_margin
-# Effective page width and height
-    epw = pdf.w - left - right
-    eph = pdf.h - top - bottom
-# salto de linea
-    th = pdf.font_size * 1.2
-    def fecha_right():
-        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
-        hoy = date.today()
-        dia = hoy.day.__str__()
-        mes = meses[hoy.month - 1]
-        year = hoy.year.__str__()
-        pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="R")
-        pdf.ln(th)
-
-    def fecha_left():
-        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
-        hoy = date.today()
-        dia = hoy.day.__str__()
-        mes = meses[hoy.month - 1]
-        year = hoy.year.__str__()
-        pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="L")
-        pdf.ln(th)
-
-    def text_left(text):
-        pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="L")
-        pdf.ln(th)
-
-    def text_right(text):
-        pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="R")
-        pdf.ln(th)
-
-    def text_center(text):
-        pdf.cell(0,0,txt=text, ln=1, border=0, align="C")
-        pdf.ln(th)
-
-    def text_left_lista(texto_lista):
-        for texto in texto_lista:
-            pdf.cell(0,0,txt=texto+' ', ln=1, border=0, align="L")
-            pdf.ln(th)
-
-    def negrilla():
-        pdf.set_font("Times", 'B', size=12)
-        pdf.set_font("Times", size=12)
-
-    def negrilla_subrayado():
-        pdf.set_font("Times", 'BU', size=12)
-        pdf.set_font("Times", size=12)
-
-    def linea(numero_lineas=1):
-        for n in range(numero_lineas):
-            pdf.ln(th)
-
-    def normal():
-        pdf.set_font("Times", size=12)
-
-    def guardar(nombre_archivo):
-        pdf.output(nombre_archivo)
-
-    def parrafo(parrafo):
-        pdf.write(th, parrafo + ' ')
-
-    def justificado(parrafo):
-        pdf.multi_cell(0,th,txt=parrafo, ln=1, border=0, align="J")
-        pdf.ln(th)
-    
-    def titulo(texto):
-        pdf.set_font("Times", 'B', size=14)
-        pdf.cell(0,0,txt=texto.upper(), ln=1, border=0, align="C")
-        pdf.set_font("Times", size=12)
-        pdf.ln(th)
-
-    def texto_negrilla(texto):
-        pdf.set_font("Times", 'B', size=12)
-        pdf.cell(0,0,txt=texto, ln=1, border=0, align="J")
-        pdf.set_font("Times", size=12)
-        pdf.ln(th)
-
-# totos estos datos vienen de la base de datos
-# ===========================================
-    nombre_estudiante = estudiante.__str__()
-    carnet_est = estudiante.carnet
-    extension_est = estudiante.extension
-    registro_est = estudiante.registro_uni
-    celular_est = estudiante.celular
-    correo_est = estudiante.correo
-    celular_tutor = estudiante.equipo.tutor.celular
-    correo_tutor = estudiante.equipo.tutor.correo
-    progreso_est = estudiante.progreso.nivel.__str__()
-    docente = estudiante.grupo_doc.__str__()
-    grupo_docente = estudiante.grupo_doc.grupo
-    tutor = estudiante.equipo.tutor.__str__()
-    usuario = 'nadie'
-    correo_usuario= 'fdsa'
-# estatico, no se mueve, a menos que sea por personalizacion
-# ******************** INICIO DEL DOCUMENTO *******************
-# Titulo 
-    titulo('ingreso al sistema para el tutor')
-    titulo(tutor)
-    linea()
-# Datos del estudiante
-    parrafo('El estudiante: '+nombre_estudiante + ' solicito su tutoría. Para aceptar o rechazar la solicitud debe ingresar al sistema con el siguiente usuario y contraseña.')
-    linea(3)
-# Usuario y password
-    text_left('Usuario: '+ estudiante.equipo.tutor.usuario.__str__())    
-    text_left('Contraseña: '+ estudiante.equipo.tutor.usuario.__str__())    
-# firma usuario solicitante.
-    linea(4)
-    text_center('Atte.: '+ nombre_estudiante)
-    text_center('Cel.: '+ celular_est)
-    text_center('e-mail.: '+ correo_est)
-
-# Fecha
-    linea(2)
-    fecha_left()
-    guardar(buffer)
-
-def generarReporteCapitulos2(buffer, estudiante):
-    pdf = FPDF(format="letter")
-    pdf.add_page()
-    pdf.set_font("Times", size=12)
-# margen
-    pdf.set_margin(25)
-# Get default margins
-    left = pdf.l_margin
-    right = pdf.r_margin
-    top = pdf.t_margin
-    bottom = pdf.b_margin
-# Effective page width and height
-    epw = pdf.w - left - right
-    eph = pdf.h - top - bottom
-# salto de linea
-    th = pdf.font_size * 1.2
-    def fecha_right():
-        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
-        hoy = date.today()
-        dia = hoy.day.__str__()
-        mes = meses[hoy.month - 1]
-        year = hoy.year.__str__()
-        pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="R")
-        pdf.ln(th)
-
-    def fecha_left():
-        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
-        hoy = date.today()
-        dia = hoy.day.__str__()
-        mes = meses[hoy.month - 1]
-        year = hoy.year.__str__()
-        pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="L")
-        pdf.ln(th)
-
-    def text_left(text):
-        pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="L")
-        pdf.ln(th)
-
-    def text_right(text):
-        pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="R")
-        pdf.ln(th)
-
-    def text_center(text):
-        pdf.cell(0,0,txt=text, ln=1, border=0, align="C")
-        pdf.ln(th)
-
-    def text_left_lista(texto_lista):
-        for texto in texto_lista:
-            pdf.cell(0,0,txt=texto+' ', ln=1, border=0, align="L")
-            pdf.ln(th)
-
-    def negrilla():
-        pdf.set_font("Times", 'B', size=12)
-        pdf.set_font("Times", size=12)
-
-    def negrilla_subrayado():
-        pdf.set_font("Times", 'BU', size=12)
-        pdf.set_font("Times", size=12)
-
-    def linea(numero_lineas=1):
-        for n in range(numero_lineas):
-            pdf.ln(th)
-
-    def normal():
-        pdf.set_font("Times", size=12)
-    def guardar(nombre_archivo):
-        pdf.output(nombre_archivo)
-
-    def parrafo(parrafo):
-        pdf.write(th, parrafo + ' ')
-
-    def justificado(parrafo):
-        pdf.multi_cell(0,th,txt=parrafo, ln=1, border=0, align="J")
-        pdf.ln(th)
-    
-    def titulo(texto):
-        pdf.set_font("Times", 'B', size=14)
-        pdf.cell(0,0,txt=texto.upper(), ln=1, border=0, align="C")
-        pdf.set_font("Times", size=12)
-        pdf.ln(th)
-
-    def texto_negrilla(texto):
-        pdf.set_font("Times", 'B', size=12)
-        pdf.cell(0,0,txt=texto, ln=1, border=0, align="J")
-        pdf.set_font("Times", size=12)
-        pdf.ln(th)
-
-# totos estos datos vienen de la base de datos
-# ===========================================
-    nombre_estudiante = estudiante.__str__()
-    carnet_est = estudiante.carnet
-    extension_est = estudiante.extension
-    registro_est = estudiante.registro_uni
-    celular_est = estudiante.celular
-    correo_est = estudiante.correo
-    celular_tutor = estudiante.equipo.tutor.celular
-    correo_tutor = estudiante.equipo.tutor.correo
-    progreso_est = estudiante.progreso.nivel.__str__()
-    docente = estudiante.grupo_doc.__str__()
-    grupo_docente = estudiante.grupo_doc.grupo
-    tutor = estudiante.equipo.tutor.__str__()
-    usuario = 'nadie'
-    correo_usuario= 'fdsa'
-    http_host = 'http'
-# estatico, no se mueve, a menos que sea por personalizacion
-# ******************** INICIO DEL DOCUMENTO *******************
-# Titulo 
-    titulo('Plantilla de Avance')
-    linea()
-# Datos 
-    text_left('Estudiante: ' + nombre_estudiante)
-    text_left('Tutor: ' + tutor)
-    text_left('Nombre del Proyecto: ' + estudiante.proyectodegrado.titulo )
-# Tabla
-    spacing = 1
-    letra = 3
-    data = [['First Name', 'Last Name', 'email', 'zip'],
-            ['Mike', 'Driscoll', 'mike@somewhere.com', '55555'],
-            ['John', 'Doe', 'jdoe@doe.com', '12345'],
-            ['Nina', 'Ma', 'inane@where.com', '54321']
-            ]
-    col_width = pdf.w / 4.9
-    row_height = pdf.font_size
-    for row in data:
-        for item in row:
-            pdf.cell(col_width, row_height*spacing, txt=item, border=1)
-        pdf.ln(row_height*spacing)
-    col_num = letra * 4
-    ancho = 170
-    col_1 = 50
-    col_2 = 30
-    col_3 = 30
-    col_4 = 70
-    # pdf.cell(col_num, row_height*spacing, txt='Tema',border=1)
-    pdf.cell(col_1, txt='Capitulo 1: Introduccion',border=1)
-    pdf.multi_cell(w=col_2,txt='4 de marzo\n del 2021',border=1)
-    pdf.cell(col_1, txt='Capitulo 1: Introduccion',border=1)
-    pdf.multi_cell(w=col_3,txt='Firma del tutor',border=1)
-    pdf.multi_cell(w=col_4,txt='La referencia bibliografica debe estar de',border=1)
-    
-# Fecha
-    linea(2)
-    fecha_left()
-    guardar(buffer)
-
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph,Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen import canvas
 # from proyecto.models import MensajeTutorRevisarProyecto
-def generarReporteCapitulos(buffer, estudiante):
+def generarFirmaTutorCapitulos(buffer, equipo):
     # doc = SimpleDocTemplate(buffer, pagesize=letter)
     def fecha():
         meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
@@ -652,11 +380,11 @@ def generarReporteCapitulos(buffer, estudiante):
     # las nomas apa ademas se seguir escribiendo. trabajando \n mas'''+'* '+ '''otro parrafo
     # de esos largos que no queda otra que aumentar''',style)
 
-    nombre_estudiante = estudiante.__str__()
-    nombre_tutor = estudiante.equipo.tutor.__str__()
-    titulo_perfil = estudiante.registroperfil.titulo.upper()
+    nombre_estudiante = equipo.datosestudiante_set.get().__str__()
+    nombre_tutor = equipo.tutor.__str__()
+    titulo_perfil = equipo.registroperfil.titulo.upper()
     # salas = estudiante.salarevisarproyecto_set.all()
-    sala_doc_tutor = estudiante.saladocumentoapp_set.get(tipo='proyecto', revisor=estudiante.equipo.tutor.usuario)
+    sala_doc_tutor = equipo.saladocumentoapp_set.get(tipo='proyecto', revisor=equipo.tutor.usuario)
     salas_revisar = sala_doc_tutor.salarevisarapp_set.all()
 
     data1 = [
@@ -671,9 +399,7 @@ def generarReporteCapitulos(buffer, estudiante):
     # generacion de las observaciones
     data2 = []
     for sala in salas_revisar:
-        # mensajes = MensajeTutorRevisarProyecto.objects.filter(sala=sala).order_by('-fecha_creacion')
-        # mensajes_tut = [mensa for mensa in mensajes if mensa.usuario == estudiante.equipo.tutor.usuario]
-        mensajes_tut = sala.mensajerevisarapp_set.filter(usuario=estudiante.equipo.tutor.usuario)
+        mensajes_tut = sala.mensajerevisarapp_set.filter(usuario=equipo.tutor.usuario)
         observaciones = []
         for mensaje in mensajes_tut:
             # observacion = mensaje.texto
@@ -690,8 +416,6 @@ def generarReporteCapitulos(buffer, estudiante):
             fecha_ultima_obs = ''
             data_aux = ['','','','']
         data2.append(data_aux)
-    # print(salas_revisar)
-    print(mensajes_tut)
     data = data1 + data2
 
     tblstyle = TableStyle([
@@ -723,3 +447,277 @@ def generarReporteCapitulos(buffer, estudiante):
     # w, h = t.wrap(aW, aH)
     # t.drawOn(canv, 72, aH-h)
     doc.build(story)
+
+
+
+# def generarReporteCapitulos2(buffer, estudiante):
+    # pdf = FPDF(format="letter")
+    # pdf.add_page()
+    # pdf.set_font("Times", size=12)
+# # margen
+    # pdf.set_margin(25)
+# # Get default margins
+    # left = pdf.l_margin
+    # right = pdf.r_margin
+    # top = pdf.t_margin
+    # bottom = pdf.b_margin
+# # Effective page width and height
+    # epw = pdf.w - left - right
+    # eph = pdf.h - top - bottom
+# # salto de linea
+    # th = pdf.font_size * 1.2
+    # def fecha_right():
+        # meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        # hoy = date.today()
+        # dia = hoy.day.__str__()
+        # mes = meses[hoy.month - 1]
+        # year = hoy.year.__str__()
+        # pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="R")
+        # pdf.ln(th)
+
+    # def fecha_left():
+        # meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        # hoy = date.today()
+        # dia = hoy.day.__str__()
+        # mes = meses[hoy.month - 1]
+        # year = hoy.year.__str__()
+        # pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="L")
+        # pdf.ln(th)
+
+    # def text_left(text):
+        # pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="L")
+        # pdf.ln(th)
+
+    # def text_right(text):
+        # pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="R")
+        # pdf.ln(th)
+
+    # def text_center(text):
+        # pdf.cell(0,0,txt=text, ln=1, border=0, align="C")
+        # pdf.ln(th)
+
+    # def text_left_lista(texto_lista):
+        # for texto in texto_lista:
+            # pdf.cell(0,0,txt=texto+' ', ln=1, border=0, align="L")
+            # pdf.ln(th)
+
+    # def negrilla():
+        # pdf.set_font("Times", 'B', size=12)
+        # pdf.set_font("Times", size=12)
+
+    # def negrilla_subrayado():
+        # pdf.set_font("Times", 'BU', size=12)
+        # pdf.set_font("Times", size=12)
+
+    # def linea(numero_lineas=1):
+        # for n in range(numero_lineas):
+            # pdf.ln(th)
+
+    # def normal():
+        # pdf.set_font("Times", size=12)
+    # def guardar(nombre_archivo):
+        # pdf.output(nombre_archivo)
+
+    # def parrafo(parrafo):
+        # pdf.write(th, parrafo + ' ')
+
+    # def justificado(parrafo):
+        # pdf.multi_cell(0,th,txt=parrafo, ln=1, border=0, align="J")
+        # pdf.ln(th)
+    
+    # def titulo(texto):
+        # pdf.set_font("Times", 'B', size=14)
+        # pdf.cell(0,0,txt=texto.upper(), ln=1, border=0, align="C")
+        # pdf.set_font("Times", size=12)
+        # pdf.ln(th)
+
+    # def texto_negrilla(texto):
+        # pdf.set_font("Times", 'B', size=12)
+        # pdf.cell(0,0,txt=texto, ln=1, border=0, align="J")
+        # pdf.set_font("Times", size=12)
+        # pdf.ln(th)
+
+# # totos estos datos vienen de la base de datos
+# # ===========================================
+    # nombre_estudiante = estudiante.__str__()
+    # carnet_est = estudiante.carnet
+    # extension_est = estudiante.extension
+    # registro_est = estudiante.registro_uni
+    # celular_est = estudiante.celular
+    # correo_est = estudiante.correo
+    # celular_tutor = estudiante.equipo.tutor.celular
+    # correo_tutor = estudiante.equipo.tutor.correo
+    # progreso_est = estudiante.progreso.nivel.__str__()
+    # docente = estudiante.grupo_doc.__str__()
+    # grupo_docente = estudiante.grupo_doc.grupo
+    # tutor = estudiante.equipo.tutor.__str__()
+    # usuario = 'nadie'
+    # correo_usuario= 'fdsa'
+    # http_host = 'http'
+# # estatico, no se mueve, a menos que sea por personalizacion
+# # ******************** INICIO DEL DOCUMENTO *******************
+# # Titulo 
+    # titulo('Plantilla de Avance')
+    # linea()
+# # Datos 
+    # text_left('Estudiante: ' + nombre_estudiante)
+    # text_left('Tutor: ' + tutor)
+    # text_left('Nombre del Proyecto: ' + estudiante.proyectodegrado.titulo )
+# # Tabla
+    # spacing = 1
+    # letra = 3
+    # data = [['First Name', 'Last Name', 'email', 'zip'],
+            # ['Mike', 'Driscoll', 'mike@somewhere.com', '55555'],
+            # ['John', 'Doe', 'jdoe@doe.com', '12345'],
+            # ['Nina', 'Ma', 'inane@where.com', '54321']
+            # ]
+    # col_width = pdf.w / 4.9
+    # row_height = pdf.font_size
+    # for row in data:
+        # for item in row:
+            # pdf.cell(col_width, row_height*spacing, txt=item, border=1)
+        # pdf.ln(row_height*spacing)
+    # col_num = letra * 4
+    # ancho = 170
+    # col_1 = 50
+    # col_2 = 30
+    # col_3 = 30
+    # col_4 = 70
+    # # pdf.cell(col_num, row_height*spacing, txt='Tema',border=1)
+    # pdf.cell(col_1, txt='Capitulo 1: Introduccion',border=1)
+    # pdf.multi_cell(w=col_2,txt='4 de marzo\n del 2021',border=1)
+    # pdf.cell(col_1, txt='Capitulo 1: Introduccion',border=1)
+    # pdf.multi_cell(w=col_3,txt='Firma del tutor',border=1)
+    # pdf.multi_cell(w=col_4,txt='La referencia bibliografica debe estar de',border=1)
+    
+# # Fecha
+    # linea(2)
+    # fecha_left()
+    # guardar(buffer)
+
+# def generarReporteIndicacionTutorEnSistema(buffer, estudiante):
+    # pdf = FPDF(format="letter")
+    # pdf.add_page()
+    # pdf.set_font("Times", size=12)
+# # margen
+    # pdf.set_margin(25)
+# # Get default margins
+    # left = pdf.l_margin
+    # right = pdf.r_margin
+    # top = pdf.t_margin
+    # bottom = pdf.b_margin
+# # Effective page width and height
+    # epw = pdf.w - left - right
+    # eph = pdf.h - top - bottom
+# # salto de linea
+    # th = pdf.font_size * 1.2
+    # def fecha_right():
+        # meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        # hoy = date.today()
+        # dia = hoy.day.__str__()
+        # mes = meses[hoy.month - 1]
+        # year = hoy.year.__str__()
+        # pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="R")
+        # pdf.ln(th)
+
+    # def fecha_left():
+        # meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        # hoy = date.today()
+        # dia = hoy.day.__str__()
+        # mes = meses[hoy.month - 1]
+        # year = hoy.year.__str__()
+        # pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="L")
+        # pdf.ln(th)
+
+    # def text_left(text):
+        # pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="L")
+        # pdf.ln(th)
+
+    # def text_right(text):
+        # pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="R")
+        # pdf.ln(th)
+
+    # def text_center(text):
+        # pdf.cell(0,0,txt=text, ln=1, border=0, align="C")
+        # pdf.ln(th)
+
+    # def text_left_lista(texto_lista):
+        # for texto in texto_lista:
+            # pdf.cell(0,0,txt=texto+' ', ln=1, border=0, align="L")
+            # pdf.ln(th)
+
+    # def negrilla():
+        # pdf.set_font("Times", 'B', size=12)
+        # pdf.set_font("Times", size=12)
+
+    # def negrilla_subrayado():
+        # pdf.set_font("Times", 'BU', size=12)
+        # pdf.set_font("Times", size=12)
+
+    # def linea(numero_lineas=1):
+        # for n in range(numero_lineas):
+            # pdf.ln(th)
+
+    # def normal():
+        # pdf.set_font("Times", size=12)
+
+    # def guardar(nombre_archivo):
+        # pdf.output(nombre_archivo)
+
+    # def parrafo(parrafo):
+        # pdf.write(th, parrafo + ' ')
+
+    # def justificado(parrafo):
+        # pdf.multi_cell(0,th,txt=parrafo, ln=1, border=0, align="J")
+        # pdf.ln(th)
+    
+    # def titulo(texto):
+        # pdf.set_font("Times", 'B', size=14)
+        # pdf.cell(0,0,txt=texto.upper(), ln=1, border=0, align="C")
+        # pdf.set_font("Times", size=12)
+        # pdf.ln(th)
+
+    # def texto_negrilla(texto):
+        # pdf.set_font("Times", 'B', size=12)
+        # pdf.cell(0,0,txt=texto, ln=1, border=0, align="J")
+        # pdf.set_font("Times", size=12)
+        # pdf.ln(th)
+
+# # totos estos datos vienen de la base de datos
+# # ===========================================
+    # nombre_estudiante = estudiante.__str__()
+    # carnet_est = estudiante.carnet
+    # extension_est = estudiante.extension
+    # registro_est = estudiante.registro_uni
+    # celular_est = estudiante.celular
+    # correo_est = estudiante.correo
+    # celular_tutor = estudiante.equipo.tutor.celular
+    # correo_tutor = estudiante.equipo.tutor.correo
+    # progreso_est = estudiante.progreso.nivel.__str__()
+    # docente = estudiante.grupo_doc.__str__()
+    # grupo_docente = estudiante.grupo_doc.grupo
+    # tutor = estudiante.equipo.tutor.__str__()
+    # usuario = 'nadie'
+    # correo_usuario= 'fdsa'
+# # estatico, no se mueve, a menos que sea por personalizacion
+# # ******************** INICIO DEL DOCUMENTO *******************
+# # Titulo 
+    # titulo('ingreso al sistema para el tutor')
+    # titulo(tutor)
+    # linea()
+# # Datos del estudiante
+    # parrafo('El estudiante: '+nombre_estudiante + ' solicito su tutoría. Para aceptar o rechazar la solicitud debe ingresar al sistema con el siguiente usuario y contraseña.')
+    # linea(3)
+# # Usuario y password
+    # text_left('Usuario: '+ estudiante.equipo.tutor.usuario.__str__())    
+    # text_left('Contraseña: '+ estudiante.equipo.tutor.usuario.__str__())    
+# # firma usuario solicitante.
+    # linea(4)
+    # text_center('Atte.: '+ nombre_estudiante)
+    # text_center('Cel.: '+ celular_est)
+    # text_center('e-mail.: '+ correo_est)
+
+# # Fecha
+    # linea(2)
+    # fecha_left()
+    # guardar(buffer)

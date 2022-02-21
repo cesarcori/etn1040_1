@@ -24,6 +24,14 @@ def agregarActividadEstudiante(texto_actividad, estudiante):
     estudiante.actividad.add(actividad)
     estudiante.save()
 
+def agregarActividadEquipo(texto_actividad, equipo):
+
+    estudiantes = equipo.datosestudiante_set.all()
+    for estudiante in estudiantes:
+        actividad = Actividad.objects.get(nombre=texto_actividad)
+        estudiante.actividad.add(actividad)
+        estudiante.save()
+
 def actividadRealizadaEstudiante(texto_actividad, estudiante):
 
     hecho = estudiante.actividad.filter(nombre=texto_actividad).exists()
@@ -43,7 +51,7 @@ def pasosRealizados(estudiante):
 
     return pasos_realizados
 
-def informarCronograma(pk, estudiante):
+def informarCronograma(pk):
     
     equipo = Equipo.objects.get(id=pk)
     cronograma_existe = ActividadesCronograma.objects.filter(equipo=equipo).exists()

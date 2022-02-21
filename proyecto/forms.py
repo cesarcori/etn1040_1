@@ -151,7 +151,7 @@ class ProyectoDeGradoForm(forms.ModelForm):
     class Meta:
         model = ProyectoDeGrado
         fields = '__all__'
-        exclude = ['usuario','calificacion','nota_tiempo_elaboracion',
+        exclude = ['equipo','calificacion','nota_tiempo_elaboracion',
                 'nota_expos_seminarios','nota_informes_trabajo',
                 'nota_cumplimiento_cronograma']
         widgets = {
