@@ -5,6 +5,7 @@ from .models import Actividad
 from proyecto.models import ActividadesCronograma, Equipo, RegistroPerfil
 
 def progress(estudiante):
+
     actividades = Actividad.objects.all()
     actividades_estudiante = estudiante.actividad.all()
     suma_valores = 0
@@ -16,6 +17,17 @@ def progress(estudiante):
         suma_valores_estudiante += actividad.valor
     progreso_sobre_100 = int(suma_valores_estudiante * porcentaje_por_unidad)
     return progreso_sobre_100
+
+def agregarActividadEstudiante(texto_actividad, estudiante):
+
+    actividad = Actividad.objects.get(nombre=texto_actividad)
+    estudiante.actividad.add(actividad)
+    estudiante.save()
+
+def actividadRealizadaEstudiante(texto_actividad, estudiante):
+
+    hecho = estudiante.actividad.filter(nombre=texto_actividad).exists()
+    return hecho
 
 def pasosRealizados(estudiante):
 
@@ -31,16 +43,18 @@ def pasosRealizados(estudiante):
 
     return pasos_realizados
 
-def infoCronograma(pk):
+def informarCronograma(pk, estudiante):
+    
     equipo = Equipo.objects.get(id=pk)
     cronograma_existe = ActividadesCronograma.objects.filter(equipo=equipo).exists()
-    progreso = equipo.progreso
+    estudiante = equipo.datosestudiante_set.get()
+    progreso = progress(estudiante)
     # mensaje_limite = 'Aún tienes tiempo para elaborar el sistema'
     mensaje_limite = ''
     if cronograma_existe:
-        cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
+        cronograma = ActividadesCronograma.objects.filter(equipo=estudiante.equipo)
             # fecha de registro del cronograma o fecha de registro del proyecto
-        fecha = RegistroPerfil.objects.get(usuario=estudiante).fecha_creacion
+        fecha = RegistroPerfil.objects.get(equipo=estudiante.equipo).fecha_creacion
             # fecha limite sistema 2 años y medio
         # prueba modificar el 0 del delta para eliminar al usuario
         fecha = fecha.astimezone().date()#-timedelta(0)
@@ -90,7 +104,7 @@ def infoCronograma(pk):
             mensaje_limite = 'El estudiante fue eliminado del sistema por pasar los 2 años sin concluir el proyecto'
             return (mensaje_limite)
         # En caso de conclusion de proyecto 
-        if progreso.nivel >= 100:
+        if progress(estudiante) >= 100:
             fecha_100 = progreso.fecha_creacion
             fecha_eliminar = fecha_100 + timedelta(100)
             if fecha_eliminar.date() < date.today():
@@ -106,7 +120,7 @@ def infoCronograma(pk):
             por_dia_retrazo = ''
             limite_cronograma = ''
         # caso de reglamento sanabria, no conclucion de perfil
-        if not estudiante.registroperfil:
+        if not estudiante.equipo.registroperfil:
             fecha_ingreso = estudiante.fecha_inscripcion.date()
         # se establese fecha limite del semestre de fin de septiembre y fin de marzo
             if fecha_ingreso.month < 6: 

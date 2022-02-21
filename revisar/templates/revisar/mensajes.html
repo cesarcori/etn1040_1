@@ -8,7 +8,7 @@
             href={%url 'revisar:revisar_documento' sala.sala_documento.tipo sala.sala_documento.revisor.id %} name='atras'> Atras</a>
     {% else %}
         <a class="btn btn-danger" 
-            href={%url 'progreso_estudiante' sala.sala_documento.estudiante.id %}>Atras</a>
+            href={%url 'progreso_estudiante' sala.sala_documento.equipo.id %}>Atras</a>
     {% endif %}
     <button type="submit" name='enviar' class="btn btn-success"
         value='enviar'>Enviar</button>

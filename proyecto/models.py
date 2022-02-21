@@ -188,7 +188,8 @@ class VistaReglamento(models.Model):
         return self.identificador
 
 class RegistroPerfil(models.Model):
-    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    # usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(null=True)
     perfil = models.FileField(upload_to='perfiles/', null=True)
@@ -207,7 +208,7 @@ class ActividadesCronograma(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class RegistroCronograma(models.Model):
-    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class ProyectoDeGrado(models.Model):

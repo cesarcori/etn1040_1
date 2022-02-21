@@ -43,6 +43,23 @@ def revisarDocumento(request, documento, id_revisor):
 @allowed_users(allowed_roles=['estudiante'])
 def crearSalaRevisar(request, documento, id_revisor, id_sala_doc):
     sala_doc = SalaDocumentoApp.objects.get(id=id_sala_doc)
+    equipo = sala_doc.equipo
+    primer_estudiante = equipo.datosestudiante_set.first()
+    if documento=='perfil':
+        if not primer_estudiante.actividad.filter(nombre='revisar perfil').exists():
+            actividad = Actividad.objects.get(nombre='revisar perfil')
+            estudiante.actividad.add(actividad)
+            estudiante.save()
+    elif documento=='proyecto':
+        if not primer_estudiante.actividad.filter(nombre='revisar proyecto').exists():
+            actividad = Actividad.objects.get(nombre='revisar proyecto')
+            estudiante.actividad.add(actividad)
+            estudiante.save()
+    elif documento=='tribunal':
+        if not primer_estudiante.actividad.filter(nombre='revisar tribunal').exists():
+            actividad = Actividad.objects.get(nombre='revisar tribunal')
+            estudiante.actividad.add(actividad)
+            estudiante.save()
     form = SalaRevisarAppForm
     if request.method == 'POST':
         form = SalaRevisarAppForm(request.POST, request.FILES)
@@ -86,11 +103,11 @@ def mensajes(request, id_sala_rev):
 @allowed_users(allowed_roles=['tutor','docente','tribunal'])
 def darVistoBueno(request, id_sala_doc):
     sala_doc = get_object_or_404(SalaDocumentoApp, id=id_sala_doc)
-    id_est = sala_doc.estudiante.id
+    id_equi = sala_doc.equipo.id
     if request.method == 'POST':
         sala_doc.visto_bueno = True
         sala_doc.save()
-        return redirect('progreso_estudiante', pk_est=id_est)
+        return redirect('progreso_estudiante', pk=id_equi)
     context = {'sala_doc':sala_doc}
     return render(request, 'revisar/dar_visto_bueno.html', context)
 

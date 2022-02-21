@@ -81,16 +81,15 @@ def numero_letra(numero_int):
         if unidad > 0:
             resultado = '%s y %s' % (resultado, UNIDADES[unidad])
     return resultado
-    # if numero_entero <= 99:
-        # resultado = leer_decenas(numero_entero)
-def formulario1(buffer, estudiante):
+
+def generarformularioAceptacion(buffer, estudiante):
     # Datod de la base de datos
     nombre = estudiante.__str__()
     carnet = estudiante.carnet
     extension = estudiante.extension
-    tutor = estudiante.tutor.__str__()
+    tutor = estudiante.equipo.tutor.__str__()
     docente = estudiante.grupo_doc.__str__()
-    titulo = estudiante.registroperfil.titulo
+    titulo = estudiante.equipo.registroperfil.titulo
     mencion = estudiante.mencion
     # =============================================
     check = 'Si'
@@ -125,8 +124,8 @@ def formulario1(buffer, estudiante):
 
     pdf.set_xy(85,122)
     # Firma tutor
-    if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
-        if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
+    if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
+        if estudiante.equipo.tutor.usuario.documentos.firma_carta_aceptacion:
             name = MEDIA_ROOT+estudiante.tutor.firma.name
             pdf.image(name, w = 25)
 # Tutor

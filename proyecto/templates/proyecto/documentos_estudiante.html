@@ -9,9 +9,9 @@
     </thead>
     <tbody>
         <tr>
-            {% if estudiante.tutor_acepto%}
+            {% if estudiante.equipo.tutor_acepto%}
             <td class='bg-success text-white'>
-                <a target='_blank' href={%url 'reporte_tutor_acepto' estudiante.id%} 
+                <a target='_blank' href={%url 'reportes:carta-tutor-acepto' estudiante.id%} 
                     class='text-white text-underline-hover'>
                     Carta de Aceptación Tutoría</a></td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>

@@ -1,11 +1,11 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h4>Elaboración del Proyecto de Grado y Revisión</h4>
-{% comment %}{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor %}{% endcomment %}
+
 {% if sala_doc.tipo == 'proyecto'%}
-    <div class='text-right'><a href={% url 'reporte_capitulos' sala_doc.estudiante.id %}>Imprimir Plantilla Observación Tutor</a></div>
+    <div class='text-right'><a href={% url 'reporte_capitulos' sala_doc.equipo.id %}>Imprimir Plantilla Observación Tutor</a></div>
     {% if salas_doc.0.visto_bueno %}
-        <div class='text-right'><a href={%url 'carta_final' sala_doc.estudiante.id %}>Carta de Conclusión</a></div>
+        <div class='text-right'><a href={%url 'carta_final' sala_doc.equipo.id %}>Carta de Conclusión</a></div>
     {% endif %}
 {% endif %}
 
@@ -75,56 +75,15 @@
     </tr>
   </tbody>
 </table>
-{% comment %}{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}{% endcomment %}
-    {% comment %}<p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>{% endcomment %}
-    {% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
-    {% comment %}[><p><a href={%url 'entrega_proyecto' %}>Revisión Proyecto</a><]{% endcomment %}
-    {% comment %}<p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>{% endcomment %}
-    {% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
-    {% comment %}{% if not proyecto_grado %}{% endcomment %}
-        {% comment %}<p><a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>{% endcomment %}
-        {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
-    {% comment %}{% endif %}{% endcomment %}
-{% comment %}{% else %}{% endcomment %}
-    {% comment %}<p><a href={%url 'cronograma_control'%}>Cumplir con Cronograma</a>{% endcomment %}
-    {% comment %}<i class="fas text-danger fa-graduation-cap"></i><br>{% endcomment %}
-    {% comment %}[><p><a href={%url 'entrega_proyecto' %}>Revision Proyecto</a><]{% endcomment %}
-    {% comment %}<p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>{% endcomment %}
-    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
-    {% comment %}<p><a class="btn disabled" href=#>Registro Proyecto de Grado</a>{% endcomment %}
-    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
-{% comment %}{% endif %}{% endcomment %}
 
-{% comment %}{% if estudiante.vb_proyecto_docente and estudiante.vb_proyecto_tutor and not proyecto_grado%}{% endcomment %}
-{% comment %}{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno and not proyecto_grado %}{% endcomment %}
-{% comment %}{% if proyecto_grado %}{% endcomment %}
-    {% comment %}<p><a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>{% endcomment %}
-    {% comment %}<i class="fas text-danger fa-graduation-cap"></i></p>{% endcomment %}
-{% comment %}{% endif %}{% endcomment %}
-
-{% comment %}{% if proyecto_grado and proyecto.0.calificacion %}{% endcomment %}
-    {% comment %}<p><a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado y Calificado</a>{% endcomment %}
-    {% comment %}<i class="fas text-success fa-check"></i></p>{% endcomment %}
-{% comment %}{% endif %}{% endcomment %}
-
-{% comment %}{% if proyecto and not proyecto.0.calificacion %}{% endcomment %}
-    {% comment %}<p><a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado, Esperando Nota</a>{% endcomment %}
-    {% comment %}<i class="fas text-warning fa-graduation-cap"></i></p>{% endcomment %}
-{% comment %}{% endif %}{% endcomment %}
-
-{% comment %}{% if proyecto_grado and proyecto.0.calificacion%}{% endcomment %}
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
-{% comment %}{% if proyecto_grado and estudiante.vb_proyecto_tutor and estudiante.vb_proyecto_docente and proyecto.0.calificacion%}{% endcomment %}
 {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno and proyecto.0.calificacion and proyecto_grado%}
-    {% if progreso.nivel < 86 %}
+    {% if progreso < 86 %}
         <a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a></p>
     {% endif %}
-    {% if progreso.nivel >= 86 %}
+    {% if progreso >= 86 %}
         <h5>Paso Completado</h5>
     {% endif %}
-{% comment %}{% else %}{% endcomment %}
-    {% comment %}<a class="btn btn-success disabled" href={%url 'confirmar_paso_5' %}>Completado</a>{% endcomment %}
-    {% comment %}Aún no se tiene Visto Bueno, No se registro el proyecto de grado o no se calificó.{% endcomment %}
 {% endif %}
 
 

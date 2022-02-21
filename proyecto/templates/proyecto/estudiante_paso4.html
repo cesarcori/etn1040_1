@@ -50,7 +50,7 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
     <tr>
       <td>
         {% if registro_perfil_existe%}
-            {% if estudiante.registrocronograma%}
+            {% if estudiante.equipo.registrocronograma%}
                 <a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a>
             {% else %}
                 <a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a>
@@ -61,7 +61,7 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
       </td>
       <td>
         {% if registro_perfil_existe%}
-            {% if estudiante.registrocronograma%}
+            {% if estudiante.equipo.registrocronograma%}
                 <i class="fas text-success fa-check "></i> Cumplido
             {% else %}
                 <i class="fas text-danger fa-graduation-cap"></i> Pendiente
@@ -74,8 +74,8 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
     <tr>
       <td>
         {% if registro_perfil_existe %}
-            {% if estudiante.registrocronograma%}
-                <a target='_blank' href={%url 'formulario_1' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
+            {% if estudiante.equipo.registrocronograma%}
+                <a target='_blank' href={%url 'reportes:formulario-aceptacion' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
                 <a target='_blank' href="/media/formularios/form1.pdf">Formulario en blanco</a>
             {% else %}
                 <a class="btn disabled" href=#>Formulario de Aprobación</a>
@@ -86,7 +86,7 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
       </td>
       <td>
         {% if registro_perfil_existe %}
-            {% if estudiante.registrocronograma%}
+            {% if estudiante.equipo.registrocronograma%}
                 <i class="fas text-success fa-check "></i> Cumplido
             {% else %}
                 <i class="fas text-danger fa-graduation-cap"></i> Pendiente
@@ -154,16 +154,13 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
 
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
-{% if perfil and estudiante.registrocronograma %}
-    {% if progreso < 64 %}
-        <a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
-    {% endif %}
-    {% if progreso >= 64 %}
+{% if perfil and estudiante.equipo.registrocronograma %}
+
+    {% if not imprimir %}
+        <a class="btn btn-warning" href={%url 'confirmar_paso_4' %}>Ya imprimi el formulario</a></p>
+    {% else %}
         <h5>Paso Completado</h5>
     {% endif %}
-{% comment %}{% else %}{% endcomment %}
-    {% comment %}<a class="btn btn-success disabled" href={%url 'confirmar_paso_1' %}>Completado</a>{% endcomment %}
-    {% comment %}No se registro aún el perfil y el cronograma{% endcomment %}
 {% endif %}
 
 {% endblock %} 

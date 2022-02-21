@@ -18,10 +18,10 @@ def cartaTutorAcepto(request, pk):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','docente','director','tribunal'])
-def formAceptacion(request,id_est):
+def formularioAceptacion(request,pk):
     buffer = io.BytesIO()
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    formulario1(buffer,estudiante)
+    estudiante = DatosEstudiante.objects.get(id=pk)
+    generarformularioAceptacion(buffer,estudiante)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_aceptacion.pdf')
 
