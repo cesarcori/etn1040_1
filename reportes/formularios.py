@@ -192,88 +192,89 @@ def generarformularioAceptacion(buffer, estudiante):
     # eliminando el pdf auxiliar
     remove('form1_solapa.pdf')
 
-def formulario2(buffer, estudiante):
-    ## info de base de datos
-    postulante = estudiante.__str__()
-    asesor = estudiante.tutor.__str__()
-    docente_etn1040 = estudiante.grupo_doc.__str__()
-    titulo = estudiante.proyectodegrado.titulo
-    mencion = estudiante.mencion
-    abstract = estudiante.proyectodegrado.resumen
-    fecha = estudiante.proyectodegrado.fecha_creacion
-    dia = fecha.day.__str__()
-    mes = fecha.month.__str__()
-    year = fecha.year.__str__()
+def generarFormularioSolicituTribunal(buffer, proyecto):
+    estudiante = proyecto.equipo.datosestudiante_set.get() 
+    individual = 'V'
+    equipo_de = '1'
+    nombre = estudiante.__str__()
+    carnet = estudiante.carnet
+    extension = estudiante.extension
+    tutor = estudiante.tutor.__str__()
+    titulo = proyecto.titulo
+    nota_40 = proyecto.calificacion.__str__()
+    # literal_40 = 'Cuarenta y nueve'
+    literal_40 = numero_letra(nota_40)
+    fecha = fecha_right()
+    # fecha = ['8', 'agosto', '2021']
+    docente_etn1040 = 'Jorge Mario León Gómez'
 
-    # postulante = info_estu[0]
-    # asesor = info_estu[1]
-    # docente_etn1040 = info_estu[2]
-    # titulo = info_estu[3]
-    # mencion = info_estu[4]
-    # abstract= info_estu[5]
-    # dia = info_estu[6].day.__str__()
-    # mes = info_estu[6].month.__str__()
-    # year = info_estu[6].year.__str__()
-    fecha_aprobacion = dia+'/'+mes+'/'+year
-    if int(mes) <= 6:
-        periodo = 'I'
-    else:
-        periodo = 'II'
-    gestion = periodo + '/' + year
-
+# Generacion del pdf
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
 
+# Modalidad:
+    pdf.set_xy(88,54)
+    pdf.cell(w=5, h=6, txt=individual, ln=1, border=0, align='C')
+
+    pdf.set_xy(140,54)
+    pdf.cell(w=5, h=6, txt=equipo_de, ln=1, border=0, align='C')
+
 # Postulante
-    pdf.set_xy(60,41)
-    pdf.cell(w=65, h=8, txt=postulante, ln=1, border=1, align='C')
+    pdf.set_xy(35,72)
+    pdf.cell(w=100, h=6, txt=nombre, ln=1, border=0, align='L')
 
-# Fecha de aprobacion
-    pdf.set_xy(167,41)
-    pdf.cell(w=23, h=8, txt=fecha_aprobacion, ln=1, border=1, align='C')
+    pdf.set_xy(135,72)
+    pdf.cell(w=50, h=6, txt=carnet + ' ' + extension, ln=1, border=0, align='L')
 
-# Titulo del tema
-    pdf.set_xy(60,55)
-    pdf.multi_cell(w=130, h=6, txt=titulo, ln=1, border=1, 
-        align='C', max_line_height=10)
-
-# Mencion
-    pdf.set_xy(60,77)
-    pdf.cell(w=50, h=8, txt=mencion, ln=1, border=1, align='C')
-
-# Gestion academica
-    pdf.set_xy(150,77)
-    pdf.cell(w=40, h=8, txt=gestion, ln=1, border=1, align='C')
-
-# Asesor
-    pdf.set_xy(60,92)
-    pdf.cell(w=76, h=8, txt=asesor, ln=1, border=1, align='C')
-    if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
+# Docente Tutor
+    pdf.set_xy(35,98)
+    pdf.cell(w=100, h=6, txt='Ing. '+tutor, ln=1, border=0, align='L')
+    if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
         if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
             name = MEDIA_ROOT+estudiante.tutor.firma.name
-            pdf.image(name, x = 156, y = 86, w = 25)
+            pdf.image(name, x = 90, y = 95, w = 20)
 
-# Docente
-    pdf.set_xy(60,107)
-    pdf.cell(w=76, h=8, txt='Ing. '+docente_etn1040, ln=1, border=1, align='C')
+# Titulo del tema
+    pdf.set_xy(35,114)
+    pdf.multi_cell(w=140, h=8.3, txt=titulo, ln=1, border=0, 
+        align='J', max_line_height=60)
+
+# Calificacion obtenida s/40
+    pdf.set_xy(50,165)
+    pdf.cell(w=15, h=6, txt=nota_40, ln=1, border=0, align='C')
+
+    pdf.set_xy(120,165)
+    pdf.cell(w=40, h=6, txt=literal_40, ln=1, border=0, align='C')
+
+# Fecha de Cierre
+    pdf.set_xy(109,209)
+    pdf.cell(w=10,h=6, txt=fecha[0], ln=1, border=0, align='C')
+
+    pdf.set_xy(130,209)
+    pdf.cell(w=20,h=6, txt=fecha[1], ln=1, border=0, align='C')
+
+    pdf.set_xy(168,209)
+    pdf.cell(w=15,h=6, txt=fecha[2], ln=1, border=0, align='C')
+
 # firma docente
+    pdf.set_xy(37,219)
     if Documentos.objects.filter(usuario=estudiante.grupo_doc.usuario).exists():
         if estudiante.grupo_doc.usuario.documentos.firma_formulario1_doc:
             name = MEDIA_ROOT+estudiante.grupo_doc.firma.name
-            pdf.image(name, x = 156, y = 103, w = 25)
-# Abstract
-    pdf.set_xy(27,133)
-    pdf.multi_cell(w=162, h=5, txt=abstract, ln=1, border=0, 
-        align='J', max_line_height=150)
-# Guardar archivo
-    pdf.output("form2_solapa.pdf")
+            pdf.image(name, w = 40)
+# Ing. (supongo docente 1040)
+    pdf.set_xy(37,234)
+    pdf.cell(w=100, h=6, txt=docente_etn1040, ln=1, border=0, align='L')
 
-    # input_file = MEDIA_ROOT + "formularios/form2.pdf"  
-    # watermark_file = "form2_solapa.pdf"
-    watermark_file = MEDIA_ROOT + "formularios/form2.pdf"  
-    input_file = "form2_solapa.pdf"
-    output_file = "form2_final.pdf"  
+# Guardar archivo
+    pdf.output("form4_solapa.pdf")
+
+    # input_file = MEDIA_ROOT + "formularios/form4.pdf"  
+    # watermark_file = "form4_solapa.pdf"
+    watermark_file = MEDIA_ROOT + "formularios/form4.pdf"  
+    input_file = "form4_solapa.pdf"
+    output_file = "form4_final.pdf"  
 
     with open(input_file, "rb") as filehandle_input:  
         # read content of the original file
@@ -298,13 +299,15 @@ def formulario2(buffer, estudiante):
             # add page
             pdf_writer.addPage(first_page)
 
+            # buffer
             pdf_writer.write(buffer)
 
     # eliminando el pdf auxiliar
-    remove('form2_solapa.pdf')
+    remove('form4_solapa.pdf')
 
-def formulario3(buffer, estudiante, proyecto):
+def generarRegistroSeguimiento(buffer, proyecto):
     # mencion
+    estudiante = proyecto.equipo.datosestudiante_set.get()
     tele= ''
     control = ''
     sistemas = ''
@@ -406,7 +409,7 @@ def formulario3(buffer, estudiante, proyecto):
 # Docente Tutor
     pdf.set_xy(65,74)
     pdf.cell(w=55, h=6, txt=docente_tutor, ln=1, border=0, align='L')
-    if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
+    if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
         if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
             name = MEDIA_ROOT+estudiante.tutor.firma.name
             pdf.image(name, x = 145, y = 70, w = 20)
@@ -521,89 +524,88 @@ def formulario3(buffer, estudiante, proyecto):
     # eliminando el pdf auxiliar
     remove('form3_solapa.pdf')
 
+def generarFormularioMateria(buffer, estudiante):
+    ## info de base de datos
+    postulante = estudiante.__str__()
+    asesor = estudiante.tutor.__str__()
+    docente_etn1040 = estudiante.grupo_doc.__str__()
+    titulo = estudiante.equipo.proyectodegrado.titulo
+    mencion = estudiante.mencion
+    abstract = estudiante.equipo.proyectodegrado.resumen
+    fecha = estudiante.equipo.proyectodegrado.fecha_creacion
+    dia = fecha.day.__str__()
+    mes = fecha.month.__str__()
+    year = fecha.year.__str__()
 
-def formulario4(buffer, estudiante, proyecto):
-    individual = 'V'
-    equipo_de = '1'
-    nombre = estudiante.__str__()
-    carnet = estudiante.carnet
-    extension = estudiante.extension
-    tutor = estudiante.tutor.__str__()
-    titulo = proyecto.titulo
-    nota_40 = proyecto.calificacion.__str__()
-    # literal_40 = 'Cuarenta y nueve'
-    literal_40 = numero_letra(nota_40)
-    fecha = fecha_right()
-    # fecha = ['8', 'agosto', '2021']
-    docente_etn1040 = 'Jorge Mario León Gómez'
+    # postulante = info_estu[0]
+    # asesor = info_estu[1]
+    # docente_etn1040 = info_estu[2]
+    # titulo = info_estu[3]
+    # mencion = info_estu[4]
+    # abstract= info_estu[5]
+    # dia = info_estu[6].day.__str__()
+    # mes = info_estu[6].month.__str__()
+    # year = info_estu[6].year.__str__()
+    fecha_aprobacion = dia+'/'+mes+'/'+year
+    if int(mes) <= 6:
+        periodo = 'I'
+    else:
+        periodo = 'II'
+    gestion = periodo + '/' + year
 
-# Generacion del pdf
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
 
-# Modalidad:
-    pdf.set_xy(88,54)
-    pdf.cell(w=5, h=6, txt=individual, ln=1, border=0, align='C')
-
-    pdf.set_xy(140,54)
-    pdf.cell(w=5, h=6, txt=equipo_de, ln=1, border=0, align='C')
-
 # Postulante
-    pdf.set_xy(35,72)
-    pdf.cell(w=100, h=6, txt=nombre, ln=1, border=0, align='L')
+    pdf.set_xy(60,41)
+    pdf.cell(w=65, h=8, txt=postulante, ln=1, border=1, align='C')
 
-    pdf.set_xy(135,72)
-    pdf.cell(w=50, h=6, txt=carnet + ' ' + extension, ln=1, border=0, align='L')
-
-# Docente Tutor
-    pdf.set_xy(35,98)
-    pdf.cell(w=100, h=6, txt='Ing. '+tutor, ln=1, border=0, align='L')
-    if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
-        if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
-            name = MEDIA_ROOT+estudiante.tutor.firma.name
-            pdf.image(name, x = 90, y = 95, w = 20)
+# Fecha de aprobacion
+    pdf.set_xy(167,41)
+    pdf.cell(w=23, h=8, txt=fecha_aprobacion, ln=1, border=1, align='C')
 
 # Titulo del tema
-    pdf.set_xy(35,114)
-    pdf.multi_cell(w=140, h=8.3, txt=titulo, ln=1, border=0, 
-        align='J', max_line_height=60)
+    pdf.set_xy(60,55)
+    pdf.multi_cell(w=130, h=6, txt=titulo, ln=1, border=1, 
+        align='C', max_line_height=10)
 
-# Calificacion obtenida s/40
-    pdf.set_xy(50,165)
-    pdf.cell(w=15, h=6, txt=nota_40, ln=1, border=0, align='C')
+# Mencion
+    pdf.set_xy(60,77)
+    pdf.cell(w=50, h=8, txt=mencion, ln=1, border=1, align='C')
 
-    pdf.set_xy(120,165)
-    pdf.cell(w=40, h=6, txt=literal_40, ln=1, border=0, align='C')
+# Gestion academica
+    pdf.set_xy(150,77)
+    pdf.cell(w=40, h=8, txt=gestion, ln=1, border=1, align='C')
 
-# Fecha de Cierre
-    pdf.set_xy(109,209)
-    pdf.cell(w=10,h=6, txt=fecha[0], ln=1, border=0, align='C')
+# Asesor
+    pdf.set_xy(60,92)
+    pdf.cell(w=76, h=8, txt=asesor, ln=1, border=1, align='C')
+    if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
+        if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
+            name = MEDIA_ROOT+estudiante.tutor.firma.name
+            pdf.image(name, x = 156, y = 86, w = 25)
 
-    pdf.set_xy(130,209)
-    pdf.cell(w=20,h=6, txt=fecha[1], ln=1, border=0, align='C')
-
-    pdf.set_xy(168,209)
-    pdf.cell(w=15,h=6, txt=fecha[2], ln=1, border=0, align='C')
-
+# Docente
+    pdf.set_xy(60,107)
+    pdf.cell(w=76, h=8, txt='Ing. '+docente_etn1040, ln=1, border=1, align='C')
 # firma docente
-    pdf.set_xy(37,219)
     if Documentos.objects.filter(usuario=estudiante.grupo_doc.usuario).exists():
         if estudiante.grupo_doc.usuario.documentos.firma_formulario1_doc:
             name = MEDIA_ROOT+estudiante.grupo_doc.firma.name
-            pdf.image(name, w = 40)
-# Ing. (supongo docente 1040)
-    pdf.set_xy(37,234)
-    pdf.cell(w=100, h=6, txt=docente_etn1040, ln=1, border=0, align='L')
-
+            pdf.image(name, x = 156, y = 103, w = 25)
+# Abstract
+    pdf.set_xy(27,133)
+    pdf.multi_cell(w=162, h=5, txt=abstract, ln=1, border=0, 
+        align='J', max_line_height=150)
 # Guardar archivo
-    pdf.output("form4_solapa.pdf")
+    pdf.output("form2_solapa.pdf")
 
-    # input_file = MEDIA_ROOT + "formularios/form4.pdf"  
-    # watermark_file = "form4_solapa.pdf"
-    watermark_file = MEDIA_ROOT + "formularios/form4.pdf"  
-    input_file = "form4_solapa.pdf"
-    output_file = "form4_final.pdf"  
+    # input_file = MEDIA_ROOT + "formularios/form2.pdf"  
+    # watermark_file = "form2_solapa.pdf"
+    watermark_file = MEDIA_ROOT + "formularios/form2.pdf"  
+    input_file = "form2_solapa.pdf"
+    output_file = "form2_final.pdf"  
 
     with open(input_file, "rb") as filehandle_input:  
         # read content of the original file
@@ -628,9 +630,11 @@ def formulario4(buffer, estudiante, proyecto):
             # add page
             pdf_writer.addPage(first_page)
 
-            # buffer
             pdf_writer.write(buffer)
 
     # eliminando el pdf auxiliar
-    remove('form4_solapa.pdf')
+    remove('form2_solapa.pdf')
+
+
+
 

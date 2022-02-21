@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from proyecto.decorators import unauthenticated_user, allowed_users, admin_only
-from proyecto.models import DatosEstudiante, Equipo
+from proyecto.models import DatosEstudiante, Equipo, ProyectoDeGrado
 
 from .formularios import *
 from .reportes import *
@@ -54,3 +54,66 @@ def cartaFinal(request, pk):
     generarCartaFinal(buffer, equipo)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_final.pdf')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
+def formularioSolicitudTribunal(request, pk):
+    buffer = io.BytesIO()
+    estudiante = DatosEstudiante.objects.get(id=pk)
+    equipo = estudiante.equipo
+    proyecto = ProyectoDeGrado.objects.get(equipo=estudiante.equipo)
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    extension = 'L.P.'
+    cargo = 'director'
+    lugar = 'instituto de electrónica aplicada'
+    institucion = 'facultad de ingeniería'
+    generarFormularioSolicituTribunal(buffer, proyecto)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='formulario_material.pdf')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
+def formularioRegistroSeguimiento(request, pk):
+    buffer = io.BytesIO()
+    estudiante = DatosEstudiante.objects.get(id=pk)
+    proyecto = ProyectoDeGrado.objects.get(equipo=estudiante.equipo)
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    generarRegistroSeguimiento(buffer,proyecto)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='formulario_registro_seguimiento.pdf')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','tutor','docente'])
+def auspicioFormRegSeg(request, id_est):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=id_est)
+    if not Auspicio.objects.filter(usuario=estudiante).exists():
+        Auspicio.objects.create(usuario=estudiante)
+    auspicio_est = Auspicio.objects.get(usuario=estudiante)
+    form = AuspicioForm(instance=auspicio_est)
+    if request.method == 'POST':
+        form = AuspicioForm(request.POST, instance=auspicio_est)
+        if form.is_valid():
+            form.save()
+            return redirect('paso6')
+    context = {'grupo': grupo,'form':form,'estudiante':estudiante}
+    return render(request, 'proyecto/auspicio_f3.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
+def formularioMateria(request, pk):
+    buffer = io.BytesIO()
+    estudiante = DatosEstudiante.objects.get(id=pk)
+    # lo siguiente hay que hagregar de alguna forma a la base de datos
+    # info_estu = [
+            # estudiante.__str__(),
+            # estudiante.tutor.__str__(),
+            # estudiante.grupo_doc.__str__(),
+            # proyecto.titulo,
+            # estudiante.mencion,
+            # proyecto.resumen,
+            # proyecto.fecha_creacion,
+            # ]
+    generarFormularioMateria(buffer,estudiante)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='formulario_2.pdf')

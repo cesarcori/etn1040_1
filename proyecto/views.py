@@ -2298,48 +2298,24 @@ def reporteCapitulos(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso6()
 @permitir_con(pasos=[1,2,3,4,5])
 def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    progreso = Progreso.objects.get(usuario=estudiante)
-    # tribunales = estudiante.tribunales.all()
-    # dicc_vb_tribunal = {}
-    # for tribunal in tribunales:
-        # salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
-        # vb_tribunal = False
-        # for sala in salas:
-            # if sala.visto_bueno:
-                # vb_tribunal = sala.visto_bueno
-                # break
-        # dicc_vb_tribunal[tribunal] = vb_tribunal
-    # vb_tribunales = []
-    # for tribunal, vb in dicc_vb_tribunal.items():
-        # vb_tribunales.append(vb)
-    # if vb_tribunales == []:
-        # vb_tribunal_total = False
-    # else:
-        # vb_tribunal_total = all(vb_tribunales)
-    # nueva app revision
-    vector_sala_doc = SalaDocumentoApp.objects.filter(estudiante=estudiante, tipo='tribunal')
+    vector_sala_doc = SalaDocumentoApp.objects.filter(equipo=estudiante.equipo, tipo='tribunal')
     vec_visto_bueno = [v.visto_bueno for v in vector_sala_doc]
     if vec_visto_bueno == []:
         visto_bueno = False
     else:
         visto_bueno = all(vec_visto_bueno)
     context = {'grupo': grupo, 
-            'progreso': progreso,
             'estudiante': estudiante,
-            # 'dicc_vb_tribunal':dicc_vb_tribunal,
-            # 'vbt': vb_tribunal_total,
             'salas_doc':vector_sala_doc,
             'visto_bueno':visto_bueno}
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso6()
 @permitir_con(pasos=[1,2,3,4,5])
 def solicitudTribunal(request, id_est):
     grupo = request.user.groups.get().name
@@ -2349,7 +2325,6 @@ def solicitudTribunal(request, id_est):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-# @permitir_paso6()
 @permitir_con(pasos=[1,2,3,4,5])
 def crearSalaRevisarTribunal(request,id_trib):
     grupo = request.user.groups.get().name
@@ -2372,7 +2347,6 @@ def crearSalaRevisarTribunal(request,id_trib):
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/crear_sala_revisar.html', context)
 
-# @permitir_paso6()
 @permitir_con(pasos=[1,2,3,4,5])
 @login_required(login_url='login')
 def salaRevisarEstTrib(request, pk_sala,id_trib):
@@ -2621,7 +2595,6 @@ def eliminarMaterialParaEst(request, id_material):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
-# @permitir_paso6()
 def formulario_2(request, id_est):
     buffer = io.BytesIO()
     estudiante = DatosEstudiante.objects.get(id=id_est)
@@ -2640,51 +2613,50 @@ def formulario_2(request, id_est):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_2.pdf')
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
-# @permitir_paso6()
-def formulario_3(request, id_est):
-    buffer = io.BytesIO()
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
-    # lo siguiente hay que hagregar de alguna forma a la base de datos
-    formulario3(buffer,estudiante,proyecto)
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='formulario_3.pdf')
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
+# # @permitir_paso6()
+# def formulario_3(request, id_est):
+    # buffer = io.BytesIO()
+    # estudiante = DatosEstudiante.objects.get(id=id_est)
+    # proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+    # # lo siguiente hay que hagregar de alguna forma a la base de datos
+    # formulario3(buffer,estudiante,proyecto)
+    # buffer.seek(0)
+    # return FileResponse(buffer, as_attachment=True, filename='formulario_3.pdf')
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente'])
-# @permitir_paso6()
-def auspicioF3(request, id_est):
-    grupo = request.user.groups.get().name
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    if not Auspicio.objects.filter(usuario=estudiante).exists():
-        Auspicio.objects.create(usuario=estudiante)
-    auspicio_est = Auspicio.objects.get(usuario=estudiante)
-    form = AuspicioForm(instance=auspicio_est)
-    if request.method == 'POST':
-        form = AuspicioForm(request.POST, instance=auspicio_est)
-        if form.is_valid():
-            form.save()
-            return redirect('paso6')
-    context = {'grupo': grupo,'form':form,'estudiante':estudiante}
-    return render(request, 'proyecto/auspicio_f3.html', context)
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['estudiante','tutor','docente'])
+# # @permitir_paso6()
+# def auspicioF3(request, id_est):
+    # grupo = request.user.groups.get().name
+    # estudiante = DatosEstudiante.objects.get(id=id_est)
+    # if not Auspicio.objects.filter(usuario=estudiante).exists():
+        # Auspicio.objects.create(usuario=estudiante)
+    # auspicio_est = Auspicio.objects.get(usuario=estudiante)
+    # form = AuspicioForm(instance=auspicio_est)
+    # if request.method == 'POST':
+        # form = AuspicioForm(request.POST, instance=auspicio_est)
+        # if form.is_valid():
+            # form.save()
+            # return redirect('paso6')
+    # context = {'grupo': grupo,'form':form,'estudiante':estudiante}
+    # return render(request, 'proyecto/auspicio_f3.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
-# @permitir_paso6()
-def formulario_4(request, id_est):
-    buffer = io.BytesIO()
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
-    # lo siguiente hay que hagregar de alguna forma a la base de datos
-    extension = 'L.P.'
-    cargo = 'director'
-    lugar = 'instituto de electrónica aplicada'
-    institucion = 'facultad de ingeniería'
-    formulario4(buffer,estudiante, proyecto)
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='formulario_4.pdf')
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['estudiante','tutor','docente','director'])
+# def formulario_4(request, id_est):
+    # buffer = io.BytesIO()
+    # estudiante = DatosEstudiante.objects.get(id=id_est)
+    # proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+    # # lo siguiente hay que hagregar de alguna forma a la base de datos
+    # extension = 'L.P.'
+    # cargo = 'director'
+    # lugar = 'instituto de electrónica aplicada'
+    # institucion = 'facultad de ingeniería'
+    # formulario4(buffer,estudiante, proyecto)
+    # buffer.seek(0)
+    # return FileResponse(buffer, as_attachment=True, filename='formulario_4.pdf')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
