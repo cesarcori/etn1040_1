@@ -55,7 +55,7 @@ def informarCronograma(pk):
     
     equipo = Equipo.objects.get(id=pk)
     cronograma_existe = ActividadesCronograma.objects.filter(equipo=equipo).exists()
-    estudiante = equipo.datosestudiante_set.get()
+    estudiante = equipo.datosestudiante_set.first()
     progreso = progress(estudiante)
     # mensaje_limite = 'Aún tienes tiempo para elaborar el sistema'
     mensaje_limite = ''

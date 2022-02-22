@@ -8,26 +8,30 @@
   </thead>
   <tbody>
     <tr>
-{%for equipo in equipos %}
-    {% if equipo.cantidad != 1%}
+{%for equipo in equipos_multiple %}
 
-    {%if equipo.tutor_acepto%}
-        <td>
-            <a class="text-underline-hover" href="{% url 'progreso_estudiante' equipo.pk %}">{{equipo}}</a>
-        </td>
+    {% if grupo == 'tutor' %}
+        {%if equipo.tutor_acepto%}
+            <td>
+                <a class="text-underline-hover" href="{% url 'progreso_estudiante' equipo.pk %}">{{equipo.alias}}</a>
+            </td>
+        {% else %}
+            <td>
+                <a class="text-underline-hover" href="{% url 'solicitud_tutoria' equipo.id %}" 
+                    name='solicitud_tutoria'><strong>Solicitud</strong> {{equipo.alias}}</a>
+            </td>
+        {% endif %}
     {% else %}
         <td>
-            <a class="text-underline-hover" href="{% url 'solicitud_tutoria' equipo.id %}" 
-                name='solicitud_tutoria'><strong>Solicitud</strong> {{equipo}}</a>
+            <a class="text-underline-hover" href="{% url 'progreso_estudiante' equipo.pk %}">{{equipo.alias}}</a>
         </td>
     {% endif %}
 
-        <td>
-            {{equipo.cantidad}}
-        </td>
-    </tr>
+    <td>
+        {{equipo.cantidad}}
+    </td>
 
-    {% endif %}
 {% endfor %}
+    </tr>
   </tbody>
 </table>

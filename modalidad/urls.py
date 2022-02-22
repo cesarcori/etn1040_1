@@ -17,6 +17,7 @@ urlpatterns = [
     path('rechazar-solicitud-inv/<int:pk>', views.rechazarSolicitudInvitado, name='rechazar_solicitud_invitado'),
     path('modificar-nombre/', views.modificarNombreEquipo, name='modificar_nombre_equipo'),
     path('agregar-integrantes/', views.agregarIntegrantes, name='agregar_integrantes'),
+    path('ver-equipo/<int:pk>', views.verEquipo, name='ver_equipo'),
 ]
 
 

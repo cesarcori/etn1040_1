@@ -309,6 +309,9 @@ def generarReporteIndicacionTutor(buffer, estudiante, http_host):
 # totos estos datos vienen de la base de datos
 # ===========================================
     nombre_estudiante = estudiante.__str__()
+    integrantes = estudiante.equipo.datosestudiante_set.all()
+    estudiantes= [e.__str__() for e in integrantes]
+    nombre_estudiantes = " - ".join(estudiantes)
     celular_est = estudiante.celular
     correo_est = estudiante.correo
     tutor = estudiante.equipo.tutor.__str__()
@@ -326,16 +329,21 @@ def generarReporteIndicacionTutor(buffer, estudiante, http_host):
     titulo(correo_tutor)
     linea()
 # Datos del estudiante
-    parrafo('El estudiante: '+nombre_estudiante + ' solicito su tutoría. Para aceptar la solicitud debe ingresar al sistema mediante URL: '+ http_host + ' con el siguiente usuario y contraseña.')
+    if integrantes.count() > 1:
+        parte_nombre = f"Los estudiantes: {nombre_estudiantes}"
+    else:
+        parte_nombre = f"El estudiante: {nombre_estudiantes}"
+    parrafo(parte_nombre + ' solicito su tutoría. Para aceptar la solicitud debe ingresar al sistema mediante URL: '+ http_host + ' con el siguiente usuario y contraseña.')
     linea(3)
 # Usuario y password
     text_left('Usuario: '+ estudiante.equipo.tutor.usuario.__str__())    
     text_left('Contraseña: '+ estudiante.equipo.tutor.usuario.__str__())    
 # firma usuario solicitante.
-    linea(4)
-    text_center('Atte.: '+ nombre_estudiante)
-    text_center('Cel.: '+ celular_est)
-    text_center('e-mail.: '+ correo_est)
+    for estudiante in integrantes:
+        linea(3)
+        text_center('Atte.: '+ estudiante.__str__())
+        text_center('Cel.: '+ estudiante.celular)
+        text_center('e-mail.: '+ estudiante.correo)
 
 # Fecha
     linea(2)

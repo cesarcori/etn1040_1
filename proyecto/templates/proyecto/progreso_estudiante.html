@@ -1,7 +1,7 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
 <h4 class='text-center'><strong>ESTUDIANTE: {{estudiante|upper}}</strong></h4>
-{% if estudiante.modalidad == "multiple" and not estudiante.equipo%}
+{% if estudiante.modalidad == "multiple" and estudiante.equipo.cantidad == 1%}
     <div class="d-grid gap-2 col-6 mx-auto">
         <a class="btn btn-danger btn-lg" href={% url 'modalidad:ver_solicitud' estudiante.solicitud_set.last.pk %}>Responder a Solicitud de Modalidad Múltiple</a>
     </div>

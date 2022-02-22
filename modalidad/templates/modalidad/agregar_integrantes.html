@@ -2,7 +2,7 @@
 {% block content %}
 <h4>Agregar integrantes al equipo</h4>
 <p>Nombre del equipo:<strong>{{equipo.nombre}}</strong><br>
-<a href={% url 'modalidad:modificar_nombre_equipo' %}>modificar</a> el nombre de equipo </p>
+{% comment %}<a href={% url 'modalidad:modificar_nombre_equipo' %}>modificar</a> el nombre de equipo </p>{% endcomment %}
 <p>El equipo está autorizado para ser de <strong>{{equipo.cantidad}} integrantes.</strong></p>
 <p>Tienes <strong>{{solicitud_mandar}} solitudes</strong> que realizar.</p>
 {% include 'modalidad/messages.html' %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -40,7 +41,9 @@ from datetime import timedelta
 # import nltk
 # from pandas import read_csv
 
-
+# ********* activar o desactivar correo para pruebas *******
+activar_estudiante = True
+# **********************************************************
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
 
@@ -99,7 +102,7 @@ def registerPage(request):
                 # creacion del grupo
                 group = Group.objects.get(name='solicitud')
                 user = User.objects.get(username=usuario)
-                user.is_active = True
+                user.is_active = activar_estudiante
                 user.groups.add(group)
                 user.save()
                 # creacion de datos del solicitante
@@ -203,8 +206,10 @@ def home(request):
             info = 'Se eliminó al estudiante: ' + info_usuario.apellido + ' ' \
             + info_usuario.nombre
             SolicitudInvitado.objects.get(pk=usuario_elim).usuario.delete()
+        return redirect('home')
     solicitudes = SolicitudInvitado.objects.all()
-    aviso = 'Tiene: ' + str(solicitudes.count()) + ' solicitudes'
+    # aviso = 'Tiene: ' + str(solicitudes.count()) + ' solicitudes'
+    aviso = f"Tiene: {solicitudes.count()} solicitudes"
     context = {'grupo': grupo, 'solicitudes':solicitudes,
             'form':form, 'info':info, 'aviso':aviso}
     return render(request, 'proyecto/home.html', context)
@@ -226,8 +231,12 @@ def eliminarUsuario(request, usuario_id):
 @allowed_users(allowed_roles=['docente'])
 def docente(request):
     grupo = 'docente'
-    datos_est = request.user.datosdocente.datosestudiante_set.all().order_by('apellido')
-    context = {'datos_est':datos_est,'grupo':grupo}
+    # datos_est = request.user.datosdocente.datosestudiante_set.filter(modalidad="individual").order_by('apellido')
+    datos_est = request.user.datosdocente.datosestudiante_set.filter(
+            Q(modalidad="individual") | Q(modalidad=None)
+            )
+    equipos_multiple = request.user.datosdocente.equipo_set.filter(cantidad__gt=1)
+    context = {'datos_est':datos_est,'grupo':grupo, 'equipos_multiple':equipos_multiple}
     return render(request, 'proyecto/docente.html', context)
 
 @login_required(login_url='login')
@@ -235,10 +244,12 @@ def docente(request):
 def tutor(request):
     grupo = request.user.groups.get().name
     tutor = request.user.datostutor
-    datos_est = tutor.datosestudiante_set.filter(modalidad='individual').order_by('apellido')
-    equipos = Equipo.objects.filter(tutor=tutor).exclude(cantidad=1)
+    # datos_est = tutor.datosestudiante_set.filter(modalidad='individual').order_by('apellido')
+    datos_est = [e.datosestudiante_set.get() for e in request.user.datostutor.equipo_set.filter(cantidad=1)]
+    # equipos = Equipo.objects.filter(tutor=tutor).exclude(cantidad=1)
+    equipos_multiple = request.user.datostutor.equipo_set.filter(cantidad__gt=1)
     datos_est = [n.datosestudiante_set.get() for n in Equipo.objects.filter(tutor=tutor, cantidad=1)]
-    context = {'datos_est':datos_est,'grupo':grupo,'equipos':equipos}
+    context = {'datos_est':datos_est,'grupo':grupo,'equipos_multiple':equipos_multiple}
     return render(request, 'proyecto/tutor.html', context)
 
 @login_required(login_url='login')
@@ -857,8 +868,14 @@ def imprimirReporteEstudiante(request, id_est):
 def progresoEstudiante(request, pk):
     grupo = request.user.groups.get().name
     equipo = Equipo.objects.get(id=pk)
-    estudiante = equipo.datosestudiante_set.get()
+    estudiante = equipo.datosestudiante_set.first()
+    # estudiante = get_object_or_404(DatosEstudiante, id=pk)
+    # equipo = estudiante.equipo
     progreso = progress(estudiante)
+    # if equipo == None:
+        # tribunales = None
+    # else: 
+        # tribunales = equipo.tribunales.all()
     tribunales = equipo.tribunales.all()
     if ProyectoDeGrado.objects.filter(equipo=equipo).exists():
         proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
@@ -867,11 +884,14 @@ def progresoEstudiante(request, pk):
         proyecto = None
         calificacion = None
     # cronograma informacion
-    context_aux = informarCronograma(equipo.id)
-    if not isinstance(context_aux, dict):
-        context_aux = {}
-        mensaje = infoCronograma(estudiante.id)
-        return HttpResponse(mensaje)
+    if equipo:
+        context_aux = informarCronograma(equipo.id)
+        if not isinstance(context_aux, dict):
+            context_aux = {}
+            mensaje = infoCronograma(estudiante.id)
+            return HttpResponse(mensaje)
+    else:
+        context_aux={}
     if grupo == 'docente':
         # evita que se un docente consulte otros estudiantes
         # existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk).exists()
@@ -1783,9 +1803,7 @@ def confirmarPaso3(request):
     if not estudiante.actividad.filter(nombre='tutor acepto'):
         return HttpResponse('error')
     if request.method == 'POST':
-        actividad = Actividad.objects.get(nombre='imprimir carta tutoria')
-        estudiante.actividad.add(actividad)
-        estudiante.save()
+        agregarActividadEquipo('imprimir carta tutoria', estudiante.equipo)
         return redirect('estudiante')
     context = {'grupo': grupo,}
     return render(request, 'proyecto/confirmar_paso.html', context)
@@ -1796,7 +1814,7 @@ def confirmarPaso3(request):
 def paso4(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
-    tutor = estudiante.tutor
+    tutor = estudiante.equipo.tutor
     docente = estudiante.grupo_doc
     registro_perfil_existe = RegistroPerfil.objects.filter(equipo=estudiante.equipo).exists()
     progreso = progress(estudiante)

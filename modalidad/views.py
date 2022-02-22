@@ -4,8 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from proyecto.decorators import *
+from proyecto.models import Equipo
 from .forms import *
 from actividades.models import *
+from actividades.funciones import *
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -16,16 +18,14 @@ def individual(request):
     mensaje = f'¿Está seguro de que desea trabajar en la modalidad INDIVIDUAL?'
     link = ['paso3']
     if not estudiante.actividad.filter(nombre="elegir modalidad").exists():
-        actividad = Actividad.objects.get(nombre='elegir modalidad')
         if request.method == 'POST':
-            Equipo.objects.create(nombre=estudiante.correo, cantidad=1, docente=estudiante.grupo_doc)
-            equipo_est = Equipo.objects.get(nombre=estudiante.correo)
-            equipo_est.cantidad = 1
-            equipo_est.save()
+            # Equipo.objects.create(nombre=estudiante.correo, cantidad=1, docente=estudiante.grupo_doc)
+            # equipo_est = Equipo.objects.get(nombre=estudiante.correo)
+            # equipo_est.cantidad = 1
+            # equipo_est.save()
             estudiante.modalidad = 'individual'
-            estudiante.actividad.add(actividad)
-            estudiante.equipo = equipo_est
             estudiante.save()
+            agregarActividadEstudiante('elegir modalidad', estudiante)
             return redirect('paso3')
         context = {'grupo': grupo, 'estudiante':estudiante,
                 'mensaje':mensaje,'link':link,
@@ -61,28 +61,26 @@ def solicitud(request):
     estudiante = request.user.datosestudiante
     if estudiante.actividad.filter(nombre="elegir modalidad").exists():
         return HttpResponse('error')
-    if estudiante.equipo == None:
-        actividad = Actividad.objects.get(nombre='elegir modalidad')
-        mensaje = f"Se enviará al docente Ing. {estudiante.grupo_doc}, la solicitud de modalidad Múltiple"
-        link = ['modalidad:multiple']
-        form = SolicitudForm
-        if request.method == 'POST':
-            form = SolicitudForm(request.POST)
-            if form.is_valid():
-                file = form.save(commit=False)
-                file.estudiante= estudiante
-                file.docente= estudiante.grupo_doc
-                file.save()
-                estudiante.modalidad = 'multiple'
-                estudiante.actividad.add(actividad)
-                estudiante.save()
-            return redirect('paso3')
-        context = {'grupo': grupo, 'estudiante':estudiante,
-                'mensaje':mensaje,'link':link,'form':form
-                }
-        return render(request, 'modalidad/formulario.html', context)
-    else:
-        return HttpResponse("error")
+    # if not estudiante.equipo == None:
+        # return HttpResponse("error")
+    mensaje = f"Se enviará al docente Ing. {estudiante.grupo_doc}, la solicitud de modalidad Múltiple"
+    link = ['modalidad:multiple']
+    form = SolicitudForm
+    if request.method == 'POST':
+        form = SolicitudForm(request.POST)
+        if form.is_valid():
+            form.instance.estudiante = estudiante
+            form.instance.docente = estudiante.grupo_doc
+            form.save()
+            estudiante.modalidad = 'multiple'
+            estudiante.save()
+            agregarActividadEstudiante('elegir modalidad', estudiante)
+
+        return redirect('paso3')
+    context = {'grupo': grupo, 'estudiante':estudiante,
+            'mensaje':mensaje,'link':link,'form':form
+            }
+    return render(request, 'modalidad/formulario.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','estudiante'])
@@ -111,21 +109,24 @@ def rechazarSolicitud(request, id_obj):
     link = ['modalidad:ver_solicitud', solicitud.id]
     estudiante = solicitud.estudiante
     if not solicitud.estudiante.grupo_doc == docente:
-        return redirect('error_pagina')
+        return HttpResponse('error')
     form = RechazarSolicitudForm
     if request.method == 'POST':
         form = RechazarSolicitudForm(request.POST)
         if form.is_valid():
-            file = form.save(commit=False)
-            file.estudiante= estudiante
-            file.docente= estudiante.grupo_doc
-            file.save()
+            form.instance.estudiante = estudiante
+            form.instance.docente = estudiante.grupo_doc
+            form.save()
+            # file = form.save(commit=False)
+            # file.estudiante= estudiante
+            # file.docente= estudiante.grupo_doc
+            # file.save()
             # reestablecer datos estudiante
             actividad = Actividad.objects.get(nombre='elegir modalidad')
             estudiante.modalidad = None
             estudiante.actividad.remove(actividad)
             estudiante.save()
-            return redirect('progreso_estudiante', pk_est=estudiante.id)
+            return redirect('progreso_estudiante', pk=estudiante.equipo.id)
 
     context = {'grupo':grupo, 'solicitud':solicitud, 'link':link, 
             'form':form,'mensaje': mensaje}
@@ -151,25 +152,22 @@ def aprobarSolicitud(request, id_obj):
     estudiante = solicitud.estudiante
     docente = request.user.datosdocente
     if not solicitud.estudiante.grupo_doc == docente:
-        return redirect('error_pagina')
-    # act_est = estudiante.realizaractividad_set.get(actividad=actividad)
+        return HttpResponse("error")
     mensaje = f'¿Está seguro de aprobar al estudiante: {estudiante} la modalidad MÚLTIPLE? Ingresar la cantidad de participantes.'
     link = ['modalidad:ver_solicitud',solicitud.pk]
     if not estudiante.actividad.filter(nombre="elegir modalidad").exists():
         return HttpResponse("error")
     else:
-        form = AprobarSolicitudForm
+        form = AprobarSolicitudForm(instance=estudiante.equipo)
         if request.method == 'POST':
-            form = AprobarSolicitudForm(request.POST)
+            form = AprobarSolicitudForm(request.POST, instance=estudiante.equipo)
             if form.is_valid():
-                file = form.save(commit=False)
-                file.nombre = estudiante.correo
-                file.save()
-                estudiante.equipo = Equipo.objects.get(nombre=estudiante.correo)
-                estudiante.save()
-                solicitud.estado = 'aprobar'
+                form.save()
+                solicitud.aprobar = True
                 solicitud.save()
-                return redirect('progreso_estudiante', pk_est=estudiante.id)
+                estudiante.equipo.alias = estudiante.equipo.nombre
+                estudiante.equipo.save()
+                return redirect('progreso_estudiante', pk=estudiante.equipo.id)
         context = {'grupo': grupo, 'estudiante':estudiante,
                 'mensaje':mensaje, 'link':link, 'form':form,
                 }
@@ -185,20 +183,18 @@ def agregarIntegrantes(request):
     solicitudes = equipo.interesado.filter(estado=None)
     if request.method == 'POST':
         correo = request.POST['agregar_integrante']
-        # verificar que el correo pertencece a un estudiante que no tiene aun tutor
-        estudiantes_permitidos = DatosEstudiante.objects.filter(tutor=None)
         if solicitud_mandar <= 0:
-            messages.error(request, 'Ya tienes se completo el numero de solicitudes.')
+            messages.error(request, 'Ya tienes completo el número de solicitudes.')
         elif not DatosEstudiante.objects.filter(correo=correo).exists():
             messages.error(request, 'El correo ingresado no pertenece a un estudiante registrado en el sistema.')
         elif not DatosEstudiante.objects.filter(correo=correo, grupo_doc=estudiante.grupo_doc).exists():
             messages.error(request, 'El estudiante no se encuentra en el mismo paraleo del docente.')
-        elif not estudiantes_permitidos.filter(correo=correo).exists():
-            messages.error(request, 'El estudiante ya tiene tutor')
         elif estudiante.correo==correo:
             messages.error(request, 'No puedes enviar la solicitud a ti mismo.')
         elif DatosEstudiante.objects.get(correo=correo).modalidad:
             messages.error(request, 'El estudiante ya tiene una modalidad de trabajo.')
+        # elif DatosEstudiante.objects.get(correo=correo).actividad.count()<3:
+            # messages.error(request, 'El estudiante no concluyo el paso 2.')
         elif equipo.interesado.filter(correo_invitado=correo, estado=None).exists():
             messages.error(request, 'Ya enviaste solicitud a este estudiante.')
         else: 
@@ -210,8 +206,7 @@ def agregarIntegrantes(request):
                 correo_invitado = correo,
                     )
             messages.success(request, f"Se envió la solicitud a {estudiante_invitado}")
-            # mostrar solicitud enviada
-            return redirect('modalidad:agregar_integrantes')
+        return redirect('modalidad:agregar_integrantes')
     context = {'grupo':grupo, 'estudiante':estudiante, 'equipo':equipo,
             'solicitud_mandar':solicitud_mandar, 'solicitudes':solicitudes 
             }
@@ -237,7 +232,7 @@ def rechazarSolicitudInvitado(request,pk):
     solicitud = get_object_or_404(SolicitudIntegrante, id=pk)
     if not solicitud.estudiante_invitado == estudiante:
         return HttpResponse('error')
-    if estudiante.modalidad:
+    if estudiante.modalidad == individual:
         return HttpResponse('error')
     mensaje = f'¿Está seguro rechazar la solicitud del estudiante: {solicitud.equipo_interesado}, para ser parte de su grupo?'
     link = ['modalidad:ver_solicitudes_invitado']
@@ -263,15 +258,22 @@ def aprobarSolicitudInvitado(request, pk):
     mensaje = f'¿Está seguro de ser parte del grupo del estudiante: {solicitud.equipo_interesado}? No hay marcha atras luego de aceptar ser parte del equipo.'
     link = ['modalidad:ver_solicitudes_invitado']
     if request.method == 'POST':
-        actividad = Actividad.objects.get(nombre='elegir modalidad')
+        # actividad = Actividad.objects.get(nombre='elegir modalidad')
         solicitud.estado = 'aprobar'
         solicitud.save()
+        # cambiar el nombre del equipo
+        solicitud.equipo_interesado.nombre = f"{solicitud.equipo_interesado.nombre} : {estudiante.equipo.nombre}"
+        solicitud.equipo_interesado.save()
         # asignar al equipo.
         estudiante.equipo = solicitud.equipo_interesado
         # asignar modalidad multiple
         estudiante.modalidad = 'multiple'
         # asignar elegir modalidad
-        estudiante.actividad.add(actividad)
+        # estudiante.actividad.add(actividad)
+        agregarActividadEstudiante('estudiar reglamento', estudiante)
+        agregarActividadEstudiante('material docente', estudiante)
+        agregarActividadEstudiante('busqueda proyecto', estudiante)
+        agregarActividadEstudiante('elegir modalidad', estudiante)
         # guardar todos los cambios
         estudiante.save()
         # rechazar a todas las demas solicitudes.
@@ -293,14 +295,24 @@ def modificarNombreEquipo(request):
     estudiante = request.user.datosestudiante
     equipo = estudiante.equipo
     mensaje = f'Cambiar nombre del grupo'
-    link = ['modalidad:agregar_integrantes']
+    link = ['modalidad:ver_equipo',equipo.pk]
     form = EquipoForm(instance=equipo)
     if request.method == 'POST':
         form = EquipoForm(request.POST, instance=equipo)
         if form.is_valid():
             form.save()
-            return redirect('modalidad:agregar_integrantes')
+            return redirect('modalidad:ver_equipo', pk=equipo.pk)
     context = {'grupo':grupo, 'estudiante':estudiante,
             'mensaje':mensaje,'link':link, 'form':form
             }
     return render(request, 'modalidad/formulario.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def verEquipo(request, pk):
+    equipo = get_object_or_404(Equipo, id=pk)
+    grupo = request.user.groups.get().name
+    context = {'grupo':grupo, 'equipo':equipo}
+    return render(request, 'modalidad/ver_equipo.html', context)
+    
+

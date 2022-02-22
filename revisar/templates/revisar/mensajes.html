@@ -1,5 +1,6 @@
 {% extends 'proyecto/main.html'%}
 {% block content%}
+{% if is_ultima_sala and not sala.sala_documento.visto_bueno %}
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
@@ -13,6 +14,7 @@
     <button type="submit" name='enviar' class="btn btn-success"
         value='enviar'>Enviar</button>
 </form>
+{% endif %}
 
 <p>
 <div class="accordion" id="accordionExample">

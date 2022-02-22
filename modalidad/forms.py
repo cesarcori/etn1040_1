@@ -26,7 +26,7 @@ class AprobarSolicitudForm(forms.ModelForm):
 class EquipoForm(forms.ModelForm):
     class Meta:
         model = Equipo
-        fields = ['nombre']
+        fields = ['alias']
 
 class RechazarSolicitudForm(forms.ModelForm):
     class Meta:

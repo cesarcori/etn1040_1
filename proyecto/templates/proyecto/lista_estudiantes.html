@@ -27,7 +27,7 @@
 {%endif%}
 
 {%if grupo == 'docente' %}
-<td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+    <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
 {%endif%}
 
 {%if grupo == 'director' and est.progreso.nivel < 100%}

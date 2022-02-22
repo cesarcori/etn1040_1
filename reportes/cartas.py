@@ -91,7 +91,7 @@ def reporte_tutor_acepto(buffer, estudiante):
     else:
         parrafo1_3 = 'del estudiante'
         parrafo1_4 = nombre_estudiante
-    parrafo1_5 = 'y doy el compromiso de supervisar el cumplimiento de cronograma propuesto en el perfil.'
+    parrafo1_5 = 'dando el compromiso de supervisar el cumplimiento de cronograma propuesto en el perfil.'
     despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
 
 # Fecha

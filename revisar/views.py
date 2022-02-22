@@ -48,13 +48,13 @@ def crearSalaRevisar(request, documento, id_revisor, id_sala_doc):
     primer_estudiante = equipo.datosestudiante_set.first()
     if sala_doc.tipo=='perfil':
         if not actividadRealizadaEstudiante('revisar perfil', primer_estudiante):
-            agregarActividadEstudiante('revisar perfil', primer_estudiante)
+            agregarActividadEquipo('revisar perfil', equipo)
     elif sala_doc.tipo=='proyecto':
         if not actividadRealizadaEstudiante('revisar proyecto', primer_estudiante):
-            agregarActividadEstudiante('revisar proyecto', primer_estudiante)
+            agregarActividadEquipo('revisar proyecto', equipo)
     elif sala_doc.tipo=='tribunal':
         if not actividadRealizadaEstudiante('revisar tribunal', primer_estudiante):
-            agregarActividadEstudiante('revisar tribunal', primer_estudiante)
+            agregarActividadEquipo('revisar tribunal', equipo)
     form = SalaRevisarAppForm
     if request.method == 'POST':
         form = SalaRevisarAppForm(request.POST, request.FILES)
@@ -72,6 +72,8 @@ def mensajes(request, id_sala_rev):
     usuario = request.user
     grupo = usuario.groups.get()
     sala = SalaRevisarApp.objects.get(id=id_sala_rev)
+    ultima_sala = SalaRevisarApp.objects.last()
+    is_ultima_sala = sala == ultima_sala
     form = MensajeRevisarAppForm
     if request.method == "POST":
         form= MensajeRevisarAppForm(request.POST)
@@ -91,6 +93,7 @@ def mensajes(request, id_sala_rev):
             'mensajes':mensajes,
             'sala':sala,
             'grupo':grupo.name,
+            'is_ultima_sala':is_ultima_sala,
             }
     return render(request, 'revisar/mensajes.html', context)
 

@@ -8,7 +8,7 @@
 {% if not tutor and not estudiante.tutor_acepto %}
     <h4>Registrar al Tutor para que ingrese al sistema.</h4>
     {% if not elegir_modalidad %}
-        <p>Para este punto debe de conversar con un posible Tutor y confirmar su participación
+        <p>Antes de elegir una modalidad debe de conversar con un posible Tutor y confirmar su participación
         en el desarrollo del proyecto.</p>
         <p>En el caso de que el tutor recomiende más de un integrante, debe de realizarse la solicitud
         al docente ETN-1040 para que autorice la participación múltiple en el proyecto.
@@ -25,11 +25,11 @@
             <a class="btn btn-outline-success" href={% url 'modalidad:individual' %}>Individual</a>
             <a class="btn btn-outline-success" href={% url 'modalidad:multiple'%}>Múltiple</a>
         </div>
-    {% elif estudiante.modalidad == 'multiple' and not estudiante.equipo %}
+    {% elif estudiante.modalidad == 'multiple' and estudiante.equipo.cantidad == 1 %}
         <p>Se envió la 
         <a href={% url 'modalidad:ver_solicitud' estudiante.solicitud_set.last.pk %}>solicitud </a>
          al docente, espere una respuesta favorable</p>
-    {% elif estudiante.modalidad == 'multiple' and estudiante.equipo%}
+    {% elif estudiante.modalidad == 'multiple' and not estudiante.equipo.cantidad == 1%}
         <p>El docente aceptó la solicitud de modalidad múltiple</p>
     {% endif %}
 {% elif estudiante.equipo.tutor and not estudiante.equipo.tutor_acepto %}
@@ -46,7 +46,22 @@
 
 {% comment %}cumprueba que el estudiante ya tenga una modalidad{% endcomment %}
 {% comment %}y en el caso que se asigno ya un grupo, que este este completo{% endcomment %}
-{% if elegir_modalidad and estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad and estudiante.equipo %}
+{% if elegir_modalidad and estudiante.equipo.datosestudiante_set.count == estudiante.equipo.cantidad and not estudiante.equipo.cantidad == 1 %}
+    {% if not tutor and not estudiante.equipo.tutor_acepto %}
+        <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
+        <p>
+        <form class="d-flex" style="margin:auto;max-width:300px" method='post'
+                            action="" >
+            {% csrf_token %}
+            <input name="agregar_tutor" class="form-control me-2" type="email"
+            placeholder="Registrar Email Tutor" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit" name='enviar'>Enviar</button>
+        </form>
+        </p>
+    {% endif %}
+{% endif %}
+
+{% if estudiante.modalidad == 'individual' %}
     {% if not tutor and not estudiante.equipo.tutor_acepto %}
         <p>Ingrese el correo electrónico del tutor y espere a que acepte su solicitud.</p>
         <p>
@@ -70,7 +85,7 @@
     {% endif %}
     Espere hasta que acepte su solicitud
     <i class="fas fa-user-clock text-primary"></i><br>
-    <a href="{% url 'reportes:indicaciones_tutor' estudiante.id %}">Imprimir Indicaciones a Tutor</a><br>
+    <a target=_blank href="{% url 'reportes:indicaciones_tutor' estudiante.id %}">Imprimir Indicaciones a Tutor</a><br>
     </p>
 {% endif %}
 

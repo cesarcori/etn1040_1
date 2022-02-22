@@ -87,11 +87,11 @@ class DatosEstudiante(models.Model):
     celular = models.CharField(max_length=50, null=True)
     mencion = models.CharField(max_length=50, null=True)
     grupo_doc = models.ForeignKey(DatosDocente,on_delete=models.SET_NULL, null=True)
-    tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
-    tutor_acepto = models.BooleanField(default=False)
+    # tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
+    # tutor_acepto = models.BooleanField(default=False)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     solicitud_tribunal_docente = models.BooleanField(default=False)
-    tribunales = models.ManyToManyField(DatosTribunal, blank=True)
+    # tribunales = models.ManyToManyField(DatosTribunal, blank=True)
     modalidad = models.CharField(max_length=200, choices=MODALIDAD, null=True, blank=True)
     equipo = models.ForeignKey('Equipo', null=True, blank=True, on_delete=models.SET_NULL)
     actividad = models.ManyToManyField(Actividad, blank=True)
@@ -101,7 +101,8 @@ class DatosEstudiante(models.Model):
         return f"{self.nombre} {self.apellido}"
 
 class Equipo(models.Model):
-    nombre = models.CharField(max_length=50, null=True, unique=True)
+    nombre = models.CharField(max_length=150, null=True, unique=True)
+    alias = models.CharField(max_length=50, null=True, unique=True)
     cantidad = models.PositiveSmallIntegerField(null=True,)
     docente = models.ForeignKey(DatosDocente,on_delete=models.SET_NULL, null=True, blank=True)
     tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
