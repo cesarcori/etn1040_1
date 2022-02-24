@@ -82,8 +82,16 @@ def numero_letra(numero_int):
             resultado = '%s y %s' % (resultado, UNIDADES[unidad])
     return resultado
 
-def generarformularioAceptacion(buffer, estudiante):
+def generarformularioAceptacion(buffer, equipo):
     # Datod de la base de datos
+    if equipo.cantidad > 1:
+        individual = 'NO'
+        equipo_de = str(equipo.cantidad)
+    else:
+        individual = 'SI'
+        equipo_de = '1'
+    nombres_carnet = [f"{n.__str__()}{50*' '}{n.carnet.__str__()} {n.extension.__str__()}" for n in equipo.datosestudiante_set.all()]
+    estudiante = equipo.datosestudiante_set.first()
     nombre = estudiante.__str__()
     carnet = estudiante.carnet
     extension = estudiante.extension
@@ -92,7 +100,6 @@ def generarformularioAceptacion(buffer, estudiante):
     titulo = estudiante.equipo.registroperfil.titulo
     mencion = estudiante.mencion
     # =============================================
-    check = 'Si'
 
     pdf = FPDF(format="letter")
     pdf.add_page()
@@ -112,18 +119,26 @@ def generarformularioAceptacion(buffer, estudiante):
     year = fecha[2]
 
 # Modalidad
+
     pdf.set_xy(89,65)
-    pdf.cell(txt=check, ln=1, align="J")
+    pdf.cell(txt=individual, ln=1, align="J")
+
+# Equipo de 
+
+    pdf.set_xy(121,65)
+    pdf.cell(txt=equipo_de, ln=1, align="J")
 
 # Postulantes
-    pdf.set_xy(32,85)
-    pdf.cell(txt=nombre, ln=1, align="J")
-
-    pdf.set_xy(130,85)
-    pdf.cell(txt=carnet + ' ' + extension, ln=1, align="J")
+    n = 0
+    for nombre_carnet in nombres_carnet:
+        pdf.set_xy(32,84+n)
+        pdf.cell(txt=nombre_carnet, ln=1, align="J")
+        n += 10
 
     pdf.set_xy(85,122)
-    # Firma tutor
+
+
+# Firma tutor
     if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
         if estudiante.equipo.tutor.usuario.documentos.firma_carta_aceptacion:
             name = MEDIA_ROOT+estudiante.tutor.firma.name

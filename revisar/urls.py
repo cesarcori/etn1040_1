@@ -11,5 +11,3 @@ urlpatterns = [
     path('caramba/', views.mensajes, name='crear_mensaje'),
     path('dar-vistoBueno/<int:id_sala_doc>', views.darVistoBueno, name='dar_visto_bueno'),
 ]
-
-

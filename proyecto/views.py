@@ -935,6 +935,7 @@ def progresoEstudiante(request, pk):
     todo_salas_doc = SalaDocumentoApp.objects.filter(equipo=equipo)
     context = {'grupo': grupo,
             'estudiante':estudiante,
+            'equipo': equipo,
             'progreso':progreso,
             'proyecto': proyecto,
             'calificacion': calificacion,
@@ -947,201 +948,201 @@ def progresoEstudiante(request, pk):
     context = {**context_aux, **context}
     return render(request, 'proyecto/progreso_estudiante.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
-def progresoEstudianteBackup(request, pk_est):
-    grupo = str(request.user.groups.get())
-    estudiante = DatosEstudiante.objects.get(id=pk_est)
-    progreso = Progreso.objects.get(usuario=estudiante).nivel
-    tribunales = estudiante.tribunales.all()
-    dicc_vb_tribunal = {}
-    for tribunal in tribunales:
-        salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
-        vb_tribunal = False
-        for sala in salas:
-            if sala.visto_bueno:
-                vb_tribunal = sala.visto_bueno
-                break
-        dicc_vb_tribunal[tribunal] = vb_tribunal
-    if ProyectoDeGrado.objects.filter(usuario=estudiante).exists():
-        proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
-        calificacion = proyecto.calificacion
-    else:
-        proyecto = None
-        calificacion = None
-    # cronograma informacion
-    context_aux = infoCronograma(estudiante.id)
-    if not isinstance(context_aux, dict):
-        context_aux = {}
-        mensaje = infoCronograma(estudiante.id)
-        return HttpResponse(mensaje)
-    if grupo == 'docente':
-        # evita que se un docente consulte otros estudiantes
-        existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
-        if existe_est:
-            info_estu = SalaRevisar.objects.filter(estudiante_rev=estudiante)
-            salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
-            info_estu_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante)
-            salas_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
-            # para que salga notificacion perfil
-            dicc_salas = {}
-            for sala in salas:
-                mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala)
-                no_visto= 0
-                for mensaje_doc in mensajes_doc:
-                    if not mensaje_doc.visto_docente:
-                        no_visto += 1
-                dicc_salas[sala] = no_visto
-            # para que salga notificacion proyecto
-            dicc_salas_proy = {}
-            for sala in salas_proy:
-                mensajes_doc = MensajeDocenteRevisarProyecto.objects.filter(sala=sala)
-                no_visto= 0
-                for mensaje_doc in mensajes_doc:
-                    if not mensaje_doc.visto_docente:
-                        no_visto += 1
-                dicc_salas_proy[sala] = no_visto
-            revisor = request.user
-            documento = 'perfil'
-            usuario = request.user
-            sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
-                grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
-            salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
-            dicc_salas = {}
-            for sala in salas_revisar:
-                mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
-                no_visto = 0
-                for mensaje in mensajes:
-                    if not mensaje.visto:
-                        no_visto += 1
-                dicc_salas[sala] = no_visto
-            context = {'grupo': grupo,'estudiante':estudiante,
-                    'progreso':progreso,
-                    'info_estu':info_estu,
-                    'salas':salas,
-                    'dicc_salas':dicc_salas,
-                    'dicc_salas_proy':dicc_salas_proy,
-                    'info_estu_proy':info_estu_proy,
-                    'salas_proy':salas_proy,
-                    'proyecto': proyecto,
-                    'dicc_vb_tribunal':dicc_vb_tribunal,
-                    'calificacion': calificacion,
-                    'sala_doc':sala_doc,
-                    'dicc_salas':dicc_salas,
-                    }
-            context = {**context_aux, **context}
-            return render(request, 'proyecto/progreso_estudiante.html', context)
-        else:
-            return redirect('error_pagina')
-    elif grupo== 'tutor':
-        existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
-        if existe_est:
-            info_estu = SalaRevisar.objects.filter(estudiante_rev=estudiante)
-            salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
-            info_estu_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante)
-            salas_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
-            # para que salga notificacion
-            dicc_salas = {}
-            for sala in salas:
-                mensajes_tut= MensajeTutorRevisar.objects.filter(sala=sala)
-                no_visto= 0
-                for mensaje_tut in mensajes_tut:
-                    if not mensaje_tut.visto_tutor:
-                        no_visto += 1
-                dicc_salas[sala] = no_visto
-            # para que salga notificacion proyecto
-            dicc_salas_proy = {}
-            for sala in salas_proy:
-                mensajes_tut= MensajeTutorRevisarProyecto.objects.filter(sala=sala)
-                no_visto= 0
-                for mensaje_tut in mensajes_tut:
-                    if not mensaje_tut.visto_tutor:
-                        no_visto += 1
-                dicc_salas_proy[sala] = no_visto
-            revisor = request.user
-            documento = 'perfil'
-            usuario = request.user
-            sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
-                grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
-            salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
-            dicc_salas = {}
-            for sala in salas_revisar:
-                mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
-                no_visto = 0
-                for mensaje in mensajes:
-                    if not mensaje.visto:
-                        no_visto += 1
-                dicc_salas[sala] = no_visto
-            # context = {
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
+# def progresoEstudianteBackup(request, pk_est):
+    # grupo = str(request.user.groups.get())
+    # estudiante = DatosEstudiante.objects.get(id=pk_est)
+    # progreso = Progreso.objects.get(usuario=estudiante).nivel
+    # tribunales = estudiante.tribunales.all()
+    # dicc_vb_tribunal = {}
+    # for tribunal in tribunales:
+        # salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
+        # vb_tribunal = False
+        # for sala in salas:
+            # if sala.visto_bueno:
+                # vb_tribunal = sala.visto_bueno
+                # break
+        # dicc_vb_tribunal[tribunal] = vb_tribunal
+    # if ProyectoDeGrado.objects.filter(usuario=estudiante).exists():
+        # proyecto = ProyectoDeGrado.objects.get(usuario=estudiante)
+        # calificacion = proyecto.calificacion
+    # else:
+        # proyecto = None
+        # calificacion = None
+    # # cronograma informacion
+    # context_aux = infoCronograma(estudiante.id)
+    # if not isinstance(context_aux, dict):
+        # context_aux = {}
+        # mensaje = infoCronograma(estudiante.id)
+        # return HttpResponse(mensaje)
+    # if grupo == 'docente':
+        # # evita que se un docente consulte otros estudiantes
+        # existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
+        # if existe_est:
+            # info_estu = SalaRevisar.objects.filter(estudiante_rev=estudiante)
+            # salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
+            # info_estu_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante)
+            # salas_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
+            # # para que salga notificacion perfil
+            # dicc_salas = {}
+            # for sala in salas:
+                # mensajes_doc = MensajeDocenteRevisar.objects.filter(sala=sala)
+                # no_visto= 0
+                # for mensaje_doc in mensajes_doc:
+                    # if not mensaje_doc.visto_docente:
+                        # no_visto += 1
+                # dicc_salas[sala] = no_visto
+            # # para que salga notificacion proyecto
+            # dicc_salas_proy = {}
+            # for sala in salas_proy:
+                # mensajes_doc = MensajeDocenteRevisarProyecto.objects.filter(sala=sala)
+                # no_visto= 0
+                # for mensaje_doc in mensajes_doc:
+                    # if not mensaje_doc.visto_docente:
+                        # no_visto += 1
+                # dicc_salas_proy[sala] = no_visto
+            # revisor = request.user
+            # documento = 'perfil'
+            # usuario = request.user
+            # sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
+                # grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
+            # salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+            # dicc_salas = {}
+            # for sala in salas_revisar:
+                # mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
+                # no_visto = 0
+                # for mensaje in mensajes:
+                    # if not mensaje.visto:
+                        # no_visto += 1
+                # dicc_salas[sala] = no_visto
+            # context = {'grupo': grupo,'estudiante':estudiante,
+                    # 'progreso':progreso,
+                    # 'info_estu':info_estu,
+                    # 'salas':salas,
+                    # 'dicc_salas':dicc_salas,
+                    # 'dicc_salas_proy':dicc_salas_proy,
+                    # 'info_estu_proy':info_estu_proy,
+                    # 'salas_proy':salas_proy,
+                    # 'proyecto': proyecto,
+                    # 'dicc_vb_tribunal':dicc_vb_tribunal,
+                    # 'calificacion': calificacion,
                     # 'sala_doc':sala_doc,
                     # 'dicc_salas':dicc_salas,
-                    # 'grupo':grupo.name,
                     # }
-            context = {'grupo': grupo,'estudiante':estudiante,
-                    'progreso':progreso,
-                    'info_estu':info_estu,
-                    'salas':salas,
-                    'dicc_salas':dicc_salas,
-                    'dicc_salas_proy':dicc_salas_proy,
-                    'info_estu_proy':info_estu_proy,
-                    'salas_proy':salas_proy,
-                    'proyecto': proyecto,
-                    'dicc_vb_tribunal':dicc_vb_tribunal,
-                    'calificacion': calificacion,
-                    'sala_doc':sala_doc,
-                    'dicc_salas':dicc_salas,
-                    }
-            context = {**context_aux, **context}
-            return render(request, 'proyecto/progreso_estudiante.html', context)
-        else:
-            return redirect('error_pagina')
-    elif grupo== 'tribunal':
-        existe_est = request.user.datostribunal.datosestudiante_set.filter(id=pk_est).exists()
-        tribunal = request.user.datostribunal
-        if existe_est:
-            info_estu = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante)
-            salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
-            vb_tribunal = False
-            for sala in salas:
-                if sala.visto_bueno:
-                    vb_tribunal = sala.visto_bueno
-                    break
-            # para que salga notificacion
-            dicc_salas = {}
-            for sala in salas:
-                mensajes_trib = MensajeTribunalRevisar.objects.filter(sala=sala)
-                no_visto = 0
-                for mensaje_trib in mensajes_trib:
-                    if not mensaje_trib.visto_tribunal:
-                        no_visto += 1
-                dicc_salas[sala] = no_visto
-            # para que salga notificacion proyecto
-            context = {'grupo': grupo,'estudiante':estudiante,
-                    'progreso':progreso,
-                    'info_estu':info_estu,
-                    'salas':salas,
-                    'dicc_salas':dicc_salas,
-                    'proyecto': proyecto,
-                    'vb_tribunal':vb_tribunal,
-                    'calificacion': calificacion,
-                    }
-            context = {**context_aux, **context}
-            return render(request, 'proyecto/progreso_estudiante.html', context)
-        else:
-            return redirect('error_pagina')
-    elif grupo== 'director':
-        existe_est = DatosEstudiante.objects.filter(id=pk_est).exists()
-        if existe_est:
-            context = {'grupo': grupo,'estudiante':estudiante,
-                    'progreso':progreso,
-                    'proyecto': proyecto,
-                    'dicc_vb_tribunal':dicc_vb_tribunal,
-                    'calificacion': calificacion,
-                    }
-            context = {**context_aux, **context}
-            return render(request, 'proyecto/progreso_estudiante.html', context)
-        else:
-            return redirect('error_pagina')
+            # context = {**context_aux, **context}
+            # return render(request, 'proyecto/progreso_estudiante.html', context)
+        # else:
+            # return redirect('error_pagina')
+    # elif grupo== 'tutor':
+        # existe_est = request.user.datostutor.datosestudiante_set.filter(id=pk_est).exists()
+        # if existe_est:
+            # info_estu = SalaRevisar.objects.filter(estudiante_rev=estudiante)
+            # salas = SalaRevisar.objects.filter(estudiante_rev=estudiante) 
+            # info_estu_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante)
+            # salas_proy = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
+            # # para que salga notificacion
+            # dicc_salas = {}
+            # for sala in salas:
+                # mensajes_tut= MensajeTutorRevisar.objects.filter(sala=sala)
+                # no_visto= 0
+                # for mensaje_tut in mensajes_tut:
+                    # if not mensaje_tut.visto_tutor:
+                        # no_visto += 1
+                # dicc_salas[sala] = no_visto
+            # # para que salga notificacion proyecto
+            # dicc_salas_proy = {}
+            # for sala in salas_proy:
+                # mensajes_tut= MensajeTutorRevisarProyecto.objects.filter(sala=sala)
+                # no_visto= 0
+                # for mensaje_tut in mensajes_tut:
+                    # if not mensaje_tut.visto_tutor:
+                        # no_visto += 1
+                # dicc_salas_proy[sala] = no_visto
+            # revisor = request.user
+            # documento = 'perfil'
+            # usuario = request.user
+            # sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
+                # grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
+            # salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+            # dicc_salas = {}
+            # for sala in salas_revisar:
+                # mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
+                # no_visto = 0
+                # for mensaje in mensajes:
+                    # if not mensaje.visto:
+                        # no_visto += 1
+                # dicc_salas[sala] = no_visto
+            # # context = {
+                    # # 'sala_doc':sala_doc,
+                    # # 'dicc_salas':dicc_salas,
+                    # # 'grupo':grupo.name,
+                    # # }
+            # context = {'grupo': grupo,'estudiante':estudiante,
+                    # 'progreso':progreso,
+                    # 'info_estu':info_estu,
+                    # 'salas':salas,
+                    # 'dicc_salas':dicc_salas,
+                    # 'dicc_salas_proy':dicc_salas_proy,
+                    # 'info_estu_proy':info_estu_proy,
+                    # 'salas_proy':salas_proy,
+                    # 'proyecto': proyecto,
+                    # 'dicc_vb_tribunal':dicc_vb_tribunal,
+                    # 'calificacion': calificacion,
+                    # 'sala_doc':sala_doc,
+                    # 'dicc_salas':dicc_salas,
+                    # }
+            # context = {**context_aux, **context}
+            # return render(request, 'proyecto/progreso_estudiante.html', context)
+        # else:
+            # return redirect('error_pagina')
+    # elif grupo== 'tribunal':
+        # existe_est = request.user.datostribunal.datosestudiante_set.filter(id=pk_est).exists()
+        # tribunal = request.user.datostribunal
+        # if existe_est:
+            # info_estu = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante)
+            # salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
+            # vb_tribunal = False
+            # for sala in salas:
+                # if sala.visto_bueno:
+                    # vb_tribunal = sala.visto_bueno
+                    # break
+            # # para que salga notificacion
+            # dicc_salas = {}
+            # for sala in salas:
+                # mensajes_trib = MensajeTribunalRevisar.objects.filter(sala=sala)
+                # no_visto = 0
+                # for mensaje_trib in mensajes_trib:
+                    # if not mensaje_trib.visto_tribunal:
+                        # no_visto += 1
+                # dicc_salas[sala] = no_visto
+            # # para que salga notificacion proyecto
+            # context = {'grupo': grupo,'estudiante':estudiante,
+                    # 'progreso':progreso,
+                    # 'info_estu':info_estu,
+                    # 'salas':salas,
+                    # 'dicc_salas':dicc_salas,
+                    # 'proyecto': proyecto,
+                    # 'vb_tribunal':vb_tribunal,
+                    # 'calificacion': calificacion,
+                    # }
+            # context = {**context_aux, **context}
+            # return render(request, 'proyecto/progreso_estudiante.html', context)
+        # else:
+            # return redirect('error_pagina')
+    # elif grupo== 'director':
+        # existe_est = DatosEstudiante.objects.filter(id=pk_est).exists()
+        # if existe_est:
+            # context = {'grupo': grupo,'estudiante':estudiante,
+                    # 'progreso':progreso,
+                    # 'proyecto': proyecto,
+                    # 'dicc_vb_tribunal':dicc_vb_tribunal,
+                    # 'calificacion': calificacion,
+                    # }
+            # context = {**context_aux, **context}
+            # return render(request, 'proyecto/progreso_estudiante.html', context)
+        # else:
+            # return redirect('error_pagina')
 
 # @login_required(login_url='login')
 # @allowed_users(allowed_roles=['docente','tutor'])
@@ -1871,11 +1872,9 @@ def registro_perfil(request):
     if request.method == "POST":
         form= RegistroPerfilForm(request.POST, request.FILES)
         if form.is_valid():
-            file = form.save(commit=False)
-            file.equipo = estudiante.equipo
-            file.save()
-            # return render(request, 'proyecto/exito_registro_perfil.html')
-            agregarActividadEstudiante('registro perfil', estudiante)
+            form.instance.equipo = estudiante.equipo
+            form.save()
+            agregarActividadEquipo('registro perfil', estudiante.equipo)
             return redirect('paso4')
     else:
         form = RegistroPerfilForm()
@@ -1992,7 +1991,7 @@ def cronograma_registrar(request):
         if form.is_valid():
             form.instance.equipo = estudiante.equipo
             form.save()
-            agregarActividadEstudiante('registro cronograma', estudiante)
+            agregarActividadEquipo('registro cronograma', estudiante.equipo)
             return redirect('paso4')
     context = {'grupo': grupo,'form':form} 
     return render(request, 'proyecto/cronograma_registrar.html', context)
@@ -2022,7 +2021,7 @@ def confirmarPaso4(request):
     if not estudiante.actividad.filter(nombre='tutor acepto'):
         return HttpResponse('error')
     if request.method == 'POST':
-        agregarActividadEstudiante('imprimir formulario', estudiante)
+        agregarActividadEquipo('imprimir formulario', estudiante.equipo)
         # crear sala de revision perfil
         SalaDocumentoApp.objects.create(
             revisor = estudiante.equipo.tutor.usuario,    

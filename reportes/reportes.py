@@ -388,21 +388,27 @@ def generarFirmaTutorCapitulos(buffer, equipo):
     # las nomas apa ademas se seguir escribiendo. trabajando \n mas'''+'* '+ '''otro parrafo
     # de esos largos que no queda otra que aumentar''',style)
 
-    nombre_estudiante = equipo.datosestudiante_set.get().__str__()
+    nombre_estudiante = equipo.datosestudiante_set.first().__str__()
+    if equipo.cantidad > 1:
+        valor = 'Estudiantes'
+    else:
+        valor = 'Estudiante'
+    nombres = [f"{n.__str__()}" for n in equipo.datosestudiante_set.all()]
+    nombres_estudiantes = " - ".join(nombres)
     nombre_tutor = equipo.tutor.__str__()
     titulo_perfil = equipo.registroperfil.titulo.upper()
     # salas = estudiante.salarevisarproyecto_set.all()
     sala_doc_tutor = equipo.saladocumentoapp_set.get(tipo='proyecto', revisor=equipo.tutor.usuario)
     salas_revisar = sala_doc_tutor.salarevisarapp_set.all()
-
+    lista_estudiantes = f"<b>{valor}:</b> {nombres_estudiantes}"
     data1 = [
         [header,'','',''],                    
-        [Paragraph('<b>Estudiante: </b>'+nombre_estudiante), '',Paragraph('<b>Tutor: </b>Ing. '+nombre_tutor),''],
+        # [Paragraph('<b>Estudiante: </b>'+nombre_estudiante), '',Paragraph('<b>Tutor: </b>Ing. '+nombre_tutor),''],
+        [Paragraph('<b>Tutor: </b>Ing. '+nombre_tutor),'','',''],
+        # [Paragraph('<b>'+plural_est+': </b>'+nombre_estudiante), '','',''],
+        [Paragraph(lista_estudiantes), '','',''],
         [Paragraph('<b>Proyecto de Grado: </b>'+titulo_perfil),'','',''],
         ['Tema','Fecha','Firma Tutor','Observaciones'],
-        # [Paragraph('Capitulo 1: Introducción'), '4 de marzo de 2021', '', p],
-        # [Paragraph('Capitulo 2: Marco Teórico'), '25 de marzo de 2021', '', p],
-        # [Paragraph('Capitulo 3: Desarrollo del proyecto de grado'), fecha(), '', p],
     ]
     # generacion de las observaciones
     data2 = []
@@ -427,19 +433,23 @@ def generarFirmaTutorCapitulos(buffer, equipo):
     data = data1 + data2
 
     tblstyle = TableStyle([
+        # ('GRID', (0,0), (-1,-1), 0.5, colors.grey), descomentar para ver la disposicion
         ('SPAN', (0,0), (-1,0)),
-        ('SPAN', (0,1), (1,1)),
-        ('SPAN', (2,1), (3,1)),
+        ('SPAN', (0,1), (-1,1)),
         ('SPAN', (0,2), (-1,2)),
-        ('INNERGRID', (0,3), (-1,-1), 0.3, colors.black),
-        ('BOX', (0,3), (-1,-1), 0.3, colors.black),
-        ('FONTNAME', (0,3),(-1,3),'Helvetica-Bold'),
-        ('ALIGN',(0,3),(-1,-1),'CENTER'),
-        ('VALIGN',(0,3),(-1,-1),'MIDDLE'),
-        ('BACKGROUND',(0,3),(-1,3), colors.HexColor('#f6ddea')),
+        ('SPAN', (0,3), (-1,3)),
+        # ('SPAN', (0,1), (1,1)),
+        # ('SPAN', (2,1), (3,1)), # este no se por que lo puse
+        # ('SPAN', (0,2), (-1,2)),
+        ('INNERGRID', (0,4), (-1,-1), 0.3, colors.black),
+        ('BOX', (0,4), (-1,-1), 0.3, colors.black),
+        ('FONTNAME', (0,4),(-1,4),'Helvetica-Bold'),
+        ('ALIGN',(0,4),(-1,-1),'CENTER'),
+        ('VALIGN',(0,4),(-1,-1),'MIDDLE'),
+        ('BACKGROUND',(0,4),(-1,4), colors.HexColor('#f6ddea')),
     ])
 
-    for n in range(5,len(data)+1,2):
+    for n in range(6,len(data)+1,2):
         tblstyle.add('BACKGROUND',(0,n),(-1,n), colors.HexColor('#f6ddea'))
 
     t = Table(data)

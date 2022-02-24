@@ -31,7 +31,8 @@ def reporteIndicacionesTutor(request, pk):
 def formularioAceptacion(request,pk):
     buffer = io.BytesIO()
     estudiante = DatosEstudiante.objects.get(id=pk)
-    generarformularioAceptacion(buffer,estudiante)
+    equipo = estudiante.equipo
+    generarformularioAceptacion(buffer, equipo)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_aceptacion.pdf')
 

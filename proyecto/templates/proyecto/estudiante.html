@@ -1,24 +1,26 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 {% if solicitud_invitado and not tutor and not estudiante.modalidad == 'individual'%}
-    <div class="d-grid gap-2 col-6 mx-auto">
-        <a class="btn btn-danger btn-lg" href={% url 'modalidad:ver_solicitudes_invitado' %}>Solicitudes de participación múltiple</a>
-    </div>
-    <br>
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-danger btn-lg" href={% url 'modalidad:ver_solicitudes_invitado' %}>Solicitudes de participación múltiple</a>
+  </div>
+  <br>
 {% endif %}
 {% if estudiante.modalidad %}
-    {% if estudiante.modalidad == "multiple" %}
+  {% if estudiante.modalidad == "multiple" %}
     <div class="d-flex flex-row-reverse bd-highlight">
-        <a href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
+      <a href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
     </div>
-    {% endif %}
-    <div class="d-flex justify-content-evenly">
-        <h3>MODALIDAD: {{estudiante.get_modalidad_display|upper}}</h3>
-    </div>
+  {% endif %}
+  <div class="d-flex justify-content-evenly">
+    <h3>MODALIDAD: {{estudiante.get_modalidad_display|upper}}</h3>
+  </div>
 {% endif %}
+
 {% include 'proyecto/lista_docente_tutor.html' %}
+
 {% if progreso >= 100%}
-{% include 'proyecto/felicidades.html' %}
+  {% include 'proyecto/felicidades.html' %}
 {% endif %}
 
 <div class="container">
@@ -27,14 +29,14 @@
     {%if pasos_realizados == 0 %}
       <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-            <a class="btn btn-warning" href={%url 'paso1'%}>Paso 1</a>
+          <a class="btn btn-warning" href={%url 'paso1'%}>Paso 1</a>
         </div>
       </div>
     {% endif %}
     {%if pasos_realizados >= 1%}
       <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-            <a class="btn btn-success" href={%url 'paso1'%} name='paso1'>Paso 1</a>
+          <a class="btn btn-success" href={%url 'paso1'%} name='paso1'>Paso 1</a>
         </div>
       </div>    
     {% endif %}
@@ -50,14 +52,14 @@
     {%if pasos_realizados >= 2%}
       <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-success" href={%url 'paso2'%}>Paso 2</a>
+          <a class="btn btn-success" href={%url 'paso2'%}>Paso 2</a>
         </div>
       </div>
     {% endif %}
     {%if pasos_realizados < 1 %}
       <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-danger disabled text-white">Paso 2</a>
+          <a class="btn btn-danger disabled text-white">Paso 2</a>
         </div>
       </div>
     {% endif %}
@@ -66,21 +68,21 @@
     {%if pasos_realizados == 2 %}
       <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-warning" href={%url 'paso3'%}>Paso 3</a>
+          <a class="btn btn-warning" href={%url 'paso3'%}>Paso 3</a>
         </div>
       </div>
     {% endif %}
     {%if pasos_realizados >= 3 %}
       <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-success" href={%url 'paso3'%}>Paso 3</a>
+          <a class="btn btn-success" href={%url 'paso3'%}>Paso 3</a>
         </div>
       </div>
     {% endif %}
     {%if pasos_realizados < 2 %}
       <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-danger disabled text-white">Paso 3</a>
+          <a class="btn btn-danger disabled text-white">Paso 3</a>
         </div>
       </div>
     {% endif %}
@@ -89,70 +91,70 @@
     {%if pasos_realizados == 3 %}
       <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-warning" href={%url 'paso4'%}>Paso 4</a>
+          <a class="btn btn-warning" href={%url 'paso4'%}>Paso 4</a>
         </div>
       </div>
     {% endif %}
     {%if pasos_realizados >= 4 %}
       <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-success" href={%url 'paso4'%}>Paso 4</a>
+          <a class="btn btn-success" href={%url 'paso4'%}>Paso 4</a>
         </div>
       </div>
     {% endif %}
     {%if pasos_realizados < 3 %}
       <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-danger disabled text-white">Paso 4</a>
+          <a class="btn btn-danger disabled text-white">Paso 4</a>
         </div>
       </div>
-    {% endif %}
+      {% endif %}
     </div>
     <div class="col">
-    {%if pasos_realizados == 4 %}
+      {%if pasos_realizados == 4 %}
       <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-warning" href={%url 'paso5'%}>Paso 5</a>
+          <a class="btn btn-warning" href={%url 'paso5'%}>Paso 5</a>
         </div>
       </div>
-    {% endif %}
-    {%if pasos_realizados >= 5 %}
+      {% endif %}
+      {%if pasos_realizados >= 5 %}
       <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-success" href={%url 'paso5'%}>Paso 5</a>
+          <a class="btn btn-success" href={%url 'paso5'%}>Paso 5</a>
         </div>
       </div>
-    {% endif %}
-    {%if pasos_realizados < 4 %}
+      {% endif %}
+      {%if pasos_realizados < 4 %}
       <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-danger disabled text-white">Paso 5</a>
+          <a class="btn btn-danger disabled text-white">Paso 5</a>
         </div>
       </div>
-    {% endif %}
+      {% endif %}
     </div>
     <div class="col">
-    {%if pasos_realizados == 5 %}
+      {%if pasos_realizados == 5 %}
       <div class="p-3 border bg-warning" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-warning" href={%url 'paso6'%}>Paso 6</a>
+          <a class="btn btn-warning" href={%url 'paso6'%}>Paso 6</a>
         </div>
       </div>
-    {% endif %}
-    {%if pasos_realizados >= 6 %}
+      {% endif %}
+      {%if pasos_realizados >= 6 %}
       <div class="p-3 border bg-success" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-success" href={%url 'paso6'%}>Paso 6</a>
+          <a class="btn btn-success" href={%url 'paso6'%}>Paso 6</a>
         </div>
       </div>
-    {% endif %}
-    {%if pasos_realizados < 5 %}
+      {% endif %}
+      {%if pasos_realizados < 5 %}
       <div class="p-3 border bg-danger" style="--bs-bg-opacity: .5;">
         <div class="text-center">
-       <a class="btn btn-danger disabled text-white">Paso 6</a>
+          <a class="btn btn-danger disabled text-white">Paso 6</a>
         </div>
       </div>
-    {% endif %}
+      {% endif %}
     </div>
   </div>
 </div>
@@ -161,14 +163,14 @@
 
 <h5>Progreso:</h5>
 <div class="progress">
-    <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
-        aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
-        {{progreso}}%
-    </div>
+  <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
+                                               aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
+    {{progreso}}%
+  </div>
 </div>
 <p>
 {% if cronograma_existe %}
-    {% include 'proyecto/cronograma_info.html'%}
+{% include 'proyecto/cronograma_info.html'%}
 {% endif %}
 </p>
 
