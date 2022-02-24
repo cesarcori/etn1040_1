@@ -12,3 +12,5 @@ pyvenv.cfg
 estudiantes.csv
 salida.csv
 media/*
+work.vim
+Session.vim
