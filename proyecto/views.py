@@ -263,9 +263,14 @@ def tribunal(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['director'])
 def director(request):
-    grupo = 'director'
-    datos_est = DatosEstudiante.objects.all().order_by('apellido')
-    context = {'datos_est':datos_est,'grupo':grupo}
+    grupo = request.user.groups.get().name
+    # datos_est = DatosEstudiante.objects.all().order_by('apellido')
+    # context = {'datos_est':datos_est,'grupo':grupo}
+    datos_est = DatosEstudiante.objects.filter(
+            Q(modalidad="individual") | Q(modalidad=None)
+            )
+    equipos_multiple = Equipo.objects.filter(cantidad__gt=1)
+    context = {'datos_est':datos_est,'grupo':grupo, 'equipos_multiple':equipos_multiple}
     return render(request, 'proyecto/director.html', context)
 
 @login_required(login_url='login')
