@@ -88,6 +88,7 @@ def reporte_tutor_acepto(buffer, estudiante):
     if estudiante.equipo.cantidad > 1:
         parrafo1_3 = 'de los estudiantes'
         integrantes = [n.__str__() for n in estudiante.equipo.datosestudiante_set.all()]
+        parrafo1_4 = ", ".join(integrantes)
     else:
         parrafo1_3 = 'del estudiante'
         parrafo1_4 = nombre_estudiante
@@ -120,12 +121,13 @@ def reporte_tutor_acepto(buffer, estudiante):
     parrafo(parrafo1_3)
     negrilla()
     # parrafo(parrafo1_4+'.')
-    if estudiante.equipo.cantidad > 1:
-        for parrafo1_4 in integrantes:
-            parrafo(parrafo1_4+', ')
-    else:
-        parrafo(parrafo1_4+', ')
+    # if estudiante.equipo.cantidad > 1:
+        # for parrafo1_4 in integrantes:
+            # parrafo(parrafo1_4+', ')
+    # else:
+        # parrafo(parrafo1_4+', ')
 
+    parrafo(parrafo1_4+', ')
     normal()
     parrafo(parrafo1_5)
 
@@ -484,7 +486,7 @@ def generarCartaFinal(buffer, equipo):
         pdf.ln(th)
 # totos estos datos vienen de la base de datos
 # ===========================================
-    estudiante = equipo.datosestudiante_set.get()
+    estudiante = equipo.datosestudiante_set.first()
     nombre = estudiante.__str__()
     celular_tutor = equipo.tutor.celular
     correo_tutor = equipo.tutor.correo
@@ -492,6 +494,14 @@ def generarCartaFinal(buffer, equipo):
     tutor = equipo.tutor.__str__()
     # titulo_proyecto = estudiante.proyectodegrado.titulo
     titulo_proyecto = equipo.registroperfil.titulo
+
+    if estudiante.equipo.cantidad > 1:
+        parrafo1_3 = 'de los estudiantes'
+        integrantes = [n.__str__() for n in estudiante.equipo.datosestudiante_set.all()]
+        parrafo1_4 = ", ".join(integrantes)
+    else:
+        parrafo1_3 = 'del estudiante'
+        parrafo1_4 = nombre_estudiante
 
 # ===========================================
 # estatico, no se mueve, a menos que sea por personalizacion
@@ -501,8 +511,8 @@ def generarCartaFinal(buffer, equipo):
     universidad = 'universidad mayor de san andrés'
     parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, la conclusión satisfactoria, en el desarrollo del Proyecto de Grado:'
     parrafo1_2 = titulo_proyecto
-    parrafo1_3 = 'A cargo del estudiante'
-    parrafo1_4 = nombre
+    # parrafo1_3 = 'A cargo del estudiante'
+    # parrafo1_4 = nombre
     parrafo1_5 = 'Doy total conformidad al mencionado Proyecto de Grado que cuenta con las características necesarias para ser defendido y presentado ante el Tribunal de Docentes.'
     despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
 
