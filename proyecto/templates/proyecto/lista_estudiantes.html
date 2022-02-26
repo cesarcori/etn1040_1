@@ -18,54 +18,53 @@
       <th scope="col">Info</th>
     </tr>
   </thead>
+
   <tbody>
-    <tr>
-{%for est in datos_est %}
-{%if grupo == 'administrador'%}
-<th scope="row">{{est.registro_uni}}</th>
-<td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
-{%endif%}
+    {%for est in datos_est %}
+      <tr>
+        {%if grupo == 'administrador'%}
+          <th scope="row">{{est.registro_uni}}</th>
+          <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+        {%endif%}
 
-{%if grupo == 'docente' %}
-    <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
-{%endif%}
+        {%if grupo == 'docente' %}
+          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
+        {%endif%}
 
-{%if grupo == 'director' and est.progreso.nivel < 100%}
-<td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
-<th scope="row">{{est.celular}}</th>
-<th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
-<td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
-{%endif%}
+        {%if grupo == 'director' %}
+          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+          <th scope="row">{{est.celular}}</th>
+          <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
+          <td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
+        {%endif%}
 
+        {%if grupo == 'tutor' %}
+          {%if est.equipo.tutor_acepto%}
+            <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
+          {% else %}
+            <td><a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.equipo.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est}}</a></td>
+          {% endif %}
+        {%endif%}
 
-{%if grupo == 'tutor' %}
-    {%if est.equipo.tutor_acepto%}
-        <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
-    {% else %}
-        <td><a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.equipo.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est}}</a></td>
-    {% endif %}
-{%endif%}
+        {%if grupo == 'administrador'%}
+          <th scope="row">{{est.grupo_doc.grupo}}</th>
+          <th scope="row">{{est.grupo_doc.apellido}}</th>
+        {%endif%}
 
-{%if grupo == 'administrador'%}
-<th scope="row">{{est.grupo_doc.grupo}}</th>
-<th scope="row">{{est.grupo_doc.apellido}}</th>
-{%endif%}
+        {%if grupo == 'tribunal' %}
+          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+        {%endif%}
 
-{%if grupo == 'tribunal' %}
-<td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
-{%endif%}
+        {% if grupo == 'estudiante' or grupo == 'adminstrador' or grupo == 'docente' or grupo == 'tutor'%}
+          <td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
+        {% endif %}
 
-{% if grupo == 'estudiante' or grupo == 'adminstrador' or grupo == 'docente' or grupo == 'tutor'%}
-<td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
-{% endif %}
-
-{% if grupo == 'tutor' or grupo == 'docente' or grupo == 'administrador' or grupo == 'tribunal'%}
-<th scope="row">{{est.celular}}</th>
-<th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
-<td scope="row"><a href="{% url 'enlace_estudiante' est.id %}">Info</a></td>
-{% endif %}
-
-    </tr>
-{% endfor %}
+        {% if grupo == 'tutor' or grupo == 'docente' or grupo == 'administrador' or grupo == 'tribunal'%}
+          <th scope="row">{{est.celular}}</th>
+          <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
+          <td scope="row"><a href="{% url 'enlace_estudiante' est.id %}">Info</a></td>
+        {% endif %}
+      </tr>
+    {% endfor %}
   </tbody>
 </table>

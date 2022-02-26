@@ -270,7 +270,8 @@ def director(request):
             Q(modalidad="individual") | Q(modalidad=None)
             )
     equipos_multiple = Equipo.objects.filter(cantidad__gt=1)
-    context = {'datos_est':datos_est,'grupo':grupo, 'equipos_multiple':equipos_multiple}
+    context = {'datos_est':datos_est,'grupo':grupo, 
+            'equipos_multiple':equipos_multiple,}
     return render(request, 'proyecto/director.html', context)
 
 @login_required(login_url='login')
@@ -916,7 +917,8 @@ def progresoEstudiante(request, pk):
             # para que salga notificacion proyecto
             return HttpResponse('error')
     elif grupo== 'director':
-        existe_est = DatosEstudiante.objects.filter(id=pk).exists()
+        # existe_est = DatosEstudiante.objects.filter(id=pk).exists()
+        existe_est = Equipo.objects.filter(id=pk).exists()
         if not existe_est:
             return HttpResponse('error')
     revisor = request.user

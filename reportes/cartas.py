@@ -487,7 +487,7 @@ def generarCartaFinal(buffer, equipo):
 # totos estos datos vienen de la base de datos
 # ===========================================
     estudiante = equipo.datosestudiante_set.first()
-    nombre = estudiante.__str__()
+    nombre_estudiante = estudiante.__str__()
     celular_tutor = equipo.tutor.celular
     correo_tutor = equipo.tutor.correo
     docente = equipo.docente.__str__()
