@@ -1,13 +1,86 @@
-<p>
-<strong>Calificación del Proyecto de Grado Docente ETN 1040</strong><br>
-Tiempo Elaboración (Max. 9%): <strong>{{proyecto.nota_tiempo_elaboracion}}</strong><br>
-Exposiciones/Seminarios (Max. 6%): <strong>{{proyecto.nota_expos_seminarios}}</strong><br>
-Informes de Trabajos (Max. 22%): <strong>{{proyecto.nota_informes_trabajo}}</strong><br>
-Cumplimiento de Cronograma (Max. 3%): <strong>{{proyecto.nota_cumplimiento_cronograma}}</strong><br>
-Suma Calificación Docente ETN-1040 (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>
-<strong>Calificación del Proyecto de Grado Tribunal</strong><br>
-Calificación Tribunal (Max. 60%): <strong>{{estudiante.registroproyectotribunal.nota}}</strong><br>
-<strong>Calificación Total</strong><br>
-Calificacion Total (100%): <strong>{{estudiante.registroproyectotribunal.nota_final}}</strong><br>
+<div class="card">
+  <div class="card-body">
+    <p class="text-center"><strong>Calificación del Proyecto de Grado Docente ETN 1040</strong><br></p>
+      <!--Tiempo Elaboración (Max. 9%): <strong>{{proyecto.nota_tiempo_elaboracion}}</strong><br>-->
+      <!--Exposiciones/Seminarios (Max. 6%): <strong>{{proyecto.nota_expos_seminarios}}</strong><br>-->
+      <!--Informes de Trabajos (Max. 22%): <strong>{{proyecto.nota_informes_trabajo}}</strong><br>-->
+      <!--Cumplimiento de Cronograma (Max. 3%): <strong>{{proyecto.nota_cumplimiento_cronograma}}</strong><br>-->
+      <!--Suma Calificación Docente ETN-1040 (Max. 40%): <strong>{{proyecto.calificacion}}</strong><br>-->
 
-</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Actividad</th>
+            <th scope="col">Ponderación Max.</th>
+            <th scope="col">Nota obtenida</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tiempo Elaboración</td>
+            <td>9%</td>
+            <td><strong>{{proyecto.nota_tiempo_elaboracion}}</strong></td>
+          </tr>
+          <tr>
+            <td>Exposiciones/Seminarios</td>
+            <td>6%</td>
+            <td><strong>{{proyecto.nota_expos_seminarios}}</strong></td>
+          </tr>
+          <tr>
+            <td>Informes de Trabajos</td>
+            <td>22%</td>
+            <td><strong>{{proyecto.nota_informes_trabajo}}</strong></td>
+          </tr>
+          <tr>
+            <td>Cumplimiento de Cronograma</td>
+            <td>3%</td>
+            <td><strong>{{proyecto.nota_cumplimiento_cronograma}}</strong></td>
+          </tr>
+          <tr class="table-light">
+            <td>Suma Calificación Docente ETN-1040</td>
+            <td>40%</td>
+            <td><strong>{{proyecto.calificacion}}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="text-center"><strong>Calificación del Proyecto de Grado Tribunal</strong></p>
+      <!--Calificación Tribunal (Max. 60%): <strong>{{estudiante.registroproyectotribunal.nota}}</strong><br>-->
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Actividad</th>
+            <th scope="col">Ponderación Max.</th>
+            <th scope="col">Nota obtenida</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-light">
+            <td>Calificación Tribunal</td>
+            <td>60 %</td>
+            <td><strong>{{estudiante.registroproyectotribunal}}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="text-center"><strong>Calificación Total</strong></p>
+      <!--Calificacion Total (100%): <strong>{{estudiante.registroproyectotribunal.nota_final}}</strong><br>-->
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Actividad</th>
+            <th scope="col">Ponderación Max.</th>
+            <th scope="col">Nota obtenida</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-light">
+            <td>Calificación Total</td>
+            <td>100 %</td>
+            <td><strong>{{estudiante.registroproyectotribunal}}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>

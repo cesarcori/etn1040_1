@@ -17,82 +17,82 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
       </td>
       <td>
         {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
-            <i class="fas text-success fa-check"></i> Cumplido
+          <i class="fas text-success fa-check"></i> Cumplido
         {% else %}
-            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+          <i class="fas text-danger fa-graduation-cap"></i> Pendiente
         {% endif %}
       </td>
     </tr>
     <tr>
       <td>
         {% if registro_perfil_existe %}
-            <a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a>
+          <a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a>
         {% else %}
-            {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
-                <a href={%url 'registro_perfil'%}>Registrar Perfil</a>
-            {% else %}
-                <a class="btn disabled" href#=>Registrar Perfil</a>
-            {% endif %}
+          {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+            <a href={%url 'registro_perfil'%}>Registrar Perfil</a>
+          {% else %}
+            <a class="btn disabled" href#=>Registrar Perfil</a>
+          {% endif %}
         {% endif %}
       </td>
       <td>
         {% if registro_perfil_existe %}
-            <i class="fas text-success fa-check"></i> Cumplido
+          <i class="fas text-success fa-check"></i> Cumplido
         {% else %}
-            {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
-                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
-            {% else %}
-                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
-            {% endif %}
+          {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+          {% else %}
+            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+          {% endif %}
         {% endif %}
       </td>
     </tr>
     <tr>
       <td>
         {% if registro_perfil_existe%}
-            {% if estudiante.equipo.registrocronograma%}
-                <a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a>
-            {% else %}
-                <a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a>
-            {%endif%}
+        {% if estudiante.equipo.registrocronograma%}
+        <a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a>
         {% else %}
-            <a class="btn disabled" href=#>Registro de Cronograma</a>
+        <a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a>
+        {%endif%}
+        {% else %}
+        <a class="btn disabled" href=#>Registro de Cronograma</a>
         {% endif %}
       </td>
       <td>
         {% if registro_perfil_existe%}
-            {% if estudiante.equipo.registrocronograma%}
-                <i class="fas text-success fa-check "></i> Cumplido
-            {% else %}
-                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
-            {%endif%}
+        {% if estudiante.equipo.registrocronograma%}
+        <i class="fas text-success fa-check "></i> Cumplido
         {% else %}
-            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        {%endif%}
+        {% else %}
+        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
         {% endif %}
       </td>
     </tr>
     <tr>
       <td>
         {% if registro_perfil_existe %}
-            {% if estudiante.equipo.registrocronograma%}
-                <a target='_blank' href={%url 'reportes:formulario-aceptacion' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
-                <a target='_blank' href="/media/formularios/form1.pdf">Formulario en blanco</a>
-            {% else %}
-                <a class="btn disabled" href=#>Formulario de Aprobación</a>
-            {%endif%}
+        {% if estudiante.equipo.registrocronograma%}
+        <a target='_blank' href={%url 'reportes:formulario-aceptacion' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
+        <a target='_blank' href="/media/formularios/form1.pdf">Formulario en blanco</a>
         {% else %}
-            <a class="btn disabled" href=#>Formulario 1 - Aprobación de Perfil</a>
+        <a class="btn disabled" href=#>Formulario de Aprobación</a>
+        {%endif%}
+        {% else %}
+        <a class="btn disabled" href=#>Formulario 1 - Aprobación de Perfil</a>
         {% endif %}
       </td>
       <td>
         {% if registro_perfil_existe %}
-            {% if estudiante.equipo.registrocronograma%}
-                <i class="fas text-success fa-check "></i> Cumplido
-            {% else %}
-                <i class="fas text-danger fa-graduation-cap"></i> Pendiente
-            {%endif%}
+        {% if estudiante.equipo.registrocronograma%}
+        <i class="fas text-success fa-check "></i> Cumplido
         {% else %}
-            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        {%endif%}
+        {% else %}
+        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
         {% endif %}
       </td>
     </tr>
@@ -100,67 +100,66 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
 </table>
 
 <!--
-<p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Perfil</a>
+  <p><a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Perfil</a>
 
-{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
-    <i class="fas text-success fa-check"></i></p>
-{% else %}
-    <i class="fas text-danger fa-graduation-cap"></i></p>
-{% endif %}
+  {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+  <i class="fas text-success fa-check"></i></p>
+  {% else %}
+  <i class="fas text-danger fa-graduation-cap"></i></p>
+  {% endif %}
 
-{% if registro_perfil_existe %}
-    <p><a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a>
-    <i class="fas text-success fa-check"></i></p>
-{% else %}
-    {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
-        <p><a href={%url 'registro_perfil'%}>Registro de Perfil</a>
-        <i class="fas text-danger fa-graduation-cap"></i></p>
-    {% else %}
-        <p><a class="btn disabled" href#=>Registro de Perfil</a>
-        <i class="fas text-danger fa-graduation-cap"></i></p>
-    {% endif %}
-{% endif %}
+  {% if registro_perfil_existe %}
+  <p><a href={%url 'ver_perfil_registrado'%}>Perfil de Proyecto de Grado</a>
+  <i class="fas text-success fa-check"></i></p>
+  {% else %}
+  {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
+  <p><a href={%url 'registro_perfil'%}>Registro de Perfil</a>
+  <i class="fas text-danger fa-graduation-cap"></i></p>
+  {% else %}
+  <p><a class="btn disabled" href#=>Registro de Perfil</a>
+  <i class="fas text-danger fa-graduation-cap"></i></p>
+  {% endif %}
+  {% endif %}
 
-{% if registro_perfil_existe%}
-    {% if estudiante.registrocronograma%}
-    <p><a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a>
-    <i class="fas text-success fa-check "></i></p>
-    {% else %}
-    <p><a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a>
-    <i class="fas text-danger fa-graduation-cap"></i></p>
-    {%endif%}
-{% else %}
-    <p><a class="btn disabled" href=#>Registro de Cronograma</a>
-    <i class="fas text-danger fa-graduation-cap"></i></p>
-{% endif %}
+  {% if registro_perfil_existe%}
+  {% if estudiante.registrocronograma%}
+  <p><a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a>
+  <i class="fas text-success fa-check "></i></p>
+  {% else %}
+  <p><a href={%url 'cronograma_actividad'%}>Registro de Cronograma</a>
+  <i class="fas text-danger fa-graduation-cap"></i></p>
+  {%endif%}
+  {% else %}
+  <p><a class="btn disabled" href=#>Registro de Cronograma</a>
+  <i class="fas text-danger fa-graduation-cap"></i></p>
+  {% endif %}
 
-{% comment %}{{form1_blanco}}{% endcomment %}
-{% if registro_perfil_existe %}
-    {% if estudiante.registrocronograma%}
-        <p><a href={%url 'formulario_1' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
-        <i class="fas text-success fa-check "></i>
-        <a target='_blank' href="/media/formularios/form1.pdf">En blanco</a></p>
-    {% else %}
-        <p><a class="btn disabled" href=#>Formulario de Aprobación</a>
-        <i class="fas text-danger fa-graduation-cap"></i></p>
-    {%endif%}
-{% else %}
-{% comment %}<p><a class="btn disabled" href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>{% endcomment %}
-{% comment %}<p><a class="btn disabled" >Carta aceptacion de tutoría</a></p>{% endcomment %}
-    <p><a class="btn disabled" href=#>Formulario 1 - Aprobación de Perfil</a>
-    <i class="fas text-danger fa-graduation-cap"></i></p>
-{% endif %}
+  {% comment %}{{form1_blanco}}{% endcomment %}
+  {% if registro_perfil_existe %}
+  {% if estudiante.registrocronograma%}
+  <p><a href={%url 'formulario_1' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
+  <i class="fas text-success fa-check "></i>
+  <a target='_blank' href="/media/formularios/form1.pdf">En blanco</a></p>
+  {% else %}
+  <p><a class="btn disabled" href=#>Formulario de Aprobación</a>
+  <i class="fas text-danger fa-graduation-cap"></i></p>
+  {%endif%}
+  {% else %}
+  {% comment %}<p><a class="btn disabled" href={%url 'carta_solicitud_tutor'%}>Carta solicitud de tutoría</a></p>{% endcomment %}
+  {% comment %}<p><a class="btn disabled" >Carta aceptacion de tutoría</a></p>{% endcomment %}
+  <p><a class="btn disabled" href=#>Formulario 1 - Aprobación de Perfil</a>
+  <i class="fas text-danger fa-graduation-cap"></i></p>
+  {% endif %}
 -->
 
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
 {% if perfil and estudiante.equipo.registrocronograma %}
-
-    {% if not imprimir %}
-        <a class="btn btn-warning" href={%url 'confirmar_paso_4' %}>Ya imprimi el formulario</a></p>
-    {% else %}
-        <h5>Paso Completado</h5>
-    {% endif %}
+  {% if not imprimir %}
+    <a class="btn btn-warning" href={%url 'confirmar_paso_4' %}>Ya imprimi el formulario</a></p>
+  {% else %}
+    <h5>Paso Completado</h5>
+  {% endif %}
 {% endif %}
 
 {% endblock %} 

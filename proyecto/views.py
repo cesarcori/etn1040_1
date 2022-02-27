@@ -1946,18 +1946,22 @@ def cronograma_actividad(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','director','tribunal'])
-def ver_cronograma(request, id_est):
+def ver_cronograma(request, pk):
     grupo = request.user.groups.get().name
     if grupo == 'tutor':
-        estudiante = request.user.datostutor.datosestudiante_set.get(id=id_est)
+        # estudiante = request.user.datostutor.datosestudiante_set.get(id=id_est)
+        equipo = request.user.datostutor.equipo_set.get(id=pk)
     elif grupo == 'director':
-        estudiante = DatosEstudiante.objects.get(id=id_est)
+        # estudiante = DatosEstudiante.objects.get(id=id_est)
+        equipo = Equipo.objects.get(id=pk)
     elif grupo == 'docente':
-        estudiante = request.user.datosdocente.datosestudiante_set.get(id=id_est)
+        # estudiante = request.user.datosdocente.datosestudiante_set.get(id=id_est)
+        equipo = request.user.datosdocente.equipo_set.get(id=pk)
     elif grupo == 'tribunal':
-        estudiante = request.user.datostribunal.datosestudiante_set.get(id=id_est)
-    cronograma = ActividadesCronograma.objects.filter(usuario=estudiante)
-    existe_cronograma = RegistroCronograma.objects.filter(usuario=estudiante).exists()
+        # estudiante = request.user.datostribunal.datosestudiante_set.get(id=id_est)
+        equipo = request.user.datostribunal.equipo_set.get(id=pk)
+    cronograma = ActividadesCronograma.objects.filter(equipo=equipo)
+    existe_cronograma = RegistroCronograma.objects.filter(equipo=equipo).exists()
     if cronograma.exists():
         max_semana = range(1,1+max([n.semana_final for n in cronograma]))
         vector_final = []
@@ -1977,10 +1981,10 @@ def ver_cronograma(request, id_est):
         max_semana = range(0)
         dicc_crono = {}
     # fecha del registro
-    registro_cronograma = RegistroCronograma.objects.get(usuario=estudiante)
+    registro_cronograma = RegistroCronograma.objects.get(equipo=equipo)
     context = {'grupo': grupo,'cronograma':cronograma, 
             'max_semana': max_semana,
-            'estudiante': estudiante,
+            'equipo': equipo,
             'dicc_crono': dicc_crono,
             'registro_cronograma': registro_cronograma,
             'existe_cronograma': existe_cronograma}

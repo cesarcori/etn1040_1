@@ -1,247 +1,137 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
+
 {% if equipo.cantidad > 1%}
   <div class="d-flex justify-content-evenly">
     <h3><strong>MODALIDAD: {{estudiante.get_modalidad_display|upper}}</strong></h3>
   </div>
 {% endif %}
-  <h4 class='text-center'><strong>ESTUDIANTE: {{estudiante|upper}}</strong></h4>
+
+<h4 class='text-center'><strong>ESTUDIANTE: {{estudiante|upper}}</strong></h4>
 {% if estudiante.modalidad == "multiple" and estudiante.equipo.cantidad == 1%}
   <div class="d-grid gap-2 col-6 mx-auto">
     <a class="btn btn-danger btn-lg" href={% url 'modalidad:ver_solicitud' estudiante.solicitud_set.last.pk %}>Responder a Solicitud de Modalidad Múltiple</a>
   </div>
   <br>
 {% endif %}
+
 {% if not estudiante.tribunales.count == 2 and grupo != 'director' %}
   {% include 'revisar/vista_revisor.html'%}
 {% endif %}
+
 {% if grupo == 'tribunal'%}
   {% include 'revisar/vista_revisor.html'%}
 {% endif %}
+
 {% comment %}***** solicitar y ver tribunal *****{% endcomment %}
-  {%if grupo == 'docente' and not estudiante.solicitud_tribunal_docente and estudiante.proyectodegrado and calificacion != None%}
-    <a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' estudiante.id %}>Solicitar Tribunal</a>
-  {% elif grupo == 'docente' or grupo == 'tutor' %}
-    {% if estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
-      <div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura</div>
-    {% elif estudiante.tribunales.count == 2%}
-      {% include 'proyecto/lista_tribunal_asignado.html'%}
-    {% endif %}
-  {% elif grupo == 'director' and estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
-    <p>
-    <div class="d-inline p-2 bg-danger text-white">El docente ETN 1040 Ing. 
-      {{estudiante.grupo_doc}} solicito tribunales para el estudiante:
-      {{estudiante}}</div>
-    <a class="btn btn-warning" href={% url 'asignar_tribunal' estudiante.id %}>Asignar Tribunal</a>
-    </p>
-  {% elif grupo == 'director' or grupo == 'tutor' %}
-    {% if estudiante.tribunales.count == 2%}
-      {% include 'proyecto/lista_tribunal_asignado.html'%}
-    {% endif %}
-  {%endif%}
+{%if grupo == 'docente' and not estudiante.solicitud_tribunal_docente and estudiante.equipo.proyectodegrado and calificacion != None%}
+<a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' estudiante.id %}>Solicitar Tribunal a Jefatura de Carrera</a><br><br>
+{% elif grupo == 'docente' or grupo == 'tutor' %}
+  {% if estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
+    <div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura</div>
+  {% elif estudiante.tribunales.count == 2%}
+    {% include 'proyecto/lista_tribunal_asignado.html'%}
+  {% endif %}
+{% elif grupo == 'director' and estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
+  <p>
+  <div class="d-inline p-2 bg-danger text-white">El docente ETN 1040 Ing. 
+    {{estudiante.grupo_doc}} solicito tribunales para el estudiante:
+    {{estudiante}}</div>
+  <a class="btn btn-warning" href={% url 'asignar_tribunal' estudiante.id %}>Asignar Tribunal</a>
+  </p>
+{% elif grupo == 'director' or grupo == 'tutor' %}
+  {% if estudiante.tribunales.count == 2%}
+    {% include 'proyecto/lista_tribunal_asignado.html'%}
+  {% endif %}
+{%endif%}
+
 <div class="row">
-    <div class="col-md-7">
+  <div class="col-md-7">
     {% comment %}***** aviso no se puso la nota{% endcomment %}
-        {%if grupo != 'tribunal' and not estudiante.registroproyectotribunal.nota and estudiante.registroproyectotribunal %}
-            <h5 class='text-center'>El Tribunal aún no puso la nota</h5>
-            <h5 class='text-center'>Se espera la defensa de Proyecto de Grado</h5>
-        {%endif%}
-        {%if grupo == 'tutor' and calificacion == None and not proyecto == None%}
-            <h5 class='text-center'>El docente aún no puso la nota</h5>
-            <h5 class='text-center'>Pero el estudiante ya registró el Proyecto de Grado </h5>
-        {%endif%}
+    {%if grupo != 'tribunal' and not estudiante.registroproyectotribunal.nota and estudiante.registroproyectotribunal %}
+      <h5 class='text-center'>El Tribunal aún no puso la nota</h5>
+      <h5 class='text-center'>Se espera la defensa de Proyecto de Grado</h5>
+    {%endif%}
+    {%if grupo == 'tutor' or grupo == 'director' %}
+      {% if calificacion == None and not proyecto == None%}
+        <h5 class='text-center'>El docente aún no puso la nota</h5>
+        <h5 class='text-center'>Pero el estudiante ya registró el Proyecto de Grado </h5>
+      {% endif %}
+    {%endif%}
     {% comment %}Calificacion{% endcomment %}
-        {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
-            <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
-        {%endif%}
-        {% if grupo == 'tribunal' and estudiante.registroproyectotribunal and not estudiante.registroproyectotribunal.nota %}
-            <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' estudiante.id %}>Calificar Proyecto Final</a>
-        {% endif %}
+    {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
+      <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
+    {%endif%}
+    {% if grupo == 'tribunal' and estudiante.registroproyectotribunal and not estudiante.registroproyectotribunal.nota %}
+      <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' estudiante.id %}>Calificar Proyecto Final</a>
+    {% endif %}
     {% comment %}****** ver nota ******{% endcomment %}
-        {%if grupo == 'docente' or grupo == 'director' %}
-            {%if calificacion != None %}
-                {% include 'proyecto/ver_nota.html' %}
-            {%endif%}
-        {%endif%}
+    {%if grupo == 'docente' or grupo == 'director' %}
+      {%if calificacion != None %}
+        {% include 'proyecto/ver_nota.html' %}
+      {%endif%}
+    {%endif%}
 
-        {%if grupo == 'tribunal' and not calificacion == None %}
-            {% include 'proyecto/ver_nota.html' %}
-        {% endif %}
-        {%if grupo == 'tutor' and not calificacion == None%}
-            {% include 'proyecto/ver_nota.html' %}
-        {%endif%}
+    {%if grupo == 'tribunal' and not calificacion == None %}
+    {% include 'proyecto/ver_nota.html' %}
+    {% endif %}
+    {%if grupo == 'tutor' and not calificacion == None%}
+    {% include 'proyecto/ver_nota.html' %}
+    {%endif%}
     {% comment %}******** visto bueno ********{% endcomment %}
-        <p>
-        {% for sala_doc_est in salas_doc_est %}
-            {% if sala_doc_est.visto_bueno %}
-            <p><div class="d-inline p-2 bg-success text-white">
-                El {{sala_doc_est.grupo_revisor|title}} ya dio visto bueno al {{sala_doc_est.tipo|title}}</div></p>
-            {% else %}
-            <p><div class="d-inline p-2 bg-danger text-white">
-                El {{sala_doc_est.grupo_revisor|title}} aún no dio el visto bueno al {{sala_doc_est.tipo|title}}</div></p>
-            {% endif %}
-        {% endfor %}
-        </p>
-    </div>
-    <div class="col-md-5">
-        {% comment %}***** progreso ******{% endcomment %}
-            <h5>Progreso del estudiante</h5>
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
-                        aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
-                        {{progreso}}%
-                    </div>
-                </div>
-            <br>
+    <p>
+    {% for sala_doc_est in salas_doc_est %}
+    {% if sala_doc_est.visto_bueno %}
+    <p><div class="d-inline p-2 bg-success text-white">
+      El {{sala_doc_est.grupo_revisor|title}} ya dio visto bueno al {{sala_doc_est.tipo|title}}</div></p>
+    {% else %}
+    <p><div class="d-inline p-2 bg-danger text-white">
+      El {{sala_doc_est.grupo_revisor|title}} aún no dio el visto bueno al {{sala_doc_est.tipo|title}}</div></p>
+    {% endif %}
+    {% endfor %}
+    </p>
 
-        {% include 'proyecto/documentos_estudiante.html'%}
+  {% comment %}[>***** barras del cronograma *****<]{% endcomment %}
+  {% include 'proyecto/cronograma_info.html'%}
+
+  {% comment %}***** boton ver cronograma *****{% endcomment %}
+  {% if estudiante.equipo.registrocronograma %}
+    <a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.equipo.id %}>Cronograma</a>
+  {% else %}
+    <a class="btn btn-warning disabled" href=#>Cronograma</a>
+  {% endif %}
+
+  <br><br><a class="btn btn-danger" href='/'> Atras</a>
+
+  </div>
+
+  <div class="col-md-5">
+    {% comment %}***** progreso ******{% endcomment %}
+    <h5>Progreso del estudiante</h5>
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
+      aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
+      {{progreso}}%
+      </div>
     </div>
+    <br>
+    {% include 'proyecto/documentos_estudiante.html'%}
+  </div>
 </div>
 
-{% comment %}***** barras del cronograma *****{% endcomment %}
-{% include 'proyecto/cronograma_info.html'%}
+{% comment %}[>***** barras del cronograma *****<]{% endcomment %}
+{% comment %}{% include 'proyecto/cronograma_info.html'%}{% endcomment %}
 
 {% comment %}***** boton ver cronograma *****{% endcomment %}
-{% if estudiante.registrocronograma %}
-    <a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.id %}>Cronograma</a>
-{% else %}
-    <a class="btn btn-warning disabled" href=#>Cronograma</a>
-{% endif %}
+{% comment %}{% if estudiante.equipo.registrocronograma %}{% endcomment %}
+  {% comment %}<a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.equipo.id %}>Cronograma</a>{% endcomment %}
+{% comment %}{% else %}{% endcomment %}
+  {% comment %}<a class="btn btn-warning disabled" href=#>Cronograma</a>{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
 
-
-
-
-
-
-
-{% comment %}<div class="row">{% endcomment %}
-    {% comment %}<div class="col-md-7">{% endcomment %}
-    {% comment %}{% include 'revisar/vista_revisor.html'%}{% endcomment %}
-        {% comment %}[>********* PROYECTO TRIBUNAL **************<]{% endcomment %}
-        {% comment %}[>{% if progreso >= 86 and grupo == 'tribunal'%}<]{% endcomment %}
-            {% comment %}[>{% if estudiante.registroproyectotribunal and estudiante.registroproyectotribunal.nota %}<]{% endcomment %}
-                {% comment %}[>{% include 'proyecto/ver_nota.html' %}<]{% endcomment %}
-            {% comment %}[>{% elif estudiante.registroproyectotribunal %}<]{% endcomment %}
-                {% comment %}[><a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' estudiante.id %}>Calificar Proyecto Final</a><]{% endcomment %}
-            {% comment %}[>{% else %}<]{% endcomment %}
-                {% comment %}[>{% include 'proyecto/revisar_tribunal.html' %}<]{% endcomment %}
-            {% comment %}[>{% endif %}<]{% endcomment %}
-        {% comment %}[>{% endif %}<]{% endcomment %}
-        {% comment %}[>********* PROYECTO DE GRADO **************<]{% endcomment %}
-        {% comment %}[>{% if progreso >= 64 and progreso < 86 and not grupo == 'director' and not estudiante.proyectodegrado %}<]{% endcomment %}
-            {% comment %}[><h4 class='text-center'><strong>REVISIÓN DE PROYECTO DE GRADO</strong></h4><]{% endcomment %}
-            {% comment %}[><div class = 'border border-4 <]{% endcomment %}
-            {% comment %}[>{% if progreso >= 64%}<]{% endcomment %}
-                {% comment %}[>border-success<]{% endcomment %}
-            {% comment %}[>{% else %}<]{% endcomment %}
-                {% comment %}[>border-secondary<]{% endcomment %}
-            {% comment %}[>{% endif %}<]{% endcomment %}
-            {% comment %}[>'><]{% endcomment %}
-            {% comment %}[><table class="table table-striped table-hover "><]{% endcomment %}
-            {% comment %}[><thead><]{% endcomment %}
-                {% comment %}[><tr><]{% endcomment %}
-                {% comment %}[><th scope="col">Asunto</th><]{% endcomment %}
-                {% comment %}[><th scope="col">Detalles</th><]{% endcomment %}
-                {% comment %}[><th scope="col"><]{% endcomment %}
-                    {% comment %}[>{% if grupo == 'docente'%}<]{% endcomment %}
-                    {% comment %}[>{% if estudiante.vb_proyecto_docente%}<]{% endcomment %}
-                    {% comment %}[><div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div><]{% endcomment %}
-                    {% comment %}[>{% else %}<]{% endcomment %}
-                        {% comment %}[>{% if salas_proy and estudiante.vb_proyecto_tutor %}<]{% endcomment %}
-                            {% comment %}[><a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" <]{% endcomment %}
-                            {% comment %}[>data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno"><]{% endcomment %}
-                            {% comment %}[>Dar Visto Bueno</a><]{% endcomment %}
-                        {% comment %}[>{% else %}<]{% endcomment %}
-                            {% comment %}[><a href=# type="button" class="btn btn-outline-danger btn-sm disabled" <]{% endcomment %}
-                            {% comment %}[>data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno"><]{% endcomment %}
-                            {% comment %}[>Dar Visto Bueno</a><]{% endcomment %}
-                        {% comment %}[>{% endif %}<]{% endcomment %}
-                    {% comment %}[>{% endif %}<]{% endcomment %}
-                    {% comment %}[>{% endif %}<]{% endcomment %}
-                    {% comment %}[>{% if grupo == 'tutor'%}<]{% endcomment %}
-                    {% comment %}[>{% if estudiante.vb_proyecto_tutor%}<]{% endcomment %}
-                    {% comment %}[><div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div><]{% endcomment %}
-                    {% comment %}[>{% else %}<]{% endcomment %}
-                        {% comment %}[>{% if salas_proy %}<]{% endcomment %}
-                            {% comment %}[><a href="{% url 'visto_bueno_proyecto' estudiante.id %}" type="button" class="btn btn-outline-danger btn-sm" <]{% endcomment %}
-                            {% comment %}[>data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno"><]{% endcomment %}
-                            {% comment %}[>Dar Visto Bueno</a><]{% endcomment %}
-                        {% comment %}[>{% else %}<]{% endcomment %}
-                        {% comment %}[><a href=# type="button" class="btn btn-outline-danger btn-sm disabled"> <]{% endcomment %}
-                            {% comment %}[>Dar Visto Bueno</a><]{% endcomment %}
-                        {% comment %}[>{% endif %}<]{% endcomment %}
-                    {% comment %}[>{% endif %}<]{% endcomment %}
-                    {% comment %}[>{% endif %}<]{% endcomment %}
-                {% comment %}[></th><]{% endcomment %}
-                {% comment %}[>{% if grupo == 'tutor' %}<]{% endcomment %}
-                    {% comment %}[><th scope="col">Revisar</th><]{% endcomment %}
-                {% comment %}[>{% endif %}<]{% endcomment %}
-                {% comment %}[></tr><]{% endcomment %}
-            {% comment %}[></thead><]{% endcomment %}
-            {% comment %}[><tbody><]{% endcomment %}
-                {% comment %}[>{%for s, no_visto in dicc_salas_proy.items%}<]{% endcomment %}
-                {% comment %}[><tr><]{% endcomment %}
-                {% comment %}[><td><]{% endcomment %}
-                {% comment %}[>{{s.sala}}<]{% endcomment %}
-                {% comment %}[></td>      <]{% endcomment %}
-                {% comment %}[><td><]{% endcomment %}
-                {% comment %}[><p><]{% endcomment %}
-                {% comment %}[><button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><]{% endcomment %}
-                    {% comment %}[>Detalles<]{% endcomment %}
-                {% comment %}[></button><]{% endcomment %}
-                {% comment %}[></p><]{% endcomment %}
-                {% comment %}[><div class="collapse" id="collapseExample"><]{% endcomment %}
-                {% comment %}[><div class="card card-body"><]{% endcomment %}
-                    {% comment %}[>{{s.texto}}<]{% endcomment %}
-                {% comment %}[></div><]{% endcomment %}
-                {% comment %}[></div><]{% endcomment %}
-                {% comment %}[></td>      <]{% endcomment %}
-                {% comment %}[><td><]{% endcomment %}
-                    {% comment %}[><a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Proyecto</a><]{% endcomment %}
-                {% comment %}[></td><]{% endcomment %}
-
-                {% comment %}[><td><]{% endcomment %}
-                {% comment %}[>{% if grupo == 'tutor' %}<]{% endcomment %}
-                    {% comment %}[>{% if no_visto == 0%}<]{% endcomment %}
-                    {% comment %}[><a class="btn btn-primary position-relative" href="{% url 'sala_revisar_proyecto' s.id %}">Observación</a><]{% endcomment %}
-                    {% comment %}[>{% else %}<]{% endcomment %}
-                    {% comment %}[><a href="{% url 'sala_revisar_proyecto' s.id %}" type="button" class="btn btn-primary position-relative"><]{% endcomment %}
-                        {% comment %}[>Observación<]{% endcomment %}
-                    {% comment %}[><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"><]{% endcomment %}
-                        {% comment %}[>{{no_visto}}<]{% endcomment %}
-                        {% comment %}[><span class="visually-hidden">unread messages</span><]{% endcomment %}
-                    {% comment %}[></span><]{% endcomment %}
-                    {% comment %}[></a><]{% endcomment %}
-                    {% comment %}[>{% endif %}<]{% endcomment %}
-                    {% comment %}[>[><a class="btn btn-primary" href="{% url 'proyecto_corregido' s.id %}">Corrección</a><]<]{% endcomment %}
-                {% comment %}[>{% endif %}<]{% endcomment %}
-                {% comment %}[></td>      <]{% endcomment %}
-                {% comment %}[></tr><]{% endcomment %}
-                {% comment %}[>{%endfor%}<]{% endcomment %}
-            {% comment %}[></tbody><]{% endcomment %}
-            {% comment %}[></table><]{% endcomment %}
-            {% comment %}[></div><]{% endcomment %}
-            {% comment %}[><br><]{% endcomment %}
-        {% comment %}[>{% endif %}<]{% endcomment %}
-        {% comment %}[>********* PERFIL **************<]{% endcomment %}
-        {% comment %}[>{% if progreso < 64 and not grupo == 'director'%}<]{% endcomment %}
-            {% comment %}[>{% if grupo == 'tutor' and not estudiante.vb_perfil_tutor %}<]{% endcomment %}
-                {% comment %}[>{% include 'proyecto/revisar_perfil.html'%}<]{% endcomment %}
-            {% comment %}[>{% elif grupo == 'docente' and estudiante.vb_perfil_tutor%}<]{% endcomment %}
-                {% comment %}[>{% include 'proyecto/revisar_perfil.html'%}<]{% endcomment %}
-            {% comment %}[>{% elif grupo == 'tutor' and estudiante.vb_perfil_tutor%}<]{% endcomment %}
-                {% comment %}[><div class="d-inline p-2 bg-danger text-white">El Docente ETN-1040 dará visto bueno al perfil.</div><]{% endcomment %}
-            {% comment %}[>{% endif %}<]{% endcomment %}
-        {% comment %}[>{% endif %}<]{% endcomment %}
-    {% comment %}</div>{% endcomment %}
-    {% comment %}<div class="col-md-5">{% endcomment %}
-        {% comment %}{% include 'proyecto/documentos_estudiante.html'%}{% endcomment %}
-    {% comment %}</div>{% endcomment %}
-{% comment %}</div>{% endcomment %}
-
-<br>
-<br>
-<a class="btn btn-danger" href='/'> Atras</a>
-<br>
+{% comment %}<br>{% endcomment %}
+{% comment %}<br>{% endcomment %}
+{% comment %}<a class="btn btn-danger" href='/'> Atras</a>{% endcomment %}
+{% comment %}<br>{% endcomment %}
 {% endblock %}
 

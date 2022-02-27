@@ -164,13 +164,13 @@
 <h5>Progreso:</h5>
 <div class="progress">
   <div class="progress-bar" role="progressbar" style="width: {{progreso}}%;"
-                                               aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
+    aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100">
     {{progreso}}%
   </div>
 </div>
 <p>
 {% if cronograma_existe %}
-{% include 'proyecto/cronograma_info.html'%}
+  {% include 'proyecto/cronograma_info.html'%}
 {% endif %}
 </p>
 

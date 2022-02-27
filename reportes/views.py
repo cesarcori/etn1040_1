@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from proyecto.decorators import unauthenticated_user, allowed_users, admin_only
 from proyecto.models import DatosEstudiante, Equipo, ProyectoDeGrado
@@ -6,6 +6,7 @@ from proyecto.models import DatosEstudiante, Equipo, ProyectoDeGrado
 from .formularios import *
 from .reportes import *
 from .cartas import *
+from .form import *
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','docente','director','tribunal'])
@@ -79,15 +80,15 @@ def formularioRegistroSeguimiento(request, pk):
     estudiante = DatosEstudiante.objects.get(id=pk)
     proyecto = ProyectoDeGrado.objects.get(equipo=estudiante.equipo)
     # lo siguiente hay que hagregar de alguna forma a la base de datos
-    generarRegistroSeguimiento(buffer,proyecto)
+    generarRegistroSeguimiento(buffer,estudiante,proyecto)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_registro_seguimiento.pdf')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','docente'])
-def auspicioFormRegSeg(request, id_est):
+def auspicioFormRegSeg(request, pk):
     grupo = request.user.groups.get().name
-    estudiante = DatosEstudiante.objects.get(id=id_est)
+    estudiante = DatosEstudiante.objects.get(id=pk)
     if not Auspicio.objects.filter(usuario=estudiante).exists():
         Auspicio.objects.create(usuario=estudiante)
     auspicio_est = Auspicio.objects.get(usuario=estudiante)

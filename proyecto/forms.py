@@ -256,11 +256,11 @@ class TribunalForm(forms.ModelForm):
         fields = ['correo']
         # fields = '__all__'
         # exclude = ['usuario','imagen_perfil','celular',]
-class AuspicioForm(forms.ModelForm):
-    class Meta:
-        model = Auspicio
-        fields = '__all__'
-        exclude = ['usuario']
+# class AuspicioForm(forms.ModelForm):
+    # class Meta:
+        # model = Auspicio
+        # fields = '__all__'
+        # exclude = ['usuario']
 # class FirmasForm(forms.ModelForm):
     # class Meta:
         # model = Firmas

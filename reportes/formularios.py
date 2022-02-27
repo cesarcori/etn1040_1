@@ -208,13 +208,19 @@ def generarformularioAceptacion(buffer, equipo):
     remove('form1_solapa.pdf')
 
 def generarFormularioSolicituTribunal(buffer, proyecto):
-    estudiante = proyecto.equipo.datosestudiante_set.get() 
-    individual = 'V'
-    equipo_de = '1'
+    estudiante = proyecto.equipo.datosestudiante_set.first() 
+    equipo = proyecto.equipo
+    if equipo.cantidad > 1:
+        individual = 'NO'
+        equipo_de = str(equipo.cantidad)
+    else:
+        individual = 'SI'
+        equipo_de = '1'
+    nombres_carnet = [f"{n.__str__()}{50*' '}{n.carnet.__str__()} {n.extension.__str__()}" for n in equipo.datosestudiante_set.all()]
     nombre = estudiante.__str__()
     carnet = estudiante.carnet
     extension = estudiante.extension
-    tutor = estudiante.tutor.__str__()
+    tutor = estudiante.equipo.tutor.__str__()
     titulo = proyecto.titulo
     nota_40 = proyecto.calificacion.__str__()
     # literal_40 = 'Cuarenta y nueve'
@@ -235,12 +241,20 @@ def generarFormularioSolicituTribunal(buffer, proyecto):
     pdf.set_xy(140,54)
     pdf.cell(w=5, h=6, txt=equipo_de, ln=1, border=0, align='C')
 
-# Postulante
-    pdf.set_xy(35,72)
-    pdf.cell(w=100, h=6, txt=nombre, ln=1, border=0, align='L')
+# Postulantes
+    n = 0
+    for nombre_carnet in nombres_carnet:
+        pdf.set_xy(32,72+n)
+        pdf.cell(txt=nombre_carnet, ln=1, align="J")
+        n += 5
 
-    pdf.set_xy(135,72)
-    pdf.cell(w=50, h=6, txt=carnet + ' ' + extension, ln=1, border=0, align='L')
+    # pdf.set_xy(85,122)
+
+    # pdf.set_xy(35,72)
+    # pdf.cell(w=100, h=6, txt=nombre, ln=1, border=0, align='L')
+
+    # pdf.set_xy(135,72)
+    # pdf.cell(w=50, h=6, txt=carnet + ' ' + extension, ln=1, border=0, align='L')
 
 # Docente Tutor
     pdf.set_xy(35,98)
@@ -320,9 +334,9 @@ def generarFormularioSolicituTribunal(buffer, proyecto):
     # eliminando el pdf auxiliar
     remove('form4_solapa.pdf')
 
-def generarRegistroSeguimiento(buffer, proyecto):
+def generarRegistroSeguimiento(buffer, estudiante, proyecto):
     # mencion
-    estudiante = proyecto.equipo.datosestudiante_set.get()
+    # estudiante = proyecto.equipo.datosestudiante_set.first()
     tele= ''
     control = ''
     sistemas = ''
@@ -336,7 +350,7 @@ def generarRegistroSeguimiento(buffer, proyecto):
     carnet = estudiante.carnet
     extension = estudiante.extension
     titulo = proyecto.titulo
-    docente_tutor = estudiante.tutor.__str__()
+    docente_tutor = estudiante.equipo.tutor.__str__()
     docente = estudiante.grupo_doc.__str__()
     mencion = estudiante.mencion
     nota1 = proyecto.nota_tiempo_elaboracion.__str__()
@@ -344,9 +358,6 @@ def generarRegistroSeguimiento(buffer, proyecto):
     nota3 = proyecto.nota_informes_trabajo.__str__()
     nota4 = proyecto.nota_cumplimiento_cronograma.__str__()
     calificacion = proyecto.calificacion.__str__()
-    # empresa = 'Carrera de Ingeniería Electrónica'
-    # supervisor = 'Ing. Vladimir Barra Garcia'
-    # cargo = 'Jefe de Carrera Ingeniería Electrónica'
     if Auspicio.objects.filter(usuario=estudiante).exists():
         if estudiante.auspicio.empresa:
             empresa = estudiante.auspicio.empresa.__str__()
@@ -362,8 +373,13 @@ def generarRegistroSeguimiento(buffer, proyecto):
         supervisor = ''
         cargo = ''
     # individual o multiple
-    individual = 'V'
-    multiple = ''
+    if proyecto.equipo.cantidad > 1: 
+        individual = ''
+        multiple = 'V'
+    else:
+        individual = 'V'
+        multiple = ''
+
     # fecha aprobacion
     fecha_aprobacion = proyecto.fecha_creacion.date().__str__()
     mes = proyecto.fecha_creacion.month.__str__()
@@ -542,7 +558,7 @@ def generarRegistroSeguimiento(buffer, proyecto):
 def generarFormularioMateria(buffer, estudiante):
     ## info de base de datos
     postulante = estudiante.__str__()
-    asesor = estudiante.tutor.__str__()
+    asesor = estudiante.equipo.tutor.__str__()
     docente_etn1040 = estudiante.grupo_doc.__str__()
     titulo = estudiante.equipo.proyectodegrado.titulo
     mencion = estudiante.mencion
