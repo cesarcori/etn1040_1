@@ -7,7 +7,7 @@
 <p><a href="{{ proyecto.archivo.url }}">Proyecto de Grado Aprobado<a></p>
 
 {% comment %} calificacion{% endcomment %}
-{% if estudiante.registroproyectotribunal.nota_final %}
+{% if notas_tribunales %}
     {% include 'proyecto/ver_nota.html' %}
 {% else %}
     <h4 class="text-center">El Tribunal aún no calificó el Proyecto de Grado</h4>

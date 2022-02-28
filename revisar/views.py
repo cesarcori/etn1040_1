@@ -72,7 +72,7 @@ def mensajes(request, id_sala_rev):
     usuario = request.user
     grupo = usuario.groups.get()
     sala = SalaRevisarApp.objects.get(id=id_sala_rev)
-    ultima_sala = SalaRevisarApp.objects.last()
+    ultima_sala = sala.sala_documento.salarevisarapp_set.all().last()
     is_ultima_sala = sala == ultima_sala
     form = MensajeRevisarAppForm
     if request.method == "POST":
@@ -101,7 +101,14 @@ def mensajes(request, id_sala_rev):
 @allowed_users(allowed_roles=['tutor','docente','tribunal'])
 def darVistoBueno(request, id_sala_doc):
     sala_doc = get_object_or_404(SalaDocumentoApp, id=id_sala_doc)
-    texto_actividad = f"visto bueno {sala_doc.tipo} {sala_doc.revisor.groups.get()}"
+    grupo_revisor = sala_doc.revisor.groups.get().name
+    if grupo_revisor == 'tribunal':
+        if actividadRealizadaEstudiante("visto bueno tribunal 1", sala_doc.equipo.datosestudiante_set.first()):
+            texto_actividad = f"visto bueno {sala_doc.tipo} 2"
+        else:
+            texto_actividad = f"visto bueno {sala_doc.tipo} 1"
+    else:
+        texto_actividad = f"visto bueno {sala_doc.tipo} {sala_doc.revisor.groups.get()}"
     agregarActividadEquipo(texto_actividad, sala_doc.equipo)
     if request.method == 'POST':
         sala_doc.visto_bueno = True

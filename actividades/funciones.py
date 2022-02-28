@@ -42,12 +42,12 @@ def pasosRealizados(estudiante):
     pasos = {1:2, 2:3, 3:7, 4:13, 5:18, 6:29}
     cantidad_actividades = estudiante.actividad.all().count()
     pasos_realizados = []
-    print(cantidad_actividades)
+    # print(cantidad_actividades)
 
     for paso, actividad in pasos.items():
         if cantidad_actividades >= actividad:
             pasos_realizados.append(paso)
-    print(pasos_realizados)
+    # print(pasos_realizados)
 
     return pasos_realizados
 
@@ -113,8 +113,8 @@ def informarCronograma(pk):
             return (mensaje_limite)
         # En caso de conclusion de proyecto 
         if progress(estudiante) >= 100:
-            fecha_100 = progreso.fecha_creacion
-            fecha_eliminar = fecha_100 + timedelta(100)
+            fecha_100 = equipo.fecha_conclusion
+            fecha_eliminar = fecha_100 + timedelta(180)
             if fecha_eliminar.date() < date.today():
                 # estudiante.usuario.delete()
                 print('cuenta eliminada')
@@ -127,7 +127,7 @@ def informarCronograma(pk):
             por_dia_sistema = ''
             por_dia_retrazo = ''
             limite_cronograma = ''
-        # caso de reglamento sanabria, no conclucion de perfil
+        # caso de reglamento sanabria, no conclusion de perfil
         if not estudiante.equipo.registroperfil:
             fecha_ingreso = estudiante.fecha_inscripcion.date()
         # se establese fecha limite del semestre de fin de septiembre y fin de marzo
@@ -152,17 +152,17 @@ def informarCronograma(pk):
         limite_cronograma = ''
         mensaje_limite = ''
     context = {
-                'dia_restante_crono':dia_restante_crono,
-                'dia_restante_sistema':dia_restante_sistema,
-                'dia_retrazo':dia_retrazo,
-                'semana_total':semana_total,
-                'por_dia_crono':por_dia_crono,
-                'por_dia_sistema':por_dia_sistema,
-                'por_dia_retrazo':por_dia_retrazo,
-                'limite_cronograma':limite_cronograma,
-                'cronograma_existe':cronograma_existe,
-                'estudiante':estudiante,
-            'dia_restante_sistema':dia_restante_sistema,
-            'mensaje_limite':mensaje_limite}
+        'dia_restante_crono':dia_restante_crono,
+        'dia_restante_sistema':dia_restante_sistema,
+        'dia_retrazo':dia_retrazo,
+        'semana_total':semana_total,
+        'por_dia_crono':por_dia_crono,
+        'por_dia_sistema':por_dia_sistema,
+        'por_dia_retrazo':por_dia_retrazo,
+        'limite_cronograma':limite_cronograma,
+        'cronograma_existe':cronograma_existe,
+        'estudiante':estudiante,
+        'dia_restante_sistema':dia_restante_sistema,
+        'mensaje_limite':mensaje_limite}
     return context
 

@@ -17,7 +17,7 @@ class SalaDocumentoApp(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         self.titulo = self.revisor.first_name
-        return f'Documento: {self.tipo}, Revisor: {self.titulo}-{self.grupo_revisor}, Est: {self.equipo.nombre}'
+        return f'Documento: {self.tipo}, Revisor: {self.grupo_revisor.__str__()}, Equipo: {self.equipo.__str__()}'
 
 class SalaRevisarApp(models.Model):
     sala_documento = models.ForeignKey(SalaDocumentoApp, null=True, blank=True, on_delete=models.CASCADE)

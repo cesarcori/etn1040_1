@@ -15,7 +15,7 @@
   <br>
 {% endif %}
 
-{% if not estudiante.tribunales.count == 2 and grupo != 'director' %}
+{% if not equipo.tribunales.count == 2 and grupo != 'director' %}
   {% include 'revisar/vista_revisor.html'%}
 {% endif %}
 
@@ -24,23 +24,29 @@
 {% endif %}
 
 {% comment %}***** solicitar y ver tribunal *****{% endcomment %}
-{%if grupo == 'docente' and not estudiante.solicitud_tribunal_docente and estudiante.equipo.proyectodegrado and calificacion != None%}
-<a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' estudiante.id %}>Solicitar Tribunal a Jefatura de Carrera</a><br><br>
+{%if grupo == 'docente' and not equipo.solicitud_tribunal_docente and equipo.proyectodegrado and calificacion != None%}
+  <a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' equipo.id %}>Solicitar Tribunal a Jefatura de Carrera</a><br><br>
 {% elif grupo == 'docente' or grupo == 'tutor' %}
-  {% if estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
-    <div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura</div>
-  {% elif estudiante.tribunales.count == 2%}
+  {% if equipo.solicitud_tribunal_docente and equipo.tribunales.count < 2%}
+    <div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura de carrera</div><br><br>
+  {% elif equipo.tribunales.count == 2 %}
     {% include 'proyecto/lista_tribunal_asignado.html'%}
   {% endif %}
-{% elif grupo == 'director' and estudiante.solicitud_tribunal_docente and estudiante.tribunales.count < 2%}
+{% elif grupo == 'director' and equipo.solicitud_tribunal_docente and equipo.tribunales.count < 2%}
   <p>
   <div class="d-inline p-2 bg-danger text-white">El docente ETN 1040 Ing. 
-    {{estudiante.grupo_doc}} solicito tribunales para el estudiante:
-    {{estudiante}}</div>
-  <a class="btn btn-warning" href={% url 'asignar_tribunal' estudiante.id %}>Asignar Tribunal</a>
+    {{equipo.docente}}, solicitó tribunales para 
+    {% if equipo.cantidad > 1 %}
+      el equipo:
+      {{equipo.alias}}</div>
+    {% else %}
+      el estudiante:
+      {{estudiante}}</div>
+    {% endif %}
+  <a class="btn btn-warning" href={% url 'asignar_tribunal' equipo.id %}>Asignar Tribunal</a>
   </p>
 {% elif grupo == 'director' or grupo == 'tutor' %}
-  {% if estudiante.tribunales.count == 2%}
+  {% if equipo.tribunales.count == 2 %}
     {% include 'proyecto/lista_tribunal_asignado.html'%}
   {% endif %}
 {%endif%}
@@ -48,7 +54,7 @@
 <div class="row">
   <div class="col-md-7">
     {% comment %}***** aviso no se puso la nota{% endcomment %}
-    {%if grupo != 'tribunal' and not estudiante.registroproyectotribunal.nota and estudiante.registroproyectotribunal %}
+    {%if grupo != 'tribunal' and not equipo.registroproyectotribunal.nota and equipo.registroproyectotribunal %}
       <h5 class='text-center'>El Tribunal aún no puso la nota</h5>
       <h5 class='text-center'>Se espera la defensa de Proyecto de Grado</h5>
     {%endif%}
@@ -62,8 +68,8 @@
     {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
       <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
     {%endif%}
-    {% if grupo == 'tribunal' and estudiante.registroproyectotribunal and not estudiante.registroproyectotribunal.nota %}
-      <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' estudiante.id %}>Calificar Proyecto Final</a>
+    {% if grupo == 'tribunal' and equipo.registroproyectotribunal and not is_nota_tribunal %}
+      <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' equipo.id %}>Calificar Proyecto Final</a><br><br>
     {% endif %}
     {% comment %}****** ver nota ******{% endcomment %}
     {%if grupo == 'docente' or grupo == 'director' %}

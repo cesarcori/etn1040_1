@@ -36,7 +36,7 @@
             <td>3%</td>
             <td><strong>{{proyecto.nota_cumplimiento_cronograma}}</strong></td>
           </tr>
-          <tr class="table-light">
+          <tr class="table-success">
             <td>Suma Calificación Docente ETN-1040</td>
             <td>40%</td>
             <td><strong>{{proyecto.calificacion}}</strong></td>
@@ -51,15 +51,19 @@
         <thead>
           <tr>
             <th scope="col">Actividad</th>
-            <th scope="col">Ponderación Max.</th>
-            <th scope="col">Nota obtenida</th>
+            <th scope="col">Nota obtenida Max 60%</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="table-light">
-            <td>Calificación Tribunal</td>
-            <td>60 %</td>
-            <td><strong>{{estudiante.registroproyectotribunal}}</strong></td>
+          {% for nota_tribunal in notas_tribunales %}
+            <tr>
+              <td>Tribunal: {{nota_tribunal.tribunal}}</td>
+              <td><strong>{{nota_tribunal.nota}}</strong></td>
+            </tr>
+          {% endfor %}
+          <tr class="table-success">
+            <td>Promedio</td>
+            <td><strong>{{equipo.registroproyectotribunal.nota}}</strong></td>
           </tr>
         </tbody>
       </table>
@@ -71,14 +75,14 @@
           <tr>
             <th scope="col">Actividad</th>
             <th scope="col">Ponderación Max.</th>
-            <th scope="col">Nota obtenida</th>
+            <th scope="col">Nota Final</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="table-light">
+          <tr class="table-success">
             <td>Calificación Total</td>
             <td>100 %</td>
-            <td><strong>{{estudiante.registroproyectotribunal}}</strong></td>
+            <td><strong>{{equipo.nota_final}}</strong></td>
           </tr>
         </tbody>
       </table>

@@ -100,9 +100,9 @@
           {% endif %}
         </tr>
         <tr>
-          {% if estudiante.registroproyectotribunal%}
+          {% if estudiante.equipo.registroproyectotribunal%}
             <td class='bg-success text-white'>
-              <a target='_blank' href={{ estudiante.registroproyectotribunal.archivo.url }} 
+              <a target='_blank' href={{ estudiante.equipo.registroproyectotribunal.archivo.url }} 
                 class='text-white text-underline-hover'>
                 Proyecto de Grado<br>corregido por tribunal</a></td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>

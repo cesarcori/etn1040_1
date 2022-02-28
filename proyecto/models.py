@@ -90,7 +90,7 @@ class DatosEstudiante(models.Model):
     # tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
     # tutor_acepto = models.BooleanField(default=False)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
-    solicitud_tribunal_docente = models.BooleanField(default=False)
+    # solicitud_tribunal_docente = models.BooleanField(default=False)
     # tribunales = models.ManyToManyField(DatosTribunal, blank=True)
     modalidad = models.CharField(max_length=200, choices=MODALIDAD, null=True, blank=True)
     equipo = models.ForeignKey('Equipo', null=True, blank=True, on_delete=models.SET_NULL)
@@ -107,7 +107,10 @@ class Equipo(models.Model):
     docente = models.ForeignKey(DatosDocente,on_delete=models.SET_NULL, null=True, blank=True)
     tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
     tutor_acepto = models.BooleanField(default=False)
+    solicitud_tribunal_docente = models.BooleanField(default=False)
     tribunales = models.ManyToManyField(DatosTribunal, blank=True)
+    nota_final = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
+    fecha_conclusion = models.DateTimeField(null=True,blank=True)
     def __str__(self):
         return f'Equipo: {self.nombre}'
 
@@ -226,13 +229,18 @@ class ProyectoDeGrado(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class RegistroProyectoTribunal(models.Model):
-    usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    # usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(null=True)
     archivo = models.FileField(upload_to='proyectos/', null=True)
-    nota = models.PositiveSmallIntegerField(null=True, blank=True)
-    nota_final = models.PositiveSmallIntegerField(null=True, blank=True)
+    nota = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+
+class NotaTribunal(models.Model):
+    equipo = models.ForeignKey(Equipo, null=True, blank=True, on_delete=models.CASCADE)
+    tribunal = models.ForeignKey(DatosTribunal, null=True, blank=True, on_delete=models.CASCADE)
+    nota = models.PositiveSmallIntegerField(null=True, blank=True)
 
 class Auspicio(models.Model):
     usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)

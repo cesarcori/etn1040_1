@@ -29,4 +29,10 @@ def cambio_docente(sender, instance, created, **kwargs):
         instance.equipo.docente = instance.grupo_doc
         instance.equipo.save()
 
+# @receiver(pre_delete, sender=NotaTribunal)
+# def eliminar_nota(sender, instance, **kwargs):
+    # """ Al eliminar la nota del tribunal, se reestablece las notas anteriores """
+    # estudiantes = instance.datosestudiante_set.all()
+    # for estudiante in estudiantes:
+        # estudiante.delete()
 

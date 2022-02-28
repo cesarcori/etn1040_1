@@ -171,7 +171,7 @@ class RegistroProyectoTribunalForm(forms.ModelForm):
     class Meta:
         model = RegistroProyectoTribunal
         fields = '__all__'
-        exclude = ['usuario','nota', 'nota_final']
+        exclude = ['equipo','nota', 'nota_final']
         widgets = {
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
                         'placeholder':'Título del Proyecto de Grado...'}),
@@ -191,8 +191,11 @@ class CalificarProyectoForm(forms.Form):
     nota3= forms.IntegerField(min_value=0, max_value=22,label='Informes de Trabajo (Max. 22%)')
     nota4= forms.IntegerField(min_value=0, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
 
-class CalificarProyectoTribunalForm(forms.Form):
-    nota = forms.IntegerField(min_value=0, max_value=60,label='Nota Final (Max. 60%)')
+class CalificarProyectoTribunalForm(forms.ModelForm):
+    nota = forms.IntegerField(min_value=0, max_value=60,label='Nota (Max. 60%)')
+    class Meta:
+        model = NotaTribunal
+        fields = ['nota']
 
 class DatosTutorForm(forms.ModelForm):
     class Meta:

@@ -1,28 +1,27 @@
 <table class="table table-striped">
-<thead>
+  <thead>
     <tr>
-    <th scope="col">Tribunal asignado</th>
-    {% if grupo == 'estudiante'%}
+      <th scope="col">Tribunal asignado</th>
+      {% if grupo == 'estudiante'%}
         <th scope="col">Revisión</th>
-    {% endif %}
-    <th scope="col">Visto Bueno</th>
+      {% endif %}
+      <th scope="col">Visto Bueno</th>
     </tr>
-</thead>
-    <tbody>
+  </thead>
+  <tbody>
     {% for sala_doc in salas_doc %}
-        <tr>
-        <td><a href={% url 'enlace_tribunal' sala_doc.revisor.datostribunal.id %}>{{sala_doc.revisor.datostribunal}}</a><br></td>
-        {% if grupo == 'estudiante'%}
-            <!--<td><a href={% url 'entrega_tribunal' sala_doc.revisor.datostribunal.id estudiante.id%}>Ingresar</a></td>-->
-            <td><a href={% url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>
-                    Ingresar</a></td>
-        {% endif %}
-        {% if sala_doc.visto_bueno %}
-            <td><div class="d-inline p-1 bg-success text-white">Visto Bueno</div></td>
-        {% else %}
-            <td><div class="d-inline p-1 bg-danger text-white">Sin Visto Bueno</div></td>
-        {% endif %}
-        </tr>
+    <tr>
+      <td><a href={% url 'enlace_tribunal' sala_doc.revisor.datostribunal.id %}>{{sala_doc.revisor.datostribunal}}</a><br></td>
+      {% if grupo == 'estudiante'%}
+        <td><a href={% url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>
+          Ingresar</a></td>
+      {% endif %}
+      {% if sala_doc.visto_bueno %}
+        <td><div class="d-inline p-1 bg-success text-white">Visto Bueno</div></td>
+      {% else %}
+        <td><div class="d-inline p-1 bg-danger text-white">Sin Visto Bueno</div></td>
+      {% endif %}
+    </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>

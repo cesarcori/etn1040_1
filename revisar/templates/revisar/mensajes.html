@@ -1,19 +1,21 @@
 {% extends 'proyecto/main.html'%}
 {% block content%}
+{% comment %}{{is_ultima_sala}}{% endcomment %}
+{% comment %}{{sala.sala_documento.visto_bueno}}{% endcomment %}
 {% if is_ultima_sala and not sala.sala_documento.visto_bueno %}
-<form method="POST">
+  <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     {% if grupo == 'estudiante'%}
-        <a class="btn btn-danger" 
-            href={%url 'revisar:revisar_documento' sala.sala_documento.tipo sala.sala_documento.revisor.id %} name='atras'> Atras</a>
+      <a class="btn btn-danger" 
+      href={%url 'revisar:revisar_documento' sala.sala_documento.tipo sala.sala_documento.revisor.id %} name='atras'> Atras</a>
     {% else %}
-        <a class="btn btn-danger" 
-            href={%url 'progreso_estudiante' sala.sala_documento.equipo.id %}>Atras</a>
+      <a class="btn btn-danger" 
+      href={%url 'progreso_estudiante' sala.sala_documento.equipo.id %}>Atras</a>
     {% endif %}
     <button type="submit" name='enviar' class="btn btn-success"
-        value='enviar'>Enviar</button>
-</form>
+    value='enviar'>Enviar</button>
+  </form>
 {% endif %}
 
 <p>
