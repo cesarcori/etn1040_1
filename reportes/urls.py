@@ -14,6 +14,7 @@ urlpatterns = [
     path('formulario-registro-seguimiento/<int:pk>', views.formularioRegistroSeguimiento, name='formulario_registro_seguimiento'),
     path('formulario-reg-seg/auspicio/<int:pk>', views.auspicioFormRegSeg, name='auspicio_f3'),
     path('formulario-materia/<int:pk>', views.formularioMateria, name='formulario_materia'),
+    path('reporte-est/<int:pk>', views.reporteEstudiante, name='reporte_estudiante'),
 ]
 
 

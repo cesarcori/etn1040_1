@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'revisar',
     'actividades',
     'modalidad',
-    'reportes'
+    'reportes',
+    'busquedas',
 ]
 
 MIDDLEWARE = [

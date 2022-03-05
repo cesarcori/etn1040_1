@@ -1,5 +1,5 @@
 <h5>Lista de estudiantes ETN-1040, Proyecto de Grado:</h5>
-<table class="table table-striped">
+<table class="sortable table table-striped">
   <thead>
     <tr>
     {%if grupo == 'administrador'%}
@@ -28,7 +28,7 @@
         {%endif%}
 
         {%if grupo == 'docente' %}
-          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
+          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' estudiante.est.equipo.id %}">{{est}}</a></td>
         {%endif%}
 
         {%if grupo == 'director' %}

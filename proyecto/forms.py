@@ -224,31 +224,31 @@ class DatosTribunalForm(forms.ModelForm):
         model = DatosTribunal
         fields = '__all__'
         exclude = ['usuario','correo','firma']
-class BusquedaProyectoForm(forms.ModelForm):
-    class Meta:
-        model = BusquedaProyecto
-        fields = '__all__'
-        # exclude = ['usuario','calificacion']
-        widgets = {
-                'autor': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Nombre del autor del Perfil o Proyecto de Grado'}),
-                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Titulo del Perfil o Proyecto de Grado'}),
-                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Resumen del Proyecto de Grado...'}), 
-                'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Índice del Proyecto de Grado...'}), 
-                'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Bibliografía del Proyecto de Grado...'}), 
-                }
-        labels = {
-                'autor': 'Autor',
-                'titulo': 'Titulo',
-                'resumen': 'Resumen',
-                'indice': 'Índice',
-                'bibliografia': 'Bibliografía',
-                'perfil_proyecto' : 'Documento'
-                }
+# class BusquedaProyectoForm(forms.ModelForm):
+    # class Meta:
+        # model = BusquedaProyecto
+        # fields = '__all__'
+        # # exclude = ['usuario','calificacion']
+        # widgets = {
+                # 'autor': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        # 'placeholder':'Nombre del autor del Perfil o Proyecto de Grado'}),
+                # 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        # 'placeholder':'Titulo del Perfil o Proyecto de Grado'}),
+                # 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    # 'placeholder':'Resumen del Proyecto de Grado...'}), 
+                # 'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    # 'placeholder':'Índice del Proyecto de Grado...'}), 
+                # 'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    # 'placeholder':'Bibliografía del Proyecto de Grado...'}), 
+                # }
+        # labels = {
+                # 'autor': 'Autor',
+                # 'titulo': 'Titulo',
+                # 'resumen': 'Resumen',
+                # 'indice': 'Índice',
+                # 'bibliografia': 'Bibliografía',
+                # 'perfil_proyecto' : 'Documento'
+                # }
 class TutorForm(forms.ModelForm):
     class Meta:
         model = DatosTutor

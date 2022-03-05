@@ -2,10 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 
 class CanalPar(models.Model):
-    TIPO = {
-            ('MENSAJE','MENSAJE'),
-            ('OBSERVAR','OBSERVAR'),
-            }
+    TIPO = [
+            ('mensaje','MENSAJE'),
+            ('observar','OBSERVAR'),
+            ]
     de = models.ForeignKey(User, related_name='de', null=True, blank=True, on_delete=models.CASCADE)
     para = models.ForeignKey(User, related_name='para', null=True, blank=True, on_delete=models.CASCADE)
     tipo = models.CharField(max_length=200, choices=TIPO, null=True)

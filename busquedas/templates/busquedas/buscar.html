@@ -1,0 +1,17 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<p>
+<a href="{% url 'busquedas:buscar_datos' %}">Busqueda por datos</a><p>
+<form class="d-flex" method='post' action="" >
+  {% csrf_token %}
+  <input name="buscado" class="form-control me-2" type="search" placeholder="Búsqueda de Proyectos de Grado" aria-label="Search">
+  <button class="btn btn-outline-success" type="submit">Buscar</button>
+</form></p>
+<p>Se busco: <strong>{{ buscado }}</strong></p>
+{% for score, titulo in dicc_score.items %}
+  {{score}}% {{titulo}}<p>
+{%endfor%}
+{% if grupo == 'administrador' %}
+  <a class="btn btn-sm btn-info" href="{% url 'busquedas:agregar_proyecto' %}">Agregar Proyecto de Grado</a><p>
+{% endif %}
+{% endblock %}

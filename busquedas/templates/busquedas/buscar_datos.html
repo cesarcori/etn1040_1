@@ -1,0 +1,31 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<p>
+<h4>Busqueda por datos de los estudiantes</h4>
+<form class="d-flex" method='post' action="" >
+    {% csrf_token %}
+    <input name="buscado" class="form-control me-2" type="search" placeholder="Búsqueda de Proyectos de Grado" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Buscar</button>
+</form></p>
+<p>Se busco: <strong>{{ buscado }}</strong></p>
+<table class="table sortable">
+  <thead>
+    <tr>
+      <th scope="col">Autor</th>
+      <th scope="col">Título</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Contenido</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in query %}
+    <tr>
+      <td>{{q.autor}}</td>
+      <td>{{q.titulo}}</td>
+      <td>{{q.perfil_proyecto}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

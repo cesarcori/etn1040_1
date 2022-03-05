@@ -32,7 +32,8 @@ from .funciones import *
 from random import randint
 from datetime import timedelta,date 
 
-# # busqueda
+from busquedas.funciones import search
+# busqueda
 # import pandas as pd
 # from sklearn.feature_extraction.text import TfidfVectorizer
 # from sklearn.metrics.pairwise import linear_kernel
@@ -42,7 +43,7 @@ from datetime import timedelta,date
 # from pandas import read_csv
 
 # ********* activar o desactivar correo para pruebas *******
-activar_estudiante = True
+activar_estudiante = False
 # **********************************************************
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
@@ -235,7 +236,7 @@ def docente(request):
     datos_est = request.user.datosdocente.datosestudiante_set.filter(
             Q(modalidad="individual") | Q(modalidad=None)
             )
-    equipos_multiple = request.user.datosdocente.equipo_set.filter(cantidad__gt=1)
+    equipos_multiple = request.user.datosdocente.equipo_set.filter(cantidad = 1)
     context = {'datos_est':datos_est,'grupo':grupo, 'equipos_multiple':equipos_multiple}
     return render(request, 'proyecto/docente.html', context)
 
@@ -554,11 +555,11 @@ def editarPerfil(request):
             form = DatosEstudianteForm(request.POST, request.FILES, instance=estudiante)
             if form.is_valid():
                 form.save()
-                nombre = request.POST.get('nombre')
-                apellido = request.POST.get('apellido')
-                usuario.first_name = nombre
-                usuario.last_name = apellido
-                usuario.save()
+                # nombre = request.POST.get('nombre')
+                # apellido = request.POST.get('apellido')
+                # usuario.first_name = nombre
+                # usuario.last_name = apellido
+                # usuario.save()
                 return redirect('perfil')
     if grupo == 'administrador':
         administrador = usuario.datosadministrador
@@ -605,6 +606,7 @@ def editarPerfil(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','estudiante','tribunal','director','administrador'])
 def editarPassword(request):
+    grupo = request.user.groups.get().name
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -616,7 +618,7 @@ def editarPassword(request):
             # messages.error(request, 'Corrige el error de abajo.')
     else:
         form = PasswordChangeForm(request.user)
-    context = {'form':form}
+    context = {'form':form,'grupo':grupo}
     return render(request, 'proyecto/editar_password.html', context)
 
 @login_required(login_url='login')
@@ -791,82 +793,15 @@ def enlaceEstudianteTitulado(request, id_est_tit):
         context = {'grupo': grupo,'estudiante':estudiante,}
         return render(request, 'proyecto/enlace_estudiante_titulado.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','administrador','docente','tutor','director'])
-def reporteEstudiante(request, id_est):
-    grupo = request.user.groups.get().name
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    if estudiante.progreso.nivel == 1:
-        pasos = {
-                }
-        pasos_falta = {
-                'Paso 1':['Conocimiento de Reglamentos de Proyecto de Grado',
-                        'Revisión y estudio del material compartido por Docente'],
-                'Paso 2':['Búsqueda de Proyectos de Grado'],
-                'Paso 3':['Asignación de Tutor de Proyecto de Grado',
-                        'Carta aceptación de Tutoría'],
-                'Paso 4':['Entrega y revisión de Perfil de Proyecto de Grado',
-                        'Registro de Perfil de Proyecto de Grado',
-                        'Registro de Cronograma de Proyecto de Grado',
-                        'Formulario 1'],
-                'Paso 5':['Cumplir con el cronograma',
-                        'Revisión del Proyecto de Grado',
-                        'Registro del Proyecto de Grado',],
-                'Paso 6':['Carta de Conclusión',
-                    'Gegeración de los 3 formularios']
-                }
-    if estudiante.progreso.nivel > 1:
-        pasos = {'Paso 1':['Conocimiento de Reglamentos de Proyecto de Grado',
-                        'Revisión y estudio del material compartido por Docente'],
-                }
-        pasos_falta = {
-                'Paso 2':['Búsqueda de Proyectos de Grado'],
-                'Paso 3':['Asignación de Tutor de Proyecto de Grado',
-                        'Carta aceptación de Tutoría'],
-                'Paso 4':['Entrega y revisión de Perfil de Proyecto de Grado',
-                        'Registro de Perfil de Proyecto de Grado',
-                        'Registro de Cronograma de Proyecto de Grado',
-                        'Formulario 1'],
-                'Paso 5':['Cumplir con el cronograma',
-                        'Revisión del Proyecto de Grado',
-                        'Registro del Proyecto de Grado',],
-                'Paso 6':['Carta de Conclusión',
-                    'Gegeración de los 3 formularios']
-                }
-    if estudiante.progreso.nivel > 14:
-        pasos['Paso 2'] = ['Búsqueda de Proyectos de Grado']
-        del pasos_falta['Paso 2']
-    if estudiante.progreso.nivel > 21:
-        pasos['Paso 3'] = ['Asignación de Tutor de Proyecto de Grado',
-                        'Carta aceptación de Tutoría']
-        del pasos_falta['Paso 3']
-    if estudiante.progreso.nivel > 35:
-        pasos['Paso 4'] = ['Entrega y revisión de Perfil de Proyecto de Grado',
-                        'Registro de Perfil de Proyecto de Grado',
-                        'Registro de Cronograma de Proyecto de Grado',
-                        'Formulario 1']
-        del pasos_falta['Paso 4']
-    if estudiante.progreso.nivel > 64:
-        pasos['Paso 5'] = ['Cumplir con el cronograma',
-                        'Revisión del Proyecto de Grado',
-                        'Registro del Proyecto de Grado',]
-        del pasos_falta['Paso 5']
-    if estudiante.progreso.nivel > 86:
-        pasos['Paso 6'] = ['Carta de Conclusión',
-                    'Gegeración de los 3 formularios']
-        del pasos_falta['Paso 6']
-    context = {'grupo':grupo,'estudiante':estudiante, 'pasos':pasos, 'pasos_falta':pasos_falta}
-    return render(request, 'proyecto/reporte_estudiante.html', context)
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','administrador','docente','tutor','director'])
-def imprimirReporteEstudiante(request, id_est):
-    buffer = io.BytesIO()
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    usuario_solicitante = request.user
-    docReporteEstudiante(buffer, estudiante, usuario_solicitante)
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['estudiante','administrador','docente','tutor','director'])
+# def imprimirReporteEstudiante(request, id_est):
+    # buffer = io.BytesIO()
+    # estudiante = DatosEstudiante.objects.get(id=id_est)
+    # usuario_solicitante = request.user
+    # docReporteEstudiante(buffer, estudiante, usuario_solicitante)
+    # buffer.seek(0)
+    # return FileResponse(buffer, as_attachment=True, filename='carta_aceptacion.pdf')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
@@ -1621,27 +1556,40 @@ def paso2(request):
     busqueda_proyecto = estudiante.actividad.filter(nombre='busqueda proyecto').exists()
     if request.method == 'POST':
         buscado = request.POST['buscado']
-        frase_busqueda = request.POST.get('habilitar')
-        tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
-        lista_nombres = [item for item in tesis_df['NOMBRE']]
-        lista_titulos = [item for item in tesis_df['TITULO']]
-        # agrego de base de datos
-        lista_titulos_sistema = [m.titulo for m in BusquedaProyecto.objects.all()]
-        lista_nombres_sistema = [m.autor for m in BusquedaProyecto.objects.all()]
-        lista_titulos = lista_titulos + lista_titulos_sistema
-        lista_nombres = lista_nombres + lista_nombres_sistema
-        stop_words = set(stopwords.words('spanish')) 
-        # search_terms = 'servicio de voz'
-        search_terms = buscado
-        vectorizer = TfidfVectorizer(stop_words=stop_words)
-        vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
-        cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
-        titulo_scores = [round(item.item()*100,1) for item in cosine_similarities[1:]]  # convert back to native Python dtypes
-        score_titles = list(zip(titulo_scores, lista_titulos))
-        ordenado_score = sorted(score_titles, reverse=True, key=lambda x:x[0])[:20] 
-        dicc_score = {}
-        for score_titulo in ordenado_score:
-            dicc_score[score_titulo[0]] = score_titulo[1]
+        dicc_score = search(buscado)
+        # frase_busqueda = request.POST.get('habilitar')
+        # tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
+        # lista_nombres = [item for item in tesis_df['NOMBRE']]
+        # lista_titulos = [item for item in tesis_df['TITULO']]
+        # # agrego de base de datos
+        # lista_titulos_sistema = [m.titulo for m in BusquedaProyecto.objects.all()]
+        # lista_nombres_sistema = [m.autor for m in BusquedaProyecto.objects.all()]
+        # lista_titulos = lista_titulos + lista_titulos_sistema
+        # lista_nombres = lista_nombres + lista_nombres_sistema
+        # stop_words = set(stopwords.words('spanish')) 
+        # # agregando a las listas nombres y titulos de la base de datos perfiles
+        # lista_titulos_sistema = [m.titulo for m in RegistroPerfil.objects.all()]
+        # lista_nombres_sistema = [m.equipo for m in RegistroPerfil.objects.all()]
+        # lista_titulos = lista_titulos + lista_titulos_sistema
+        # lista_nombres = lista_nombres + lista_nombres_sistema
+        # stop_words = set(stopwords.words('spanish')) 
+        # # agregando a las listas nombres y titulos de la base de datos perfiles
+        # lista_titulos_sistema = [m.titulo for m in ProyectoDeGrado.objects.all()]
+        # lista_nombres_sistema = [m.equipo for m in ProyectoDeGrado.objects.all()]
+        # lista_titulos = lista_titulos + lista_titulos_sistema
+        # lista_nombres = lista_nombres + lista_nombres_sistema
+        # stop_words = set(stopwords.words('spanish')) 
+        # # search_terms = 'servicio de voz'
+        # search_terms = buscado
+        # vectorizer = TfidfVectorizer(stop_words=stop_words)
+        # vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
+        # cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
+        # titulo_scores = [round(item.item()*100,1) for item in cosine_similarities[1:]]  # convert back to native Python dtypes
+        # score_titles = list(zip(titulo_scores, lista_titulos))
+        # ordenado_score = sorted(score_titles, reverse=True, key=lambda x:x[0])[:20] 
+        # dicc_score = {}
+        # for score_titulo in ordenado_score:
+            # dicc_score[score_titulo[0]] = score_titulo[1]
         context = {'grupo': grupo,'dicc_score':dicc_score,
                 'buscado':buscado,'progreso':progreso,
                 'busqueda_proyecto':busqueda_proyecto}
@@ -1649,38 +1597,50 @@ def paso2(request):
         context = {'grupo': grupo,'busqueda_proyecto':busqueda_proyecto}
     return render(request, 'proyecto/estudiante_paso2.html', context)
 
-@login_required(login_url='login')
-def busquedaProyectos(request):
-    grupo = request.user.groups.get().name
-    if request.method == 'POST':
-        buscado = request.POST['buscado']
-        frase_busqueda = request.POST.get('habilitar')
-        tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
-        lista_nombres = [item for item in tesis_df['NOMBRE']]
-        lista_titulos = [item for item in tesis_df['TITULO']]
-        # agregando a las listas nombres y titulos de la base de datos
-        lista_titulos_sistema = [m.titulo for m in BusquedaProyecto.objects.all()]
-        lista_nombres_sistema = [m.autor for m in BusquedaProyecto.objects.all()]
-        lista_titulos = lista_titulos + lista_titulos_sistema
-        lista_nombres = lista_nombres + lista_nombres_sistema
-        stop_words = set(stopwords.words('spanish')) 
-        # search_terms = 'servicio de voz'
-        search_terms = buscado
-        vectorizer = TfidfVectorizer(stop_words=stop_words)
-        vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
-        cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
-        titulo_scores = [round(item.item()*100,1) for item in cosine_similarities[1:]]  # convert back to native Python dtypes
-        score_titles = list(zip(titulo_scores, lista_titulos, lista_nombres))
-        ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
-                x[0])[:20] 
-        dicc_score = {}
-        for score_titulo in ordenado_score:
-            dicc_score[score_titulo[0]] = score_titulo[1]
-        context = {'grupo': grupo,'dicc_score':dicc_score,
-                'buscado':buscado}
-    else:
-        context = {'grupo': grupo,}
-    return render(request, 'proyecto/busqueda.html', context)
+# @login_required(login_url='login')
+# def busquedaProyectos(request):
+    # grupo = request.user.groups.get().name
+    # if request.method == 'POST':
+        # buscado = request.POST['buscado']
+        # frase_busqueda = request.POST.get('habilitar')
+        # tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
+        # lista_nombres = [item for item in tesis_df['NOMBRE']]
+        # lista_titulos = [item for item in tesis_df['TITULO']]
+        # # agregando a las listas nombres y titulos de la base de datos
+        # lista_titulos_sistema = [m.titulo for m in BusquedaProyecto.objects.all()]
+        # lista_nombres_sistema = [m.autor for m in BusquedaProyecto.objects.all()]
+        # lista_titulos = lista_titulos + lista_titulos_sistema
+        # lista_nombres = lista_nombres + lista_nombres_sistema
+        # stop_words = set(stopwords.words('spanish')) 
+        # # agregando a las listas nombres y titulos de la base de datos perfiles
+        # lista_titulos_sistema = [m.titulo for m in RegistroPerfil.objects.all()]
+        # lista_nombres_sistema = [m.equipo for m in RegistroPerfil.objects.all()]
+        # lista_titulos = lista_titulos + lista_titulos_sistema
+        # lista_nombres = lista_nombres + lista_nombres_sistema
+        # stop_words = set(stopwords.words('spanish')) 
+        # # agregando a las listas nombres y titulos de la base de datos perfiles
+        # lista_titulos_sistema = [m.titulo for m in ProyectoDeGrado.objects.all()]
+        # lista_nombres_sistema = [m.equipo for m in ProyectoDeGrado.objects.all()]
+        # lista_titulos = lista_titulos + lista_titulos_sistema
+        # lista_nombres = lista_nombres + lista_nombres_sistema
+        # stop_words = set(stopwords.words('spanish')) 
+        # # search_terms = 'servicio de voz'
+        # search_terms = buscado
+        # vectorizer = TfidfVectorizer(stop_words=stop_words)
+        # vectors = vectorizer.fit_transform([search_terms] + lista_titulos)
+        # cosine_similarities = linear_kernel(vectors[0:1], vectors).flatten()
+        # titulo_scores = [round(item.item()*100,1) for item in cosine_similarities[1:]]  # convert back to native Python dtypes
+        # score_titles = list(zip(titulo_scores, lista_titulos, lista_nombres))
+        # ordenado_score = sorted(score_titles, reverse=True, key=lambda x:
+                # x[0])[:20] 
+        # dicc_score = {}
+        # for score_titulo in ordenado_score:
+            # dicc_score[score_titulo[0]] = score_titulo[1]
+        # context = {'grupo': grupo,'dicc_score':dicc_score,
+                # 'buscado':buscado}
+    # else:
+        # context = {'grupo': grupo,}
+    # return render(request, 'proyecto/busqueda.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -1696,19 +1656,19 @@ def confirmarPaso2(request):
     context = {'grupo': grupo,}
     return render(request, 'proyecto/confirmar_paso.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['administrador'])
-def agregarProyecto(request):
-    grupo = request.user.groups.get().name
-    form = BusquedaProyectoForm
-    if request.method == 'POST':
-        form = BusquedaProyectoForm(request.POST)
-        if form.is_valid():
-            # file = form.save(commit=False)
-            form.save()
-            return redirect('busqueda')
-    context = {'grupo': grupo,'form':form}
-    return render(request, 'proyecto/agregar_proyecto.html', context)
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['administrador'])
+# def agregarProyecto(request):
+    # grupo = request.user.groups.get().name
+    # form = BusquedaProyectoForm
+    # if request.method == 'POST':
+        # form = BusquedaProyectoForm(request.POST)
+        # if form.is_valid():
+            # # file = form.save(commit=False)
+            # form.save()
+            # return redirect('busqueda')
+    # context = {'grupo': grupo,'form':form}
+    # return render(request, 'proyecto/agregar_proyecto.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -2658,7 +2618,6 @@ def eliminarMaterialParaEst(request, id_material):
         return redirect('material_para_estudiante')
     context = {'material':material}
     return render(request, 'proyecto/eliminar_material.html', context)
-
 
 # @login_required(login_url='login')
 # @allowed_users(allowed_roles=['estudiante','tutor','docente','director'])

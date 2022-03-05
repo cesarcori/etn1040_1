@@ -204,7 +204,6 @@ class Formularios(models.Model):
             blank=True, validators=[validate_file_extension])
 
 class ActividadesCronograma(models.Model):
-    # usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     equipo = models.ForeignKey(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     actividad = models.CharField(max_length=200, null=True)
     semana_inicial = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -216,7 +215,6 @@ class RegistroCronograma(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class ProyectoDeGrado(models.Model):
-    # usuario = models.ForeignKey(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(null=True)
@@ -229,7 +227,6 @@ class ProyectoDeGrado(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class RegistroProyectoTribunal(models.Model):
-    # usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
     equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200, null=True)
     resumen = models.TextField(null=True)
@@ -254,18 +251,18 @@ class Progreso(models.Model):
     nivel = models.PositiveSmallIntegerField(null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
-class BusquedaProyecto(models.Model):
-    documento = [
-            ('perfil','Perfil'),
-            ('proyecto','Proyecto'),
-            ]
-    autor = models.CharField(max_length=200, null=True)
-    titulo = models.CharField(max_length=200, null=True)
-    resumen = models.TextField(blank=True, null=True)
-    indice = models.TextField(blank=True, null=True)
-    bibliografia = models.TextField(blank=True, null=True)
-    perfil_proyecto = models.CharField(max_length=200, choices=documento, null=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+# class BusquedaProyecto(models.Model):
+    # documento = [
+            # ('perfil','Perfil'),
+            # ('proyecto','Proyecto'),
+            # ]
+    # autor = models.CharField(max_length=200, null=True)
+    # titulo = models.CharField(max_length=200, null=True)
+    # resumen = models.TextField(blank=True, null=True)
+    # indice = models.TextField(blank=True, null=True)
+    # bibliografia = models.TextField(blank=True, null=True)
+    # perfil_proyecto = models.CharField(max_length=200, choices=documento, null=True)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class Mencion(models.Model):
     nombre = models.CharField(max_length=200, null=True)

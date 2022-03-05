@@ -1,0 +1,12 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+<h4>Agregar Proyecto de Grado a la Base de Datos</h4>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <a class="btn btn-danger" href={%url 'busquedas:buscar_proyectos'%}>Atras</a>
+    <button type="submit" name='enviar' class="btn btn-success"
+        value='enviar'>Enviar</button>
+</form>
+{% endblock %}
+

@@ -31,8 +31,8 @@ urlpatterns = [
 
     path('perfil/', views.perfilUsuarios, name='perfil'),
     path('perfil/editar', views.editarPerfil, name='editar_perfil'),
-    path('busqueda/', views.busquedaProyectos, name='busqueda'),
-    path('busqueda/agregar/', views.agregarProyecto, name='agregar_proyecto'),
+    # path('busqueda/', views.busquedaProyectos, name='busqueda'),
+    # path('busqueda/agregar/', views.agregarProyecto, name='agregar_proyecto'),
     path('mis_comun/', views.misComunicados, name='mis_comunicados'),
     path('mis_comun/eliminar/<int:id_comunicado>', views.eliminarComunicado, name='eliminar_comunicado'),
     path('crear-comun/', views.crearComunicado, name='crear_comunicado'),
@@ -43,8 +43,8 @@ urlpatterns = [
 
     path('info-est/<int:pk_est>', views.enlaceEstudiante, name='enlace_estudiante'),
     path('info-est-tit/<int:id_est_tit>', views.enlaceEstudianteTitulado, name='enlace_estudiante_titulado'),
-    path('reporte-est/<int:id_est>', views.reporteEstudiante, name='reporte_estudiante'),
-    path('reporte-est/imprimir/<int:id_est>', views.imprimirReporteEstudiante, name='imprimir_reporte'),
+    # path('reporte-est/<int:id_est>', views.reporteEstudiante, name='reporte_estudiante'),
+    # path('reporte-est/imprimir/<int:id_est>', views.imprimirReporteEstudiante, name='imprimir_reporte'),
     path('progreso-est/<int:pk>', views.progresoEstudiante, name='progreso_estudiante'),
     # path('progreso-est/vis-bu-per/<int:id_est>', views.vistoBuenoPerfil, name='visto_bueno_perfil'),
     # path('progreso-est/vis-bu-pro/<int:id_est>', views.vistoBuenoProyecto, name='visto_bueno_proyecto'),

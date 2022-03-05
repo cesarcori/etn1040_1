@@ -1,0 +1,24 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+{{proyectos|safe}}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Tesistas</th>
+      <th scope="col">Autor</th>
+      <th scope="col">Título</th>
+      <th scope="col">Mención</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Tutor</th>
+      <th scope="col">Docente 1040</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% comment %}{% for proyecto in proyectos%}{% endcomment %}
+    {% comment %}<tr>{% endcomment %}
+      {% comment %}<td>{{proyecto.1}}</td>{% endcomment %}
+    {% comment %}</tr>{% endcomment %}
+    {% comment %}{% endfor %}{% endcomment %}
+  </tbody>
+</table>
+{% endblock %}
