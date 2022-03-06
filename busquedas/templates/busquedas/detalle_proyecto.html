@@ -1,0 +1,56 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h5><strong>{{proyecto.titulo}}</strong></h5>
+  </div>
+  <div class="card-body">
+<table class="table table-bordered">
+  <tbody>
+    <tr>
+      <td>
+      <h5 class="card-title">Tesistas: {{proyecto.tesistas}}</h5>
+      </td>
+      <td>
+      <h5 class="card-title">Sigla: {{proyecto.sigla_id}}</h5>
+      </td>
+      <td>
+      <h5 class="card-title">Autor: {{proyecto.autor}}</h5>
+      </td>
+      <td>
+      <h5 class="card-title">Mención: {{proyecto.get_mencion_display}}</h5>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <h5 class="card-title">Tipo: {{proyecto.get_tipo_display}}</h5>
+      </td>
+      <td>
+      <h5 class="card-title">Estado: {{proyecto.get_estado_display}}</h5>
+      </td>
+      <td>
+      <h5 class="card-title">Tutor: {{proyecto.tutor}}</h5>
+      </td>
+      <td>
+      <h5 class="card-title">Docente ETN-1040: {{proyecto.docente}}</h5>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=2>
+      <h5 class="card-title">Fecha de Inicio: {{proyecto.fecha_inicio}}</h5>
+      </td>
+      <td colspan=2>
+      <h5 class="card-title">Fecha de conclusión: {{proyecto.fecha_concluida}}</h5>
+      </td>
+    </tr>
+  </tbody>
+</table>
+    <h5>Resumen</h5>
+    <p class="card-text">{{proyecto.resumen|linebreaks}}</p>
+    <h5>Índice</h5>
+    <p class="card-text">{{proyecto.indice|linebreaks}}</p>
+    <h5>Bibliografía</h5>
+    <p class="card-text">{{proyecto.bibliografia|linebreaks}}</p>
+  </div>
+</div>
+{% endblock %}

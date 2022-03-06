@@ -25,6 +25,7 @@ class SalaRevisarApp(models.Model):
     asunto = models.CharField(max_length=200, null=True)
     detalle = models.TextField(blank=True, null=True)
     archivo_corregir = models.FileField(upload_to='material_estudiante_perfil/', null=True)
+    archivo_corregir_web = models.URLField(max_length=200, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return f'Sala Asunto: {self.asunto}'

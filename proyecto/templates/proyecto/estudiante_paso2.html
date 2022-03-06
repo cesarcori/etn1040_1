@@ -1,8 +1,9 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h4>Búsqueda de Proyectos de Grado</h4>
-{% comment %}Ingrese el título de su perfil o proyecto de grado,<br>{% endcomment %}
-{% comment %}no debe ser igual mayor al <strong>95% de similitud</strong>.{% endcomment %}
+<h4>Búsqueda rápida de Proyectos de Grado</h4>
+<div class="d-flex flex-row-reverse bd-highlight">
+  <a href="{% url 'busquedas:buscar_proyectos' %}">Búsqueda profunda por contenido</a></p>
+</div>
 <p class="h6">Ingrese el título de su proyecto de grado y obtendrá proyectos similares.
 {% if busqueda_proyecto %}
     <i class="fas text-success fa-check"></i><br>
@@ -11,25 +12,50 @@
 {% endif %}
 </p>
 <p>
-{% comment %}<form class="d-flex" style="margin:auto;max-width:300px" method='post' action="" >{% endcomment %}
 <form class="d-flex" method='post' action="" >
     {% csrf_token %}
-    <input name="buscado" class="form-control me-2" type="search" placeholder="Proyecto de Grado" aria-label="Search">
+    <input value="{{buscado}}" name="buscado" class="form-control me-2" type="search" placeholder="Proyecto de Grado" aria-label="Search">
     <button class="btn btn-outline-success" type="submit">Buscar</button>
 </form>
 </p>
-<p>Se busco: <strong>{{ buscado }}</strong></p>
 <p>{% for score, titulo in dicc_score.items %}
 {{score}}% {{titulo}}<br>
 {%endfor%}</p>
 
-    <div class="d-flex justify-content-evenly">
-<a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
-
-{% if not busqueda_proyecto %}
+<table class="table sortable">
+  <thead>
+    <tr>
+      <th scope="col">Tesistas</th>
+      <th scope="col">Autor</th>
+      <th scope="col">Título</th>
+      <th scope="col">Mención</th>
+      <th scope="col">Tutor</th>
+      <th scope="col">Docente</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Detalle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in query %}
+    <tr>
+      <td>{{q.tesistas}}</td>
+      <td>{{q.autor}}</td>
+      <td>{{q.titulo}}</td>
+      <td>{{q.get_mencion_display}}</td>
+      <td>{{q.tutor}}</td>
+      <td>{{q.docente}}</td>
+      <td>{{q.fecha_concluida|date:"Y M d"}}</td>
+      <td><a href={% url "busquedas:detalle_proyecto" q.autor %}>Link</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="d-flex justify-content-evenly">
+  <a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
+  {% if not busqueda_proyecto %}
     <a class="btn btn-success" href={%url 'confirmar_paso_2' %}>Completar</a>
-{% endif %}
-    </div>
+  {% endif %}
+</div>
 
 {% if busqueda_proyecto %}
 <h5>Paso Completado</h5>

@@ -20,7 +20,8 @@
         {% elif grupo == 'tutor' %}
 			<img class="profile-pic" src="{{request.user.datostutor.imagen_perfil.url}}" >
         {% elif grupo == 'estudiante' %}
-			<img class="profile-pic" src="{{request.user.datosestudiante.imagen_perfil.url}}" >
+			{% comment %}<img class="profile-pic" src="{{request.user.datosestudiante.imagen_perfil.url}}" >{% endcomment %}
+			<img class="profile-pic" src="{{request.user.datosestudiante.imagen_perfil_web}}" >
         {% elif grupo == 'director' %}
 			<img class="profile-pic" src="{{request.user.datosdirector.imagen_perfil.url}}" >
         {% elif grupo == 'tribunal' %}

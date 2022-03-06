@@ -1,17 +1,40 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <p>
-<a href="{% url 'busquedas:buscar_datos' %}">Busqueda por datos</a><p>
-<form class="d-flex" method='post' action="" >
-  {% csrf_token %}
-  <input name="buscado" class="form-control me-2" type="search" placeholder="Búsqueda de Proyectos de Grado" aria-label="Search">
-  <button class="btn btn-outline-success" type="submit">Buscar</button>
-</form></p>
-<p>Se busco: <strong>{{ buscado }}</strong></p>
-{% for score, titulo in dicc_score.items %}
-  {{score}}% {{titulo}}<p>
-{%endfor%}
-{% if grupo == 'administrador' %}
-  <a class="btn btn-sm btn-info" href="{% url 'busquedas:agregar_proyecto' %}">Agregar Proyecto de Grado</a><p>
-{% endif %}
+<form method='post' action="" >
+  <div class="d-flex">
+    {% csrf_token %}
+    <textarea name="buscado" class="form-control" id="exampleFormControlTextarea1" rows="3"
+    placeholder="Ingrese el fragmento de título, resumen, indice o bibliografía">{{buscado}}</textarea>
+  </div>
+  <div class="d-flex justify-content-evenly p-4">
+    <button class="btn btn-outline-success pl-4 pr-4" type="submit">Buscar</button>
+  </div>
+</form>
+<table class="table sortable">
+  <thead>
+    <tr>
+      <th scope="col">Similitud</th>
+      <th scope="col">Autor</th>
+      <th scope="col">Título</th>
+      <th scope="col">Mención</th>
+      <th scope="col">Tutor</th>
+      <th scope="col">Docente</th>
+      <th scope="col">Detalle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in score_objeto%}
+    <tr>
+      <td>{{q.0}} %</td>
+      <td>{{q.1.autor}}</td>
+      <td>{{q.1.titulo}}</td>
+      <td>{{q.1.mencion}}</td>
+      <td>{{q.1.tutor}}</td>
+      <td>{{q.1.docente}}</td>
+      <td><a href={% url "busquedas:detalle_proyecto" q.1.autor %}>Link</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

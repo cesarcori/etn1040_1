@@ -19,11 +19,8 @@ def individual(request):
     link = ['paso3']
     if not estudiante.actividad.filter(nombre="elegir modalidad").exists():
         if request.method == 'POST':
-            # Equipo.objects.create(nombre=estudiante.correo, cantidad=1, docente=estudiante.grupo_doc)
-            # equipo_est = Equipo.objects.get(nombre=estudiante.correo)
-            # equipo_est.cantidad = 1
-            # equipo_est.save()
             estudiante.modalidad = 'individual'
+            estudiante.is_modalidad_aprobada = True
             estudiante.save()
             agregarActividadEstudiante('elegir modalidad', estudiante)
             return redirect('paso3')
@@ -167,6 +164,8 @@ def aprobarSolicitud(request, id_obj):
                 solicitud.save()
                 estudiante.equipo.alias = estudiante.equipo.nombre
                 estudiante.equipo.save()
+                estudiante.is_modalidad_aprobada = True
+                estudiante.save()
                 return redirect('progreso_estudiante', pk=estudiante.equipo.id)
         context = {'grupo': grupo, 'estudiante':estudiante,
                 'mensaje':mensaje, 'link':link, 'form':form,
@@ -308,7 +307,7 @@ def modificarNombreEquipo(request):
     return render(request, 'modalidad/formulario.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
+@allowed_users(allowed_roles=['estudiante','tutor','docente','tribunal','director'])
 def verEquipo(request, pk):
     equipo = get_object_or_404(Equipo, id=pk)
     grupo = request.user.groups.get().name

@@ -1,7 +1,7 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h4>Agregar integrantes al equipo</h4>
-<p>Nombre del equipo:<strong>{{equipo.nombre}}</strong><br>
+<p>Equipo: <strong>{{equipo.alias}}</strong><br>
 {% comment %}<a href={% url 'modalidad:modificar_nombre_equipo' %}>modificar</a> el nombre de equipo </p>{% endcomment %}
 <p>El equipo está autorizado para ser de <strong>{{equipo.cantidad}} integrantes.</strong></p>
 <p>Tienes <strong>{{solicitud_mandar}} solitudes</strong> que realizar.</p>
@@ -11,7 +11,7 @@
     {% csrf_token %}
     <div class="d-flex justify-content-center" style="margin:auto;max-width:400px" >
         <input name="agregar_integrante" class="form-control me-2" type="email"
-        placeholder="Registrar Email Tutor" aria-label="Search">
+        placeholder="Ingresar email de tu compañero de equipo" aria-label="Search">
     </div>
         <br>
     <div class="d-flex justify-content-evenly">

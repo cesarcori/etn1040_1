@@ -10,4 +10,5 @@ urlpatterns = [
     path('datos-ex/', buscarDatosProyectosExcel, name='buscar_excel'),
     path('agregar-proy/', agregarProyecto, name='agregar_proyecto'),
     path('ver-proy/', verProyectos, name='ver_proyectos'),
+    path('detalle-proy/<str:titulo>/', detalleProyecto, name='detalle_proyecto'),
 ]

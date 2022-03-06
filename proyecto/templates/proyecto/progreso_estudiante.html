@@ -1,7 +1,9 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
-
 {% if equipo.cantidad > 1%}
+  <div class="d-flex flex-row-reverse bd-highlight">
+      <a href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
+  </div>
   <div class="d-flex justify-content-evenly">
     <h3><strong>MODALIDAD: {{estudiante.get_modalidad_display|upper}}</strong></h3>
   </div>

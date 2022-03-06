@@ -28,7 +28,7 @@
         {%endif%}
 
         {%if grupo == 'docente' %}
-          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' estudiante.est.equipo.id %}">{{est}}</a></td>
+          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
         {%endif%}
 
         {%if grupo == 'director' %}
@@ -55,7 +55,7 @@
           <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
         {%endif%}
 
-        {% if grupo == 'estudiante' or grupo == 'adminstrador' or grupo == 'docente' or grupo == 'tutor'%}
+        {% if grupo == 'estudiante' or grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor'%}
           <td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
         {% endif %}
 

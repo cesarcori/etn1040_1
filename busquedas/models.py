@@ -9,8 +9,16 @@ class ProyectosInscritos(models.Model):
             ('concluido','Concluido'),
             ('en proceso','En proceso'),
             ]
+    MENCION = [
+            ('telecomunicacion','Telecomunicación'),
+            ('control','Control'),
+            ('sistemas','Sistemas de Computación'),
+            ]
+    tesistas = models.SmallIntegerField(null=True)
+    sigla_id = models.CharField(max_length=200, null=True, blank=True)
     autor = models.CharField(max_length=200, null=True)
     titulo = models.CharField(max_length=200, null=True)
+    mencion = models.CharField(max_length=200, choices=MENCION, null=True)
     tutor = models.CharField(max_length=200, null=True)
     docente = models.CharField(max_length=200, null=True)
     resumen = models.TextField(blank=True, null=True)
@@ -37,7 +45,7 @@ class ProyectosExcel(models.Model):
             ('sistemas','Sistemas de Computación'),
             ]
     tesistas = models.SmallIntegerField(null=True)
-    sigla_id = models.CharField(max_length=200, null=True, unique=True)
+    sigla_id = models.CharField(max_length=200, null=True, blank=True)
     autor = models.CharField(max_length=200, null=True)
     titulo = models.CharField(max_length=200, null=True)
     mencion = models.CharField(max_length=200, choices=MENCION, default='proyecto', null=True)

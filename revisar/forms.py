@@ -1,11 +1,11 @@
 from django import forms
 from .models import *
-
+#https://drive.google.com/file/d/
 class SalaRevisarAppForm(forms.ModelForm):
     class Meta:
         model = SalaRevisarApp
         fields = '__all__'
-        exclude = ['sala_documento','creado_por']
+        exclude = ['sala_documento','creado_por','archivo_corregir']
         widgets = {
             'asunto': 
             forms.TextInput(attrs={'class':'input-group input-group-lg',

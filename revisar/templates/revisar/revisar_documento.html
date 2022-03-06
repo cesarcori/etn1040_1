@@ -1,6 +1,7 @@
 {% extends 'proyecto/main.html'%}
 {% block content%}
-<h4>Revisor: {{sala_doc.grupo_revisor|title}}, Ing. {{sala_doc.revisor.first_name}} {{sala_doc.revisor.last_name}}<br></h4>
+<h4>Revisor: {{sala_doc.grupo_revisor|title}}, Ing. {{sala_doc.revisor.first_name}} {{sala_doc.revisor.last_name}}
+  - Correo: {{sala_doc.revisor.email}}<br></h4>
 {% if sala_doc.visto_bueno%}
     <div class="d-inline p-2 bg-success text-white">
         El {{sala_doc.grupo_revisor}} ya dió el visto bueno al {{sala_doc.tipo}}</div><br><br>
