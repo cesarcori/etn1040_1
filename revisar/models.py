@@ -14,6 +14,7 @@ class SalaDocumentoApp(models.Model):
     equipo = models.ForeignKey(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     visto_bueno = models.BooleanField(default=False)
     tipo = models.CharField(max_length=50, choices=TIPO_REVISAR, null=True)
+    updated = models.DateTimeField(auto_now=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         self.titulo = self.revisor.first_name

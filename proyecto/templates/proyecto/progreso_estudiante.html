@@ -1,5 +1,10 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
+{% if grupo == 'director'%}
+  <div class="d-flex flex-row-reverse bd-highlight">
+      <a href={% url "tiempos:resumen" equipo.id %}>Información tiempo</a>
+  </div>
+{% endif %}
 {% if equipo.cantidad > 1%}
   <div class="d-flex flex-row-reverse bd-highlight">
       <a href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>

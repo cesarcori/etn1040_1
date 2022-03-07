@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'modalidad',
     'reportes',
     'busquedas',
+    'tiempos',
 ]
 
 MIDDLEWARE = [

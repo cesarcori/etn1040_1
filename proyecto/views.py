@@ -34,14 +34,6 @@ from datetime import timedelta,date
 
 from busquedas.funciones import searchByData, searchByDataExcel
 from itertools import chain
-# busqueda
-# import pandas as pd
-# from sklearn.feature_extraction.text import TfidfVectorizer
-# from sklearn.metrics.pairwise import linear_kernel
-# from nltk.corpus import stopwords
-
-# import nltk
-# from pandas import read_csv
 
 # ********* activar o desactivar correo para pruebas *******
 activar_estudiante = True
