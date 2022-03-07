@@ -8,21 +8,21 @@ from proyecto.models import Equipo
 def resumen(request, pk):
     grupo = request.user.groups.get().name
     equipo = get_object_or_404(Equipo, id=pk)
-    salas = SalaDocumentoApp.objects.filter(equipo=equipo)
+    salas = SalaDocumentoApp.objects.filter(equipo=equipo).order_by('-fecha_creacion')
     # el total de salas que se puede tener son 6 maximo.
+    dicc_salaDoc_days = {}
     for sala in salas:
         if sala.salarevisarapp_set.first():
             fecha_presentacion = sala.salarevisarapp_set.first().fecha_creacion
+            fecha_visto_bueno = sala.updated
             if sala.visto_bueno:
-                fecha_visto_bueno = sala.updated
                 duration = fecha_visto_bueno - fecha_presentacion
-                print(duration.days)
+                dicc_salaDoc_days[sala] = duration.days
             else:
-                print('aun no se dio visto bueno')
+                duration = date.today() - fecha_presentacion.astimezone().date()
+                dicc_salaDoc_days[sala] = duration.days
         else:
             print('aun no se empezo ninguna revision')
     
-    # fecha de primera presentacion
-    # fecha de visto bueno.
-    context = {'grupo':grupo, 'equipo':equipo}
+    context = {'grupo':grupo, 'equipo':equipo,'dicc_salaDoc_days': dicc_salaDoc_days}
     return render(request, 'tiempos/resumen.html', context)
