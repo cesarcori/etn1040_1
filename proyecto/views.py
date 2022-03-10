@@ -114,7 +114,8 @@ def registerPage(request):
                     # password = password
                     )
                 # email_activacion(request, user, correo)
-                messages.success(request, 'La solicitud se envió con exito!!! para activar tu cuenta debes de ingresar a tu correo electrónico y dar click en el enlace de activación: ')
+                # messages.success(request, 'La solicitud se envió con exito!!! para activar tu cuenta debes de ingresar a tu correo electrónico y dar click en el enlace de activación: ')
+                messages.success(request, 'La solicitud se envió con exito!!!: ')
     context = {'usuarios':usuarios, 'form':form}
     return render(request, 'proyecto/registro_estudiante.html', context)
 
