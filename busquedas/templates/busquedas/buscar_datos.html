@@ -1,0 +1,46 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<p>
+<div class="d-flex flex-row-reverse bd-highlight">
+  <a href="{% url 'busquedas:buscar_proyectos' %}">Búsqueda profunda por contenido</a></p>
+</div>
+<div class="d-flex justify-content-evenly">
+  <h4>Búsqueda rápida</h4>
+</div>
+<form class="d-flex" method='post' action="" >
+    {% csrf_token %}
+    <input value="{{buscado}}"name="buscado" class="form-control me-2" type="search" placeholder="Ingrese el autor, titulo, mención, etc..." aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Buscar</button>
+</form></p>
+<table class="table sortable">
+  <thead>
+    <tr>
+      <th scope="col">Tesistas</th>
+      <th scope="col">Autor</th>
+      <th scope="col">Título</th>
+      <th scope="col">Mención</th>
+      <th scope="col">Tutor</th>
+      <th scope="col">Docente</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Detalle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in query %}
+    <tr>
+      <td>{{q.tesistas}}</td>
+      <td>{{q.autor}}</td>
+      <td>{{q.titulo}}</td>
+      <td>{{q.get_mencion_display}}</td>
+      <td>{{q.tutor}}</td>
+      <td>{{q.docente}}</td>
+      <td>{{q.fecha_concluida|date:"Y M d"}}</td>
+      <td><a href={% url "busquedas:detalle_proyecto" q.autor %}>Link</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if grupo == 'administrador' %}
+  <a class="btn btn-sm btn-info" href="{% url 'busquedas:agregar_proyecto' %}">Agregar Proyecto de Grado</a><p>
+{% endif %}
+{% endblock %}

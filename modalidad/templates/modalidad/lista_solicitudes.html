@@ -1,0 +1,25 @@
+<h5>Solicitudes enviadas:</h5>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Estudiante</th>
+      <th scope="col">Celular</th>
+      <th scope="col">Correo Electrónico</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for solicitud in solicitudes %}
+    <tr>
+        <td>
+            {{solicitud.estudiante_invitado}}
+        </td>
+        <td>
+            {{solicitud.estudiante_invitado.celular}}
+        </td>
+        <td>
+            <a href="mailto:{{solicitud.estudiante_invitado.correo}}?Subject=">{{solicitud.estudiante_invitado.correo}}</a><br>
+        </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>

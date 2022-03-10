@@ -1,0 +1,7 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h3>Bienvenido Tribunal: Ing. {{request.user.datostribunal.nombre}}
+    {{request.user.datostribunal.apellido}}</h3> 
+{% include 'proyecto/lista_estudiantes.html' %}
+{% include 'modalidad/lista_equipos.html' %}
+{%endblock%}

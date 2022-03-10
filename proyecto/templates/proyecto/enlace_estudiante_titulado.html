@@ -1,0 +1,35 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}                                      
+
+<h3>Información del estudiante</h3>
+<style>
+	.profile-pic{
+		max-width: 200px;
+		max-height:200px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<img class="profile-pic" src="{{estudiante.imagen_perfil.url}}" >
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="card card-body">
+<p>Nombre: {{estudiante.nombre}}<br>
+Apellido: {{estudiante.apellido}}<br>
+Registro Universitario: {{estudiante.registro_uni}}<br>
+Mención: {{estudiante.mencion}}<br>
+Cédula de Identidad: {{estudiante.carnet}} {{estudiante.extension}}<br>
+Correo Electrónico: <a href="mailto:{{estudiante.correo}}?Subject=">{{estudiante.correo}}</a><br>
+Número de Celular: {{estudiante.celular}}<br>
+Docente: {{estudiante.docente }} <br>
+Tutor: {{estudiante.tutor}} <br>
+Fecha de Conclusión: {{estudiante.fecha_conclusion}}<br>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

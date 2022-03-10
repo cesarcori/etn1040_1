@@ -102,9 +102,9 @@ def reporte_tutor_acepto(buffer, estudiante):
     lugar = 'carrera de ingeniería electrónica'
     institucion = 'facultad de ingeniería'
     universidad = 'universidad mayor de san andrés'
-    parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, mi aceptación como tutor, en el desarrollo del Proyecto de Grado:'
+    parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, mi aceptación como tutor, en el desarrollo del Proyecto de Grado'
     parrafo1_2 = titulo_perfil
-    parrafo1_3 = 'A cargo del estudiante'
+    parrafo1_3 = 'del estudiante'
     parrafo1_4 = nombre_estudiante
     parrafo1_5 = 'Y doy el compromiso de supervisar el cumplimiento de cronograma propuesto en el perfil.'
     despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
@@ -432,7 +432,6 @@ def carta_solicitud(buffer, info_estu):
 # guardar documento
     guardar(buffer)
 
-
 def carta_final(buffer, estudiante):
     pdf = FPDF(format="letter")
     pdf.add_page()
@@ -519,7 +518,8 @@ def carta_final(buffer, estudiante):
     correo_tutor = estudiante.tutor.correo
     docente = estudiante.grupo_doc.__str__()
     tutor = estudiante.tutor.__str__()
-    titulo_proyecto = estudiante.proyectodegrado.titulo
+    # titulo_proyecto = estudiante.proyectodegrado.titulo
+    titulo_proyecto = estudiante.registroperfil.titulo
 
 # ===========================================
 # estatico, no se mueve, a menos que sea por personalizacion
@@ -531,7 +531,7 @@ def carta_final(buffer, estudiante):
     parrafo1_2 = titulo_proyecto
     parrafo1_3 = 'A cargo del estudiante'
     parrafo1_4 = nombre
-    parrafo1_5 = 'Doy total fe y conformidad el presente Proyecto de Grado cuenta con las características necesarias para ser defendido y presentado ante el Tribunal de Docentes.'
+    parrafo1_5 = 'Doy total conformidad al mencionado Proyecto de Grado que cuenta con las características necesarias para ser defendido y presentado ante el Tribunal de Docentes.'
     despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
 
 # Fecha

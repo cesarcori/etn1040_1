@@ -2,20 +2,6 @@
 {% block content %}
 <h3>Todos los comunicados que creaste</h3>
 
-  {% comment %}<div class="accordion-item">{% endcomment %}
-    {% comment %}<h2 class="accordion-header" id="headingOne">{% endcomment %}
-      {% comment %}<button class="accordion-button" type="button" data-bs-toggle="collapse"{% endcomment %}
-          {% comment %}data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">{% endcomment %}
-        {% comment %}Accordion Item #1{% endcomment %}
-      {% comment %}</button>{% endcomment %}
-    {% comment %}</h2>{% endcomment %}
-    {% comment %}<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">{% endcomment %}
-      {% comment %}<div class="accordion-body">{% endcomment %}
-        {% comment %}<strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.{% endcomment %}
-      {% comment %}</div>{% endcomment %}
-    {% comment %}</div>{% endcomment %}
-  {% comment %}</div>{% endcomment %}
-
 <div class="accordion" id="accordionExample">
 {%for comunicado in comunicados %}
   <div class="accordion-item">
@@ -36,6 +22,7 @@
           {% comment %}<p><strong>Fecha de{% endcomment %}
               {% comment %}publicación:</strong>&nbsp;{{comunicado.fecha_creacion}}</p> {% endcomment %}
         <div class="card-subtitle mb-2 text-muted">Publicación: {{comunicado.fecha_creacion}}</div>
+        <div class='text-right'><a href={% url 'eliminar_comunicado' comunicado.id %}>Eliminar</a></div>
       </div>
     </div>
   </div>

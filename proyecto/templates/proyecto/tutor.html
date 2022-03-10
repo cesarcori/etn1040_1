@@ -1,6 +1,6 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h2>Bienvenido Tutor: Ing. {{request.user.datostutor.nombre}}
-    {{request.user.datostutor.apellido}}</h2> 
+<h2>Bienvenido Tutor: Ing. {{request.user.datostutor}}
 {% include 'proyecto/lista_estudiantes.html' %}
+{% include 'modalidad/lista_equipos.html' %}
 {%endblock%}

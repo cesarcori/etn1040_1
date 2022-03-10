@@ -1,0 +1,8 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h4>Nombre de equipo: {{equipo.alias}}</h4>
+{% include "modalidad/lista_integrantes.html" %}
+{% if grupo == 'estudiante'%}
+  <a href={% url "modalidad:modificar_nombre_equipo" %}>Cambiar nombre del equipo</a>
+{% endif %}
+{% endblock content %}

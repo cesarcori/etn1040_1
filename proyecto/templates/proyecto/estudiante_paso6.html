@@ -1,17 +1,88 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 
-<p><a href={%url 'carta_final' estudiante.id %}>Carta de Conclusión</a>
-<i class="fas text-success fa-check"></i></p>
-<p><a href={%url 'ultimos_formularios'%}>Generación de los 3 formularios</a>
-<i class="fas text-success fa-check"></i></p>
+<h4>Revisión Tribunal</h4>
+
+{% if not estudiante.equipo.tribunales.count < 2%}
+  {% include 'proyecto/lista_tribunal_asignado.html'%}
+{% endif %}
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Formulario</th>
+      <th scope="col">Sin Llenar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <a target=_blank href={%url 'reportes:formulario_solicitud_tribunal' estudiante.id %}>Formulario - Solicitu Nombramiento Tribunal</a>
+      </td>
+      <td>
+        &nbsp; <a target=_blank href="/media/formularios/form4.pdf">En Blanco</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a target=_blank href={%url 'reportes:formulario_registro_seguimiento' estudiante.id %}>Formulario - Registro y Seguimiento </a>
+        &nbsp;
+        <a class='btn btn-warning' href={%url 'reportes:auspicio_f3' estudiante.id %}>Si tienes auspicio</a>
+      </td>
+      <td>
+        &nbsp; <a target=_blank href="/media/formularios/form3.pdf">En Blanco</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a target=_blank href={%url 'reportes:formulario_materia' estudiante.id %}>Formulario - Materia: Proyecto Abstract</a>
+      </td>
+      <td>
+        &nbsp; <a target=_blank href="/media/formularios/form2.pdf">En Blanco</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Actividad</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {% if estudiante.equipo.registroproyectotribunal.nota %}
+        <a href={%url 'ver_proyecto_tribunal'%}>Proyecto de Grado Final Revisado por tribunal</a>
+        {% elif estudiante.equipo.registroproyectotribunal%}
+        <a href={%url 'ver_proyecto_tribunal'%}>Proyecto Registrado, Esperando nota</a>
+        {% elif visto_bueno %}
+        <a href={%url 'registro_proyecto_tribunal'%}>Registrar Proyecto Tribunal</a>
+        {% else %}
+        <a class="btn disabled" href=#>Registro Proyecto Tribunal</a>
+        {% endif %}
+      </td>
+      <td>
+        {% if estudiante.equipo.registroproyectotribunal.nota %}
+        <i class="fas text-success fa-check"></i> Cumplido
+        {% elif estudiante.equipo.registroproyectotribunal%}
+        <i class="fas text-warning fa-graduation-cap"></i> Pendiente
+        {% elif visto_bueno %}
+        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        {% else %}
+        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
-{% if progreso.nivel < 100 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a></p>
-{% endif %}
-{% if progreso.nivel >= 100 %}
-<h5 class='text-success'>Felicidades!<br>Completaste Terminaste el Proyecto de Grado!</h5>
+{% if is_nota_tribunal_2 %}
+  <a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a></p>
 {% endif %}
 
 {% endblock %}

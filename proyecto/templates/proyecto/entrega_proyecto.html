@@ -2,15 +2,21 @@
 {% block content %}
 <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-replace-svg="nest"></script>
 
-{% if not estudiante.vb_proyecto_docente and not estudiante.vb_proyecto_tutor%}
+<div class='text-right'><a href={% url 'reporte_capitulos' estudiante.id %}>Imprimir Plantilla Observación</a></div>
+{% if estudiante.vb_proyecto_tutor %}
+    <div class='text-right'><a href={%url 'carta_final' estudiante.id %}>Carta de Conclusión</a></div>
+{% else %}
+    <div class="text-right"><a class='btn disabled' href=#>Carta conclusión</a></div>
+{% endif %}
+{% if not estudiante.vb_proyecto_docente or not estudiante.vb_proyecto_tutor%}
 <a class="btn btn-warning" href="{% url 'crear_sala_proyecto' %}">Crear Revisión</a><br>
 {% endif %}
 
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
+      <th scope="col">Detalle</th>
       <th scope="col">Proyecto</th>
       {% if request.user.datosestudiante.vb_proyecto_docente %}
       <th scope="col"><div class='bg-success text-white'>Docente V.B. <i class="fas fa-check"></i></th>
@@ -26,7 +32,7 @@
     </tr>
   </thead>
   <tbody>
-{%for s in salas%}
+{%for s, no_visto in dicc_salas.items%}
     <tr>
 <td>
 {{s.sala}}
@@ -37,7 +43,7 @@
   <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
     data-bs-target="#collapseExample{{s.id}}" aria-expanded="false"
     aria-controls="collapseExample{{s.id}}">
-      Asunto
+      Detalle
   </button>
 </p>
 <div class="collapse" id="collapseExample{{s.id}}">
@@ -48,13 +54,39 @@
 </td>      
 
 <td>
-    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Archivo</a>
+    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Proyecto</a>
 </td>      
 <td>
-<a class="btn btn-primary" href="{% url 'sala_revisar_proy_est_doc' s.id %}">Revisión</a>
+    {% comment %}{% if no_visto.0 == 0%}{% endcomment %}
+    {% comment %}<a class="btn btn-primary position-relative" href="{% url 'sala_revisar_proy_est_doc' s.id %}">Observación</a>{% endcomment %}
+    {% comment %}{% else %}{% endcomment %}
+    {% comment %}<a href="{% url 'sala_revisar_proy_est_doc' s.id %}" type="button" class="btn btn-primary position-relative">{% endcomment %}
+        {% comment %}Observación{% endcomment %}
+    {% comment %}<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{% endcomment %}
+        {% comment %}{{no_visto.0}}{% endcomment %}
+        {% comment %}<span class="visually-hidden">unread messages</span>{% endcomment %}
+    {% comment %}</span>{% endcomment %}
+    {% comment %}</a>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{%if s.material_corregido_docente %}{% endcomment %}
+    {% comment %}<a class="btn btn-primary" href="{{ s.material_corregido_docente.url }}">Proyecto Corregido</a>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
 </td>      
 <td>
-<a class="btn btn-primary" href="{% url 'sala_revisar_proy_est_tut' s.id %}">Revisión</a>
+    {% if no_visto.1 == 0%}
+    <a class="btn btn-primary position-relative" href="{% url 'sala_revisar_proy_est_tut' s.id %}">Observación</a>
+    {% else %}
+    <a href="{% url 'sala_revisar_proy_est_tut' s.id %}" type="button" class="btn btn-primary position-relative">
+        Observación
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{no_visto.1}}
+        <span class="visually-hidden">unread messages</span>
+    </span>
+    </a>
+    {% endif %}
+    {%if s.material_corregido_tutor %}
+    <a class="btn btn-primary" href="{{ s.material_corregido_tutor.url }}">Proyecto Corregido</a>
+    {% endif %}
 </td>      
     </tr>
 {%endfor%}

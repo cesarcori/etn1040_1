@@ -1,14 +1,22 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
 <h3>Solicitud tutoría:</h3>
-<h4>Aceptar ser tutor del estudiante: {{estudiante}}?</h4>
+<h4>Aceptar ser tutor del
+    {% if equipo.cantidad > 1 %}
+        <strong>{{equipo}}</strong>?
+    {% else %}
+        estudiante {{equipo.datosestudiante_set.get}}?
+    {% endif %}
+ </h4>
 <form action='' method='POST'>
     {% csrf_token %}
+    <div class="d-flex justify-content-evenly">
     <a class="btn btn-danger" href={%url 'tutor' %}>Cancelar</a>
     <button type="submit" name='confirmar' class="btn btn-success" 
     value='si'>Confirmar</button>
-    <button type="submit" name='rechazar' class="btn btn-warning" 
-    value='si'>Rechazar</button>
+    </div>
+    {% comment %}<button type="submit" name='rechazar' class="btn btn-warning" {% endcomment %}
+    {% comment %}value='si'>Rechazar</button>{% endcomment %}
 </form> 
 
 {% endblock %}

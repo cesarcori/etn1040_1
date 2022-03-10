@@ -1,0 +1,33 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+<h3>Lista de Tribunales:</h3>
+<table class="sortable table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Tribunal</th>
+    {% if grupo == 'administrador'%}
+      <th scope="col">Eliminar</th>
+    {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for tribunal in tribunales%}
+    <tr>
+      <td><a class="text-underline-hover" 
+    href="{% url 'enlace_tribunal' tribunal.id%}">Ing. {{tribunal.apellido}} {{tribunal.nombre}}</a></td>
+
+    {% if grupo == 'administrador'%}
+      <td><a class="text-underline-hover" href="{% url 'eliminar_usuario' tribunal.usuario_id %}">Eliminar</a></td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p><p><p>
+{% if grupo == 'administrador'%}
+<a class="btn btn-sm btn-info" href="{% url 'agregar_tribunal' %}">Agregar
+    Tribunal</a><p>
+{% endif %}
+{% endblock %}

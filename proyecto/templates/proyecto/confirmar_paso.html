@@ -3,8 +3,9 @@
 <h2>Confirmo que completé este paso.</h2>
 <form action='' method='POST'>
     {% csrf_token %}
+    <div class="d-flex justify-content-evenly">
     <a class="btn btn-danger" href={%url 'home' %}>Cancelar</a>
-    <button type="submit" name='confirmar' class="btn btn-success" 
-    value={{progreso.nivel}}>Confirmar</button>
+    <button type="submit" name='confirmar' class="btn btn-success" value='si'>Confirmar</button>
+    </div>
 </form> 
 {% endblock %}

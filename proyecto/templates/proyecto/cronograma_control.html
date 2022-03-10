@@ -3,7 +3,7 @@
 <h5>Control del cronograma</h5>
 <p>
 Registro: {{fecha}}<br> 
-Han pasado: {{semanas}} semanas y {{dias}} días<br> 
+Pasaron: {{semanas}} semanas y {{dias}} días<br> 
 Días Transcurridos: {{dias_transcurridos}}<br>
 Fecha Límite del Cronograma: {{fecha_limite_crono}}<br>
 Fecha Límite en el Sistema (2 años y medio): {{fecha_limite_sistema}}<br>
@@ -12,7 +12,7 @@ Fecha Límite en el Sistema (2 años y medio): {{fecha_limite_sistema}}<br>
 <p>
 <h5>Días restantes</h5>
 {% if limite_cronograma %}
-    Dias Retrazados {{dia_retrazo}} <br>
+    Dias Retrasados{{dia_retrazo}} <br>
     <div class="progress">
         <div class="progress-bar bg-danger" role="progressbar" style="width: {{por_dia_retrazo}}%;"            
             aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{dia_retrazo}}</div>

@@ -20,7 +20,14 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('proyecto.urls'))
+    path('', include('proyecto.urls')),
+    path('mensaje/', include('mensaje.urls')),
+    path('revisar/', include('revisar.urls')),
+    path('actividades/', include('actividades.urls')),
+    path('modalidad/', include('modalidad.urls')),
+    path('reportes/', include('reportes.urls')),
+    path('busquedas/', include('busquedas.urls')),
+    path('tiempos/', include('tiempos.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -1,60 +1,94 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-replace-svg="nest"></script>
+{% comment %}<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-replace-svg="nest"></script>{% endcomment %}
 
-{% if not estudiante.vb_perfil_docente and not estudiante.vb_perfil_tutor%}
-<a class="btn btn-warning" href="{% url 'crear_sala' %}">Crear Revisión</a>
+{% if not estudiante.vb_perfil_docente or not estudiante.vb_perfil_tutor%}
+    <a class="btn btn-warning" href="{% url 'crear_sala' %}">Crear Revisión</a>
 {% endif %}
 
+{% if estudiante.vb_perfil_tutor%}
+    <div class="d-inline p-2 bg-success text-white">El Tutor ya dio visto bueno al perfil</div><br><br>
+{% endif %}
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th scope="col">Revisión</th>
       <th scope="col">Asunto</th>
+      <th scope="col">Detalle</th>
       <th scope="col">Perfil</th>
+    {% if estudiante.vb_perfil_tutor %}
       {% if request.user.datosestudiante.vb_perfil_docente %}
-      <th scope="col"><div class='bg-success text-white'>Docente V.B. <i class="fas fa-check"></i></div></th>
+        <th scope="col"><div class='bg-success text-white'>Docente V.B. <i class="fas fa-check"></i></div></th>
       {% else %}
-      <th scope="col"><div class='bg-danger text-white'>Docente <i class="fas fa-history"></i></div></th>
+        <th scope="col"><div class='bg-danger text-white'>Docente <i class="fas fa-history"></i></div></th>
       {% endif %}
+    {% else %}
       {% if request.user.datosestudiante.vb_perfil_tutor %}
-      <th scope="col"><div class='bg-success text-white'>Tutor V.B. <i class="fas fa-check"></i></div></th>
+        <th scope="col"><div class='bg-success text-white'>Tutor V.B. <i class="fas fa-check"></i></div></th>
       {% else %}
-      <th scope="col"><div class='bg-danger text-white'>Tutor <i class="fas fa-history"></i></div></th>
+        <th scope="col"><div class='bg-danger text-white'>Tutor <i class="fas fa-history"></i></div></th>
       {% endif %}
+    {% endif %}
     </tr>
   </thead>
   <tbody>
-{%for s in salas%}
+{%for s, no_visto in dicc_sala.items %}
     <tr>
-<td>
-{{s.sala}}
-</td>      
+        <td>
+            {{s.sala}}
+        </td>      
+        <td>
+            <p>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseExample{{s.id}}" aria-expanded="false"
+                aria-controls="collapseExample{{s.id}}">
+                Detalle
+            </button>
+            </p>
+            <div class="collapse" id="collapseExample{{s.id}}">
+                <div class="card card-body">
+                    {{s.texto}}
+                </div>
+            </div>
+        </td>      
+        <td>
+            <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Perfil</a>
+        </td>      
+        {% if estudiante.vb_perfil_tutor %}
+            <td>
+                {% if no_visto.0 == 0%}
+                    <a class="btn btn-primary position-relative" href="{% url 'sala_revisar_est_doc' s.id %}">Observación</a>
+                {% else %}
+                    <a href="{% url 'sala_revisar_est_doc' s.id %}" type="button" class="btn btn-primary position-relative">
+                        Observación
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{no_visto.0}}
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                    </a>
+                {% endif %}
+                {%if s.material_corregido_docente %}
+                    <a class="btn btn-primary" href="{{ s.material_corregido_docente.url }}">Perfil Corregido</a>
+                {% endif %}
+            </td>      
+        {% else %}
+            <td>
+                {% if no_visto.1 == 0%}
+                    <a class="btn btn-primary" href="{% url 'sala_revisar_est_tut' s.id %}">Observación</a>
+                {% else %}
+                    <a href="{% url 'sala_revisar_est_tut' s.id %}" type="button" class="btn btn-primary position-relative">
+                        Observación
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{no_visto.1}}
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                    </a>
+                {% endif %}
 
-<td>
-<p>
-  <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-    data-bs-target="#collapseExample{{s.id}}" aria-expanded="false"
-    aria-controls="collapseExample{{s.id}}">
-      Asunto
-  </button>
-</p>
-<div class="collapse" id="collapseExample{{s.id}}">
-  <div class="card card-body">
-      {{s.texto}}
-  </div>
-</div>
-</td>      
-
-<td>
-    <a class="btn btn-primary" href="{{ s.material_estudiante.url }}">Archivo</a>
-</td>      
-<td>
-<a class="btn btn-primary" href="{% url 'sala_revisar_est_doc' s.id %}">Revisión</a>
-</td>      
-<td>
-<a class="btn btn-primary" href="{% url 'sala_revisar_est_tut' s.id %}">Revisión</a>
-</td>      
+                {%if s.material_corregido_tutor %}
+                    <a class="btn btn-primary" href="{{ s.material_corregido_tutor.url }}">Perfil Corregido</a>
+                {% endif %}
+            </td>      
+        {% endif  %}
     </tr>
 {%endfor%}
   </tbody>

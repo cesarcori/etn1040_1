@@ -64,11 +64,12 @@ class FormDocente(forms.Form):
         (t, t),
         (c, c),
     ] 
-    solo_grupo= RegexValidator(r'^[A-F]$', 'Ingresar una sola letra mayúscula,\
-            hasta grupo F')
+    solo_grupo= RegexValidator(r'^[A-Z]$', 'Ingresar una sola letra mayúscula,\
+            hasta grupo Z')
     solo_letra= RegexValidator(r'^[a-zA-ZÀ-ÿ\u00f1\u00d1 a-zA-ZÀ-ÿ\u00f1\u00d1]*$', 'Ingresar solo letras')
     nombre = forms.CharField(max_length = 50, validators=[solo_letra])
     apellido = forms.CharField(max_length = 50, validators=[solo_letra])
+    correo = forms.EmailField(max_length=100)
     grupo = forms.CharField(max_length = 50, validators=[solo_grupo])
     mencion = forms.ChoiceField(choices=MENCION)
 
@@ -108,109 +109,22 @@ class MaterialDocenteForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['propietario',]
 
-class SalaRevisarForm(forms.ModelForm):
-    class Meta:
-        model = SalaRevisar
-        fields = '__all__'
-        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar']
-        widgets = {
-    'sala': 
-    forms.TextInput(attrs={'class':'input-group input-group-lg',
-    'placeholder':'Escribe el nombre de la sala...'}),
-    'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
-    'placeholder':'Escribe tus modificaciones que elaboraste en el perfil...',}),
-    'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
-    # 'material_estudiante': forms.FileInput(attrs={'class':'form-control'}),
-                }
-        labels = {
-                'sala': ('Asunto de la revisión:'),
-                'texto': ('Detalles revisión:'),
-'material_estudiante': ('Subir perfil en pdf con los cambios resaltado en\
-amarillo'),
-                }
-
-class SalaRevisarProyectoForm(forms.ModelForm):
-    class Meta:
-        model = SalaRevisarProyecto
-        fields = '__all__'
-        exclude = ['docente_rev','tutor_rev','estudiante_rev','sala_revisar']
-        widgets = {
-    'sala': 
-    forms.TextInput(attrs={'class':'input-group input-group-lg',
-    'placeholder':'Asunto del Proyecto de Grado...'}),
-    'texto': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
-    'placeholder':'Escribe tus modificaciones que elaboraste en el Proyecto de Grado...',}),
-    'material_estudiante': forms.FileInput(attrs={'class':'form-control',}),
-    'material_estudiante': forms.FileInput(attrs={'class':'form-control'}),
-                }
-        labels = {
-                'sala': ('Asunto de la revisión:'),
-                'texto': ('Detalles revisión:'),
-'material_estudiante': ('Subir Proyecto de Grado en pdf con los cambios resaltado en amarillo'),
-                }
-
-class MensajeDocenteRevisarForm(forms.ModelForm):
-    class Meta:
-        model = MensajeDocenteRevisar
-        fields = ['texto']
-        widgets = {
-                'texto': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Correcciones que debe realizar...'}), 
-                }
-        labels = {
-                'texto': ''
-                }
-
-class MensajeDocenteRevisarProyectoForm(forms.ModelForm):
-    class Meta:
-        model = MensajeDocenteRevisarProyecto
-        fields = ['texto']
-        widgets = {
-                'texto': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Correcciones que debe realizar al Proyecto de Grado...'}), 
-                }
-        labels = {
-                'texto': ''
-                }
-
-class MensajeTutorRevisarForm(forms.ModelForm):
-    class Meta:
-        model = MensajeTutorRevisar
-        fields = ['texto']
-        widgets = {
-                'texto': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Correcciones que debe realizar...'}), 
-                }
-        labels = {
-                'texto': ''
-                }
-        
-class MensajeTutorRevisarProyectoForm(forms.ModelForm):
-    class Meta:
-        model = MensajeTutorRevisarProyecto
-        fields = ['texto']
-        widgets = {
-                'texto': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Correcciones que debe realizar...'}), 
-                }
-        labels = {
-                'texto': ''
-                }
-
 class RegistroPerfilForm(forms.ModelForm):
     class Meta:
         model = RegistroPerfil
         fields = '__all__'
-        exclude = ['usuario',]
+        exclude = ['equipo',]
         widgets = {
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Copia el título del perfil...'}),
+                        'placeholder':'Título del perfil...'}),
                 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Copia el resumen del perfil...'}), 
+                    'placeholder':'Resumen del perfil...'}), 
+                'perfil': forms.FileInput(attrs={'class':'form-control'}),
                 }
         labels = {
-                'titulo': 'Titulo del Perfil',
-                'resumen': 'Resumen del Perfil',
+                'titulo': '',
+                'resumen': '',
+                'perfil': 'Subir archivo del perfil',
                 }
 
 class ActividadesCronogramaForm(forms.ModelForm):
@@ -218,7 +132,7 @@ class ActividadesCronogramaForm(forms.ModelForm):
     class Meta:
         model = ActividadesCronograma
         fields = '__all__'
-        exclude = ['usuario',]
+        exclude = ['equipo',]
         widgets = {
                 'actividad': forms.TextInput(attrs={
                         'placeholder':'Actividad a elaborar'}),
@@ -231,31 +145,57 @@ class RegistroCronogramaForm(forms.ModelForm):
     class Meta:
         model = RegistroCronograma
         fields = '__all__'
-        exclude = ['usuario',]
+        exclude = ['equipo',]
 
 class ProyectoDeGradoForm(forms.ModelForm):
     class Meta:
         model = ProyectoDeGrado
         fields = '__all__'
-        exclude = ['usuario','calificacion','nota_tiempo_elaboracion',
+        exclude = ['equipo','calificacion','nota_tiempo_elaboracion',
                 'nota_expos_seminarios','nota_informes_trabajo',
                 'nota_cumplimiento_cronograma']
         widgets = {
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Copia el título del Proyecto de Grado...'}),
+                        'placeholder':'Título del Proyecto de Grado...'}),
                 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Copia el resumen del Proyecto de Grado...'}), 
+                    'placeholder':'Resumen del Proyecto de Grado...'}), 
+                'archivo': forms.FileInput(attrs={'class':'form-control',}),
                 }
         labels = {
-                'titulo': 'Titulo del Proyecto de Grado',
-                'resumen': 'Resumen del Proyecto de Grado',
+                'titulo': '',
+                'resumen': '',
+                'archivo': 'Subir archivo del Proyecto de Grado',
+                }
+
+class RegistroProyectoTribunalForm(forms.ModelForm):
+    class Meta:
+        model = RegistroProyectoTribunal
+        fields = '__all__'
+        exclude = ['equipo','nota', 'nota_final']
+        widgets = {
+                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        'placeholder':'Título del Proyecto de Grado...'}),
+                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Resumen del Proyecto de Grado...'}), 
+                'archivo': forms.FileInput(attrs={'class':'form-control',}),
+                }
+        labels = {
+                'titulo': '',
+                'resumen': '',
+                'archivo': '',
                 }
 
 class CalificarProyectoForm(forms.Form):
-    nota1= forms.IntegerField(min_value=1, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
-    nota2= forms.IntegerField(min_value=1, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
-    nota3= forms.IntegerField(min_value=1, max_value=22,label='Informes de Trabajo (Max. 22%)')
-    nota4= forms.IntegerField(min_value=1, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
+    nota1= forms.IntegerField(min_value=0, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
+    nota2= forms.IntegerField(min_value=0, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
+    nota3= forms.IntegerField(min_value=0, max_value=22,label='Informes de Trabajo (Max. 22%)')
+    nota4= forms.IntegerField(min_value=0, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
+
+class CalificarProyectoTribunalForm(forms.ModelForm):
+    nota = forms.IntegerField(min_value=0, max_value=60,label='Nota (Max. 60%)')
+    class Meta:
+        model = NotaTribunal
+        fields = ['nota']
 
 class DatosTutorForm(forms.ModelForm):
     class Meta:
@@ -269,46 +209,61 @@ class DatosDocenteForm(forms.ModelForm):
 class DatosEstudianteForm(forms.ModelForm):
     class Meta:
         model = DatosEstudiante
-        fields = ['celular','imagen_perfil']
+        fields = ['celular','imagen_perfil','imagen_perfil_web']
 class DatosAdministradorForm(forms.ModelForm):
     class Meta:
         model = DatosAdministrador
         fields = ['celular','imagen_perfil']
-class BusquedaProyectoForm(forms.ModelForm):
+class DatosDirectorForm(forms.ModelForm):
     class Meta:
-        model = BusquedaProyecto
+        model = DatosDirector
         fields = '__all__'
-        # exclude = ['usuario','calificacion']
-        widgets = {
-                'autor': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Nombre del autor del Perfil o Proyecto de Grado'}),
-                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
-                        'placeholder':'Titulo del Perfil o Proyecto de Grado'}),
-                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Resumen del Proyecto de Grado...'}), 
-                'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Índice del Proyecto de Grado...'}), 
-                'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
-                    'placeholder':'Bibliografía del Proyecto de Grado...'}), 
-                }
-        labels = {
-                'autor': 'Autor',
-                'titulo': 'Titulo',
-                'resumen': 'Resumen',
-                'indice': 'Índice',
-                'bibliografia': 'Bibliografía',
-                'perfil_proyecto' : 'Documento'
-                }
+        exclude =['usuario']
+class DatosTribunalForm(forms.ModelForm):
+    class Meta:
+        model = DatosTribunal
+        fields = '__all__'
+        exclude = ['usuario','correo','firma']
+# class BusquedaProyectoForm(forms.ModelForm):
+    # class Meta:
+        # model = BusquedaProyecto
+        # fields = '__all__'
+        # # exclude = ['usuario','calificacion']
+        # widgets = {
+                # 'autor': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        # 'placeholder':'Nombre del autor del Perfil o Proyecto de Grado'}),
+                # 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        # 'placeholder':'Titulo del Perfil o Proyecto de Grado'}),
+                # 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    # 'placeholder':'Resumen del Proyecto de Grado...'}), 
+                # 'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    # 'placeholder':'Índice del Proyecto de Grado...'}), 
+                # 'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    # 'placeholder':'Bibliografía del Proyecto de Grado...'}), 
+                # }
+        # labels = {
+                # 'autor': 'Autor',
+                # 'titulo': 'Titulo',
+                # 'resumen': 'Resumen',
+                # 'indice': 'Índice',
+                # 'bibliografia': 'Bibliografía',
+                # 'perfil_proyecto' : 'Documento'
+                # }
 class TutorForm(forms.ModelForm):
     class Meta:
         model = DatosTutor
-        fields = '__all__'
-        exclude = ['usuario','imagen_perfil','celular']
-class AuspicioForm(forms.ModelForm):
+        fields = ['correo']
+class TribunalForm(forms.ModelForm):
     class Meta:
-        model = Auspicio
-        fields = '__all__'
-        exclude = ['usuario']
+        model = DatosTribunal
+        fields = ['correo']
+        # fields = '__all__'
+        # exclude = ['usuario','imagen_perfil','celular',]
+# class AuspicioForm(forms.ModelForm):
+    # class Meta:
+        # model = Auspicio
+        # fields = '__all__'
+        # exclude = ['usuario']
 # class FirmasForm(forms.ModelForm):
     # class Meta:
         # model = Firmas
@@ -319,9 +274,17 @@ class FirmaTutorForm(forms.ModelForm):
     class Meta:
         model = DatosTutor
         fields = ['firma']
+class FirmaDocenteForm(forms.ModelForm):
+    class Meta:
+        model = DatosTutor
+        fields = ['firma']
 
 class DocumentosForm(forms.ModelForm):
     class Meta:
         model = Documentos
         fields = '__all__'
-        exclude = ['usuario']
+        exclude = ['usuario','firma_formulario1_doc','firma_formulario2_doc','firma_formulario4_doc']
+class DocumentosDocenteForm(forms.ModelForm):
+    class Meta:
+        model = Documentos
+        fields = ['firma_formulario1_doc','firma_formulario2_doc','firma_formulario4_doc']

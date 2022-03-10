@@ -1,0 +1,20 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+{% if equipo.cantidad > 1%}
+  <h2>Se calificará al equipo: {{equipo.alias}}</h2>
+{% else %}
+  <h2>Se calificará al estudiante: {{equipo.datosestudiante_set.get}}</h2>
+{% endif %}
+<h3>La nota se promediará con la del otro tribunal</h3>
+<h3>Se debe calificar sobre el 60 %</h3>
+
+<form method='post' >
+    {% csrf_token %}
+    {{form.as_p}}
+    <div class="d-flex justify-content-evenly">
+      <a class="btn btn-danger" href={%url 'progreso_estudiante' equipo.id %}>Cancelar</a>
+      <button class="btn btn-success" type="submit">Calificar</button>
+    </div>
+</form>
+
+{% endblock %}

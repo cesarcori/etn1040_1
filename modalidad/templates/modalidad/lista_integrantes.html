@@ -1,0 +1,31 @@
+<h5>Integrantes:</h5>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Estudiante</th>
+      <th scope="col">Celular</th>
+      {% if not grupo == 'estudiante' %}
+        <th scope="col">Mensajes</th>
+      {% endif %}
+      <th scope="col">Correo Electrónico</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for estudiante in equipo.datosestudiante_set.all %}
+    <tr>
+        <td>
+            {{estudiante}}
+        </td>
+        <td>
+            {{estudiante.celular}}
+        </td>
+        {% if not grupo == 'estudiante' %}
+          <td><a href="{% url 'mensaje_personal' estudiante.usuario.pk %}">Mensajes</a></td>
+        {% endif %}
+        <td>
+            <a href="mailto:{{estudiante.correo}}?Subject=">{{estudiante.correo}}</a><br>
+        </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>

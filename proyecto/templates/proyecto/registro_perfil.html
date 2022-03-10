@@ -1,6 +1,6 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h4>Registrar titulo, resumen y cronograma del Perfil de proyecto de grado</h4>
+<h4>Registrar título y resumen Perfil de proyecto de grado</h4>
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}

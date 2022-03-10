@@ -2,13 +2,13 @@
 {% block content %}
 
 {%if valor == 'docente' %}
-<h3>Comunicado por Docente Ing. {{request.user.datosestudiante.grupo_doc.apellido}}</h3>
-
+    <h3>Comunicados del Docente Ing. {{request.user.datosestudiante.grupo_doc.apellido}}</h3>
 {%elif valor == 'tutor' %}
-{% if request.user.datosestudiante.tutor %}
-<h3>Comunicado por Tutor Ing. {{request.user.datosestudiante.tutor.apellido}}</h3>
-{% endif %}
-
+    <h3>Comunicados del Tutor
+    {% if request.user.datosestudiante.tutor %}
+        Ing. {{request.user.datosestudiante.tutor.apellido}}
+    {% endif %}
+    </h3>
 {%endif%}
 
 <div class="accordion" id="accordionExample">

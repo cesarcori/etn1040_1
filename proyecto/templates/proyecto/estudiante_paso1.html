@@ -1,35 +1,97 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<p>Reglamentos de la Materia ETN-1040</p>
-<p>
-{%for link, titulo in dicc_link.items%}
-<a href="{{ link.archivo.url }}">{{titulo}} </a>
-{% if progreso.nivel < 14 %}
-<i class="fas text-danger fa-graduation-cap"></i><br>
-{% else %}
-<i class="fas text-success fa-check"></i><br>
-{% endif %}
-{%endfor%}
-</p>
-<p>Introducción de la materia:<br>
+<h4>Reglamentos de la Materia ETN-1040</h4>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Documento</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for reglamento, visto in dicc_reglamento.items%}
+    <tr>
+        <td>
+            <a target='_blank' href="{{ reglamento.archivo.url }}">{{reglamento.archivo.name}}</a>
+        </td>
+        <td>
+            {% if visto %}
+                <i class="fas text-success fa-check"></i> Estudiado
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i>
+                <a class="btn btn-warning" href={%url 'confirmar_reglamento' reglamento.id%}>Sin estudiar</a>
+            {% endif %}
+        </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+
+    {% comment %}<p>{% endcomment %}
+    {% comment %}{%for reglamento, visto in dicc_reglamento.items%}{% endcomment %}
+        {% comment %}<p><a target='_blank' href="{{ reglamento.archivo.url }}">{{reglamento.archivo.name}}</a>{% endcomment %}
+        {% comment %}{% if visto %}{% endcomment %}
+            {% comment %}<i class="fas text-success fa-check"></i><br></p>{% endcomment %}
+        {% comment %}{% else %}{% endcomment %}
+            {% comment %}<i class="fas text-danger fa-graduation-cap"></i>{% endcomment %}
+            {% comment %}<a class="btn btn-warning" href={%url 'confirmar_reglamento' reglamento.id%}>Ya estudie el reglamento</a></p>{% endcomment %}
+        {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{%endfor%}{% endcomment %}
+    {% comment %}</p>{% endcomment %}
+
+<h4>Introducción de la materia</h4>
+<p class="h6">
 Documentos compartidos por Docente ETN-1040:
-Ing. {{request.user.datosestudiante.grupo_doc}}</p>
-<p>{%for link in material_docente %}
-<a href="{{ link.material_docente.url }}">{{link.material_docente.name}}<a>
-{% if progreso.nivel < 14 %}
-<i class="fas text-danger fa-graduation-cap"></i><br>
-{% else %}
-<i class="fas text-success fa-check"></i><br>
-{% endif %}
-{%endfor%}</p>
+<strong>Ing. {{request.user.datosestudiante.grupo_doc}}</strong></p>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Documento</th>
+      <th scope="col">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for material, visto in dicc_material.items %}
+    <tr>
+        <td>
+            <a target=_blank href="{{ material.material_docente.url }}">{{material.material_docente.name}}</a>
+        </td>
+        <td>
+            {% if visto %}
+                <i class="fas text-success fa-check"></i> Estudiado
+            {% else %}
+                <i class="fas text-danger fa-graduation-cap"></i>
+                <a class="btn btn-warning" href={%url 'confirmar_material_docente' material.id%}>Sin estudiar</a>
+            {% endif %}
+        </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+
+    {% comment %}{%for material, visto in dicc_material.items %}{% endcomment %}
+            {% comment %}<a href="{{ material.material_docente.url }}">{{material.material_docente.name}}<a>{% endcomment %}
+        {% comment %}{% if visto %}{% endcomment %}
+            {% comment %}<i class="fas text-success fa-check"></i><br>{% endcomment %}
+        {% comment %}{% else %}{% endcomment %}
+            {% comment %}<i class="fas text-danger fa-graduation-cap"></i>{% endcomment %}
+            {% comment %}<a class="btn btn-warning" href={%url 'confirmar_material_docente' material.id%}>Ya estudie el documento</a></p>{% endcomment %}
+        {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{%endfor%}{% endcomment %}
+    {% comment %}</p>{% endcomment %}
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
-{% if progreso %}
-{% if progreso.nivel < 14 %}
-<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>
+{% comment %}{% if estudiante.progreso %}{% endcomment %}
+    {% comment %}{% if estudiante.progreso.nivel < 14 %}{% endcomment %}
+        {% comment %}<a class="btn btn-success" href={%url 'confirmar_paso_1' %}>Completado</a></p>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+    {% comment %}{% if estudiante.progreso.nivel >= 14 %}{% endcomment %}
+        {% comment %}<h5>Paso completado</h5>{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
+
+{% if estudiante.progreso.nivel >= 14 %}
+    <h5>Paso completado</h5>
 {% endif %}
-{% if progreso.nivel >= 14 %}
-<h5>Paso completado</h5>
-{% endif %}
-{% endif %}
+
 {% endblock %}

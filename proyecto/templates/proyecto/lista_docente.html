@@ -2,13 +2,15 @@
 {% block content %}
 
 <h5>Lista de docentes:</h5>
-<table class="table table-striped">
+<table class="sortable table table-striped">
   <thead>
     <tr>
       <th scope="col">Grupo</th>
       <th scope="col">Docente</th>
       <th scope="col">Mención</th>
+      {% if not grupo == 'director'%}
       <th scope="col">Eliminar</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -18,13 +20,17 @@
       <td><a class="text-underline-hover" href="{% url 'enlace_docente' docente.id %}">{{docente.apellido}},
               {{docente.nombre}}</a></td>
         <td>{{docente.mencion}}</td>
+      {% if not grupo == 'director'%}
         <td><a class="text-underline-hover" href="{% url 'eliminar_usuario' docente.usuario_id %}">Eliminar</a></td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
 <p><p><p>
+      {% if not grupo == 'director'%}
 <a class="btn btn-sm btn-info" href="{% url 'agregar_docente' %}">Agregar
     Docente</a><p>
+      {% endif %}
 {% endblock %}

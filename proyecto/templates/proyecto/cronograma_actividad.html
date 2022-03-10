@@ -2,58 +2,58 @@
 {% block content %}
 
 {% if not existe_cronograma %}
-<h4>Registrar Cronograma del Proyecto de Grado</h4>
+  <h4>Registrar Cronograma del Proyecto de Grado</h4>
 {% endif %}
 
 {% if existe_cronograma %}
-<h4>Cronograma del Proyecto de Grado</h4>
-<h5>Registrado el: {{registro_cronograma.fecha_creacion}}</h5>
+  <h4>Cronograma del Proyecto de Grado</h4>
+  <h5>Registrado el: {{registro_cronograma.fecha_creacion}}</h5>
 {% endif %}
 
 
 {% if not existe_cronograma %}
-{% include 'proyecto/crear_cronograma.html'%}
+  {% include 'proyecto/crear_cronograma.html'%}
+  <br>
 {% endif %}
 
 <table class="table table-striped">
+
   <thead>
     <tr>
     {% if not existe_cronograma %}
       <th scope="col">*</th>
     {% endif %}
       <th scope="col">Semanas</th>
-{% for r in max_semana %}
-<th scope="col">S{{r}}</th>
-{% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-{% for c, vector in dicc_crono.items %}
-    {% if not existe_cronograma %}
-    <th scope="row">
-    <a class="btn btn-danger" href={%url 'eliminar_actividad' c.id %}>X</a></th>
-    {% endif %}
-    <th scope="row">{{c.actividad.title}}</th>
-    {% for s in vector %}
-        <td>{{s}}</td>
+    {% for r in max_semana %}
+      <th scope="col">S{{r}}</th>
     {% endfor %}
     </tr>
-{% endfor %}          
+  </thead>
+
+  <tbody>
+    {% for c, vector in dicc_crono.items %}
+      {% if not existe_cronograma %}
+        <th scope="row">
+          <a class="btn btn-danger" href={%url 'eliminar_actividad' c.id %}>X</a>
+        </th>
+      {% endif %}
+
+      <th scope="row">{{c.actividad.title}}</th>
+      {% for s in vector %}
+        <td>{{s}}</td>
+      {% endfor %}
+      </tr>
+    {% endfor %}          
   </tbody>
+
 </table>
+
 {% if not existe_cronograma %}
-<a class="btn btn-warning" href={%url 'cronograma_registrar' %}>Registrar Cronograma</a>
+    <a class="btn btn-warning" href={%url 'cronograma_registrar' %}>Registrar Cronograma</a>
 {% endif %}
 
-{% comment %}botton atras{% endcomment %}
-{% if existe_cronograma and grupo == 'estudiante'%}
-{% comment %}<a class="btn btn-danger" href="{{ request.META.HTTP_REFERER}} ">Atras</a><p>{% endcomment %}
-{% comment %}<a class="btn btn-danger" href={% url 'paso4' %}>Atras</a><p>{% endcomment %}
-
-{% endif %}
-
-{% if grupo == 'docente' or grupo == 'tutor'%}
-<a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.id %}>Atras</a><p>
+{% if grupo == 'docente' or grupo == 'tutor' or grupo == 'director'%}
+    <a class="btn btn-danger" href={%url 'progreso_estudiante' equipo.id %}>Atras</a><p>
 {% endif %}
 
 {% endblock %}

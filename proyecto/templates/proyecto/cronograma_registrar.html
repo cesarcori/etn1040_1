@@ -6,8 +6,10 @@
 <form action='' method='POST'>
     {% csrf_token %}
     {{form}}
-    <a class="btn btn-danger" href={%url 'cronograma_actividad' %}>Cancelar</a>
-    <button type="submit" name='registrar' class="btn btn-success" 
-        value='Registrado'>Registrar</button>
+    <div class="d-flex justify-content-evenly">
+        <a class="btn btn-danger" href={%url 'cronograma_actividad' %}>Cancelar</a>
+        <button type="submit" name='registrar' class="btn btn-success" 
+            value='Registrado'>Registrar</button>
+    </div>
 </form> 
 {% endblock %}

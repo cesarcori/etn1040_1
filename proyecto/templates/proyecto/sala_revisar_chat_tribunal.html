@@ -1,0 +1,27 @@
+{% include 'proyecto/crear_mensaje_personal.html'%}
+<p>
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTutor">
+      <button class="accordion-button" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseTutor" 
+                    aria-expanded="true"
+                    aria-controls="collapseTutor">
+          <strong>Revisión Tribunal</strong>
+      </button>
+    </h2>
+    <div id="collapseTutor" class="accordion-collapse collapse show"
+                    aria-labelledby="headingTutor" 
+                    data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+{%for m in mensajes_trib%}
+<strong>{{m.usuario.first_name}}</strong>: {{m.texto}}
+<div class="card-subtitle mb-2 text-muted">{{m.fecha_creacion}}</div>
+{%endfor%}
+      </div>
+    </div>
+  </div>
+</div>
+
+

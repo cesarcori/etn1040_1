@@ -1,0 +1,41 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+{% comment %}{%if request.user.datosestudiante.tutor.id == tutor.id%}{% endcomment %}
+{% if tribunal %}
+<h3>Información del Tribunal</h3>
+<style>
+	.profile-pic{
+		max-width: 200px;
+		max-height:200px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<img class="profile-pic" src="{{tribunal.imagen_perfil.url}}" >
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="card card-body">
+<p>
+{% if grupo == 'administrador'%}
+Usuario: {{tribunal.usuario}}<br>
+{% endif %}
+Nombre: {{tribunal.nombre}}<br>
+Apellido: {{tribunal.apellido}}<br>
+Correo Electrónico: <a href="mailto:{{tribunal.correo}}?Subject=Asunto">{{tribunal.correo}}</a><br>
+Número de Celular: {{tribunal.celular}}</p>
+{% endif %}
+		</div>
+	</div>
+</div>
+
+{% if grupo == 'administrador'%}
+<div class='text-right'>
+    <a href={% url 'resetear_password' tribunal.usuario_id %}>Resetear Contraseña</a></div>
+{% endif %}
+
+{% endblock %}

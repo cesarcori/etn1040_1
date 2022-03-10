@@ -1,0 +1,11 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+Mensaje
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <a class="btn btn-danger" href={%url 'home' %}>Atras</a>
+    <button type="submit" name='enviar' class="btn btn-success"
+        value='enviar'>Enviar</button>
+</form>
+{% endblock content%}

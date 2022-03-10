@@ -1,0 +1,57 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}
+
+<h4 class="d-flex justify-content-evenly">Información de Tiempos</h4>
+{% if equipo.cantidad > 1%}
+  Estudiantes:
+  {% for estudiante in equipo.datosestudiante_set.all %}
+    {{estudiante}}. 
+  {% endfor %}
+{% else %}
+  Estudiante: {{estudiante}}
+{% endif %}
+
+{% for sala, dias in dicc_salaDoc_days.items %}
+  {% if sala.visto_bueno %}
+    <div class="card bg-success p-2 text-dark bg-opacity-10">
+  {% else %}
+    <div class="card bg-danger p-2 text-dark bg-opacity-10">
+  {% endif %}
+
+    <div class="card-body">
+      <h5 class="card-title d-flex justify-content-evenly">{{sala.documento}}</h5>
+      <p class="card-text">
+        Revisor: {{sala.revisor.groups.get.name|title}} {{sala.revisor.first_name}} {{sala.revisor.last_name}}<br>
+        Desde la creación de la primera revisión por el estudiante, 
+        hasta el visto bueno del {{sala.grupo_revisor}}: {{dias}} días<br>
+        Estado:
+        {% if sala.visto_bueno %}
+          Finalizado.
+        {% else %}
+          Aún en revision
+        {% endif %}
+      </p>
+    </div>
+
+    {% comment %}<table class="table">{% endcomment %}
+      {% comment %}<thead>{% endcomment %}
+        {% comment %}<tr>{% endcomment %}
+          {% comment %}<th scope="col">Actividad</th>{% endcomment %}
+          {% comment %}<th scope="col">Días</th>{% endcomment %}
+        {% comment %}</tr>{% endcomment %}
+      {% comment %}</thead>{% endcomment %}
+      {% comment %}<tbody>{% endcomment %}
+        {% comment %}<tr>{% endcomment %}
+          {% comment %}<td>Desde primera revisión hasta el visto bueno</td>{% endcomment %}
+          {% comment %}<td>15</td>{% endcomment %}
+        {% comment %}</tr>{% endcomment %}
+        {% comment %}<tr class="table-success">{% endcomment %}
+          {% comment %}<td>Tiempo total</td>{% endcomment %}
+          {% comment %}<td>80</td>{% endcomment %}
+        {% comment %}</tr>{% endcomment %}
+      {% comment %}</tbody>{% endcomment %}
+    {% comment %}</table>{% endcomment %}
+
+  </div>
+{% endfor %}
+{% endblock content %}

@@ -1,9 +1,12 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h2>Generar los últimos formularios</h2>
-<p><a href={%url 'formulario_2' estudiante.id %}>Formulario 2 - Materia: Proyecto </a></p>
+<p><a href={%url 'formulario_4' estudiante.id %}>Formulario 2 - Solicitu Nombramiento Tribunal</a>
+&nbsp; <a href="/media/formularios/form4.pdf">En Blanco</a></p>
 <p><a href={%url 'formulario_3' estudiante.id %}>Formulario 3 - Registro y Seguimiento </a>
+&nbsp; <a href="/media/formularios/form3.pdf">En Blanco</a>
 <a class='btn btn-warning' href={%url 'auspicio_f3' estudiante.id %}>Si tienes auspicio</a></p>
-<p><a href={%url 'formulario_4' estudiante.id %}>Formulario 4 - Solicitu Nombramiento Tribunal</a></p>
+<p><a href={%url 'formulario_2' estudiante.id %}>Formulario 4 - Materia: Proyecto </a>
+&nbsp; <a href="/media/formularios/form2.pdf">En Blanco</a></p>
 
 {% endblock %}

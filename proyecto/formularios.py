@@ -1,4 +1,5 @@
 #!/usr/bin/env python3 
+# instalar fpdf2 porque fpdf no tiene algunas funcionalidades
 from fpdf import FPDF
 from os import remove
 from datetime import date
@@ -122,6 +123,7 @@ def formulario1(buffer, estudiante):
     pdf.cell(txt=carnet + ' ' + extension, ln=1, align="J")
 
     pdf.set_xy(85,122)
+    # Firma tutor
     if Documentos.objects.filter(usuario=estudiante.tutor.usuario).exists():
         if estudiante.tutor.usuario.documentos.firma_carta_aceptacion:
             name = MEDIA_ROOT+estudiante.tutor.firma.name
@@ -142,6 +144,12 @@ def formulario1(buffer, estudiante):
     pdf.set_xy(170,224)
     pdf.cell(txt=year, ln=1, align="J")
 
+    # Firma docente
+    pdf.set_xy(33,215)
+    if Documentos.objects.filter(usuario=estudiante.grupo_doc.usuario).exists():
+        if estudiante.grupo_doc.usuario.documentos.firma_formulario1_doc:
+            name = MEDIA_ROOT+estudiante.grupo_doc.firma.name
+            pdf.image(name, w = 40)
 # Docente - mencion 
     pdf.set_xy(29,236)
     pdf.cell(txt='Ing. '+docente, ln=1, align="J")
@@ -249,6 +257,11 @@ def formulario2(buffer, estudiante):
 # Docente
     pdf.set_xy(60,107)
     pdf.cell(w=76, h=8, txt='Ing. '+docente_etn1040, ln=1, border=1, align='C')
+# firma docente
+    if Documentos.objects.filter(usuario=estudiante.grupo_doc.usuario).exists():
+        if estudiante.grupo_doc.usuario.documentos.firma_formulario1_doc:
+            name = MEDIA_ROOT+estudiante.grupo_doc.firma.name
+            pdf.image(name, x = 156, y = 103, w = 25)
 # Abstract
     pdf.set_xy(27,133)
     pdf.multi_cell(w=162, h=5, txt=abstract, ln=1, border=0, 
@@ -317,9 +330,15 @@ def formulario3(buffer, estudiante, proyecto):
     # supervisor = 'Ing. Vladimir Barra Garcia'
     # cargo = 'Jefe de Carrera Ingeniería Electrónica'
     if Auspicio.objects.filter(usuario=estudiante).exists():
-        empresa = estudiante.auspicio.empresa
-        supervisor = estudiante.auspicio.supervisor
-        cargo = estudiante.auspicio.cargo
+        if estudiante.auspicio.empresa:
+            empresa = estudiante.auspicio.empresa.__str__()
+        else: empresa = ''
+        if estudiante.auspicio.supervisor:
+            supervisor = estudiante.auspicio.supervisor.__str__()
+        else: supervisor = ''
+        if estudiante.auspicio.cargo:
+            cargo = estudiante.auspicio.cargo.__str__()
+        else: cargo = ''
     else:
         empresa = ''
         supervisor = ''
@@ -567,6 +586,12 @@ def formulario4(buffer, estudiante, proyecto):
     pdf.set_xy(168,209)
     pdf.cell(w=15,h=6, txt=fecha[2], ln=1, border=0, align='C')
 
+# firma docente
+    pdf.set_xy(37,219)
+    if Documentos.objects.filter(usuario=estudiante.grupo_doc.usuario).exists():
+        if estudiante.grupo_doc.usuario.documentos.firma_formulario1_doc:
+            name = MEDIA_ROOT+estudiante.grupo_doc.firma.name
+            pdf.image(name, w = 40)
 # Ing. (supongo docente 1040)
     pdf.set_xy(37,234)
     pdf.cell(w=100, h=6, txt=docente_etn1040, ln=1, border=0, align='L')

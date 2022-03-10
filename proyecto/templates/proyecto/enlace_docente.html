@@ -18,56 +18,60 @@
 	<div class="col-md-9">
 		<div class="card card-body">
 
-{%if grupo == 'administrador' %}
-<p>Nombre: {{docente.nombre}}<br>
-Apellido: {{docente.apellido}}<br>
-Celular: {{docente.celular}}<br>
-Correo Electrónico: {{docente.celular}}<br>
-Grupo: {{docente.grupo}}<br>
-Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>
-		</div>
-	</div>
-</div>
-<div class='text-right'>
-    <a href={% url 'resetear_password' docente.usuario_id %}>Resetear Contraseña</a></div>
-<h3>Lista de Estudiantes</h3>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Estudiante</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-{%for est in estudiantes %}
-      <td><a href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
-    </tr>
-{% endfor %}
-  </tbody>
-</table>
+{%if grupo == 'administrador' or grupo == 'director'%}
+    <p>
+    {%if grupo == 'administrador'%}
+        Usuario: {{docente.usuario.username}}<br>
+    {% endif %}
+    Nombre: {{docente.nombre}}<br>
+    Apellido: {{docente.apellido}}<br>
+    Celular: {{docente.celular}}<br>
+    Correo Electrónico: <a target=_blank href="mailto:{{docente.correo}}?Subject=Asunto">{{docente.correo}}</a><br>
+    Grupo: {{docente.grupo}}<br>
+    Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>
+            </div>
+        </div>
+    </div>
+    {% if not grupo == 'director'%}
+        <div class='text-right'><a href={% url 'resetear_password' docente.usuario_id %}>Resetear Contraseña</a></div>
+    {% endif %}
+    <h3>Lista de Estudiantes</h3>
+    <table class="table table-striped">
+    <thead>
+        <tr>
+        <th scope="col">Estudiante</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+    {%for est in estudiantes %}
+        <td><a href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
 {%endif%}
 
 {%if grupo == 'estudiante'%}
-<p>Nombre: {{docente.nombre}}<br>
-Apellido: {{docente.apellido}}<br>
-Celular: {{docente.celular}}<br>
-Correo Electrónico: {{docente.celular}}<br>
-Grupo: {{docente.grupo}}</p>
-		</div>
-	</div>
-</div>
+    <p>Nombre: {{docente.nombre}}<br>
+    Apellido: {{docente.apellido}}<br>
+    Celular: {{docente.celular}}<br>
+    Correo Electrónico: <a target=_blank href="mailto:{{docente.correo}}?Subject=Asunto">{{docente.correo}}</a><br>
+    Grupo: {{docente.grupo}}</p>
+            </div>
+        </div>
+    </div>
 {%endif%}
 
-{%if grupo == 'tutor'%}
-<p>Nombre: {{docente.nombre}}<br>
-Apellido: {{docente.apellido}}<br>
-Celular: {{docente.celular}}<br>
-Correo Electrónico: {{docente.celular}}<br>
-Grupo: {{docente.grupo}}<br>
-{% comment %}Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>{% endcomment %}
-		</div>
-	</div>
-</div>
+{%if grupo == 'tutor' or grupo == 'tribunal'%}
+    <p>Nombre: {{docente.nombre}}<br>
+    Apellido: {{docente.apellido}}<br>
+    Celular: {{docente.celular}}<br>
+    Correo Electrónico: <a target=_blank href="mailto:{{docente.correo}}?Subject=Asunto">{{docente.correo}}</a><br>
+    Grupo: {{docente.grupo}}<br>
+            </div>
+        </div>
+    </div>
 {%endif%}
 
 {% endblock %}

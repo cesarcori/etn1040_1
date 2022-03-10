@@ -18,6 +18,9 @@
 	</div>
 	<div class="col-md-9">
 		<div class="card card-body">
+{%if grupo == 'administrador'%}
+    Usuario: {{estudiante.usuario.username}}<br>
+{% endif %}
 <p>Nombre: {{estudiante.nombre}}<br>
 Apellido: {{estudiante.apellido}}<br>
 Registro Universitario: {{estudiante.registro_uni}}<br>
@@ -29,7 +32,7 @@ Grupo: {{estudiante.grupo_doc.grupo}}<br>
 Docente: <a href="{% url 'enlace_docente' estudiante.grupo_doc.id %}">
     {{estudiante.grupo_doc.nombre}} {{estudiante.grupo_doc.apellido}}</a><br>
 {% if estudiante.tutor %}
-{%if grupo == 'docente' or grupo == 'administrador'%}
+{%if grupo == 'docente' or grupo == 'administrador' or grupo == 'director'%}
 Tutor: <a href="{% url 'enlace_tutor' estudiante.tutor.id %}">
     {{estudiante.tutor.nombre}} {{estudiante.tutor.apellido}}</a><br>
 Fecha de Inscripción: {{estudiante.fecha_inscripcion}}<br>
@@ -38,8 +41,8 @@ Fecha de Inscripción: {{estudiante.fecha_inscripcion}}<br>
 Tutor: Aún no tiene tutor<br>
 Fecha de Inscripción: {{estudiante.fecha_inscripcion}}</p>
 {%endif%}
-{% if grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor'%}
-<a href="{% url 'reporte_estudiante' estudiante.id %}">Reporte Actual</a>
+{% if grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor' or grupo == 'director'%}
+<a href="{% url 'reportes:reporte_estudiante' estudiante.id %}">Reporte Actual</a>
 {% endif %}
 		</div>
 	</div>
