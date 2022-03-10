@@ -20,16 +20,16 @@ for item in items:
     mencion = item.get('MENCION')
     fecha = item.get('FECHA')
     # print(sigla_id[0], tesistas[0], autor[0], titulo[0], tutor, docente, mencion, fecha)
-    ProyectosExcel.objects.create(
-        tesistas = tesistas[0],
-        sigla_id = sigla_id[0],
-        autor = autor[0],
-        titulo = titulo[0],
-        tutor = tutor,
-        docente = docente,
-        mencion = mencion,
-        fecha_concluida = datetime.strptime(fecha, "%Y-%m-%d"),
-        )
+    # ProyectosExcel.objects.create(
+        # tesistas = tesistas[0],
+        # sigla_id = sigla_id[0],
+        # autor = autor[0],
+        # titulo = titulo[0],
+        # tutor = tutor,
+        # docente = docente,
+        # mencion = mencion,
+        # fecha_concluida = datetime.strptime(fecha, "%Y-%m-%d"),
+        # )
     
 
 
