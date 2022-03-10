@@ -12,14 +12,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+  <tr>
 {%for est in datos_est %}
 <th scope="row">{{est.registro_uni}}</th>
-      <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+  <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
 <th scope="row">{{est.grupo_doc.grupo}}</th>
 <th scope="row">{{est.grupo_doc.apellido}}</th>
 <td><a class="text-underline-hover" href="{% url 'eliminar_usuario' est.usuario_id %}">Eliminar</a></td>
-    </tr>
+  </tr>
 {% endfor %}
   </tbody>
 </table>
