@@ -113,7 +113,7 @@ def registerPage(request):
                     mencion = mencion,
                     # password = password
                     )
-                email_activacion(request, user, correo)
+                # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con exito!!! para activar tu cuenta debes de ingresar a tu correo electrónico y dar click en el enlace de activación: ')
     context = {'usuarios':usuarios, 'form':form}
     return render(request, 'proyecto/registro_estudiante.html', context)
@@ -1341,7 +1341,7 @@ def agregarDocente(request):
                 group = Group.objects.get(name='docente')
                 user = User.objects.get(username=usuario)
                 user.groups.add(group)
-                user.is_active = False
+                user.is_active = True
                 user.save()
                 # creacion de datos
                 DatosDocente.objects.create(
@@ -1353,7 +1353,7 @@ def agregarDocente(request):
                         grupo = grupo,
                         mencion = mencion,
                         )
-                email_activacion(request, user, correo)
+                # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con exito!!!')
     context = {'form':form}
     return render(request, 'proyecto/agregar_docente.html', context)
@@ -1389,7 +1389,7 @@ def agregarTutor(request):
                 group = Group.objects.get(name='tutor')
                 user = User.objects.get(username=usuario)
                 user.groups.add(group)
-                user.is_active = False
+                user.is_active = True
                 user.save()
                 # creacion de datos
                 DatosTutor.objects.create(
@@ -1399,7 +1399,7 @@ def agregarTutor(request):
                         apellido = 'sin llenar',
                         celular = 'sin llenar',
                         )
-                email_activacion(request, user, correo)
+                # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')
     context = {'form':form}
     return render(request, 'proyecto/agregar_tutor.html', context)
@@ -1439,7 +1439,7 @@ def agregarTribunal(request):
                 group = Group.objects.get(name='tribunal')
                 user = User.objects.get(username=usuario)
                 user.groups.add(group)
-                user.is_active = False
+                user.is_active = True
                 user.save()
                 # creacion de datos
                 DatosTribunal.objects.create(
@@ -1449,7 +1449,7 @@ def agregarTribunal(request):
                         apellido = user.last_name,
                         celular = 'sin llenar',
                         )
-                email_activacion(request, user, correo)
+                # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')
     context = {'form':form}
     return render(request, 'proyecto/agregar_tribunal.html', context)
@@ -1648,7 +1648,7 @@ def paso3(request):
                     actividad = Actividad.objects.get(nombre='solicitud tutoria')
                     integrante.actividad.add(actividad)
                 # activacion por email
-                email_activacion(request, user, correo)
+                # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')
         return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
