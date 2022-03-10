@@ -137,7 +137,11 @@ def sorteoDocente(estudiante):
     # ordenando diccionario por valor, de menor a mayor
     sort_docente_numEst = sorted(docente_numEst.items(), key=lambda x:x[1])
     # extraer los menores:
-    numero_menor_estudiantes = sort_docente_numEst[0][1]
+    try: 
+        numero_menor_estudiantes = sort_docente_numEst[0][1]
+    except IndexError:
+        return HttpResponse('No se tiene ningun docente para este grupo')
+
     docentes_menor_estudiantes = []
     for doc_numEst in sort_docente_numEst:
         if doc_numEst[1] == numero_menor_estudiantes:
