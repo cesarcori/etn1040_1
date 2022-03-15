@@ -5,7 +5,7 @@ from sklearn.metrics.pairwise import linear_kernel
 from nltk.corpus import stopwords
 
 import nltk
-from pandas import read_csv
+# from pandas import read_csv
 
 from django.db.models import Q
 
