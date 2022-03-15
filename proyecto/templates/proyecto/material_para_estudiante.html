@@ -21,7 +21,7 @@
     {%for m in materiales%}
     <tr>
         <td>
-        <a href="{{ m.material_docente.url }}">{{m.material_docente.name}}</a>
+        <a target=_blank href="{{ m.material_docente.url }}">{{m.material_docente.name}}</a>
         </td>
         <td>
             {% if grupo == 'docente' %}

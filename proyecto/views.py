@@ -2504,6 +2504,7 @@ def materialParaEst(request):
             file = form.save(commit=False)
             file.propietario = usuario
             file.save()
+            return redirect('material_para_estudiante')
     materiales = MaterialDocente.objects.filter(propietario=request.user)
     context = {'grupo': grupo,'form':form, 'materiales':materiales}
     return render(request, 'proyecto/material_para_estudiante.html', context)

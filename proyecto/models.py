@@ -155,9 +155,9 @@ class DatosAdministrador(models.Model):
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_inscripcion = models.DateTimeField(auto_now_add=True, null=True)
 
-    def __str__(self):
-        self.nombre_completo = self.nombre + ' ' + self.apellido
-        return self.nombre_completo
+    # def __str__(self):
+        # self.nombre_completo = self.nombre + ' ' + self.apellido
+        # return self.nombre_completo
 
 class Comunicado(models.Model):
     autor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)

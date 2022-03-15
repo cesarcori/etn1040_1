@@ -28,19 +28,26 @@ else
     echo "Ya se tiene el directorio media"
 fi
 
-# nos direccionamos a la carpeta de carga de informacion
-#cd load_start_info
+# creando la base de datos
 python manage.py makemigrations
 python manage.py migrate
+
 # Cargar datos de actividades.
-#python3 manage.py shell < load_start_info/load_actividades.py
+python3 manage.py shell < load_start_info/load_actividades.py
+
+# Cargar base de datos archivo proyectos csv
+python3 manage.py shell < load_start_info/load_proyectos_csv.py
+
+## Cargar reglamentos.
+python3 manage.py shell < load_start_info/load_reglamentos.py
 
 # crear los grupos: docente, tutor, tribunal, estudiante, administrador.
+python3 manage.py shell < load_start_info/load_grupos.py
+
 # agregar datos iniciales importantes: administrador, director, 3 docentes por
-# mencion.
-## Cargar base de datos archivo csv
-#python3 manage.py shell < load_proyectos.py
-## Cargar reglamentos.
-#python3 manage.py shell < load_reglamentos.py
+python3 manage.py shell < load_start_info/load_usuarios.py
+
+# agregar menciones.
+python3 manage.py shell < load_start_info/load_menciones.py
 
 
