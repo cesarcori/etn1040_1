@@ -4,10 +4,9 @@ from proyecto.models import Reglamento
 # la terminal, dentro del proyecto.
 # python manage.py shell -i python < load_db.py
 # otra forma de poblar datos es mediante dumpdata y fixtures
-Reglamento.objects.create(archivo='reglamentos/reglamento1.pdf')    
-Reglamento.objects.create(archivo='reglamentos/reglamento2.pdf')    
-Reglamento.objects.create(archivo='reglamentos/resolucion1.pdf')    
-
-f= open("load_start_info/reglamentos_creado.txt","w+")
-f.write("Se cargo los reglamentos con exito")
-f.close
+if not Reglamento.objects.all().count() == 3:
+    Reglamento.objects.create(archivo='reglamentos/reglamento1.pdf')    
+    Reglamento.objects.create(archivo='reglamentos/reglamento2.pdf')    
+    Reglamento.objects.create(archivo='reglamentos/resolucion1.pdf')    
+else:
+    print("*** Ya se cargo los reglamentos")

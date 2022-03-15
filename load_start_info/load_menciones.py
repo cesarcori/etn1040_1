@@ -4,13 +4,12 @@ from proyecto.models import Mencion
 # la terminal, dentro del proyecto.
 # python manage.py shell -i python < load_db.py
 # otra forma de poblar datos es mediante dumpdata y fixtures
-menciones = ['Sistemas de Computación','Telecomunicación','Control']
-for mencion in menciones:
-    Mencion.objects.create(nombre=mencion)
+if not Mencion.objects.all().count() >= 3:
+    menciones = ['Sistemas de Computación','Telecomunicación','Control']
+    for mencion in menciones:
+        Mencion.objects.create(nombre=mencion)
+else:
+    print("*** Ya se cargo las menciones")
 
-f= open("load_start_info/menciones_creado.txt","w+")
-f.write("Se cargo las menciones con exito.")
-f.close
-    
 
 

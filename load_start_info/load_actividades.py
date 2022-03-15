@@ -5,27 +5,31 @@ import csv
 # la terminal, dentro del proyecto.
 # python manage.py shell -i python < load_db.py
 # otra forma de poblar datos es mediante dumpdata y fixtures
-with open('load_start_info/actividades.csv', 'r') as f:
-    reader = csv.DictReader(f)
-    items = list(reader)
-    # items = items[0:5]
+if not Actividad.objects.all().count() > 25:
 
-for item in items:
-    nombre = item.get('nombre'),
-    detalle = item.get('detalle'),
-    valor = item.get('valor'),
-    orden = item.get('orden')
-    print(f"Cargando actividad: {nombre[0]}")
-    # print(nombre[0], detalle[0], valor[0], orden)
-    Actividad.objects.create(
-        nombre=nombre[0],
-        detalle=detalle[0],
-        valor=valor[0],
-        orden=orden,
-        )
-f= open("load_start_info/actividades_creado.txt","w+")
-f.write("Se cargo las actividades con exito")
-f.close
+    with open('load_start_info/actividades.csv', 'r') as f:
+        reader = csv.DictReader(f)
+        items = list(reader)
+        # items = items[0:5]
+
+    for item in items:
+        nombre = item.get('nombre'),
+        detalle = item.get('detalle'),
+        valor = item.get('valor'),
+        orden = item.get('orden')
+        print(f"Cargando actividad: {nombre[0]}")
+        # print(nombre[0], detalle[0], valor[0], orden)
+        Actividad.objects.create(
+            nombre=nombre[0],
+            detalle=detalle[0],
+            valor=valor[0],
+            orden=orden,
+            )
+else:
+    print("*** Ya se cargo las actividades")
+# f= open("load_start_info/actividades_creado.txt","w+")
+# f.write("Se cargo las actividades con exito")
+# f.close
     
 
 
