@@ -8,7 +8,7 @@
     {{estudiante}}. 
   {% endfor %}
 {% else %}
-  Estudiante: {{estudiante}}
+  Estudiante: {{equipo.datosestudiante_set.get}}
 {% endif %}
 
 {% for sala, dias in dicc_salaDoc_days.items %}
@@ -22,6 +22,7 @@
       <h5 class="card-title d-flex justify-content-evenly">{{sala.documento}}</h5>
       <p class="card-text">
         Revisor: {{sala.revisor.groups.get.name|title}} {{sala.revisor.first_name}} {{sala.revisor.last_name}}<br>
+        Documento: {{sala.get_tipo_display}}<br>
         Desde la creación de la primera revisión por el estudiante, 
         hasta el visto bueno del {{sala.grupo_revisor}}: {{dias}} días<br>
         Estado:
