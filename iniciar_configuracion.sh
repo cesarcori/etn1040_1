@@ -2,6 +2,10 @@
 
 # ejecutar el archivo para realizar las configuraciones iniciales
 
+# installar entorno virtual virtualenv
+
+pip3 install virtualenv
+
 # crear entorno virtual
 DIR_VIR="../virtual-django/"
 if [ ! -d "$DIR_VIR" ]; then
@@ -13,7 +17,7 @@ else
 fi
 source ../virtual-django/bin/activate
 # Instalar librerias necesarias de python
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 DIR="media/"
 if [ ! -d "$DIR" ]; then
@@ -29,8 +33,8 @@ else
 fi
 
 # creando la base de datos
-python manage.py makemigrations
-python manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
 
 # Cargar datos de actividades.
 python3 manage.py shell < load_start_info/load_actividades.py
