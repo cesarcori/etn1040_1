@@ -563,8 +563,10 @@ def editarPerfil(request):
                 form.save()
                 nombre = request.POST.get('nombre')
                 apellido = request.POST.get('apellido')
+                correo = request.POST.get('correo')
                 usuario.first_name = nombre
                 usuario.last_name = apellido
+                usuario.email = correo
                 usuario.save()
                 return redirect('perfil')
     if grupo == 'director':
@@ -575,8 +577,10 @@ def editarPerfil(request):
             if form.is_valid():
                 nombre = request.POST.get('nombre')
                 apellido = request.POST.get('apellido')
+                correo = request.POST.get('correo')
                 usuario.first_name = nombre
                 usuario.last_name = apellido
+                usuario.email = correo
                 usuario.save()
                 form.save()
                 return redirect('perfil')

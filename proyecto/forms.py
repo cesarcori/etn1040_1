@@ -213,7 +213,7 @@ class DatosEstudianteForm(forms.ModelForm):
 class DatosAdministradorForm(forms.ModelForm):
     class Meta:
         model = DatosAdministrador
-        fields = ['celular','imagen_perfil']
+        fields = ['nombre','apellido','celular','correo','imagen_perfil']
 class DatosDirectorForm(forms.ModelForm):
     class Meta:
         model = DatosDirector
