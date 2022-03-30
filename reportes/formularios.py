@@ -227,7 +227,7 @@ def generarFormularioSolicituTribunal(buffer, proyecto):
     literal_40 = numero_letra(nota_40)
     fecha = fecha_right()
     # fecha = ['8', 'agosto', '2021']
-    docente_etn1040 = 'Jorge Mario León Gómez'
+    docente_etn1040 = estudiante.equipo.docente.__str__()
 
 # Generacion del pdf
     pdf = FPDF(format="letter")
@@ -289,7 +289,7 @@ def generarFormularioSolicituTribunal(buffer, proyecto):
 # firma docente
     pdf.set_xy(37,219)
     if Documentos.objects.filter(usuario=estudiante.grupo_doc.usuario).exists():
-        if estudiante.grupo_doc.usuario.documentos.firma_formulario1_doc:
+        if estudiante.grupo_doc.usuario.documentos.firma_formulario2_doc:
             name = MEDIA_ROOT+estudiante.grupo_doc.firma.name
             pdf.image(name, w = 40)
 # Ing. (supongo docente 1040)
@@ -622,7 +622,7 @@ def generarFormularioMateria(buffer, estudiante):
     pdf.cell(w=76, h=8, txt='Ing. '+docente_etn1040, ln=1, border=1, align='C')
 # firma docente
     if Documentos.objects.filter(usuario=estudiante.grupo_doc.usuario).exists():
-        if estudiante.grupo_doc.usuario.documentos.firma_formulario1_doc:
+        if estudiante.grupo_doc.usuario.documentos.firma_formulario4_doc:
             name = MEDIA_ROOT+estudiante.grupo_doc.firma.name
             pdf.image(name, x = 156, y = 103, w = 25)
 # Abstract

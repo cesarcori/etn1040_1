@@ -65,11 +65,6 @@ def formularioSolicitudTribunal(request, pk):
     estudiante = DatosEstudiante.objects.get(id=pk)
     equipo = estudiante.equipo
     proyecto = ProyectoDeGrado.objects.get(equipo=estudiante.equipo)
-    # lo siguiente hay que hagregar de alguna forma a la base de datos
-    extension = 'L.P.'
-    cargo = 'director'
-    lugar = 'instituto de electrónica aplicada'
-    institucion = 'facultad de ingeniería'
     generarFormularioSolicituTribunal(buffer, proyecto)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='formulario_material.pdf')
