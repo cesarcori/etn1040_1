@@ -119,11 +119,17 @@ class RegistroPerfilForm(forms.ModelForm):
                         'placeholder':'Título del perfil...'}),
                 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
                     'placeholder':'Resumen del perfil...'}), 
+                'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Índice del perfil...'}), 
+                'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Bibliografía del perfil...'}), 
                 'perfil': forms.FileInput(attrs={'class':'form-control'}),
                 }
         labels = {
                 'titulo': '',
                 'resumen': '',
+                'indice': '',
+                'bibliografia': '',
                 'perfil': 'Subir archivo del perfil',
                 }
 
@@ -159,11 +165,17 @@ class ProyectoDeGradoForm(forms.ModelForm):
                         'placeholder':'Título del Proyecto de Grado...'}),
                 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
                     'placeholder':'Resumen del Proyecto de Grado...'}), 
+                'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Índice del Proyecto de Grado...'}), 
+                'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Bibliografía del Proyecto de Grado...'}), 
                 'archivo': forms.FileInput(attrs={'class':'form-control',}),
                 }
         labels = {
                 'titulo': '',
                 'resumen': '',
+                'indice': '',
+                'bibliografia': '',
                 'archivo': 'Subir archivo del Proyecto de Grado',
                 }
 
@@ -177,11 +189,17 @@ class RegistroProyectoTribunalForm(forms.ModelForm):
                         'placeholder':'Título del Proyecto de Grado...'}),
                 'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
                     'placeholder':'Resumen del Proyecto de Grado...'}), 
+                'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Índice del Proyecto de Grado...'}), 
+                'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Bibliografía del Proyecto de Grado...'}), 
                 'archivo': forms.FileInput(attrs={'class':'form-control',}),
                 }
         labels = {
                 'titulo': '',
                 'resumen': '',
+                'indice': '',
+                'bibliografia': '',
                 'archivo': '',
                 }
 
