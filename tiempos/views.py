@@ -22,7 +22,8 @@ def resumen(request, pk):
                 duration = date.today() - fecha_presentacion.astimezone().date()
                 dicc_salaDoc_days[sala] = duration.days
         else:
-            print('aun no se empezo ninguna revision')
+            # print('aun no se empezo ninguna revision')
+            pass
     
     context = {'grupo':grupo, 'equipo':equipo,'dicc_salaDoc_days': dicc_salaDoc_days}
     return render(request, 'tiempos/resumen.html', context)
