@@ -54,7 +54,7 @@
   <tbody>
     <tr>
       <td>
-        {% if estudiante.equipo.registroproyectotribunal.nota %}
+        {% if estudiante.equipo.registroproyectotribunal.nota and is_nota_tribunal_2 %}
         <a href={%url 'ver_proyecto_tribunal'%}>Proyecto de Grado Final Revisado por tribunal</a>
         {% elif estudiante.equipo.registroproyectotribunal%}
         <a href={%url 'ver_proyecto_tribunal'%}>Proyecto Registrado, Esperando nota</a>
@@ -65,14 +65,14 @@
         {% endif %}
       </td>
       <td>
-        {% if estudiante.equipo.registroproyectotribunal.nota %}
-        <i class="fas text-success fa-check"></i> Cumplido
+        {% if estudiante.equipo.registroproyectotribunal.nota and is_nota_tribunal_2 %}
+          <i class="fas text-success fa-check"></i> Cumplido
         {% elif estudiante.equipo.registroproyectotribunal%}
-        <i class="fas text-warning fa-graduation-cap"></i> Pendiente
+          <i class="fas text-warning fa-graduation-cap"></i> Pendiente
         {% elif visto_bueno %}
-        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+          <i class="fas text-danger fa-graduation-cap"></i> Pendiente
         {% else %}
-        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+          <i class="fas text-danger fa-graduation-cap"></i> Pendiente
         {% endif %}
       </td>
     </tr>

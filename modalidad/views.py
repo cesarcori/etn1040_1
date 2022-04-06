@@ -267,6 +267,7 @@ def aprobarSolicitudInvitado(request, pk):
         estudiante.equipo = solicitud.equipo_interesado
         # asignar modalidad multiple
         estudiante.modalidad = 'multiple'
+        estudiante.is_modalidad_aprobada = True
         # asignar elegir modalidad
         # estudiante.actividad.add(actividad)
         agregarActividadEstudiante('estudiar reglamentos', estudiante)

@@ -135,7 +135,7 @@ def generarformularioAceptacion(buffer, equipo):
         pdf.cell(txt=nombre_carnet, ln=1, align="J")
         n += 10
 
-    pdf.set_xy(100,122)
+    pdf.set_xy(120,122)
 
 # Firma tutor
     if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():

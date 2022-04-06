@@ -2477,20 +2477,22 @@ def confirmarPaso6(request):
         agregarActividadEquipo('conclusion', estudiante.equipo)
         estudiante.equipo.fecha_conclusion = date.today()
         estudiante.equipo.save()
+        integrantes = estudiante.equipo.datosestudiante_set.all()
         # agregando a lista de titulados
-        DatosEstudianteTitulado.objects.create(
-            correo = estudiante.correo,
-            nombre = estudiante.nombre,
-            apellido = estudiante.apellido,
-            carnet = estudiante.carnet,
-            extension = estudiante.extension,
-            registro_uni = estudiante.registro_uni,
-            celular = estudiante.celular, 
-            mencion = estudiante.mencion,
-            tutor = estudiante.equipo.tutor,
-            docente = estudiante.grupo_doc,
-            imagen_perfil =estudiante.imagen_perfil,
-        )
+        for estudiante in integrantes:
+            DatosEstudianteTitulado.objects.create(
+                correo = estudiante.correo,
+                nombre = estudiante.nombre,
+                apellido = estudiante.apellido,
+                carnet = estudiante.carnet,
+                extension = estudiante.extension,
+                registro_uni = estudiante.registro_uni,
+                celular = estudiante.celular, 
+                mencion = estudiante.mencion,
+                tutor = estudiante.equipo.tutor,
+                docente = estudiante.grupo_doc,
+                imagen_perfil =estudiante.imagen_perfil,
+            )
         return redirect('estudiante')
     context = {'grupo': grupo,}
     return render(request, 'proyecto/confirmar_paso.html', context)
