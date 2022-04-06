@@ -1170,31 +1170,33 @@ def enlaceDocente(request, pk_doc):
         context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
         return render(request, 'proyecto/enlace_docente.html', context)
     elif grupo == 'tutor':
-        objeto_tutor_estu = request.user.datostutor.datosestudiante_set
-        existe_doc = objeto_tutor_estu.filter(grupo_doc_id=pk_doc).exists()
+        objeto_tutor_estu = request.user.datostutor.equipo_set.all()
+        existe_doc = objeto_tutor_estu.filter(docente_id=pk_doc).exists()
+        # existe_doc = Equipo.objects.filter(id=pk_equ, docente_id=pk_doc, tutor_id=request.user.datostutor.id).exists()
         if existe_doc:
             estudiantes = {}
             context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
             return render(request, 'proyecto/enlace_docente.html', context)
         else:
-            return redirect('error_pagina')
+            return HttpResponse('error')
     elif grupo == 'tribunal':
-        objeto_trib_est= request.user.datostribunal.datosestudiante_set
-        existe_doc = objeto_trib_est.filter(grupo_doc_id=pk_doc).exists()
+        objeto_trib_est= request.user.datostribunal.equipo_set.all()
+        existe_doc = objeto_trib_est.filter(docente_id=pk_doc).exists()
         if existe_doc:
             estudiantes = {}
             context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
             return render(request, 'proyecto/enlace_docente.html', context)
         else:
-            return redirect('error_pagina')
+            return HttpResponse('error')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['docente','administrador','estudiante','director'])
+@allowed_users(allowed_roles=['docente','administrador','estudiante','director','tribunal'])
 def enlaceTutor(request, pk_tutor):
     grupo = str(request.user.groups.get())
-    tutor = DatosTutor.objects.get(id=pk_tutor)
+    # tutor = DatosTutor.objects.get(id=pk_tutor)
+    tutor = get_object_or_404(DatosTutor, id=pk_tutor)
     if grupo == 'docente':
-        objeto_tutor_estu = request.user.datosdocente.datosestudiante_set
+        objeto_tutor_estu = request.user.datosdocente.equipo_set.all()
         existe_doc = objeto_tutor_estu.filter(tutor_id=pk_tutor).exists()
         if existe_doc:
             context = {'grupo': grupo, 'tutor':tutor}
@@ -1210,6 +1212,12 @@ def enlaceTutor(request, pk_tutor):
     elif grupo == 'estudiante':
         id_tutor = request.user.datosestudiante.equipo.tutor.id
         if id_tutor == pk_tutor:
+            context = {'grupo': grupo, 'tutor':tutor}
+            return render(request, 'proyecto/enlace_tutor.html', context)
+    elif grupo == 'tribunal':
+        objeto_trib_est= request.user.datostribunal.equipo_set.all()
+        existe_tut = objeto_trib_est.filter(tutor_id=pk_tutor).exists()
+        if existe_tut:
             context = {'grupo': grupo, 'tutor':tutor}
             return render(request, 'proyecto/enlace_tutor.html', context)
         else:

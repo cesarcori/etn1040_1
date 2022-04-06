@@ -29,18 +29,29 @@ Cédula de Identidad: {{estudiante.carnet}} {{estudiante.extension}}<br>
 Correo Electrónico: <a href="mailto:{{estudiante.correo}}?Subject=">{{estudiante.correo}}</a><br>
 Número de Celular: {{estudiante.celular}}<br>
 Grupo: {{estudiante.grupo_doc.grupo}}<br>
-Docente: <a href="{% url 'enlace_docente' estudiante.grupo_doc.id %}">
+Docente:
+{% if grupo != "docente" %}
+  <a href="{% url 'enlace_docente' estudiante.equipo.docente.id %}">
     {{estudiante.grupo_doc.nombre}} {{estudiante.grupo_doc.apellido}}</a><br>
-{% if estudiante.equipo.tutor %}
-{%if grupo == 'docente' or grupo == 'administrador' or grupo == 'director'%}
-Tutor: <a href="{% url 'enlace_tutor' estudiante.equipo.tutor.id %}">
-    {{estudiante.equipo.tutor.nombre}} {{estudiante.equipo.tutor.apellido}}</a><br>
-Fecha de Inscripción: {{estudiante.fecha_inscripcion}}<br>
-{%endif%}
 {% else %}
-Tutor: Aún no tiene tutor<br>
-Fecha de Inscripción: {{estudiante.fecha_inscripcion}}</p>
+  {{estudiante.grupo_doc.nombre}} {{estudiante.grupo_doc.apellido}}<br>
+{% endif %}
+
+Tutor:
+{% if estudiante.equipo.tutor %}
+  {% comment %}{%if grupo == 'docente' or grupo == 'administrador' or grupo == 'director'%}{% endcomment %}
+  {% if grupo != "tutor" %}
+    <a href="{% url 'enlace_tutor' estudiante.equipo.tutor.id %}">
+        {{estudiante.equipo.tutor.nombre}} {{estudiante.equipo.tutor.apellido}}</a><br>
+  {% else %}
+    {{estudiante.equipo.tutor.nombre}} {{estudiante.equipo.tutor.apellido}}<br>
+  {%endif%}
+{% else %}
+  Aún no tiene tutor<br>
 {%endif%}
+
+Fecha de Inscripción: {{estudiante.fecha_inscripcion}}<br>
+
 {% if grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor' or grupo == 'director'%}
 <a targe=_blank href="{% url 'reportes:reporte_estudiante' estudiante.id %}">Reporte Actual</a>
 {% endif %}
