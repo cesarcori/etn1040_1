@@ -553,7 +553,7 @@ def generarCartaFinal(buffer, equipo):
 # firma 
     linea(17)
     if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
-        if estudiante.equipo.tutor.usuario.documentos.firma_carta_aceptacion:
+        if estudiante.equipo.tutor.usuario.documentos.firma_carta_conclusion:
             name = MEDIA_ROOT+estudiante.equipo.tutor.firma.name
             pdf.image(name, x = 85, y = 195, w = 50)
     text_center('Ing.: '+tutor)

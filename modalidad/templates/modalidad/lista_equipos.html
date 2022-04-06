@@ -4,6 +4,7 @@
     <tr>
       <th scope="col">Equipo</th>
       <th scope="col">Integrantes</th>
+      <th scope="col">Ver Equipo</th>
     </tr>
   </thead>
   <tbody>
@@ -27,6 +28,9 @@
         {% endif %}
         <td>
           {{equipo.cantidad}}
+        </td>
+        <td>
+          <a href={% url "modalidad:ver_equipo" equipo.pk %}>Ver Equipo</a>
         </td>
       </tr>
     {% endfor %}

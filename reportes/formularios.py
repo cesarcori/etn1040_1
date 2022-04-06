@@ -135,14 +135,14 @@ def generarformularioAceptacion(buffer, equipo):
         pdf.cell(txt=nombre_carnet, ln=1, align="J")
         n += 10
 
-    pdf.set_xy(85,122)
-
+    pdf.set_xy(100,122)
 
 # Firma tutor
     if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
-        if estudiante.equipo.tutor.usuario.documentos.firma_carta_aceptacion:
+        if estudiante.equipo.tutor.usuario.documentos.firma_formulario1:
             name = MEDIA_ROOT+estudiante.equipo.tutor.firma.name
             pdf.image(name, w = 25)
+
 # Tutor
     pdf.set_xy(32,128)
     pdf.cell(txt='Ing. '+tutor, ln=1, align="J")
@@ -256,13 +256,15 @@ def generarFormularioSolicituTribunal(buffer, proyecto):
     # pdf.set_xy(135,72)
     # pdf.cell(w=50, h=6, txt=carnet + ' ' + extension, ln=1, border=0, align='L')
 
-# Docente Tutor
+# Firma Tutor
+    if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
+        if estudiante.equipo.tutor.usuario.documentos.firma_formulario2:
+            name = MEDIA_ROOT+estudiante.equipo.tutor.firma.name
+            pdf.image(name, x = 110, y = 95, w = 20)
+
+# Nombre Tutor
     pdf.set_xy(35,98)
     pdf.cell(w=100, h=6, txt='Ing. '+tutor, ln=1, border=0, align='L')
-    if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
-        if estudiante.equipo.tutor.usuario.documentos.firma_carta_aceptacion:
-            name = MEDIA_ROOT+estudiante.equipo.tutor.firma.name
-            pdf.image(name, x = 90, y = 95, w = 20)
 
 # Titulo del tema
     pdf.set_xy(35,114)
@@ -441,7 +443,7 @@ def generarRegistroSeguimiento(buffer, estudiante, proyecto):
     pdf.set_xy(65,74)
     pdf.cell(w=55, h=6, txt=docente_tutor, ln=1, border=0, align='L')
     if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
-        if estudiante.equipo.tutor.usuario.documentos.firma_carta_aceptacion:
+        if estudiante.equipo.tutor.usuario.documentos.firma_formulario3:
             name = MEDIA_ROOT+estudiante.equipo.tutor.firma.name
             pdf.image(name, x = 145, y = 70, w = 20)
 
@@ -613,7 +615,7 @@ def generarFormularioMateria(buffer, estudiante):
     pdf.set_xy(60,92)
     pdf.cell(w=76, h=8, txt=asesor, ln=1, border=1, align='C')
     if Documentos.objects.filter(usuario=estudiante.equipo.tutor.usuario).exists():
-        if estudiante.equipo.tutor.usuario.documentos.firma_carta_aceptacion:
+        if estudiante.equipo.tutor.usuario.documentos.firma_formulario4:
             name = MEDIA_ROOT+estudiante.equipo.tutor.firma.name
             pdf.image(name, x = 156, y = 86, w = 25)
 
