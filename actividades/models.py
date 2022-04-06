@@ -1,5 +1,6 @@
 from django.db import models
-# from proyecto.models import *
+from django.contrib.auth.models import User
+
 
 class Actividad(models.Model):
     nombre = models.CharField(max_length=50, null=True)
@@ -12,3 +13,12 @@ class Actividad(models.Model):
     def __str__(self):
         return f'Orden: {self.orden} - Actividad: {self.nombre} - Valor: {self.valor}'
 
+class AvisoActividad(models.Model):
+    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    equipo = models.ForeignKey("proyecto.Equipo", null=True, blank=True, on_delete=models.CASCADE)
+    visto = models.BooleanField(default=False)
+    cantidad = models.PositiveSmallIntegerField(null=True, blank=True)
+    actividades = models.ManyToManyField(Actividad, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+    def __str__(self):
+        return f'Orden: {self.orden} - Actividad: {self.nombre} - Valor: {self.valor}'

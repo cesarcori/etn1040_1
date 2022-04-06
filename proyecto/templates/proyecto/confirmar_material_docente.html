@@ -3,8 +3,10 @@
 <h4>Confirmo que estudie el documento:<br>{{material.material_docente.name}}</h4>
 <form action='' method='POST'>
     {% csrf_token %}
-    <a class="btn btn-danger" href={%url 'paso1' %}>No</a>
-    <button type="submit" name='confirmar' class="btn btn-success" 
-    value='si'>Si</button>
+    <div class="d-flex justify-content-evenly">
+      <a class="btn btn-danger" href={%url 'paso1' %}>No</a>
+      <button type="submit" name='confirmar' class="btn btn-success" 
+      value='si'>Si</button>
+    </div>
 </form> 
 {% endblock %}

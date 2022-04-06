@@ -39,7 +39,7 @@ def actividadRealizadaEstudiante(texto_actividad, estudiante):
 
 def pasosRealizados(estudiante):
 
-    pasos = {1:2, 2:3, 3:7, 4:13, 5:18, 6:29}
+    pasos = {1:2, 2:3, 3:7, 4:13, 5:18, 6:26}
     cantidad_actividades = estudiante.actividad.all().count()
     pasos_realizados = []
     # print(cantidad_actividades)

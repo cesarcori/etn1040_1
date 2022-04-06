@@ -2201,6 +2201,7 @@ def paso6(request):
     estudiante = request.user.datosestudiante
     is_nota_tribunal_2 = NotaTribunal.objects.filter(equipo=estudiante.equipo).count() == 2
     vector_sala_doc = SalaDocumentoApp.objects.filter(equipo=estudiante.equipo, tipo='tribunal')
+    is_conclusion = actividadRealizadaEstudiante('conclusion', estudiante)
     vec_visto_bueno = [v.visto_bueno for v in vector_sala_doc]
     if vec_visto_bueno == []:
         visto_bueno = False
@@ -2210,6 +2211,7 @@ def paso6(request):
             'estudiante': estudiante,
             'salas_doc':vector_sala_doc,
             'is_nota_tribunal_2':is_nota_tribunal_2,
+            'is_conclusion':is_conclusion,
             'visto_bueno':visto_bueno}
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
@@ -2350,8 +2352,8 @@ def registroProyectoTribunal(request):
             form.instance.equipo = estudiante.equipo
             form.save()
             agregarActividadEquipo("registro proyecto tribunal", estudiante.equipo)
-            agregarActividadEquipo("fecha defensa", estudiante.equipo)
-            agregarActividadEquipo("defensa realizada", estudiante.equipo)
+            # agregarActividadEquipo("fecha defensa", estudiante.equipo)
+            # agregarActividadEquipo("defensa realizada", estudiante.equipo)
         return redirect('paso6')
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/registro_proyecto_tribunal.html', context)
@@ -2456,17 +2458,31 @@ def calificarProyectoTribunal(request, pk):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
-@permitir_con(pasos=[1,2,3])
+@permitir_con(pasos=[1,2,3,4,5])
 def confirmarPaso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     if not actividadRealizadaEstudiante('nota tribunal 2',estudiante):
         return HttpResponse('error')
     if request.method == 'POST':
-        agregarActividadEquipo('documentacion final', estudiante.equipo)
+        # agregarActividadEquipo('documentacion final', estudiante.equipo)
         agregarActividadEquipo('conclusion', estudiante.equipo)
         estudiante.equipo.fecha_conclusion = date.today()
         estudiante.equipo.save()
+        # agregando a lista de titulados
+        DatosEstudianteTitulado.objects.create(
+            correo = estudiante.correo,
+            nombre = estudiante.nombre,
+            apellido = estudiante.apellido,
+            carnet = estudiante.carnet,
+            extension = estudiante.extension,
+            registro_uni = estudiante.registro_uni,
+            celular = estudiante.celular, 
+            mencion = estudiante.mencion,
+            tutor = estudiante.equipo.tutor,
+            docente = estudiante.grupo_doc,
+            imagen_perfil =estudiante.imagen_perfil,
+        )
         return redirect('estudiante')
     context = {'grupo': grupo,}
     return render(request, 'proyecto/confirmar_paso.html', context)

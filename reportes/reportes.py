@@ -7,9 +7,10 @@ from datetime import date
 from django.http import FileResponse
 from fpdf import FPDF
 from actividades.funciones import progress
+from actividades.models import Actividad
 
 
-def generarReporteEstudiante(buffer, estudiante, usuario_solicitante):
+def generarReporteEstudianteAntiguo(buffer, estudiante, usuario_solicitante):
     pdf = FPDF(format="letter")
     pdf.add_page()
     pdf.set_font("Times", size=12)
@@ -213,6 +214,170 @@ def generarReporteEstudiante(buffer, estudiante, usuario_solicitante):
         text_left_lista(pasos['Paso 6'])
         texto_negrilla('Actividades Faltantes: ')
     
+# firma usuario solicitante.
+    linea(4)
+    text_center('Atte.: '+ usuario)
+    # text_center('Cel.: '+ celular_usuario)
+    text_center('e-mail.: '+ correo_usuario)
+
+# Fecha
+    linea(2)
+    fecha_left()
+    guardar(buffer)
+
+def generarReporteEstudiante(buffer, estudiante, usuario_solicitante):
+    pdf = FPDF(format="letter")
+    pdf.add_page()
+    pdf.set_font("Times", size=12)
+# margen
+    pdf.set_margin(25)
+# Get default margins
+    left = pdf.l_margin
+    right = pdf.r_margin
+    top = pdf.t_margin
+    bottom = pdf.b_margin
+# Effective page width and height
+    epw = pdf.w - left - right
+    eph = pdf.h - top - bottom
+# salto de linea
+    th = pdf.font_size * 1.2
+    def fecha_right():
+        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        hoy = date.today()
+        dia = hoy.day.__str__()
+        mes = meses[hoy.month - 1]
+        year = hoy.year.__str__()
+        pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="R")
+        pdf.ln(th)
+
+    def fecha_left():
+        meses = ("enero", "febrero", "marzo", "abri", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+        hoy = date.today()
+        dia = hoy.day.__str__()
+        mes = meses[hoy.month - 1]
+        year = hoy.year.__str__()
+        pdf.cell(0,0,txt='La Paz, ' + dia + ' de ' + mes + ' del ' + year, ln=1, border=0, align="L")
+        pdf.ln(th)
+
+    def text_left(text):
+        pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="L")
+        pdf.ln(th)
+
+    def text_right(text):
+        pdf.cell(0,0,txt=text+' ', ln=1, border=0, align="R")
+        pdf.ln(th)
+
+    def text_center(text):
+        pdf.cell(0,0,txt=text, ln=1, border=0, align="C")
+        pdf.ln(th)
+
+    def text_left_lista(texto_lista):
+        for texto in texto_lista:
+            pdf.cell(0,0,txt=texto+' ', ln=1, border=0, align="L")
+            pdf.ln(th)
+
+    def negrilla():
+        pdf.set_font("Times", 'B', size=12)
+        pdf.set_font("Times", size=12)
+
+    def negrilla_subrayado():
+        pdf.set_font("Times", 'BU', size=12)
+        pdf.set_font("Times", size=12)
+
+    def linea(numero_lineas=1):
+        for n in range(numero_lineas):
+            pdf.ln(th)
+
+    def normal():
+        pdf.set_font("Times", size=12)
+
+    def guardar(nombre_archivo):
+        pdf.output(nombre_archivo)
+
+    def parrafo(parrafo):
+        pdf.write(th, parrafo + ' ')
+
+    def justificado(parrafo):
+        pdf.multi_cell(0,th,txt=parrafo, ln=1, border=0, align="J")
+        pdf.ln(th)
+    
+    def titulo(texto):
+        pdf.set_font("Times", 'B', size=14)
+        pdf.cell(0,0,txt=texto.upper(), ln=1, border=0, align="C")
+        pdf.set_font("Times", size=12)
+        pdf.ln(th)
+
+    def texto_negrilla(texto):
+        pdf.set_font("Times", 'B', size=12)
+        pdf.cell(0,0,txt=texto, ln=1, border=0, align="J")
+        pdf.set_font("Times", size=12)
+        pdf.ln(th)
+
+# totos estos datos vienen de la base de datos
+# ===========================================
+    nombre_estudiante = estudiante.__str__()
+    carnet_est = estudiante.carnet
+    extension_est = estudiante.extension
+    registro_est = estudiante.registro_uni
+    celular_est = estudiante.celular
+    correo_est = estudiante.correo
+    if estudiante.equipo.tutor:
+        celular_tutor = estudiante.equipo.tutor.celular
+        correo_tutor = estudiante.equipo.tutor.correo
+    else:
+        celular_tutor = ""
+        correo_tutor = ""
+    # progreso_est = estudiante.progreso.nivel.__str__()
+    progreso_est = str(progress(estudiante))
+    docente = estudiante.grupo_doc.__str__()
+    grupo_docente = estudiante.grupo_doc.grupo
+    tutor = estudiante.equipo.tutor.__str__()
+    usuario = usuario_solicitante.first_name + ' ' + usuario_solicitante.last_name
+    correo_usuario= usuario_solicitante.email
+# estatico, no se mueve, a menos que sea por personalizacion
+# ******************** INICIO DEL DOCUMENTO *******************
+# Titulo 
+    titulo('reporte etn-1040 proyecto de grado')
+    titulo('estudiante')
+    titulo(nombre_estudiante)
+    linea()
+# Datos del estudiante
+    texto_negrilla('Datos del Estudiante:')
+    text_left('Nombre completo: '+nombre_estudiante)
+    text_left('Cedula de Identidad: '+ carnet_est +' '+ extension_est)
+    text_left('Registro Universitario: '+ registro_est)
+    linea()
+
+# Datos de contacto
+    texto_negrilla('Datos de contacto:')
+    text_left('Número de celular: '+ celular_est)
+    text_left('Correo Electrónico: '+ estudiante.correo)
+    linea()
+
+# Estado actual etn1040
+    texto_negrilla('Estado Actual ETN-1040:')
+    text_left('Docente ETN-1040: '+ docente)
+    text_left('Grupo: '+ grupo_docente)
+    text_left('Tutor: '+ tutor)
+    text_left('Progreso ETN-1040: '+ progreso_est + '% avanzado')
+    linea()
+# Actividades concluidas
+    actividades = estudiante.actividad.all()
+    all_actividades = Actividad.objects.all()
+    actividades_faltantes = set(all_actividades).difference(set(actividades))
+
+    texto_negrilla('Actividades Elaboradas: ')
+    n = 0
+    for actividad in actividades:
+        n += 1
+        text_left(f"    {n}.  {actividad.nombre.title()}")
+
+    n = 0
+    texto_negrilla('Actividades Faltantes: ')
+    for actividad in actividades_faltantes:
+        n += 1
+        text_left(f"    {n}.  {actividad.nombre.title()}")
+
 # firma usuario solicitante.
     linea(4)
     text_center('Atte.: '+ usuario)

@@ -59,7 +59,7 @@
     {% else %}
     Tutor: Aún no asignaste tutor</p>
     {% endif %}
-    <a href="{% url 'reportes:reporte_estudiante' request.user.datosestudiante.id %}">Reporte Actual</a>
+    <a target=_blank href="{% url 'reportes:reporte_estudiante' request.user.datosestudiante.id %}">Reporte Actual</a>
 {%elif grupo == 'docente' %}
     Usuario: {{ request.user.datosdocente.usuario }}<br> 
     Nombre: {{ request.user.datosdocente.nombre }}<br>

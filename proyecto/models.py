@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
-from actividades.models import *
+from actividades.models import Actividad
 
 def validate_file_extension(value):
     if not value.name.endswith('.pdf'):

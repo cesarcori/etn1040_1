@@ -108,7 +108,7 @@ def formularioMateria(request, pk):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','administrador','docente','tutor','director'])
-def reporteEstudiante(request, pk):
+def reporteEstudianteHtml(request, pk):
     grupo = request.user.groups.get().name
     estudiante = DatosEstudiante.objects.get(id=pk)
     pasos_realizados = len(pasosRealizados(estudiante))

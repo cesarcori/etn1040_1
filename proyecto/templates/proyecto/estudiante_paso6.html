@@ -81,7 +81,7 @@
 
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
 
-{% if is_nota_tribunal_2 %}
+{% if is_nota_tribunal_2 and not is_conclusion%}
   <a class="btn btn-success" href={%url 'confirmar_paso_6' %}>Completado</a></p>
 {% endif %}
 
