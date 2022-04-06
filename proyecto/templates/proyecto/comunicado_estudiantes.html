@@ -5,8 +5,8 @@
     <h3>Comunicados del Docente Ing. {{request.user.datosestudiante.grupo_doc.apellido}}</h3>
 {%elif valor == 'tutor' %}
     <h3>Comunicados del Tutor
-    {% if request.user.datosestudiante.tutor %}
-        Ing. {{request.user.datosestudiante.tutor.apellido}}
+    {% if request.user.datosestudiante.equipo.tutor %}
+        Ing. {{request.user.datosestudiante.equipo.tutor.apellido}}
     {% endif %}
     </h3>
 {%endif%}

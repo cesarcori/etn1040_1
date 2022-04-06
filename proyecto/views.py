@@ -1732,7 +1732,7 @@ def carta_solicitud_tutor(request):
             estudiante.celular,
             estudiante.correo,
             estudiante.grupo_doc.__str__(),
-            estudiante.tutor.__str__(),
+            estudiante.equipo.tutor.__str__(),
             cargo, lugar, institucion, 
             ]
     carta_solicitud(buffer,info_estu)
@@ -2035,7 +2035,7 @@ def entregaProyecto(request):
     usuario = request.user
     estudiante = usuario.datosestudiante
     docente = estudiante.grupo_doc
-    tutor = estudiante.tutor
+    tutor = estudiante.equipo.tutor
     salas = SalaRevisarProyecto.objects.filter(estudiante_rev=estudiante) 
     dicc_salas = {}
     for sala in salas:
@@ -2064,7 +2064,7 @@ def crearSalaRevisarProyecto(request):
     usuario = request.user
     estudiante = usuario.datosestudiante
     docente = estudiante.grupo_doc
-    tutor = estudiante.tutor
+    tutor = estudiante.equipo.tutor
     if request.method == 'POST':
         form = SalaRevisarProyectoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -2314,7 +2314,7 @@ def entregaTribunal(request, id_trib, id_est):
     usuario = request.user
     estudiante = usuario.datosestudiante
     docente = estudiante.grupo_doc
-    tutor = estudiante.tutor
+    tutor = estudiante.equipo.tutor
     tribunal = estudiante.tribunales.get(id=id_trib)
     salas = SalaRevisarTribunal.objects.filter(estudiante_rev=estudiante, tribunal_rev=tribunal) 
     # visto bueno diferente filosofia

@@ -52,10 +52,10 @@
     Docente: <a href="{% url 'enlace_docente' request.user.datosestudiante.grupo_doc.id %}">
         {{ request.user.datosestudiante.grupo_doc.nombre}} 
         {{request.user.datosestudiante.grupo_doc.apellido}}</a><br>
-    {% if request.user.datosestudiante.tutor %}
-    Tutor: <a href="{% url 'enlace_tutor' request.user.datosestudiante.tutor.id %}">
-    {{request.user.datosestudiante.tutor.nombre}} 
-    {{request.user.datosestudiante.tutor.apellido}}</a></p>
+    {% if request.user.datosestudiante.equipo.tutor %}
+    Tutor: <a href="{% url 'enlace_tutor' request.user.datosestudiante.equipo.tutor.id %}">
+    {{request.user.datosestudiante.equipo.tutor.nombre}} 
+    {{request.user.datosestudiante.equipo.tutor.apellido}}</a></p>
     {% else %}
     Tutor: Aún no asignaste tutor</p>
     {% endif %}
