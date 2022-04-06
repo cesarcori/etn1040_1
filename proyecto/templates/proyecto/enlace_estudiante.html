@@ -42,7 +42,7 @@ Tutor: Aún no tiene tutor<br>
 Fecha de Inscripción: {{estudiante.fecha_inscripcion}}</p>
 {%endif%}
 {% if grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor' or grupo == 'director'%}
-<a href="{% url 'reportes:reporte_estudiante' estudiante.id %}">Reporte Actual</a>
+<a targe=_blank href="{% url 'reportes:reporte_estudiante' estudiante.id %}">Reporte Actual</a>
 {% endif %}
 		</div>
 	</div>
