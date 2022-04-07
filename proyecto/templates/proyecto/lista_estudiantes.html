@@ -20,7 +20,7 @@
   </thead>
 
   <tbody>
-    {%for est in datos_est %}
+    {%for est, cantidad_aviso in datos_estudiantes.items %}
       <tr>
         {%if grupo == 'administrador'%}
           <th scope="row">{{est.registro_uni}}</th>
@@ -28,11 +28,38 @@
         {%endif%}
 
         {%if grupo == 'docente' %}
-          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
+          <td>
+            <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
+              type="button" class="btn btn-primary position-relative"
+              data-bs-toggle="tooltip" data-bs-placement="right" 
+              title="{{cantidad_aviso.1}}">
+              {{est}}
+              {% if cantidad_aviso.0 != 0 %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{cantidad_aviso.0}}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              {% endif %}
+            </a>
+          </td>
+          <!--<a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>-->
         {%endif%}
 
         {%if grupo == 'director' %}
-          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+          <td>
+            <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
+              type="button" class="btn btn-primary position-relative"
+              data-bs-toggle="tooltip" data-bs-placement="right" 
+              title="{{cantidad_aviso.1}}">
+              {{est}}
+              {% if cantidad_aviso.0 != 0 %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{cantidad_aviso.0}}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              {% endif %}
+            </a>
+          </td>
           <th scope="row">{{est.celular}}</th>
           <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
           <td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
@@ -40,9 +67,24 @@
 
         {%if grupo == 'tutor' %}
           {%if est.equipo.tutor_acepto%}
-            <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>
+            <td>
+              <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
+                type="button" class="btn btn-primary position-relative"
+                data-bs-toggle="tooltip" data-bs-placement="right" 
+                title="{{cantidad_aviso.1}}">
+                {{est}}
+                {% if cantidad_aviso.0 != 0 %}
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{cantidad_aviso.0}}
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+                {% endif %}
+              </a>
+            </td>
           {% else %}
-            <td><a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.equipo.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est}}</a></td>
+            <td>
+              <a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.equipo.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est}}</a>
+            </td>
           {% endif %}
         {%endif%}
 
@@ -52,7 +94,20 @@
         {%endif%}
 
         {%if grupo == 'tribunal' %}
-          <td><a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+          <td>
+            <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
+              type="button" class="btn btn-primary position-relative"
+              data-bs-toggle="tooltip" data-bs-placement="right" 
+              title="{{cantidad_aviso.1}}">
+              {{est}}
+              {% if cantidad_aviso.0 != 0 %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{cantidad_aviso.0}}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              {% endif %}
+            </a>
+          </td>
         {%endif%}
 
         {% if grupo == 'estudiante' or grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor'%}

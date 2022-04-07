@@ -75,7 +75,7 @@
     Apellido: {{ request.user.datostutor.apellido }}<br>
     Celular: {{ request.user.datostutor.celular }}<br>
     Correo Electrónico: {{ request.user.datostutor.correo}}<br>
-    Cantidad de Estudiantes: {{ request.user.datostutor.datosestudiante_set.count}}<br>
+    Cantidad de Estudiantes: {{ cantidad_estudiantes }}<br>
 {%elif grupo == 'director' %}
     Usuario: {{ request.user.datosdirector.usuario }}<br> 
     Nombre: {{ request.user.datosdirector.nombre }}<br>

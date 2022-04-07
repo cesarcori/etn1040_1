@@ -229,8 +229,12 @@ def docente(request):
     datos_est = request.user.datosdocente.datosestudiante_set.filter(
             Q(modalidad="individual") | Q(modalidad=None) | Q(is_modalidad_aprobada=False)
             )
+    orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
+
     equipos_multiple = request.user.datosdocente.equipo_set.filter(cantidad__gt = 1)
-    context = {'datos_est':datos_est,'grupo':grupo, 'equipos_multiple':equipos_multiple}
+    context = {'grupo':grupo, 'equipos_multiple':equipos_multiple,
+        'datos_estudiantes': orden_datos_estudiantes,
+    }
     return render(request, 'proyecto/docente.html', context)
 
 @login_required(login_url='login')
@@ -243,21 +247,26 @@ def tutor(request):
     # equipos = Equipo.objects.filter(tutor=tutor).exclude(cantidad=1)
     equipos_multiple = request.user.datostutor.equipo_set.filter(cantidad__gt=1)
     datos_est = [n.datosestudiante_set.get() for n in Equipo.objects.filter(tutor=tutor, cantidad=1)]
-    context = {'datos_est':datos_est,'grupo':grupo,'equipos_multiple':equipos_multiple}
+
+    orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
+    context = {'datos_est':datos_est,'grupo':grupo,'equipos_multiple':equipos_multiple,
+        'datos_estudiantes': orden_datos_estudiantes,
+    }
     return render(request, 'proyecto/tutor.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tribunal'])
 def tribunal(request):
     grupo = 'tribunal'
-    # datos_est = request.user.datostribunal.datosestudiante_set.all().order_by('apellido')
-    # datos_est = request.user.tribunal.equipo_set.filter(
-            # Q(modalidad="individual") | Q(modalidad=None)
-            # )
     tribunal = request.user.datostribunal
     datos_est = [e.datosestudiante_set.get() for e in tribunal.equipo_set.filter(cantidad=1)]
     equipos_multiple = tribunal.equipo_set.filter(cantidad__gt=1)
-    context = {'datos_est':datos_est,'grupo':grupo,'equipos_multiple':equipos_multiple}
+    # avisos
+    orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
+
+    context = {'datos_est':datos_est,'grupo':grupo,'equipos_multiple':equipos_multiple,
+        'datos_estudiantes': orden_datos_estudiantes,
+    }
     return render(request, 'proyecto/tribunal.html', context)
 
 @login_required(login_url='login')
@@ -270,7 +279,10 @@ def director(request):
             Q(modalidad="individual") | Q(modalidad=None)
             )
     equipos_multiple = Equipo.objects.filter(cantidad__gt=1)
+    # avisos
+    orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
     context = {'datos_est':datos_est,'grupo':grupo, 
+        'datos_estudiantes': orden_datos_estudiantes,
             'equipos_multiple':equipos_multiple,}
     return render(request, 'proyecto/director.html', context)
 
@@ -507,7 +519,14 @@ def estudiante(request):
 @allowed_users(allowed_roles=['docente','tutor','estudiante','tribunal','director','administrador'])
 def perfilUsuarios(request):
     grupo = request.user.groups.get().name
-    context = {'grupo': grupo}
+    cantidad_estudiantes = None
+    if grupo == 'tutor':
+        cantidad_estudiantes = 0
+        for equipo in request.user.datostutor.equipo_set.all():
+            cantidad_estudiantes += equipo.datosestudiante_set.count()    
+    context = {'grupo': grupo,
+            'cantidad_estudiantes': cantidad_estudiantes,
+            }
     return render(request, 'proyecto/perfil.html', context)
 
 @login_required(login_url='login')

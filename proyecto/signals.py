@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import post_save, post_delete, pre_delete, pre_save, m2m_changed
 from django.dispatch import receiver
 
-from .models import DatosEstudiante, Equipo
+from .models import DatosEstudiante, Equipo, DatosDirector
+from actividades.models import AvisoActividad
 
 @receiver(post_save, sender=DatosEstudiante)
 def crear_equipo(sender, instance, created, **kwargs):
@@ -29,10 +30,42 @@ def cambio_docente(sender, instance, created, **kwargs):
         instance.equipo.docente = instance.grupo_doc
         instance.equipo.save()
 
-# @receiver(pre_delete, sender=NotaTribunal)
-# def eliminar_nota(sender, instance, **kwargs):
-    # """ Al eliminar la nota del tribunal, se reestablece las notas anteriores """
-    # estudiantes = instance.datosestudiante_set.all()
-    # for estudiante in estudiantes:
-        # estudiante.delete()
+@receiver(m2m_changed, sender=DatosEstudiante.actividad.through)
+def cambio_actividad(sender, action, instance, **kwargs):
+    """Cuando se aumenta un valor en actividades del estudiante enviará
+    un aviso."""
+    if action == "post_add":
+        print(f"*********** aviso agregado *******")
+        if instance.equipo.tribunales.all().count() == 2:
+            lista_usuarios = [
+                instance.equipo.docente.usuario, 
+                DatosDirector.objects.all()[0].usuario,
+                instance.equipo.tutor.usuario, 
+                instance.equipo.tribunales.all()[0].usuario,
+                instance.equipo.tribunales.all()[1].usuario,
+            ]
+        elif instance.equipo.tutor:
+            lista_usuarios = [
+                instance.equipo.docente.usuario, 
+                DatosDirector.objects.all()[0].usuario,
+                instance.equipo.tutor.usuario, 
+            ]
+        else : 
+            lista_usuarios = [
+                instance.equipo.docente.usuario, 
+                DatosDirector.objects.all()[0].usuario,
+            ]
+        actividad_agregada = instance.actividad.last()
+        # existe relacion en base de datos revisar en cada usuario
+        for usuario in lista_usuarios:
+            aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=instance.equipo)
+            if aviso.exists():
+                aviso[0].actividades.add(actividad_agregada)
+            else:
+                AvisoActividad.objects.create(
+                    usuario = usuario,
+                    equipo = instance.equipo,
+                )
+                aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=instance.equipo)
+                aviso[0].actividades.add(actividad_agregada)
 
