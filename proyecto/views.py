@@ -232,8 +232,11 @@ def docente(request):
     orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
 
     equipos_multiple = request.user.datosdocente.equipo_set.filter(cantidad__gt = 1)
+    orden_datos_equipos = avisosEquipos(equipos_multiple, request.user)
+
     context = {'grupo':grupo, 'equipos_multiple':equipos_multiple,
         'datos_estudiantes': orden_datos_estudiantes,
+        'datos_equipos': orden_datos_equipos,
     }
     return render(request, 'proyecto/docente.html', context)
 
@@ -245,12 +248,15 @@ def tutor(request):
     # datos_est = tutor.datosestudiante_set.filter(modalidad='individual').order_by('apellido')
     datos_est = [e.datosestudiante_set.get() for e in request.user.datostutor.equipo_set.filter(cantidad=1)]
     # equipos = Equipo.objects.filter(tutor=tutor).exclude(cantidad=1)
-    equipos_multiple = request.user.datostutor.equipo_set.filter(cantidad__gt=1)
     datos_est = [n.datosestudiante_set.get() for n in Equipo.objects.filter(tutor=tutor, cantidad=1)]
-
     orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
+
+    equipos_multiple = request.user.datostutor.equipo_set.filter(cantidad__gt=1)
+    orden_datos_equipos = avisosEquipos(equipos_multiple, request.user)
+
     context = {'datos_est':datos_est,'grupo':grupo,'equipos_multiple':equipos_multiple,
         'datos_estudiantes': orden_datos_estudiantes,
+        'datos_equipos': orden_datos_equipos,
     }
     return render(request, 'proyecto/tutor.html', context)
 
@@ -259,13 +265,16 @@ def tutor(request):
 def tribunal(request):
     grupo = 'tribunal'
     tribunal = request.user.datostribunal
-    datos_est = [e.datosestudiante_set.get() for e in tribunal.equipo_set.filter(cantidad=1)]
-    equipos_multiple = tribunal.equipo_set.filter(cantidad__gt=1)
     # avisos
+    datos_est = [e.datosestudiante_set.get() for e in tribunal.equipo_set.filter(cantidad=1)]
     orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
+
+    equipos_multiple = tribunal.equipo_set.filter(cantidad__gt=1)
+    orden_datos_equipos = avisosEquipos(equipos_multiple, request.user)
 
     context = {'datos_est':datos_est,'grupo':grupo,'equipos_multiple':equipos_multiple,
         'datos_estudiantes': orden_datos_estudiantes,
+        'datos_equipos': orden_datos_equipos,
     }
     return render(request, 'proyecto/tribunal.html', context)
 
@@ -273,17 +282,18 @@ def tribunal(request):
 @allowed_users(allowed_roles=['director'])
 def director(request):
     grupo = request.user.groups.get().name
-    # datos_est = DatosEstudiante.objects.all().order_by('apellido')
-    # context = {'datos_est':datos_est,'grupo':grupo}
     datos_est = DatosEstudiante.objects.filter(
             Q(modalidad="individual") | Q(modalidad=None)
             )
-    equipos_multiple = Equipo.objects.filter(cantidad__gt=1)
-    # avisos
     orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
+
+    equipos_multiple = Equipo.objects.filter(cantidad__gt=1)
+    orden_datos_equipos = avisosEquipos(equipos_multiple, request.user)
+
     context = {'datos_est':datos_est,'grupo':grupo, 
         'datos_estudiantes': orden_datos_estudiantes,
-            'equipos_multiple':equipos_multiple,}
+        'datos_equipos': orden_datos_equipos,
+        'equipos_multiple':equipos_multiple,}
     return render(request, 'proyecto/director.html', context)
 
 @login_required(login_url='login')
@@ -781,24 +791,27 @@ def enlaceSolicitante(request, pk_sol):
 def enlaceEstudiante(request, pk_est):
     grupo = str(request.user.groups.get())
     estudiante = DatosEstudiante.objects.get(id=pk_est)
-    if grupo=='administrador' or grupo=='director' or grupo=='tribunal':
+    if grupo=='administrador':
         context = {'grupo': grupo,'estudiante':estudiante,}
-        return render(request, 'proyecto/enlace_estudiante.html', context)
+        # return render(request, 'proyecto/enlace_estudiante.html', context)
+    elif grupo == "director" or grupo == "tribunal":
+        context = {'grupo': grupo,'estudiante':estudiante,}
+        # return render(request, 'proyecto/enlace_estudiante.html', context)
     elif grupo == 'docente':
         # evita que se un docente consulte otros estudiantes
         existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk_est).exists()
         if existe_est:
             context = {'grupo': grupo,'estudiante':estudiante,}
-            return render(request, 'proyecto/enlace_estudiante.html', context)
         else:
             return HttpResponse('error')
     else:           
         tutor = request.user.datostutor
         if tutor.equipo_set.filter(tutor=tutor).exists():
             context = {'grupo': grupo,'estudiante':estudiante,}
-            return render(request, 'proyecto/enlace_estudiante.html', context)
+            # return render(request, 'proyecto/enlace_estudiante.html', context)
         else:
             return HttpResponse('error')
+    return render(request, 'proyecto/enlace_estudiante.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['administrador','director'])
@@ -850,8 +863,6 @@ def progresoEstudiante(request, pk):
     else:
         context_aux={}
     if grupo == 'docente':
-        # evita que se un docente consulte otros estudiantes
-        # existe_est = request.user.datosdocente.datosestudiante_set.filter(id=pk).exists()
         existe_est = request.user.datosdocente.equipo_set.filter(id=pk).exists()
         if not existe_est:
             return HttpResponse('error')
@@ -894,7 +905,10 @@ def progresoEstudiante(request, pk):
         dicc_salas[sala] = no_visto
     todo_salas_doc = SalaDocumentoApp.objects.filter(equipo=equipo)
     notas_tribunales = NotaTribunal.objects.filter(equipo=equipo)
+    # avisos 
+    mensajes_avisos = mensajesAvisosLista(equipo, request.user) 
     context = {'grupo': grupo,
+            'mensajes_avisos':mensajes_avisos,
             'estudiante':estudiante,
             'equipo': equipo,
             'progreso':progreso,
@@ -909,6 +923,9 @@ def progresoEstudiante(request, pk):
             'notas_tribunales':notas_tribunales,
             }
     context = {**context_aux, **context}
+    # marca los avisos como vistos
+    marcarAvisosVistos(equipo, request.user)
+
     return render(request, 'proyecto/progreso_estudiante.html', context)
 
 # @login_required(login_url='login')

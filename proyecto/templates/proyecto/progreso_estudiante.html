@@ -1,5 +1,14 @@
 {%  extends 'proyecto/main.html' %}
 {% block content %}            
+{% if mensajes_avisos %}
+  {% for aviso in mensajes_avisos %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>!Noticias!</strong>
+      Se realizó la siguiente actividad: <strong>{{aviso|title}}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
 {% if grupo == 'director'%}
   <div class="d-flex flex-row-reverse bd-highlight">
       <a href={% url "tiempos:resumen" equipo.id %}>Información tiempo</a>
