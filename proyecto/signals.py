@@ -22,6 +22,17 @@ def eliminar_equipo(sender, instance, **kwargs):
     for estudiante in estudiantes:
         estudiante.delete()
 
+@receiver(post_delete, sender=DatosEstudiante)
+def eliminar_estudiante(sender, instance, **kwargs):
+    """Al eliminar un equipo se eliminaran a todos sus estudiantes 
+    relacionados con este"""
+    equipo = instance.equipo
+    if instance.equipo.datosestudiante_set.count() < 2:
+        equipo.delete()
+    # estudiantes = instance.datosestudiante_set.all()
+    # for estudiante in estudiantes:
+        # estudiante.delete()
+
 @receiver(post_save, sender=DatosEstudiante)
 def cambio_docente(sender, instance, created, **kwargs):
     """Cuando se cambia el docente del estudiante, el docente del grupo

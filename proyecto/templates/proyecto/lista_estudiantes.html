@@ -42,7 +42,6 @@
               {% endif %}
             </a>
           </td>
-          <!--<a class="text-underline-hover" href="{% url 'progreso_estudiante' est.equipo.id %}">{{est}}</a></td>-->
         {%endif%}
 
         {%if grupo == 'director' %}
@@ -81,6 +80,7 @@
                 {% endif %}
               </a>
             </td>
+
           {% else %}
             <td>
               <a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.equipo.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est}}</a>
@@ -111,7 +111,17 @@
         {%endif%}
 
         {% if grupo == 'estudiante' or grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor'%}
-          <td><a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a></td>
+          <td>
+            <!--<a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a>-->
+            <a href="{% url 'mensaje_personal' est.usuario.pk %}" class="btn btn-primary position-relative">
+              Mensajes
+              {% if not cantidad_aviso.2 %}
+                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                  <span class="visually-hidden">New alerts</span>
+                </span>
+              {% endif %}
+            </a>
+          </td>
         {% endif %}
 
         {% if grupo == 'tutor' or grupo == 'docente' or grupo == 'administrador' or grupo == 'tribunal'%}

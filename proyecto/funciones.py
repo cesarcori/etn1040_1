@@ -6,10 +6,35 @@ from datetime import date, timedelta
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.http import FileResponse
-from .models import ActividadesCronograma, Equipo, RegistroPerfil, DatosDocente
+from .models import ActividadesCronograma, Equipo, RegistroPerfil, DatosDocente, Sala
 from actividades.funciones import progress
 from random import choice
 from actividades.models import AvisoActividad
+
+
+def isVistoUsuarioEstudiante(usuario_request, usuario):
+    # aviso del estudiante
+    id_request = usuario_request.id.__str__()
+    id_usuario = usuario.id.__str__()
+    nombre_sala = id_usuario + id_request
+    sala = Sala.objects.get(nombre_sala=nombre_sala).mensajesala_set.filter(usuario=usuario).last()
+    if sala:
+        is_visto = sala.is_visto
+    else:
+        is_visto = True
+    return is_visto
+
+def isVistoUsuario(usuario_request, usuario):
+    # aviso del estudiante
+    id_request = usuario_request.id.__str__()
+    id_usuario = usuario.id.__str__()
+    nombre_sala = id_usuario + id_request
+    sala = Sala.objects.get(nombre_sala=nombre_sala).mensajesala_set.filter(usuario=usuario_request).last()
+    if sala:
+        is_visto = sala.is_visto
+    else:
+        is_visto = True
+    return is_visto
 
 def avisosEstudiantes(datos_est, usuario):
     avisos = AvisoActividad.objects.filter(usuario=usuario)
@@ -23,9 +48,10 @@ def avisosEstudiantes(datos_est, usuario):
                 mensaje = "\n".join(nombre_actividades)
             else:
                 mensaje = "No realizó actividad nueva"
-            datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje]
+            datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje,
+                isVistoUsuario(dato_est.usuario, usuario)]
         else:
-            datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad"]
+            datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad", isVistoUsuario(dato_est.usuario, usuario)]
     orden_datos_estudiantes = dict(sorted(datos_estudiantes.items(), key=lambda cantidad: cantidad[1][0], reverse=True))
     return orden_datos_estudiantes
 

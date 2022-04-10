@@ -177,6 +177,7 @@ class Sala(models.Model):
 class MensajeSala(models.Model):
     usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     texto = models.TextField(blank=True, null=True)
+    is_visto = models.BooleanField(default=False)
     sala = models.ForeignKey(Sala, null=True, blank=True, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 

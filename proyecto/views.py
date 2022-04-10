@@ -496,18 +496,6 @@ def estudiante(request):
         if sorteo == 'si':
             # sorteo docente
             docente_asignado = sorteoDocente(estudiante)
-            # mencion = estudiante.mencion
-            # doc_mencion = DatosDocente.objects.filter(mencion=mencion)
-            # cantidad_est1 = doc_mencion[0].datosestudiante_set.count()
-            # cantidad_est2 = doc_mencion[1].datosestudiante_set.count()
-            # if cantidad_est1 == cantidad_est2:
-                # sorteo = randint(0,1)
-                # docente_asignado = doc_mencion[sorteo]
-            # elif cantidad_est1 < cantidad_est2:
-                # docente_asignado = doc_mencion[0]
-            # else:
-                # docente_asignado = doc_mencion[1]
-            # docente = doc_mencion[0]                   
             # guardar docente
             estudiante.grupo_doc = docente_asignado
             estudiante.save()
@@ -518,12 +506,21 @@ def estudiante(request):
             Sala.objects.create(nombre_sala = nombre_sala)
             return redirect('estudiante')
         return render(request, 'proyecto/sorteo_docente.html')
-    else:
-        progreso = progress(estudiante)
-        context = {'grupo': grupo,'progreso':progreso, 'estudiante':estudiante,
-                'solicitud_invitado':solicitud_invitado,'pasos_realizados':pasos_realizados}
-        context = {**context, **context_aux}
-        return render(request, 'proyecto/estudiante.html', context)
+    # else:
+    progreso = progress(estudiante)
+
+    is_visto_docente = isVistoUsuarioEstudiante(request.user, estudiante.equipo.docente.usuario)
+    is_visto_tutor = isVistoUsuarioEstudiante(request.user, estudiante.equipo.tutor.usuario)
+
+    context = {
+        'grupo': grupo,'progreso':progreso, 
+        'estudiante':estudiante,
+        'is_visto_docente': is_visto_docente,
+        'is_visto_tutor': is_visto_tutor,
+        'solicitud_invitado':solicitud_invitado,
+        'pasos_realizados':pasos_realizados}
+    context = {**context, **context_aux}
+    return render(request, 'proyecto/estudiante.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','estudiante','tribunal','director','administrador'])
@@ -733,6 +730,11 @@ def mensajePersonal(request, pk_doc_tut_est):
             nombre_sala = id_user + id_link
         sala = Sala.objects.get(nombre_sala=nombre_sala)
         mensajes = sala.mensajesala_set.all().order_by('-fecha_creacion')
+        # limpiar vista
+        ultimo_mensaje = sala.mensajesala_set.filter(usuario=usuario_link).last()
+        if ultimo_mensaje:
+            ultimo_mensaje.is_visto = True
+            ultimo_mensaje.save()
         context = {'grupo':grupo,'mensajes':mensajes,
                 'form':form,'usuario_link':usuario_link}
         return render(request, 'proyecto/mensaje_personal.html', context)
