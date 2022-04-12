@@ -1,153 +1,135 @@
 {% load static %}
 <style>
-.hello-msg{
+  .hello-msg{
     font-size: 18px;
     color: #fff;
     margin-right: 20px;
-}
+  }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            {% if grupo == 'docente' %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'mis_comunicados' %}">Mis Comunicados</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'material_para_estudiante' %}">Material para Estudiantes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'firmas' %}">Firmas</a>
-                </li>
-            {% elif grupo == 'tutor'%}
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'mis_comunicados' %}">Mis Comunicados</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'firmas' %}">Firmas</a>
-                </li>
-            {% elif grupo == 'estudiante'%}
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'comunicados_doc_est' %}">
-                        Comunicados Doc</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'comunicados_tut_est' %}">
-                        Comunicados Tut</a>
-                </li>
-            {% elif grupo == 'director'%}
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lista_estudiante_titulado' %}">Estudiantes Titulados</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lista_docentes' %}">Docentes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lista_tutores' %}">Tutor</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lista_tribunales' %}">Tribunales</a>
-                </li>
-            {% elif grupo == 'tribunal'%}
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
-                </li>
-            {% elif grupo == 'solicitud'%}
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Inicio</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lista_estudiantes' %}">Estudiantes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lista_docentes' %}">Docentes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lista_tutores' %}">Tutor</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lista_tribunales' %}">Tribunales</a>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
-    {% comment %}{% if grupo == 'docente' or grupo == 'tutor' %}{% endcomment %}
-        {% comment %}<span class="hello-msg">Bienvenido, Ing. {{ request.user.first_name }} </span>{% endcomment %}
-    {% comment %}{% elif grupo == 'estudiante'%}{% endcomment %}
-        {% comment %}<span class="hello-msg">Bienvenido, Futuro(a) Ing. {{ request.user.first_name }} </span>{% endcomment %}
-    {% comment %}{% elif grupo == 'administrador' %}{% endcomment %}
-        {% comment %}<span class="hello-msg">Bienvenido, Administrador {{ request.user.first_name }} </span>{% endcomment %}
-    {% comment %}{% elif grupo == 'director' %}{% endcomment %}
-        {% comment %}<span class="hello-msg">Bienvenido, Director {{ request.user.first_name }} </span>{% endcomment %}
-    {% comment %}{% endif %}{% endcomment %}
-    <span class="hello-msg">Bienvenido, 
-        {% if grupo == 'docente' %}
-            Docente Ing.
-        {% elif grupo == 'tutor'%}
-            Tutor Ing.
-        {% elif grupo == 'estudiante'%}
-            Futuro(a) Ing.
-        {% elif grupo == 'administrador' %}
-            Administrador
-        {% elif grupo == 'director' %}
-            Director
-        {% elif grupo == 'tribunal' %}
-            Tribunal Ing.
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+        </li>
+        {% if grupo != 'solicitud' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
+          </li>
         {% endif %}
-    {{ request.user.first_name }} </span>
-    <span><a class="text-underline-hover" href="{% url 'logout' %}">Cerrar Sesión</a></span>
+        {% if grupo == 'docente' %}
+          {% comment %}<li class="nav-item">{% endcomment %}
+            {% comment %}<a class="nav-link" href="{% url 'perfil'%}">Perfil</a>{% endcomment %}
+          {% comment %}</li>{% endcomment %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'mis_comunicados' %}">Mis Comunicados</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'material_para_estudiante' %}">Material para Estudiantes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'firmas' %}">Firmas</a>
+          </li>
+        {% elif grupo == 'tutor'%}
+          {% comment %}<li class="nav-item">{% endcomment %}
+            {% comment %}<a class="nav-link" href="{% url 'perfil'%}">Perfil</a>{% endcomment %}
+          {% comment %}</li>{% endcomment %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'mis_comunicados' %}">Mis Comunicados</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'firmas' %}">Firmas</a>
+          </li>
+        {% elif grupo == 'estudiante'%}
+          {% comment %}<li class="nav-item">{% endcomment %}
+            {% comment %}<a class="nav-link" href="{% url 'perfil'%}">Perfil</a>{% endcomment %}
+          {% comment %}</li>{% endcomment %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'comunicados_doc_est' %}">
+            Comunicados Doc</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'comunicados_tut_est' %}">
+            Comunicados Tut</a>
+          </li>
+        {% elif grupo == 'director'%}
+          {% comment %}<li class="nav-item">{% endcomment %}
+            {% comment %}<a class="nav-link" href="{% url 'perfil'%}">Perfil</a>{% endcomment %}
+          {% comment %}</li>{% endcomment %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_estudiante_titulado' %}">Estudiantes Titulados</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_docentes' %}">Docentes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_tutores' %}">Tutor</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_tribunales' %}">Tribunales</a>
+          </li>
+        {% elif grupo == 'tribunal'%}
+          {% comment %}<li class="nav-item">{% endcomment %}
+            {% comment %}<a class="nav-link" href="{% url 'perfil'%}">Perfil</a>{% endcomment %}
+          {% comment %}</li>{% endcomment %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
+          </li>
+        {% elif grupo == 'solicitud'%}
+
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'perfil'%}">Perfil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_estudiantes' %}">Estudiantes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_docentes' %}">Docentes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_tutores' %}">Tutor</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_tribunales' %}">Tribunales</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+    <span class="hello-msg">Bienvenido, 
+      {% if grupo == 'docente' %}
+        Docente Ing.
+      {% elif grupo == 'tutor'%}
+        Tutor Ing.
+      {% elif grupo == 'estudiante'%}
+        Futuro(a) Ing.
+      {% elif grupo == 'administrador' %}
+        Administrador
+      {% elif grupo == 'director' %}
+        Director
+      {% elif grupo == 'tribunal' %}
+        Tribunal Ing.
+      {% endif %}
+      {{ request.user.first_name }} {{ request.user.last_name}} </span>
+    {% comment %}<span><a class="text-underline-hover" href="{% url 'logout' %}">Cerrar Sesión</a></span>{% endcomment %}
+    <span><a class="navbar-text" href="{% url 'logout' %}">Cerrar Sesión</a></span>
+  </div>
 </nav>
 

@@ -38,6 +38,7 @@ def isVistoUsuario(usuario_request, usuario):
 
 def avisosEstudiantes(datos_est, usuario):
     avisos = AvisoActividad.objects.filter(usuario=usuario)
+    grupo = usuario.groups.get().name
     datos_estudiantes = {}
     for dato_est in datos_est:
         aviso_estudiante = avisos.filter(equipo=dato_est.equipo)
@@ -48,10 +49,16 @@ def avisosEstudiantes(datos_est, usuario):
                 mensaje = "\n".join(nombre_actividades)
             else:
                 mensaje = "No realizó actividad nueva"
-            datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje,
-                isVistoUsuario(dato_est.usuario, usuario)]
+            if grupo == 'tutor' or grupo == 'docente':
+                datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje,
+                    isVistoUsuario(dato_est.usuario, usuario)]
+            else:
+                datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje]
         else:
-            datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad", isVistoUsuario(dato_est.usuario, usuario)]
+            if grupo == 'tutor' or grupo == 'docente':
+                datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad", isVistoUsuario(dato_est.usuario, usuario)]
+            else:
+                datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad"]
     orden_datos_estudiantes = dict(sorted(datos_estudiantes.items(), key=lambda cantidad: cantidad[1][0], reverse=True))
     return orden_datos_estudiantes
 

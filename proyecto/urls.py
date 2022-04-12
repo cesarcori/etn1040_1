@@ -131,3 +131,4 @@ urlpatterns = [
     path('error/', views.error , name='error_pagina'),
     
 ]
+

@@ -41,6 +41,9 @@ activar_estudiante = True
 def bienvenidos(request):
     return render(request, 'proyecto/bienvenidos.html')
 
+def error_cuatro(request, exception):
+    return HttpResponse('error')
+
 @unauthenticated_user
 def registerPage(request):
     form = CreateUserForm
