@@ -5,7 +5,11 @@
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <a class="btn btn-danger" href={%url 'home' %}>Atras</a>
+    {% if para_usuario.groups.get.name == 'estudiante' and para_usuario.datosestudiante.equipo.datosestudiante_set.count == 1 %}
+      <a class="btn btn-danger" href={%url 'home' %}>Atras</a>
+    {% elif para_usuario.groups.get.name != 'estudiante' %}
+      <a class="btn btn-danger" href={%url 'home' %}>Atras</a>
+    {% endif %}
     <button type="submit" name='enviar' class="btn btn-success"
         value='enviar'>Enviar</button>
 </form>
@@ -17,7 +21,10 @@
   </div>
   <div class="card-body">
 {%for mensaje in mensajes%}
-    <strong>{{mensaje.usuario.first_name}}</strong>: {{mensaje.texto}}
+    <strong>
+      {{mensaje.usuario.groups.get|title}}:
+      {{mensaje.usuario.first_name}}
+    </strong>: {{mensaje.texto}}
     <div class="card-subtitle mb-2 text-muted">{{mensaje.fecha_creacion}}</div>
 {%endfor%}
   </div>

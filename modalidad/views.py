@@ -5,9 +5,11 @@ from django.contrib import messages
 
 from proyecto.decorators import *
 from proyecto.models import Equipo
+from mensaje.funciones import isVisto
 from .forms import *
 from actividades.models import *
 from actividades.funciones import *
+
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
@@ -312,7 +314,14 @@ def modificarNombreEquipo(request):
 def verEquipo(request, pk):
     equipo = get_object_or_404(Equipo, id=pk)
     grupo = request.user.groups.get().name
-    context = {'grupo':grupo, 'equipo':equipo}
+    estudiantes = equipo.datosestudiante_set.all()
+    estudiante_isVisto = {}
+    if grupo == 'docente' or grupo == 'tutor':
+        for estudiante in estudiantes:
+            is_visto = isVisto(estudiante.usuario, request.user)
+            estudiante_isVisto[estudiante] = is_visto
+            # estudiante_isVisto[estudiante] = True
+        print(estudiante_isVisto)
+    context = {'grupo':grupo, 'equipo':equipo, 'estudiante_isVisto': estudiante_isVisto}
     return render(request, 'modalidad/ver_equipo.html', context)
     
-

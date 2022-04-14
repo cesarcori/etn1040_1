@@ -4,7 +4,7 @@
     <tr>
       <th scope="col">Estudiante</th>
       <th scope="col">Celular</th>
-      {% if not grupo == 'estudiante' %}
+      {% if grupo == 'docente' or grupo == 'tutor'%}
         <th scope="col">Mensajes</th>
       {% endif %}
       <th scope="col">Correo Electrónico</th>
@@ -14,7 +14,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for estudiante in equipo.datosestudiante_set.all %}
+    {% for estudiante, is_visto in estudiante_isVisto.items %}
     <tr>
         <td>
             {{estudiante}}
@@ -22,8 +22,19 @@
         <td>
             {{estudiante.celular}}
         </td>
-        {% if not grupo == 'estudiante' %}
-          <td><a href="{% url 'mensaje_personal' estudiante.usuario.pk %}">Mensajes</a></td>
+        {% if grupo == 'docente' or grupo == 'tutor'%}
+          <td>
+            <!--<a href="{% url 'mensaje_personal' estudiante.usuario.pk %}">Mensajes</a>-->
+            <!--<a href="{% url 'mensaje_personal' estudiante.usuario.pk %}" class="btn btn-primary position-relative">-->
+            <a href="{% url 'mensaje:enviar_mensaje_par' estudiante.usuario.pk %}" class="btn btn-primary position-relative">
+              Mensajes
+              {% if not is_visto %}
+                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                  <span class="visually-hidden">New alerts</span>
+                </span>
+              {% endif %}
+            </a>
+          </td>
         {% endif %}
         <td>
             <a href="mailto:{{estudiante.correo}}?Subject=">{{estudiante.correo}}</a><br>

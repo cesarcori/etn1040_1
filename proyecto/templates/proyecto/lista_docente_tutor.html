@@ -3,7 +3,8 @@
     <tr>
       <td>Docente: Ing. {{estudiante.grupo_doc.apellido}}</td>
       <td>
-        <a href="{% url 'mensaje_personal' estudiante.grupo_doc.usuario.pk %}" class="btn btn-primary position-relative">
+        <!--<a href="{% url 'mensaje_personal' estudiante.grupo_doc.usuario.pk %}" class="btn btn-primary position-relative">-->
+        <a href="{% url 'mensaje:enviar_mensaje_par' estudiante.grupo_doc.usuario.pk %}" class="btn btn-primary position-relative">
           Mensajes
           {% if not is_visto_docente %}
             <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
@@ -19,7 +20,8 @@
 
       {% if estudiante.equipo.tutor %}
         <td>
-          <a href="{% url 'mensaje_personal' estudiante.equipo.tutor.usuario.pk %}" class="btn btn-primary position-relative">
+          <!--<a href="{% url 'mensaje_personal' estudiante.equipo.tutor.usuario.pk %}" class="btn btn-primary position-relative">-->
+          <a href="{% url 'mensaje:enviar_mensaje_par' estudiante.equipo.tutor.usuario.pk %}" class="btn btn-primary position-relative">
             Mensajes
             {% if not is_visto_tutor %}
               <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">

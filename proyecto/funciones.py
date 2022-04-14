@@ -10,6 +10,7 @@ from .models import ActividadesCronograma, Equipo, RegistroPerfil, DatosDocente,
 from actividades.funciones import progress
 from random import choice
 from actividades.models import AvisoActividad
+from mensaje.funciones import isVisto
 
 
 def isVistoUsuarioEstudiante(usuario_request, usuario):
@@ -17,6 +18,8 @@ def isVistoUsuarioEstudiante(usuario_request, usuario):
     id_request = usuario_request.id.__str__()
     id_usuario = usuario.id.__str__()
     nombre_sala = id_usuario + id_request
+    sala = Sala.objects.get(nombre_sala=nombre_sala)
+    # print(sala)
     sala = Sala.objects.get(nombre_sala=nombre_sala).mensajesala_set.filter(usuario=usuario).last()
     if sala:
         is_visto = sala.is_visto
@@ -25,7 +28,7 @@ def isVistoUsuarioEstudiante(usuario_request, usuario):
     return is_visto
 
 def isVistoUsuario(usuario_request, usuario):
-    # aviso del estudiante
+    # En caso que el usuario request sea el docente o tutor
     id_request = usuario_request.id.__str__()
     id_usuario = usuario.id.__str__()
     nombre_sala = id_usuario + id_request
@@ -51,12 +54,12 @@ def avisosEstudiantes(datos_est, usuario):
                 mensaje = "No realizó actividad nueva"
             if grupo == 'tutor' or grupo == 'docente':
                 datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje,
-                    isVistoUsuario(dato_est.usuario, usuario)]
+                    isVisto(dato_est.usuario, usuario)]
             else:
                 datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje]
         else:
             if grupo == 'tutor' or grupo == 'docente':
-                datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad", isVistoUsuario(dato_est.usuario, usuario)]
+                datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad", isVisto(dato_est.usuario, usuario)]
             else:
                 datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad"]
     orden_datos_estudiantes = dict(sorted(datos_estudiantes.items(), key=lambda cantidad: cantidad[1][0], reverse=True))

@@ -33,6 +33,7 @@ from random import randint
 from datetime import timedelta,date 
 
 from busquedas.funciones import searchByData, searchByDataExcel
+from mensaje.funciones import isVisto
 from itertools import chain
 
 # ********* activar o desactivar correo para pruebas *******
@@ -512,8 +513,15 @@ def estudiante(request):
     # else:
     progreso = progress(estudiante)
 
-    is_visto_docente = isVistoUsuarioEstudiante(request.user, estudiante.equipo.docente.usuario)
-    is_visto_tutor = isVistoUsuarioEstudiante(request.user, estudiante.equipo.tutor.usuario)
+    # is_visto_docente = isVistoUsuarioEstudiante(request.user, estudiante.equipo.docente.usuario)
+    is_visto_docente = isVisto(estudiante.equipo.docente.usuario, request.user)
+
+    # en caso que no exista aun el tutor
+    if estudiante.equipo.tutor:
+        # is_visto_tutor = isVistoUsuarioEstudiante(request.user, estudiante.equipo.tutor.usuario)
+        is_visto_tutor = isVisto(estudiante.equipo.tutor.usuario, request.user)
+    else:
+        is_visto_tutor = True
 
     context = {
         'grupo': grupo,'progreso':progreso, 

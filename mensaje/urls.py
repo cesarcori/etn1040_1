@@ -6,7 +6,7 @@ app_name = 'mensaje'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('par/', views.par, name='enviar_mensaje_par'),
+    path('par/<int:pk_para>', views.par, name='enviar_mensaje_par'),
 ]
 
 
