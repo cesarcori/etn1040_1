@@ -110,7 +110,7 @@ def reporte_tutor_acepto(buffer, estudiante):
     normal()
     text_left('Presente.-')
     linea()
-    text_left('De mi concideración:')
+    text_left('De mi consideración:')
     linea()
 
 # parrafo
@@ -263,7 +263,7 @@ def carta_aceptacion(buffer, estudiante):
     normal()
     text_left('Presente.-')
     linea()
-    text_left('De mi concideración:')
+    text_left('De mi consideración:')
     linea()
 
 # parrafo
@@ -376,7 +376,7 @@ def carta_solicitud(buffer, info_estu):
     lugar = info_estu[8]
     institucion = info_estu[9]
 # ===========================================
-    parrafo1_1 = 'Saludo a usted de mi mayor concideración y con todo respeto '
+    parrafo1_1 = 'Saludo a usted de mi mayor consideración y con todo respeto '
     parrafo1_2 = 'solicitar tutoría en la elaboración del Proyecto de Grado '
     parrafo1_3 = 'para la Carrera de Ingeniería Electrónica, Facultad de Ingeniería, Universidad Mayor de San Andrés.'
     parrafo4 = 'Debido a su gran colaboración, ideas y atención que me brinda para la elaboración del trabajo. Su conocimiento y experiencias son de vital importancia para el desarrollo del Proyecto de Grado, así como sus concejos y orientaciones.'
@@ -400,7 +400,7 @@ def carta_solicitud(buffer, info_estu):
     linea(2)
 
     normal()
-    text_left('De mi concideración:')
+    text_left('De mi consideración:')
     linea()
 
     parrafo(parrafo1_1)
@@ -531,7 +531,7 @@ def generarCartaFinal(buffer, equipo):
     normal()
     text_left('Presente.-')
     linea()
-    text_left('De mi concideración:')
+    text_left('De mi consideración:')
     linea()
 
 # parrafo

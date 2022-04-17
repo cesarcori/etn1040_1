@@ -316,7 +316,7 @@ def verEquipo(request, pk):
     grupo = request.user.groups.get().name
     estudiantes = equipo.datosestudiante_set.all()
     estudiante_isVisto = {}
-    if grupo == 'docente' or grupo == 'tutor':
+    if grupo == 'docente' or grupo == 'tutor' or grupo == 'estudiante':
         for estudiante in estudiantes:
             is_visto = isVisto(estudiante.usuario, request.user)
             estudiante_isVisto[estudiante] = is_visto
