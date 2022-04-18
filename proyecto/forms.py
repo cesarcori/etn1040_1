@@ -113,7 +113,7 @@ class RegistroPerfilForm(forms.ModelForm):
     class Meta:
         model = RegistroPerfil
         fields = '__all__'
-        exclude = ['equipo',]
+        exclude = ['equipo','perfil']
         widgets = {
                 'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
                         'placeholder':'Título del perfil...'}),
@@ -157,7 +157,7 @@ class ProyectoDeGradoForm(forms.ModelForm):
     class Meta:
         model = ProyectoDeGrado
         fields = '__all__'
-        exclude = ['equipo','calificacion','nota_tiempo_elaboracion',
+        exclude = ['equipo','archivo','calificacion','nota_tiempo_elaboracion',
                 'nota_expos_seminarios','nota_informes_trabajo',
                 'nota_cumplimiento_cronograma']
         widgets = {

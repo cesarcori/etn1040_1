@@ -96,7 +96,8 @@
     <p><a target=_blank href={%url 'reportes:carta-tutor-acepto' estudiante.id %}>Carta de Aceptación para Docente ETN-1040</a>
     <i class="fas text-success fa-check"></i></p>
     {% if not imprimir %}
-        <a class="btn btn-warning" href={%url 'confirmar_paso_3' %}>Ya imprimí la carta</a></p>
+      <a class="btn btn-warning" href={% url 'documentos:subir_documento' "carta_aceptacion" %}>Subir archivo documento</a>
+      <a class="btn btn-warning" href={% url 'confirmar_paso_3' %}>Ya imprimí la carta</a></p>
     {% endif %}
 
 {% endif %}

@@ -6,6 +6,7 @@
   <div class='text-right'><a target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %}>Imprimir Plantilla Observación Tutor</a></div>
   {% if salas_doc.0.visto_bueno %}
     <div class='text-right'><a target=_blank href={%url 'reportes:carta_final' sala_doc.equipo.id %}>Carta de Conclusión</a></div>
+    <a href={% url 'documentos:subir_documento' "carta_conclusion" %}>Subir la carta escaneada</a>
   {% endif %}
 {% endif %}
 
@@ -44,31 +45,31 @@
     <tr>
       <td>
         {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
-        {% if not proyecto_grado %}
-        <a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>
-        {% endif %}
+          {% if not proyecto.0.titulo %}
+            <a href={%url 'registro_proyecto'%}>Registrar Proyecto de Grado para calificación</a>
+          {% endif %}
         {% else %}
-        <a class="btn disabled" href=#>Registro Proyecto de Grado</a>
+          <a class="btn disabled" href=#>Registro Proyecto de Grado</a>
         {% endif %}
-        {% if proyecto_grado and proyecto.0.calificacion %}
-        <a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado y Calificado</a>
+        {% if proyecto.0.titulo and proyecto.0.calificacion %}
+          <a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado Registrado y Calificado</a>
         {% endif %}
-        {% if proyecto and not proyecto.0.calificacion %}
-        <a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado, Esperando Nota</a>
+        {% if proyecto.0.titulo and not proyecto.0.calificacion %}
+          <a href={%url 'ver_proyecto_grado'%}>Proyecto de Grado, Esperando Nota</a>
         {% endif %}
       </td>
       <td>
         {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}
-        {% if not proyecto_grado %}
+        {% if not proyecto.0.titulo %}
         <i class="fas text-danger fa-graduation-cap"></i> Pendiente
         {% endif %}
         {% else %}
         <i class="fas text-danger fa-graduation-cap"></i> Pendiente
         {% endif %}
-        {% if proyecto_grado and proyecto.0.calificacion %}
+        {% if proyecto.0.titulo and proyecto.0.calificacion %}
         <i class="fas text-success fa-check"></i> Cumplido
         {% endif %}
-        {% if proyecto and not proyecto.0.calificacion %}
+        {% if proyecto.0.titulo and not proyecto.0.calificacion %}
         <i class="fas text-warning fa-graduation-cap"></i> Pendiente
         {% endif %}
       </td>
@@ -77,14 +78,5 @@
 </table>
 
 <p><a class="btn btn-danger" href={%url 'estudiante' %}>Atras</a>
-{% comment %}{% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno and proyecto.0.calificacion and proyecto_grado%}{% endcomment %}
-{% comment %}{% if progreso < 86 %}{% endcomment %}
-{% comment %}<a class="btn btn-success" href={%url 'confirmar_paso_5' %}>Completado</a></p>{% endcomment %}
-{% comment %}{% endif %}{% endcomment %}
-{% comment %}{% if progreso >= 86 %}{% endcomment %}
-{% comment %}<h5>Paso Completado</h5>{% endcomment %}
-{% comment %}{% endif %}{% endcomment %}
-{% comment %}{% endif %}{% endcomment %}
-
 
 {% endblock %}

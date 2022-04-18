@@ -585,11 +585,6 @@ def editarPerfil(request):
             form = DatosEstudianteForm(request.POST, request.FILES, instance=estudiante)
             if form.is_valid():
                 form.save()
-                # nombre = request.POST.get('nombre')
-                # apellido = request.POST.get('apellido')
-                # usuario.first_name = nombre
-                # usuario.last_name = apellido
-                # usuario.save()
                 return redirect('perfil')
     if grupo == 'administrador':
         administrador = usuario.datosadministrador
@@ -1802,16 +1797,16 @@ def carta_solicitud_tutor(request):
 def registro_perfil(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    perfil = get_object_or_404(RegistroPerfil, equipo=estudiante.equipo)
+    form = RegistroPerfilForm(instance=perfil)
     if request.method == "POST":
-        form= RegistroPerfilForm(request.POST, request.FILES)
+        form= RegistroPerfilForm(request.POST, request.FILES, instance=perfil)
         if form.is_valid():
             form.instance.equipo = estudiante.equipo
             form.save()
             agregarActividadEquipo('registro perfil', estudiante.equipo)
             return redirect('paso4')
-    else:
-        form = RegistroPerfilForm()
-    context = {'grupo': grupo, 'form':form,}
+    context = {'grupo': grupo, 'form':form,'perfil':perfil}
     return render(request, 'proyecto/registro_perfil.html', context)
 
 @login_required(login_url='login')
@@ -2434,9 +2429,10 @@ def ver_proyecto_tribunal(request):
 def registroProyecto(request):
     grupo = request.user.groups.get().name
     equipo = request.user.datosestudiante.equipo
-    form = ProyectoDeGradoForm
+    proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
+    form = ProyectoDeGradoForm(instance=proyecto)
     if request.method == 'POST':
-        form = ProyectoDeGradoForm(request.POST, request.FILES)
+        form = ProyectoDeGradoForm(request.POST, request.FILES, instance=proyecto)
         if form.is_valid():
             form.instance.equipo = equipo
             form.save()

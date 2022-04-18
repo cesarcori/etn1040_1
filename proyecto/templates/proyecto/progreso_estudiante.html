@@ -137,23 +137,10 @@
       </div>
     </div>
     <br>
-    {% include 'proyecto/documentos_estudiante.html'%}
+    {% comment %}{% include 'proyecto/documentos_estudiante.html'%}{% endcomment %}
+    {% include 'documentos/documentos_estudiante.html'%}
   </div>
 </div>
 
-{% comment %}[>***** barras del cronograma *****<]{% endcomment %}
-{% comment %}{% include 'proyecto/cronograma_info.html'%}{% endcomment %}
-
-{% comment %}***** boton ver cronograma *****{% endcomment %}
-{% comment %}{% if estudiante.equipo.registrocronograma %}{% endcomment %}
-  {% comment %}<a class="btn btn-warning" href={% url 'ver_cronograma' estudiante.equipo.id %}>Cronograma</a>{% endcomment %}
-{% comment %}{% else %}{% endcomment %}
-  {% comment %}<a class="btn btn-warning disabled" href=#>Cronograma</a>{% endcomment %}
-{% comment %}{% endif %}{% endcomment %}
-
-{% comment %}<br>{% endcomment %}
-{% comment %}<br>{% endcomment %}
-{% comment %}<a class="btn btn-danger" href='/'> Atras</a>{% endcomment %}
-{% comment %}<br>{% endcomment %}
 {% endblock %}
 

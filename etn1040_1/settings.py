@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'reportes',
     'busquedas',
     'tiempos',
+    'documentos',
 ]
 
 MIDDLEWARE = [

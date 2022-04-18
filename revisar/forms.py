@@ -5,7 +5,7 @@ class SalaRevisarAppForm(forms.ModelForm):
     class Meta:
         model = SalaRevisarApp
         fields = '__all__'
-        exclude = ['sala_documento','creado_por','archivo_corregir']
+        exclude = ['sala_documento','creado_por','archivo_corregir_web']
         widgets = {
             'asunto': 
             forms.TextInput(attrs={'class':'input-group input-group-lg',
@@ -17,8 +17,8 @@ class SalaRevisarAppForm(forms.ModelForm):
         labels = {
                 'asunto': (''),
                 'detalle': (''),
-'archivo_corregir': ('Subir el docmento en pdf con los cambios resaltado en\
-amarillo'),
+'archivo_corregir': 
+    ('Subir el docmento en pdf con los cambios resaltado en amarillo'),
                 }
 
 class MensajeRevisarAppForm(forms.ModelForm):

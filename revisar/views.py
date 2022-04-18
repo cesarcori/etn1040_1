@@ -6,6 +6,7 @@ from django.contrib.auth.models import User, Group
 from proyecto.decorators import *
 from .forms import *
 from actividades.funciones import *
+from proyecto.models import RegistroPerfil, ProyectoDeGrado
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor','docente','tribunal','estudiante'])
@@ -110,7 +111,19 @@ def darVistoBueno(request, id_sala_doc):
     else:
         texto_actividad = f"visto bueno {sala_doc.tipo} {sala_doc.revisor.groups.get()}"
     agregarActividadEquipo(texto_actividad, sala_doc.equipo)
+
     if request.method == 'POST':
+        if grupo_revisor == 'docente':
+            if sala_doc.tipo == 'perfil':
+                RegistroPerfil.objects.create(
+                    equipo = sala_doc.equipo,
+                    perfil = sala_doc.salarevisarapp_set.last().archivo_corregir,    
+                )
+            elif sala_doc.tipo == 'proyecto':
+                ProyectoDeGrado.objects.create(
+                    equipo = sala_doc.equipo,
+                    archivo = sala_doc.salarevisarapp_set.last().archivo_corregir,    
+                )
         sala_doc.visto_bueno = True
         sala_doc.save()
         return redirect('progreso_estudiante', pk=sala_doc.equipo.id)
