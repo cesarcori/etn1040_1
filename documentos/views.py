@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
+from etn1040_1.settings import MEDIA_ROOT
 
 from proyecto.decorators import *
 from .forms import *
@@ -8,7 +9,7 @@ from .models import *
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor','docente','tribunal','estudiante'])
-def verDocumento(request):
+def verDocumentoIndex(request):
     context = {}
     return render(request, 'mensaje/index.html', context)
 
@@ -36,6 +37,13 @@ def subirDocumento(request, tipo):
 def verDocumento(request, pk, tipo):
     grupo = request.user.groups.get().name
     equipo = get_object_or_404(Equipo, id=pk)
-    documento = get_object_or_404(Documento, equipo=equipo, tipo=tipo)
-    filepath = documento.archivo.file.name
+    if Documento.objects.filter(equipo=equipo, tipo=tipo).exists():
+        documento = get_object_or_404(Documento, equipo=equipo, tipo=tipo)
+        if documento.archivo:
+            filepath = documento.archivo.file.name
+        else:
+            filepath = MEDIA_ROOT + "formularios/documento_sin_respaldo.pdf"
+    else:
+        filepath = MEDIA_ROOT + "formularios/documento_sin_respaldo.pdf"
+
     return FileResponse(open(filepath, 'rb'))

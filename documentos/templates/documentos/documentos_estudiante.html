@@ -11,7 +11,7 @@
     <tbody>
       <tr>
         {% if estudiante.equipo.tutor_acepto%}
-          {% if grupo != 'docente' and grupo != 'director' and grupo != 'tribunal'%}
+          {% if grupo != 'docente' and grupo != 'director' and grupo != 'tribunal' and grupo != 'tutor'%}
             <td class='bg-success text-white'>
               <a target='_blank' href={%url 'reportes:carta-tutor-acepto' estudiante.id%} 
                 class='text-white text-underline-hover'>
@@ -29,7 +29,7 @@
           {% endif %}
         {% else %}
           <td class='bg-danger text-white'>Carta de Aceptación Tutoría</td>
-          <td class='bg-success text-white'></td>
+          <td class='bg-danger text-white'></td>
           <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
         {% endif %}
       </tr>
@@ -62,7 +62,11 @@
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% else %}
             <td class='bg-success text-white'>Formulario<br>Aprobación Perfil</td>
-            <td class='bg-success text-white'>Ver</td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "formulario_aprobacion" %} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
 
           {% endif %}

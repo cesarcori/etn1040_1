@@ -32,7 +32,11 @@
 {% endif %}
 
 {% if not equipo.tribunales.count == 2 and grupo != 'director' %}
-  {% include 'revisar/vista_revisor.html'%}
+  {% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
+    {% include 'revisar/vista_revisor_docente_proyecto.html'%}
+  {% else %}
+    {% include 'revisar/vista_revisor.html'%}
+  {% endif %}
 {% endif %}
 
 {% if grupo == 'tribunal'%}

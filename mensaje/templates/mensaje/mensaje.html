@@ -22,9 +22,9 @@
   <div class="card-body">
 {%for mensaje in mensajes%}
     <strong>
-      {{mensaje.usuario.groups.get|title}}:
-      {{mensaje.usuario.first_name}}
-    </strong>: {{mensaje.texto}}
+      {{mensaje.usuario.groups.get|title}} - 
+      {{mensaje.usuario.first_name}}:
+    </strong> {{mensaje.texto}}
     <div class="card-subtitle mb-2 text-muted">{{mensaje.fecha_creacion}}</div>
 {%endfor%}
   </div>

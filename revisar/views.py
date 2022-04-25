@@ -34,12 +34,49 @@ def revisarDocumento(request, documento, id_revisor):
             if not mensaje.visto:
                 no_visto += 1
         dicc_salas[sala] = no_visto
+    # ver nota en proyecto
+    # if grupo == 'docente' and sala_doc.tipo == 'proyecto' and salas_revisar.count() > 0:
+    if grupo_revisor.name == 'docente' and sala_doc.tipo == 'proyecto' and salas_revisar.count() > 0:
+        dicc_salas_no_visto_nota = {}
+        no_visto_nota = []
+        for sala, no_visto in dicc_salas.items():
+            nota_sala = NotaSalaRevisarApp.objects.get(revisor=revisor, sala=sala)
+            no_visto_nota = [no_visto, nota_sala]
+            dicc_salas_no_visto_nota[sala] = no_visto_nota
+        dicc_salas = dicc_salas_no_visto_nota
+
+        # sala_revisar = salas_revisar.order_by('fecha_creacion').last()
+        # nota_sala = NotaSalaRevisarApp.objects.get(revisor=revisor, sala=sala_revisar)
+    # else:
+        # nota_sala = 0
     context = {
             'sala_doc':sala_doc,
             'dicc_salas':dicc_salas,
             'salas_doc': salas_doc,
             'grupo':grupo.name}
     return render(request, 'revisar/revisar_documento.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente'])
+def calificarSalaRevision(request, pk):
+    usuario = request.user
+    grupo = usuario.groups.get().name
+    nota_sala = get_object_or_404(NotaSalaRevisarApp, id=pk, revisor=usuario)
+    equipo = nota_sala.sala.creado_por.equipo
+    form = NotaSalaRevisarAppForm(instance=nota_sala)
+    if request.method == 'POST':
+        form = NotaSalaRevisarAppForm(request.POST, instance=nota_sala)
+        if form.is_valid():
+            form.save()
+            return redirect('progreso_estudiante',pk=equipo.pk)
+
+    context = {
+            'grupo':grupo,
+            'nota_sala': nota_sala,
+            'equipo': equipo,
+            'form': form,
+            }
+    return render(request, 'revisar/calificar_sala_revision.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

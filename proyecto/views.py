@@ -915,6 +915,23 @@ def progresoEstudiante(request, pk):
     notas_tribunales = NotaTribunal.objects.filter(equipo=equipo)
     # avisos 
     mensajes_avisos = mensajesAvisosLista(equipo, request.user) 
+
+    # calificacion de la sala por docente, requisito Ing. Campero
+    # if grupo == 'docente' and sala_doc.tipo == 'proyecto' and salas_revisar.count() > 0:
+        # sala_revisar = salas_revisar.last()
+        # nota_sala = NotaSalaRevisarApp.objects.get(revisor=request.user, sala=sala_revisar)
+    # else:
+        # nota_sala = 0
+    if dicc_salas: 
+        if grupo == 'docente' and sala_doc.tipo == 'proyecto' and salas_revisar.count() > 0:
+            dicc_salas_no_visto_nota = {}
+            no_visto_nota = []
+            for sala, no_visto in dicc_salas.items():
+                nota_sala, created = NotaSalaRevisarApp.objects.get_or_create(revisor=request.user, sala=sala)
+                no_visto_nota = [no_visto, nota_sala]
+                dicc_salas_no_visto_nota[sala] = no_visto_nota
+            dicc_salas = dicc_salas_no_visto_nota
+
     context = {'grupo': grupo,
             'mensajes_avisos':mensajes_avisos,
             'estudiante':estudiante,

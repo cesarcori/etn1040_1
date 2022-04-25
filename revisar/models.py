@@ -40,3 +40,7 @@ class MensajeRevisarApp(models.Model):
     def __str__(self):
         return f'Sala Revisar: {self.sala}, De: {self.usuario}, Mensaje: {self.mensaje},'
 
+class NotaSalaRevisarApp(models.Model):
+    sala = models.ForeignKey(SalaRevisarApp, null=True, blank=True, on_delete=models.CASCADE)
+    revisor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    nota = models.PositiveSmallIntegerField(null=True, blank=True, default=0)

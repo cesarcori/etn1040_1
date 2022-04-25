@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:id_sala_rev>/mensajes/', views.mensajes, name='mensajes'),
     path('caramba/', views.mensajes, name='crear_mensaje'),
     path('dar-vistoBueno/<int:id_sala_doc>', views.darVistoBueno, name='dar_visto_bueno'),
+    path('calificar-sala/<int:pk>', views.calificarSalaRevision, name='calificar_sala'),
 ]

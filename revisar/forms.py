@@ -32,3 +32,9 @@ class MensajeRevisarAppForm(forms.ModelForm):
         labels = {
                 'mensaje': ''
                 }
+
+class NotaSalaRevisarAppForm(forms.ModelForm):
+    nota = forms.IntegerField(min_value=0, max_value=100,label='Calificar sobre 100%')
+    class Meta:
+        model = NotaSalaRevisarApp
+        fields = ['nota']

@@ -12,7 +12,13 @@
     <div class="d-inline p-2 bg-danger text-white">
         El {{sala_doc.grupo_revisor.name.title}} aún no dio el visto bueno al {{sala_doc.tipo}}</div><br><br>
 {% endif %}
-    {% include 'revisar/vista_revisor.html'%}
+
+{% if grupo == 'estudiante' and sala_doc.tipo == 'proyecto' and sala_doc.grupo_revisor.name == 'docente'%}
+  {% include 'revisar/vista_revisor_docente_proyecto.html'%}
+{% else %}
+  {% include 'revisar/vista_revisor.html'%}
+{% endif %}
+
 {% comment %}**** analizar con el tiempo como se puede evitar esto para generalizar la app {% endcomment %}
 {% if sala_doc.tipo == 'perfil'%}
     <a class="btn btn-danger" href={%url 'paso4'%} name="atras">Atras</a>

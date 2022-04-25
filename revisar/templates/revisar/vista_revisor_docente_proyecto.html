@@ -31,10 +31,16 @@
       {% else %}
         <th scope="col">Revisar</th>
       {% endif %}
+      {% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
+        <th scope="col">Calificar</th>
+      {% endif %}
+      {% if grupo == 'estudiante' and sala_doc.tipo == 'proyecto'%}
+        <th scope="col">Calificación</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
-    {%for sala, no_visto in dicc_salas.items %}
+    {%for sala, no_visto_nota in dicc_salas.items %}
         <tr>
           {% if sala_doc.equipo.cantidad > 1%}
             <td>
@@ -64,16 +70,40 @@
           <td>
             <a class="btn btn-primary position-relative" href={% url 'revisar:mensajes' sala.id %} type="button" name="observacion">
                 Observación
-            {% if no_visto == 0 %}
+            {% if no_visto_nota.0 == 0 %}
                 </a>
             {% else %}
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {{no_visto}}
+                    {{no_visto_nota.0}}
                     <span class="visually-hidden">unread messages</span>
                 </span>
                 </a>
             {% endif %}
           </td>      
+          {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' %}
+            <td>
+              {% if no_visto_nota.1.nota == 0 %}
+              <a class="btn btn-danger" href={% url "revisar:calificar_sala" no_visto_nota.1.pk %}>Sin calificar</a>
+              {% else %}
+                <div class="alert alert-success p-2 d-inline-flex ">
+                    Nota: {{no_visto_nota.1.nota}}                    
+                </div>
+              {% endif %}
+            </td>      
+          {% endif %}
+          {% if grupo == 'estudiante' and sala_doc.tipo == 'proyecto' %}
+            <td>
+              {% if no_visto_nota.1.nota == 0 %}
+                <div class="alert alert-danger p-2 d-inline-flex ">
+                    Sin Calificar
+                </div>
+              {% else %}
+                <div class="alert alert-success p-2 d-inline-flex ">
+                    Nota: {{no_visto_nota.1.nota}}                    
+                </div>
+              {% endif %}
+            </td>      
+          {% endif %}
         </tr>
     {%endfor%}
   </tbody>
