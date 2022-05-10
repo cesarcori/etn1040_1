@@ -1,12 +1,5 @@
 from django import forms
-from proyecto.models import Auspicio
 from .models import *
-
-class AuspicioForm(forms.ModelForm):
-    class Meta:
-        model = Auspicio
-        fields = '__all__'
-        exclude = ['usuario']
 
 class TituloPerfilForm(forms.ModelForm):
     class Meta:

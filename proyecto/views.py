@@ -1749,14 +1749,14 @@ def paso3(request):
             'elegir_modalidad':elegir_modalidad, 'rechazo':rechazo,'imprimir':imprimir}
     return render(request, 'proyecto/estudiante_paso3.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante','tutor','docente','director','tribunal'])
-def reporteTutorAcepto(request, id_est):
-    buffer = io.BytesIO()
-    estudiante = DatosEstudiante.objects.get(id=id_est)
-    reporte_tutor_acepto(buffer, estudiante)
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['estudiante','tutor','docente','director','tribunal'])
+# def reporteTutorAcepto(request, id_est):
+    # buffer = io.BytesIO()
+    # estudiante = DatosEstudiante.objects.get(id=id_est)
+    # reporte_tutor_acepto(buffer, estudiante)
+    # buffer.seek(0)
+    # return FileResponse(buffer, as_attachment=True, filename='reporte_aceptacion.pdf')
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])

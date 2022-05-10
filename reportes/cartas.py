@@ -77,23 +77,45 @@ def reporte_tutor_acepto(buffer, estudiante):
     correo_tutor = estudiante.equipo.tutor.correo
     docente = estudiante.grupo_doc.__str__()
     tutor = estudiante.equipo.tutor.__str__()
-    titulo_perfil= ''
+    try: 
+        titulo_perfil = estudiante.equipo.tituloperfil.titulo
+        titulo_perfil = f'"{titulo_perfil}"'
+    except AttributeError:
+        titulo_perfil= ''
+
 # estatico, no se mueve, a menos que sea por personalizacion
+    # cargo = 'docente de la asignatura etn-1040 proyecto de grado'
+    # lugar = 'carrera de ingeniería electrónica'
+    # institucion = 'facultad de ingeniería'
+    # universidad = 'universidad mayor de san andrés'
+    # parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, mi aceptación como tutor, en el desarrollo del Proyecto de Grado'
+    # parrafo1_2 = titulo_perfil
+    # if estudiante.equipo.cantidad > 1:
+        # parrafo1_3 = 'de los estudiantes'
+        # integrantes = [n.__str__() for n in estudiante.equipo.datosestudiante_set.all()]
+        # parrafo1_4 = ", ".join(integrantes)
+    # else:
+        # parrafo1_3 = 'del estudiante'
+        # parrafo1_4 = nombre_estudiante
+    # parrafo1_5 = 'dando el compromiso de supervisar el cumplimiento de cronograma propuesto en el perfil.'
+    # despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
+# nuevo modelo formato Leon
     cargo = 'docente de la asignatura etn-1040 proyecto de grado'
     lugar = 'carrera de ingeniería electrónica'
     institucion = 'facultad de ingeniería'
     universidad = 'universidad mayor de san andrés'
-    parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, mi aceptación como tutor, en el desarrollo del Proyecto de Grado'
+    referencia = 'ASESORÍA PROYECTO DE GRADO'
+    parrafo1_1 = 'Mediante la presente tengo a bien comunicar a usted que acepto asesorar el Proyecto de Grado'
     parrafo1_2 = titulo_perfil
     if estudiante.equipo.cantidad > 1:
-        parrafo1_3 = 'de los estudiantes'
+        parrafo1_3 = 'realizado por los universitarios'
         integrantes = [n.__str__() for n in estudiante.equipo.datosestudiante_set.all()]
         parrafo1_4 = ", ".join(integrantes)
     else:
-        parrafo1_3 = 'del estudiante'
+        parrafo1_3 = 'realizado por el universitario(a)'
         parrafo1_4 = nombre_estudiante
-    parrafo1_5 = 'dando el compromiso de supervisar el cumplimiento de cronograma propuesto en el perfil.'
-    despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
+    parrafo1_5 = 'Asimismo, supervisar el cumplimiento del cronograma propuesto, en el marco de lo establecido en el Reglamento de la asignatura ETN 1040 Proyecto de Grado.'
+    despedida = 'Aprovecho la ocación para saludar a usted atentamente.'
 
 # Fecha
     fecha_right()
@@ -108,7 +130,8 @@ def reporte_tutor_acepto(buffer, estudiante):
     text_left(universidad.upper())
     linea()
     normal()
-    text_left('Presente.-')
+    # text_left('Presente.-')
+    text_right('Ref.: ' + referencia)
     linea()
     text_left('De mi consideración:')
     linea()
@@ -505,17 +528,33 @@ def generarCartaFinal(buffer, equipo):
 
 # ===========================================
 # estatico, no se mueve, a menos que sea por personalizacion
-    cargo = 'docente de la asignatura etn-1040'
+    # cargo = 'docente de la asignatura etn-1040'
+    # lugar = 'carrera de ingeniería electrónica'
+    # institucion = 'facultad de ingeniería'
+    # universidad = 'universidad mayor de san andrés'
+    # parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, la conclusión satisfactoria, en el desarrollo del Proyecto de Grado:'
+    # parrafo1_2 = titulo_proyecto
+    # parrafo1_5 = 'Doy total conformidad al mencionado Proyecto de Grado que cuenta con las características necesarias para ser defendido y presentado ante el Tribunal de Docentes.'
+    # despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
+# formato leon
+    cargo = 'docente de la asignatura etn-1040 proyecto de grado'
     lugar = 'carrera de ingeniería electrónica'
     institucion = 'facultad de ingeniería'
     universidad = 'universidad mayor de san andrés'
-    parrafo1_1 = 'Mediante la presente deseo poner en conocimiento suyo, la conclusión satisfactoria, en el desarrollo del Proyecto de Grado:'
-    parrafo1_2 = titulo_proyecto
-    # parrafo1_3 = 'A cargo del estudiante'
-    # parrafo1_4 = nombre
-    parrafo1_5 = 'Doy total conformidad al mencionado Proyecto de Grado que cuenta con las características necesarias para ser defendido y presentado ante el Tribunal de Docentes.'
-    despedida = 'Sin otro particular, me despido con las consideraciones más distinguitas'
-
+    referencia = 'CULMINACIÓN DE TUTORÍA'
+    parrafo1_1 = 'Saludo a usted a tiempo de dar a conocer, la conclución de mi tutoría con '
+    if estudiante.equipo.cantidad > 1:
+        parrafo1_2 = 'realizado por los universitarios'
+        integrantes = [n.__str__() for n in estudiante.equipo.datosestudiante_set.all()]
+        parrafo1_3 = ", ".join(integrantes)
+    else:
+        parrafo1_2 = 'realizado por el universitario(a)'
+        parrafo1_3 = nombre_estudiante
+    parrafo1_4 = 'de la carrera de Ingeniería Electrónica, con el tema de Proyecto de Grado:'
+    parrafo1_5 = titulo_proyecto
+    parrafo1_6 = 'Dando mi consentimiento para continuar el proceso de la asignatura, ya que se cumplió con los requisitos previos.'
+    despedida = 'Sin otro particular, me despido de usted.'
+    atte = 'Atentamente.'
 # Fecha
     fecha_right()
     linea(2)
@@ -530,25 +569,28 @@ def generarCartaFinal(buffer, equipo):
     linea()
     normal()
     text_left('Presente.-')
+    text_right('Ref.: ' + referencia)
     linea()
     text_left('De mi consideración:')
     linea()
 
 # parrafo
     parrafo(parrafo1_1)    
+    parrafo(parrafo1_2)    
     negrilla()
-    parrafo(parrafo1_2)
-    normal()
     parrafo(parrafo1_3)
-    negrilla()
-    parrafo(parrafo1_4+'.')
     normal()
-    parrafo(parrafo1_5)
+    parrafo(parrafo1_4)
+    negrilla()
+    parrafo(parrafo1_5+'.')
+    normal()
+    parrafo(parrafo1_6)
 
 # despedida
     linea(3)
     text_left(despedida)
     linea()
+    text_left(atte)
 
 # firma 
     linea(17)
@@ -557,7 +599,9 @@ def generarCartaFinal(buffer, equipo):
             name = MEDIA_ROOT+estudiante.equipo.tutor.firma.name
             pdf.image(name, x = 85, y = 195, w = 50)
     text_center('Ing.: '+tutor)
-    text_center('Cel.: '+ celular_tutor)
-    text_center('e-mail.: '+ correo_tutor)
+    negrilla()
+    text_center('DOCENTE TUTOR')
+    # text_center('Cel.: '+ celular_tutor)
+    # text_center('e-mail.: '+ correo_tutor)
     guardar(buffer)
 

@@ -93,8 +93,15 @@
     <p>El <strong>Ing. {{tutor}}</strong> aceptó la solicitud de tutoría
     <i class="fas fa-user-check text-success"></i>
     </p>
-    <p><a target=_blank href={%url 'reportes:carta-tutor-acepto' estudiante.id %}>Carta de Aceptación para Docente ETN-1040</a>
-    <i class="fas text-success fa-check"></i></p>
+    <p>
+      <a target=_blank href={%url 'reportes:carta-tutor-acepto' estudiante.id %}>
+        Carta de Aceptación para Docente ETN-1040
+      </a>
+      <i class="fas text-success fa-check"></i>
+      <a class="btn btn-primary" href={% url "reportes:agregar_titulo" estudiante.id%}>
+        Agregar título al proyecto
+      </a>
+    </p>
     {% if not imprimir %}
       <a class="btn btn-warning" href={% url 'documentos:subir_documento' "carta_aceptacion" %}>Subir archivo documento</a>
       <a class="btn btn-warning" href={% url 'confirmar_paso_3' %}>Ya imprimí la carta</a></p>

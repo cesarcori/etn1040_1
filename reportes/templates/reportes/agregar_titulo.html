@@ -1,0 +1,17 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h2>Agregar Título al Perfil de Proyecto de Grado</h2>
+
+<p>
+</p>
+
+<form method='post' >
+  {% csrf_token %}
+  {{form.as_p}}
+  <div class="d-flex justify-content-evenly">
+    <a class="btn btn-danger" href={% url 'paso3' %}>Cancelar</a>
+    <button class="btn btn-success" type="submit">Confirmar</button>
+  </div>
+</form>
+
+{% endblock %}

@@ -8,6 +8,7 @@ from .reportes import *
 from .cartas import *
 from .form import *
 from actividades.funciones import *
+from .models import *
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor','docente','director','tribunal'])
@@ -17,6 +18,25 @@ def cartaTutorAcepto(request, pk):
     reporte_tutor_acepto(buffer, estudiante)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='carta_tutor_acepto.pdf')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def agregarTitulo(request, pk):
+    grupo = request.user.groups.get().name
+    estudiante = DatosEstudiante.objects.get(id=pk)
+    equipo = estudiante.equipo
+    titulo, created = TituloPerfil.objects.get_or_create(equipo=equipo)
+    form = TituloPerfilForm(instance=titulo)
+    if request.method == 'POST':
+        form = TituloPerfilForm(request.POST, instance=titulo)
+        if form.is_valid():
+            form.save()
+            return redirect('paso3')
+    context = {
+            'grupo': grupo,
+            'form': form,
+            }
+    return render(request, 'reportes/agregar_titulo.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante','tutor',])
