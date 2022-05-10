@@ -79,7 +79,7 @@ def reporte_tutor_acepto(buffer, estudiante):
     tutor = estudiante.equipo.tutor.__str__()
     titulo_perfil= ''
 # estatico, no se mueve, a menos que sea por personalizacion
-    cargo = 'docente de la asignatura etn-1040'
+    cargo = 'docente de la asignatura etn-1040 proyecto de grado'
     lugar = 'carrera de ingeniería electrónica'
     institucion = 'facultad de ingeniería'
     universidad = 'universidad mayor de san andrés'

@@ -57,11 +57,13 @@ urlpatterns = [
     path('info-doc/<int:pk_doc>/', views.enlaceDocente, name='enlace_docente'),
     path('info-tut/<int:pk_tutor>/', views.enlaceTutor, name='enlace_tutor'),
     path('info-tri/<int:pk_tribunal>/', views.enlaceTribunal, name='enlace_tribunal'),
+    path('info-dir/<int:pk>/', views.enlaceDirector, name='enlace_director'),
     path('lista_est/', views.listaEstudiantes, name='lista_estudiantes'),
     path('lista_est_tit/', views.listaEstudianteTitulado, name='lista_estudiante_titulado'),
     path('lista_doc/', views.listaDocentes, name='lista_docentes'),
     path('lista_tut/', views.listaTutores, name='lista_tutores'),
     path('lista_tri/', views.listaTribunales, name='lista_tribunales'),
+    path('lista_dir/', views.listaDirector, name='lista_director'),
 
     path('agregar-doc/', views.agregarDocente, name='agregar_docente'),
     path('agregar-tut/', views.agregarTutor, name='agregar_tutor'),

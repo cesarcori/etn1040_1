@@ -1,0 +1,40 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+<h3>Información del Director</h3>
+<style>
+	.profile-pic{
+		max-width: 200px;
+		max-height:200px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<img class="profile-pic" src="{{director.imagen_perfil.url}}" >
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="card card-body">
+      <p>
+      {% if grupo == 'administrador'%}
+      Usuario: {{director.usuario}}<br>
+      {% endif %}
+      Nombre: {{director.nombre}}<br>
+      Apellido: {{director.apellido}}<br>
+      Correo Electrónico: <a href="mailto:{{director.correo}}?Subject=Asunto">{{director.correo}}</a><br>
+      Número de Celular: {{director.celular}}</p>
+		</div>
+	</div>
+</div>
+
+{% if grupo == 'administrador'%}
+  <div class="d-flex flex-row-reverse bd-highlight">
+    <a href={% url 'resetear_password' director.usuario_id %}>Resetear Contraseña</a>
+  </div>
+{% endif %}
+
+{% endblock %}

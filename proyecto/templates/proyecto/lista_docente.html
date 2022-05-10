@@ -2,6 +2,7 @@
 {% block content %}
 
 <h5>Lista de docentes:</h5>
+
 <table class="sortable table table-striped">
   <thead>
     <tr>
@@ -28,9 +29,8 @@
   </tbody>
 </table>
 
-<p><p><p>
-      {% if not grupo == 'director'%}
-<a class="btn btn-sm btn-info" href="{% url 'agregar_docente' %}">Agregar
-    Docente</a><p>
-      {% endif %}
+{% if grupo == 'administrador' %}
+  <a class="btn btn-sm btn-info" href="{% url 'agregar_docente' %}">Agregar Docente</a>
+{% endif %}
+
 {% endblock %}

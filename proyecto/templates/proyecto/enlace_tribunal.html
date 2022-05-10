@@ -33,8 +33,9 @@ Número de Celular: {{tribunal.celular}}</p>
 </div>
 
 {% if grupo == 'administrador'%}
-<div class='text-right'>
-    <a href={% url 'resetear_password' tribunal.usuario_id %}>Resetear Contraseña</a></div>
+  <div class="d-flex flex-row-reverse bd-highlight">
+    <a href={% url 'resetear_password' tribunal.usuario_id %}>Resetear Contraseña</a>
+  </div>
 {% endif %}
 
 {% endblock %}

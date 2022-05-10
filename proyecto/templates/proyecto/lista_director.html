@@ -1,0 +1,29 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+<h5>Director:</h5>
+
+<table class="sortable table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Nombre</th>
+      <th scope="col">Celular</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for director in directores %}
+    <tr>
+      <td>
+        <a class="text-underline-hover" href="{% url 'enlace_director' director.id %}">
+          {{director}}
+        </a>
+      </td>
+      <td>
+        <strong>{{director.celular}}</strong>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

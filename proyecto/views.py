@@ -1328,6 +1328,14 @@ def enlaceTribunal(request, pk_tribunal):
             return redirect('error_pagina')
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','administrador','estudiante','director','tutor'])
+def enlaceDirector(request, pk):
+    grupo = request.user.groups.get().name
+    director = get_object_or_404(DatosDirector, id=pk)
+    context = {'grupo': grupo, 'director':director}
+    return render(request, 'proyecto/enlace_director.html', context)
+
+@login_required(login_url='login')
 @admin_only
 def registroEstudiante(request):
     grupo = request.user.groups.get().name
@@ -2846,6 +2854,14 @@ def listaTribunales(request):
     tribunales = DatosTribunal.objects.all().order_by('apellido')
     context = {'grupo':grupo, 'tribunales':tribunales}
     return render(request, 'proyecto/lista_tribunales.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['administrador',])
+def listaDirector(request):
+    grupo = request.user.groups.get().name
+    directores = DatosDirector.objects.all().order_by('apellido')
+    context = {'grupo':grupo, 'directores':directores}
+    return render(request, 'proyecto/lista_director.html', context)
 
 def error(request):
     return render(request, 'proyecto/error_pagina.html')
