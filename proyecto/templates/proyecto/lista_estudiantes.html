@@ -61,7 +61,7 @@
           </td>
           <th scope="row">{{est.celular}}</th>
           <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
-          <td scope="row"><a href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
+          <td scope="row"><a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
         {%endif%}
 
         {%if grupo == 'tutor' %}
@@ -83,7 +83,7 @@
 
           {% else %}
             <td>
-              <a class="text-underline-hover" href="{% url 'solicitud_tutoria' est.equipo.id %}" name='solicitud_tutoria'><strong>Solicitud</strong> {{est}}</a>
+              <a class="btn btn-warning text-underline-hover" href="{% url 'solicitud_tutoria' est.equipo.id %}" name='solicitud_tutoria'><strong>Solicitud tutoría</strong> {{est}}</a>
             </td>
           {% endif %}
         {%endif%}
@@ -128,7 +128,7 @@
         {% if grupo == 'tutor' or grupo == 'docente' or grupo == 'administrador' or grupo == 'tribunal'%}
           <th scope="row">{{est.celular}}</th>
           <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
-          <td scope="row"><a href="{% url 'enlace_estudiante' est.id %}">Info</a></td>
+          <td scope="row"><a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id %}">Info</a></td>
         {% endif %}
       </tr>
     {% endfor %}

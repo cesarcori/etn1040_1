@@ -1,6 +1,8 @@
 from django import forms
 from .models import *
+from proyecto.models import ProyectoDeGrado
 #https://drive.google.com/file/d/
+from .funciones import *
 class SalaRevisarAppForm(forms.ModelForm):
     class Meta:
         model = SalaRevisarApp
@@ -34,7 +36,19 @@ class MensajeRevisarAppForm(forms.ModelForm):
                 }
 
 class NotaSalaRevisarAppForm(forms.ModelForm):
-    nota = forms.IntegerField(min_value=0, max_value=100,label='Calificar sobre 100%')
+    # maximo = 5
+    # nota = forms.DecimalField(min_value=0, max_value=maximo, label = f'',
+            # max_digits=2, decimal_places=1)
     class Meta:
         model = NotaSalaRevisarApp
-        fields = ['nota']
+        fields = ['nota_max','nota']
+        labels = {
+                'nota': 'Nota asignada',
+                'nota_max': 'Calificar sobre'
+                }
+
+# class NotaSeminarioForm(forms.ModelForm):
+    # nota_expos_seminarios = forms.IntegerField(min_value=0, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
+    # class Meta:
+        # model = ProyectoDeGrado
+        # fields = ['nota_expos_seminarios']

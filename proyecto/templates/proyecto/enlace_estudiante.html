@@ -19,7 +19,7 @@
 	<div class="col-md-9">
 		<div class="card card-body">
 {%if grupo == 'administrador'%}
-    Usuario: {{estudiante.usuario.username}}<br>
+  Usuario: {{estudiante.usuario.username}}<br>
 {% endif %}
 <p>Nombre: {{estudiante.nombre}}<br>
 Apellido: {{estudiante.apellido}}<br>
@@ -53,14 +53,15 @@ Tutor:
 Fecha de Inscripción: {{estudiante.fecha_inscripcion}}<br>
 
 {% if grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor' or grupo == 'director'%}
-<a target=_blank href="{% url 'reportes:reporte_estudiante' estudiante.id %}">Reporte Actual</a>
+  <a target=_blank href="{% url 'reportes:reporte_estudiante' estudiante.id %}">Reporte Actual</a>
 {% endif %}
 		</div>
 	</div>
 </div>
 {% if grupo == 'administrador'%}
-<div class='text-right'>
-    <a href={% url 'resetear_password' estudiante.usuario_id %}>Resetear Contraseña</a></div>
+  <div class="d-flex flex-row-reverse bd-highlight">
+    <a href={% url 'resetear_password' estudiante.usuario_id %}>Resetear Contraseña</a>
+  </div>
 {% endif %}
 
 {% endblock %}

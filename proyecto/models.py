@@ -211,8 +211,8 @@ class Formularios(models.Model):
 class ActividadesCronograma(models.Model):
     equipo = models.ForeignKey(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     actividad = models.CharField(max_length=200, null=True)
-    semana_inicial = models.PositiveSmallIntegerField(null=True, blank=True)
-    semana_final= models.PositiveSmallIntegerField(null=True, blank=True)
+    semana_inicial = models.PositiveSmallIntegerField(null=True)
+    semana_final= models.PositiveSmallIntegerField(null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class RegistroCronograma(models.Model):
@@ -226,10 +226,10 @@ class ProyectoDeGrado(models.Model):
     indice = models.TextField(null=True)
     bibliografia = models.TextField(null=True)
     archivo = models.FileField(upload_to='proyectos/', null=True)
-    nota_tiempo_elaboracion = models.PositiveSmallIntegerField(null=True, blank=True)
-    nota_expos_seminarios = models.PositiveSmallIntegerField(null=True, blank=True)
+    nota_tiempo_elaboracion = models.DecimalField(null=True, blank=True, default=0, max_digits=3, decimal_places=1)
+    nota_expos_seminarios = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
     nota_informes_trabajo = models.PositiveSmallIntegerField(null=True, blank=True)
-    nota_cumplimiento_cronograma = models.PositiveSmallIntegerField(null=True, blank=True)
+    nota_cumplimiento_cronograma = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
     calificacion = models.PositiveSmallIntegerField(null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 

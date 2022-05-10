@@ -203,11 +203,19 @@ class RegistroProyectoTribunalForm(forms.ModelForm):
                 'archivo': '',
                 }
 
-class CalificarProyectoForm(forms.Form):
-    nota1= forms.IntegerField(min_value=0, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
-    nota2= forms.IntegerField(min_value=0, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
-    nota3= forms.IntegerField(min_value=0, max_value=22,label='Informes de Trabajo (Max. 22%)')
-    nota4= forms.IntegerField(min_value=0, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
+class CalificarProyectoForm(forms.ModelForm):
+    # nota1= forms.IntegerField(min_value=0, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
+    # nota2= forms.IntegerField(min_value=0, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
+    # nota3= forms.IntegerField(min_value=0, max_value=22,label='Informes de Trabajo (Max. 22%)')
+    # nota4= forms.IntegerField(min_value=0, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
+    nota_tiempo_elaboracion = forms.IntegerField(min_value=0, max_value=9,label='Tiempo de Elaboración (Max. 9%)')
+    nota_expos_seminarios = forms.IntegerField(min_value=0, max_value=6,label='Exposiciones o Seminarios (Max. 6%)')
+    nota_cumplimiento_cronograma = forms.IntegerField(min_value=0, max_value=3,label='Cumplimiento de Cronograma (Max. 3%)')
+    nota_informes_trabajo = forms.IntegerField(min_value=0, max_value=22,label='Informes de Trabajo (Max. 22%)')
+    class Meta:
+        model = ProyectoDeGrado
+        fields = ['nota_tiempo_elaboracion', 'nota_cumplimiento_cronograma',
+                'nota_expos_seminarios', 'nota_informes_trabajo']
 
 class CalificarProyectoTribunalForm(forms.ModelForm):
     nota = forms.IntegerField(min_value=0, max_value=60,label='Nota (Max. 60%)')

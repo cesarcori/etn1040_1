@@ -49,7 +49,8 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
     </tr>
     <tr>
       <td>
-        {% if registro_perfil_existe%}
+        {% comment %}{% if registro_perfil_existe%}{% endcomment %}
+        {% if perfil.0.titulo %}
         {% if estudiante.equipo.registrocronograma%}
         <a href={%url 'cronograma_actividad'%}>Ver de Cronograma</a>
         {% else %}

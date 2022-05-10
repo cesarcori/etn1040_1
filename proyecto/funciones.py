@@ -92,7 +92,6 @@ def mensajesAvisosLista(equipo, usuario):
     aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=equipo)
     if aviso.exists():
         lista_actividades = aviso[0].actividades.all()
-        # mensajes = [f"{n}: {a.nombre}" for n, a in enumerate(lista_actividades, 1)]
         mensajes = [f"{n.nombre}" for n in lista_actividades]
     else:
         mensajes = []

@@ -3,10 +3,16 @@
 <h4>Elaboración del Proyecto de Grado y Revisión</h4>
 
 {% if sala_doc.tipo == 'proyecto'%}
-  <div class='text-right'><a target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %}>Imprimir Plantilla Observación Tutor</a></div>
+  <div class="d-flex flex-row-reverse bd-highlight">
+    <a target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %}>Imprimir Plantilla Observación Tutor</a>
+  </div>
   {% if salas_doc.0.visto_bueno %}
-    <div class='text-right'><a target=_blank href={%url 'reportes:carta_final' sala_doc.equipo.id %}>Carta de Conclusión</a></div>
-    <a href={% url 'documentos:subir_documento' "carta_conclusion" %}>Subir la carta escaneada</a>
+    <div class="d-flex flex-row-reverse bd-highlight">
+      <a target=_blank href={%url 'reportes:carta_final' sala_doc.equipo.id %}>Carta de Conclusión</a>
+    </div>
+    <div class="d-flex flex-row-reverse bd-highlight">
+      <a href={% url 'documentos:subir_documento' "carta_conclusion" %}>Subir la carta escaneada</a>
+    </div>
   {% endif %}
 {% endif %}
 

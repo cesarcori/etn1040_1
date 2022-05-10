@@ -11,12 +11,16 @@
     <tbody>
       <tr>
         {% if estudiante.equipo.tutor_acepto%}
-          {% if grupo != 'docente' and grupo != 'director' and grupo != 'tribunal' and grupo != 'tutor'%}
+          {% if grupo == 'tutor' %}
             <td class='bg-success text-white'>
               <a target='_blank' href={%url 'reportes:carta-tutor-acepto' estudiante.id%} 
                 class='text-white text-underline-hover'>
                 Carta de Aceptación Tutoría</a></td>
-            <td class='bg-success text-white'>Ver</td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "carta_aceptacion"%} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% else %}
             <td class='bg-success text-white'>Carta de Aceptación Tutoría</td>
@@ -49,7 +53,7 @@
       {% endif %}
       <tr>
         {% if estudiante.equipo.registrocronograma %}
-          {% if grupo != 'director' and grupo != 'tribunal'%}
+          {% if grupo == 'docente' or grupo == 'tutor'%}
             <td class='bg-success text-white'>
               <a target='_blank' href={% url 'reportes:formulario-aceptacion' estudiante.id %}
                 class='text-white text-underline-hover'>
@@ -68,7 +72,6 @@
                 Ver</a>
             </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
-
           {% endif %}
         {% else %}
           <td class='bg-danger text-white'>Formulario<br>Aprobación Perfil</td>
@@ -78,11 +81,16 @@
       </tr>
       <tr>
         {% if todo_salas_doc.2.visto_bueno %}
-          {% if grupo != 'docente' and grupo != 'director' and grupo != 'tribunal'%}
+          {% if grupo == 'tutor'%}
             <td class='bg-success text-white'>
               <a target='_blank' href={%url 'reportes:carta_final' estudiante.equipo.id %} class='text-white text-underline-hover'>
-                Carta de Conclusión</a></td>
-            <td class='bg-success text-white'></td>
+                Carta de Conclusión</a>
+            </td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "carta_conclusion" %} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% else %}
             <td class='bg-success text-white'>Carta de Conclusión</td>
@@ -100,7 +108,7 @@
         {% endif %}
       </tr>
       <tr>
-        {% if estudiante.equipo.proyectodegrado%}
+        {% if estudiante.equipo.proyectodegrado.archivo%}
           <td class='bg-success text-white'>
             <a target='_blank' href="{{ estudiante.equipo.proyectodegrado.archivo.url }}"
                               class='text-white text-underline-hover'>
@@ -119,13 +127,19 @@
             <td class='bg-success text-white'>
               <a target='_blank' href={% url "reportes:formulario_solicitud_tribunal" estudiante.id %} class='text-white text-underline-hover'>
               Formulario<br>Solicitud Nombramiento Tribunal</a></td>
-            <td class='bg-success text-white'></td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "formulario_solicitud_tribunal" %} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% else %}
+            <td class='bg-success text-white'>Formulario<br>Solicitud Nombramiento Tribunal</td>
             <td class='bg-success text-white'>
-              <a target='_blank' href={% url "reportes:formulario_solicitud_tribunal" estudiante.id %} class='text-white text-underline-hover'>
-              Formulario<br>Solicitud Nombramiento Tribunal</a></td>
-            <td class='bg-success text-white'></td>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "formulario_solicitud_tribunal" %} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% endif %}
         {% else %}
@@ -136,11 +150,25 @@
       </tr>
       <tr>
         {% if estudiante.equipo.proyectodegrado.calificacion%}
-          <td class='bg-success text-white'>
-            <a target='_blank' href={% url "reportes:formulario_registro_seguimiento" estudiante.id %} class='text-white text-underline-hover'>
-            Formulario<br>Registro y Seguimiento</a></td>
-          <td class='bg-success text-white'></td>
-          <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+          {% if grupo != 'director' and grupo != 'tribunal'%}
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "reportes:formulario_registro_seguimiento" estudiante.id %} class='text-white text-underline-hover'>
+              Formulario<br>Registro y Seguimiento</a></td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "formulario_registro_seguimiento" %} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
+            <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+          {% else %}
+            <td class='bg-success text-white'>Formulario<br>Registro y Seguimiento</td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "formulario_registro_seguimiento" %} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
+            <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+          {% endif %}
         {% else %}
           <td class='bg-danger text-white'>Formulario<br>Registro y Seguimiento</td>
           <td class='bg-danger text-white'></td>
@@ -149,11 +177,25 @@
       </tr>
       <tr>
         {% if estudiante.equipo.proyectodegrado.calificacion%}
-          <td class='bg-success text-white'>
-            <a target='_blank' href={%url 'reportes:formulario_materia' estudiante.id %} class='text-white text-underline-hover'>
-            Formulario<br>Materia: Proyecto, abstract</a></td>
-          <td class='bg-success text-white'></td>
-          <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+          {% if grupo != 'director' and grupo != 'tribunal'%}
+            <td class='bg-success text-white'>
+              <a target='_blank' href={%url 'reportes:formulario_materia' estudiante.id %} class='text-white text-underline-hover'>
+              Formulario<br>Materia: Proyecto, abstract</a></td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "formulario_materia" %} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
+            <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+          {% else %}
+            <td class='bg-success text-white'>Formulario<br>Materia: Proyecto</td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "formulario_materia" %} 
+                class='text-white text-underline-hover'>
+                Ver</a>
+            </td>
+            <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+          {% endif %}
         {% else %}
           <td class='bg-danger text-white'>Formulario<br>Materia: Proyecto</td>
           <td class='bg-danger text-white'></td>

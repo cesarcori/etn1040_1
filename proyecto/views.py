@@ -922,6 +922,7 @@ def progresoEstudiante(request, pk):
         # nota_sala = NotaSalaRevisarApp.objects.get(revisor=request.user, sala=sala_revisar)
     # else:
         # nota_sala = 0
+    suma = 0
     if dicc_salas: 
         if grupo == 'docente' and sala_doc.tipo == 'proyecto' and salas_revisar.count() > 0:
             dicc_salas_no_visto_nota = {}
@@ -931,6 +932,12 @@ def progresoEstudiante(request, pk):
                 no_visto_nota = [no_visto, nota_sala]
                 dicc_salas_no_visto_nota[sala] = no_visto_nota
             dicc_salas = dicc_salas_no_visto_nota
+
+            # nota promediada
+            suma = 0
+            for no_visto_nota in dicc_salas.values():
+                suma += no_visto_nota[1].nota
+                # promedio = round(float(suma / len(dicc_salas)),1)
 
     context = {'grupo': grupo,
             'mensajes_avisos':mensajes_avisos,
@@ -946,6 +953,7 @@ def progresoEstudiante(request, pk):
             'todo_salas_doc':todo_salas_doc,
             'is_nota_tribunal':is_nota_tribunal,
             'notas_tribunales':notas_tribunales,
+            'suma': suma,
             }
     context = {**context_aux, **context}
     # marca los avisos como vistos
@@ -1331,7 +1339,9 @@ def registroEstudiante(request):
 @admin_only
 def listaEstudiantes(request):
     datos_est = DatosEstudiante.objects.all().order_by('apellido')
-    context = {'datos_est':datos_est}
+    grupo = request.user.groups.get().name
+    context = {'datos_est':datos_est,
+            'grupo':grupo}
     return render(request, 'proyecto/lista_estudiante.html', context)
 
 @login_required(login_url='login')
@@ -2475,24 +2485,43 @@ def calificarProyecto(request, pk):
     usuario = request.user.datosdocente
     estudiante = DatosEstudiante.objects.get(id=pk)
     equipo = estudiante.equipo
+    proyecto = equipo.proyectodegrado
+    dias = diasRestantes(equipo.pk)
+    semestres = dias[2] // 180 + 1
+    if semestres < 3:
+        proyecto.nota_tiempo_elaboracion = 9
+        nota_tiempo = 9
+    elif semestres > 3 and semestre < 5:
+        proyecto.nota_tiempo_elaboracion = 4.5
+        nota_tiempo = 4.5
+
+    form = CalificarProyectoForm(instance=proyecto)
+
+    nota_tiempo_elaboracion = ''
     if request.method == 'POST':
-        form = CalificarProyectoForm(request.POST)
-        nota1 = request.POST['nota1']
-        nota2 = request.POST['nota2']
-        nota3 = request.POST['nota3']
-        nota4 = request.POST['nota4']
-        proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
-        proyecto.nota_tiempo_elaboracion = nota1
-        proyecto.nota_expos_seminarios = nota2
-        proyecto.nota_informes_trabajo = nota3
-        proyecto.nota_cumplimiento_cronograma = nota4
-        proyecto.calificacion = int(nota1)+int(nota2)+int(nota3)+int(nota4)
-        proyecto.save()
-        agregarActividadEquipo('nota docente proyecto', equipo)
-        return redirect('progreso_estudiante',pk=equipo.pk)
-    else: 
-        form = CalificarProyectoForm
-    context = {'grupo': grupo,'estudiante':estudiante, 'form': form}
+        form = CalificarProyectoForm(request.POST, instance=proyecto)
+        if form.is_valid():
+            nota1 = request.POST['nota_tiempo_elaboracion']
+            nota2 = request.POST['nota_cumplimiento_cronograma']
+            nota3 = request.POST['nota_expos_seminarios']
+            nota4 = proyecto.nota_informes_trabajo
+            proyecto.calificacion = int(nota1)+int(nota2)+int(nota3)+int(nota4)
+            proyecto.save()
+            agregarActividadEquipo('nota docente proyecto', equipo)
+            form.save()
+            return redirect('progreso_estudiante',pk=equipo.pk)
+        # nota1 = request.POST['nota1']
+        # nota2 = request.POST['nota2']
+        # nota3 = request.POST['nota3']
+        # nota4 = request.POST['nota4']
+        # proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
+        # proyecto.nota_tiempo_elaboracion = nota1
+        # proyecto.nota_expos_seminarios = nota2
+        # proyecto.nota_informes_trabajo = nota3
+        # proyecto.nota_cumplimiento_cronograma = nota4
+    context = {'grupo': grupo,'estudiante':estudiante, 'form': form,
+            'proyecto':proyecto,'dias':dias,'semestres':semestres,
+            'nota_tiempo':nota_tiempo}
     return render(request, 'proyecto/calificar_proyecto.html', context)
 
 @login_required(login_url='login')

@@ -43,4 +43,5 @@ class MensajeRevisarApp(models.Model):
 class NotaSalaRevisarApp(models.Model):
     sala = models.ForeignKey(SalaRevisarApp, null=True, blank=True, on_delete=models.CASCADE)
     revisor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    nota = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
+    nota = models.DecimalField(null=True, blank=True, default=0, max_digits=3, decimal_places=1)
+    nota_max = models.DecimalField(null=True, blank=True, default=0, max_digits=3, decimal_places=1)

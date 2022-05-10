@@ -32,10 +32,10 @@
         <th scope="col">Revisar</th>
       {% endif %}
       {% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
-        <th scope="col">Calificar</th>
+        <th scope="col">Calificación {{suma}} sobre 22</th>
       {% endif %}
       {% if grupo == 'estudiante' and sala_doc.tipo == 'proyecto'%}
-        <th scope="col">Calificación</th>
+        <th scope="col">Calificación {{suma}} sobre 22</th>
       {% endif %}
     </tr>
   </thead>
@@ -86,7 +86,7 @@
               <a class="btn btn-danger" href={% url "revisar:calificar_sala" no_visto_nota.1.pk %}>Sin calificar</a>
               {% else %}
                 <div class="alert alert-success p-2 d-inline-flex ">
-                    Nota: {{no_visto_nota.1.nota}}                    
+                  Nota: {{no_visto_nota.1.nota}} sobre {{no_visto_nota.1.nota_max}}                    
                 </div>
               {% endif %}
             </td>      
@@ -99,7 +99,7 @@
                 </div>
               {% else %}
                 <div class="alert alert-success p-2 d-inline-flex ">
-                    Nota: {{no_visto_nota.1.nota}}                    
+                  Nota: {{no_visto_nota.1.nota}} sobre {{no_visto_nota.1.nota_max}}                    
                 </div>
               {% endif %}
             </td>      

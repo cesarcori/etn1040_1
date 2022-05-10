@@ -1,13 +1,27 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h2>Se calificará al estudiante: {{estudiante}}</h2>
+
+<p>Tiempo de elaboracion (Max. 9%):</br>
+Semestres transcurridos: {{semestres}}
+<br>
+{% comment %}<span id="semestres"></span><br>{% endcomment %}
+Nota recomendada: {{nota_tiempo}}
+{% comment %}<span id="nota_tiempo_elaboracion"></span>{% endcomment %}
+</p>
 <form method='post' >
-    {% csrf_token %}
-    {{form.as_p}}
-    <div class="d-flex justify-content-evenly">
-        <a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.equipo.id %}>Cancelar</a>
-        <button class="btn btn-success" type="submit">Calificar</button>
-    </div>
+  {% csrf_token %}
+  {{form.as_p}}
+  <div class="d-flex justify-content-evenly">
+      <a class="btn btn-danger" href={%url 'progreso_estudiante' estudiante.equipo.id %}>Cancelar</a>
+      <button class="btn btn-success" type="submit">Confirmar</button>
+  </div>
 </form>
 
+<script>
+  {% comment %}var nota = document.getElementById("nota_tiempo_elaboracion").innerHTML;{% endcomment %}
+  {% comment %}var dias_transcurridos = {{dias.2}};{% endcomment %}
+  {% comment %}var semestres = Math.floor(dias_transcurridos / 180) + 1;{% endcomment %}
+  {% comment %}document.getElementById("semestres").innerHTML = semestres;{% endcomment %}
+</script>
 {% endblock %}

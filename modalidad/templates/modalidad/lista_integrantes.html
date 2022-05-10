@@ -41,7 +41,7 @@
         </td>
         {% if grupo != "estudiante"%}
         <td>
-          <a href="{% url 'enlace_estudiante' estudiante.id %}">Info</a>
+          <a class="btn btn-primary" href="{% url 'enlace_estudiante' estudiante.id %}">Info</a>
         </td>
         {% endif %}
     </tr>

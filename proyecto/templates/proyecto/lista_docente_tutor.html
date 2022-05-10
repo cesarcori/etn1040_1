@@ -1,9 +1,8 @@
 <table class="table table-striped">
   <tbody>
     <tr>
-      <td>Docente: Ing. {{estudiante.grupo_doc.apellido}}</td>
+      <td>Docente: Ing. {{estudiante.grupo_doc}}</td>
       <td>
-        <!--<a href="{% url 'mensaje_personal' estudiante.grupo_doc.usuario.pk %}" class="btn btn-primary position-relative">-->
         <a href="{% url 'mensaje:enviar_mensaje_par' estudiante.grupo_doc.usuario.pk %}" class="btn btn-primary position-relative">
           Mensajes
           {% if not is_visto_docente %}
@@ -13,25 +12,27 @@
           {% endif %}
         </a>
       </td>
-      <td><a href="{% url 'enlace_docente' estudiante.grupo_doc.id %}">Info</a></td>
+      <td>
+          <a class="btn btn-primary" href="{% url 'enlace_docente' estudiante.grupo_doc.id %}">Info</a>
+      </td>
     </tr>
-    <tr>
-      <td>Tutor: Ing. {{estudiante.equipo.tutor.apellido}}</td>
-
-      {% if estudiante.equipo.tutor %}
-        <td>
-          <!--<a href="{% url 'mensaje_personal' estudiante.equipo.tutor.usuario.pk %}" class="btn btn-primary position-relative">-->
-          <a href="{% url 'mensaje:enviar_mensaje_par' estudiante.equipo.tutor.usuario.pk %}" class="btn btn-primary position-relative">
-            Mensajes
-            {% if not is_visto_tutor %}
-              <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
-                <span class="visually-hidden">New alerts</span>
-              </span>
-            {% endif %}
-          </a>
-        </td>
-        <td><a href="{% url 'enlace_tutor' estudiante.equipo.tutor.id %}">Info</a></td>
-      {% endif %}
-    </tr>
+    {% if estudiante.equipo.tutor %}
+      <tr>
+        <td>Tutor: Ing. {{estudiante.equipo.tutor}}</td>
+        {% if estudiante.equipo.tutor %}
+          <td>
+            <a href="{% url 'mensaje:enviar_mensaje_par' estudiante.equipo.tutor.usuario.pk %}" class="btn btn-primary position-relative">
+              Mensajes
+              {% if not is_visto_tutor %}
+                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                  <span class="visually-hidden">New alerts</span>
+                </span>
+              {% endif %}
+            </a>
+          </td>
+          <td><a class="btn btn-primary" href="{% url 'enlace_tutor' estudiante.equipo.tutor.id %}">Info</a></td>
+        {% endif %}
+      </tr>
+    {% endif %}
   </tbody>
 </table>

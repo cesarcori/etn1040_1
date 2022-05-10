@@ -166,3 +166,41 @@ def informarCronograma(pk):
         'mensaje_limite':mensaje_limite}
     return context
 
+def diasRestantes(pk):
+    
+    equipo = Equipo.objects.get(id=pk)
+    cronograma_existe = ActividadesCronograma.objects.filter(equipo=equipo).exists()
+    estudiante = equipo.datosestudiante_set.first()
+    progreso = progress(estudiante)
+    mensaje_limite = ''
+    if cronograma_existe:
+        cronograma = ActividadesCronograma.objects.filter(equipo=estudiante.equipo)
+        # fecha de registro del cronograma o fecha de registro del proyecto
+        fecha = RegistroPerfil.objects.get(equipo=estudiante.equipo).fecha_creacion
+        # fecha limite sistema 2 años y medio
+        # prueba modificar el 0 del delta para eliminar al usuario
+        fecha = fecha.astimezone().date()#-timedelta(0)
+        # fecha limite sistema 2 años y medio
+        fecha_limite_sistema = fecha+ timedelta(365*2.5)
+        dias_restantes_sistema = fecha_limite_sistema - date.today()
+        dias_restantes_sistema = dias_restantes_sistema.days
+        # fecha transcurrida desde el inicio
+        dias_transcurridos = date.today() - fecha
+        dias_transcurridos = dias_transcurridos + timedelta(0)
+        dias_transcurridos = dias_transcurridos.days
+        # duracion del proyecto
+        max_semana = range(1,1+max([n.semana_final for n in cronograma]))
+        semana_total = len(max_semana)
+        dia_total = 7*semana_total
+        # fecha limite cronograma
+        fecha_limite_crono = fecha + timedelta(dia_total)
+        dias_restantes_cronograma = fecha_limite_crono - date.today()
+        dias_restantes_cronograma = dias_restantes_cronograma.days
+
+    else:
+        dias_restantes_sistema = ''
+        dias_restantes_cronograma = ''
+        dias_transcurridos = ''
+
+    return dias_restantes_cronograma, dias_restantes_sistema, dias_transcurridos
+

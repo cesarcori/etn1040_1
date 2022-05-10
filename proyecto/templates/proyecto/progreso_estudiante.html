@@ -16,14 +16,15 @@
 {% endif %}
 {% if equipo.cantidad > 1%}
   <div class="d-flex flex-row-reverse bd-highlight">
-      <a href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
+      <a class="btn btn-primary" href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
   </div>
   <div class="d-flex justify-content-evenly">
     <h3><strong>MODALIDAD: {{estudiante.get_modalidad_display|upper}}</strong></h3>
   </div>
+{% else %}
+  <h4 class='text-center'><strong>ESTUDIANTE: {{estudiante|upper}}</strong></h4>
 {% endif %}
 
-<h4 class='text-center'><strong>ESTUDIANTE: {{estudiante|upper}}</strong></h4>
 {% if estudiante.modalidad == "multiple" and estudiante.equipo.cantidad == 1%}
   <div class="d-grid gap-2 col-6 mx-auto">
     <a class="btn btn-danger btn-lg" href={% url 'modalidad:ver_solicitud' estudiante.solicitud_set.last.pk %}>Responder a Solicitud de Modalidad Múltiple</a>
@@ -32,7 +33,8 @@
 {% endif %}
 
 {% if not equipo.tribunales.count == 2 and grupo != 'director' %}
-  {% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
+  {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.salarevisarapp_set.count >= 1 %}
+    {% include 'revisar/calificar.html'%}
     {% include 'revisar/vista_revisor_docente_proyecto.html'%}
   {% else %}
     {% include 'revisar/vista_revisor.html'%}
@@ -48,7 +50,10 @@
   <a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' equipo.id %}>Solicitar Tribunal a Jefatura de Carrera</a><br><br>
 {% elif grupo == 'docente' or grupo == 'tutor' %}
   {% if equipo.solicitud_tribunal_docente and equipo.tribunales.count < 2%}
-    <div class="d-inline p-2 bg-primary text-white">Se solicitó tribunales a jefatura de carrera</div><br><br>
+    {% comment %}<div class="d-inline p-2 bg-primary text-white">{% endcomment %}
+    <div class="alert alert-primary" role="alert">
+      Se solicitó tribunales a jefatura de carrera
+    </div>
   {% elif equipo.tribunales.count == 2 %}
     {% include 'proyecto/lista_tribunal_asignado.html'%}
   {% endif %}
@@ -85,7 +90,8 @@
       {% endif %}
     {%endif%}
     {% comment %}Calificacion{% endcomment %}
-    {%if grupo == 'docente' and calificacion == None and not proyecto == None%}
+    {% comment %}{%if grupo == 'docente' and calificacion == None and not proyecto == None%}{% endcomment %}
+    {%if grupo == 'docente' and not estudiante.equipo.proyectodegrado.calificacion %}
       <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
     {%endif%}
     {% if grupo == 'tribunal' and equipo.registroproyectotribunal and not is_nota_tribunal %}

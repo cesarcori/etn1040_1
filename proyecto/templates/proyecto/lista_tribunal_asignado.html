@@ -11,7 +11,7 @@
   <tbody>
     {% for sala_doc in salas_doc %}
     <tr>
-      <td><a href={% url 'enlace_tribunal' sala_doc.revisor.datostribunal.id %}>{{sala_doc.revisor.datostribunal}}</a><br></td>
+      <td><a class="btn btn-primary" href={% url 'enlace_tribunal' sala_doc.revisor.datostribunal.id %}>{{sala_doc.revisor.datostribunal}}</a><br></td>
       {% if grupo == 'estudiante'%}
         <td><a href={% url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>
           Ingresar</a></td>

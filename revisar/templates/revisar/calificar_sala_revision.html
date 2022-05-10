@@ -1,12 +1,55 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h3>{{mensaje}}</h3>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div class="d-flex justify-content-evenly">
-      <a class="btn btn-danger" href={%url 'progreso_estudiante' equipo.id %}>Cancelar</a>
-        <button type="submit" class="btn btn-success">Enviar</button>
-    </div>
+<h3>La calificación no puede exceder los 22 puntos.</h3>
+<h3>Puntos acumulados: {{suma}} puntos.</h3>
+  <button class="btn btn-primary" onclick="myFunction()">Valor por defecto</button>
+  <button class="btn btn-primary" onclick="establecer()">Establecer</button>
+<br>
+<br>
+<p id='p1'></p>
+<form method="POST" enctype="multipart/form-data" name="myForm" onsubmit="return comprobar()">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div class="d-flex justify-content-evenly">
+    <a class="btn btn-danger" href={%url 'progreso_estudiante' equipo.id %}>Cancelar</a>
+    <button type="submit" class="btn btn-success">Enviar</button>
+  </div>
 </form> 
+
+<script>
+  let nota = "{{nota_limite}}";
+  nota = nota.replace(/,/g, '.'); 
+  document.getElementById("id_nota").min = 0 ;
+  document.getElementById("id_nota").max = nota ;
+  document.getElementById("p1").innerHTML = "Por defecto se calificará sobre el " + nota + "%" + ", según reglamento.";
+  document.getElementById("id_nota_max").value = nota;
+
+  function myFunction() {
+    var x = document.getElementById("id_nota").max = nota;
+    var x = document.getElementById("id_nota_max").value = nota;
+    document.getElementById("p1").innerHTML = "Por defecto se calificará sobre el " + nota + "%" + ", según reglamento.";
+  };
+
+  function comprobar() {
+    let suma = "{{suma}}";
+    suma = parseFloat(suma.replace(/,/g, '.'));
+    let x = parseFloat(document.forms["myForm"]["id_nota"].value);
+    suma_total = x + suma
+    if ( x == 0 ) {
+      alert(`No asignar nota cero.`);
+      return false;
+    } else if (suma_total > 22){
+      alert(`La suma {{suma}} con la nota asignada ${x} excede los 22 puntos.`);
+      return false;
+    }
+  };
+
+  function establecer() {
+    var valor_max = document.getElementById("id_nota_max").value;
+    var x = document.getElementById("id_nota_max").value = valor_max;
+    var x = document.getElementById("id_nota").max = valor_max;
+    document.getElementById("p1").innerHTML = "Se calificará sobre el " + valor_max + "%";
+  };
+</script>
 {% endblock %}
