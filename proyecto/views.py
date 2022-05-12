@@ -34,6 +34,7 @@ from datetime import timedelta,date
 
 from busquedas.funciones import searchByData, searchByDataExcel
 from mensaje.funciones import isVisto
+from documentos.models import Documento
 from itertools import chain
 
 # ********* activar o desactivar correo para pruebas *******
@@ -1667,6 +1668,7 @@ def confirmarPaso2(request):
 def paso3(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    equipo = estudiante.equipo
     # tutor = estudiante.equipo.tutor
     if estudiante.equipo: 
         tutor = estudiante.equipo.tutor
@@ -1745,8 +1747,11 @@ def paso3(request):
         return redirect('paso3')
     mensaje = 'Ya se le asigno el tutor'
     imprimir = estudiante.actividad.filter(nombre='imprimir carta tutoria').exists()
+    documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='carta_aceptacion')
     context = {'grupo': grupo, 'tutor':tutor, 'estudiante':estudiante,
-            'elegir_modalidad':elegir_modalidad, 'rechazo':rechazo,'imprimir':imprimir}
+            'elegir_modalidad':elegir_modalidad, 'rechazo':rechazo,
+            'imprimir':imprimir,
+            'documento':documento}
     return render(request, 'proyecto/estudiante_paso3.html', context)
 
 # @login_required(login_url='login')

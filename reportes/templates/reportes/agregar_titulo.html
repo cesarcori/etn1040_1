@@ -9,7 +9,11 @@
   {% csrf_token %}
   {{form.as_p}}
   <div class="d-flex justify-content-evenly">
-    <a class="btn btn-danger" href={% url 'paso3' %}>Cancelar</a>
+    {% if grupo == 'tutor' %}
+      <a class="btn btn-danger" href={% url "progreso_estudiante" equipo.id %}>Cancelar</a>
+    {% else %}
+      <a class="btn btn-danger" href={% url 'paso3' %}>Cancelar</a>
+    {% endif %}
     <button class="btn btn-success" type="submit">Confirmar</button>
   </div>
 </form>

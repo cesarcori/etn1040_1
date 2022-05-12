@@ -98,12 +98,20 @@
         Carta de Aceptación para Docente ETN-1040
       </a>
       <i class="fas text-success fa-check"></i>
-      <a class="btn btn-primary" href={% url "reportes:agregar_titulo" estudiante.id%}>
-        Agregar título al proyecto
-      </a>
+      {% if documento.archivo %}
+        <a class="btn btn-primary" href={% url 'documentos:subir_documento' "carta_aceptacion" %}>
+          Cambiar carta acepatión escaneada
+        </a>
+      {% else %}
+        <a class="btn btn-danger" href={% url 'documentos:subir_documento' "carta_aceptacion" %}>
+          Subir carta acepatión escaneada
+        </a>
+      {% endif %}
+      {% comment %}<a class="btn btn-primary" href={% url "reportes:agregar_titulo" estudiante.id%}>{% endcomment %}
+        {% comment %}Agregar título al proyecto{% endcomment %}
+      {% comment %}</a>{% endcomment %}
     </p>
     {% if not imprimir %}
-      <a class="btn btn-warning" href={% url 'documentos:subir_documento' "carta_aceptacion" %}>Subir archivo documento</a>
       <a class="btn btn-warning" href={% url 'confirmar_paso_3' %}>Ya imprimí la carta</a></p>
     {% endif %}
 

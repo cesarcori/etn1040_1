@@ -79,7 +79,10 @@ def reporte_tutor_acepto(buffer, estudiante):
     tutor = estudiante.equipo.tutor.__str__()
     try: 
         titulo_perfil = estudiante.equipo.tituloperfil.titulo
-        titulo_perfil = f'"{titulo_perfil}"'
+        if titulo_perfil != None:
+            titulo_perfil = f'"{titulo_perfil}"'
+        else:
+            titulo_perfil= ''
     except AttributeError:
         titulo_perfil= ''
 

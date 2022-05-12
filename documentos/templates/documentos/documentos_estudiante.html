@@ -13,13 +13,18 @@
         {% if estudiante.equipo.tutor_acepto%}
           {% if grupo == 'tutor' %}
             <td class='bg-success text-white'>
-              <a target='_blank' href={%url 'reportes:carta-tutor-acepto' estudiante.id%} 
-                class='text-white text-underline-hover'>
-                Carta de Aceptación Tutoría</a></td>
+              <a target='_blank' href={% url 'reportes:carta-tutor-acepto' estudiante.id%} class='text-white text-underline-hover'>
+                Carta de Aceptación Tutoría
+              </a>
+              <a class='text-black text-underline-hover' href={% url 'reportes:agregar_titulo' estudiante.id%}>
+                Agregar Titulo
+              </a>
+            </td>
             <td class='bg-success text-white'>
               <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "carta_aceptacion"%} 
                 class='text-white text-underline-hover'>
-                Ver</a>
+                Ver
+              </a>
             </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% else %}

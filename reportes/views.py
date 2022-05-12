@@ -20,7 +20,7 @@ def cartaTutorAcepto(request, pk):
     return FileResponse(buffer, as_attachment=True, filename='carta_tutor_acepto.pdf')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
+@allowed_users(allowed_roles=['estudiante','tutor'])
 def agregarTitulo(request, pk):
     grupo = request.user.groups.get().name
     estudiante = DatosEstudiante.objects.get(id=pk)
@@ -31,10 +31,13 @@ def agregarTitulo(request, pk):
         form = TituloPerfilForm(request.POST, instance=titulo)
         if form.is_valid():
             form.save()
+            if grupo == 'tutor':
+                return redirect('progreso_estudiante', pk=equipo.id)
             return redirect('paso3')
     context = {
             'grupo': grupo,
             'form': form,
+            'equipo': equipo,
             }
     return render(request, 'reportes/agregar_titulo.html', context)
 
