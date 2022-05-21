@@ -11,6 +11,7 @@ class Documento(models.Model):
         ('formulario_solicitud_tribunal','Formulario de Solicitud de Nombramiento de Tribunal'),
         ('formulario_registro_seguimiento','Formulario de Registro y Seguimiento'),
         ('formulario_materia','Formulario Materia: Proyecto'),
+        ('plantilla_observacion','Plantilla de Observación'),
     ]
     equipo = models.ForeignKey(Equipo, null=True, blank=True, on_delete=models.CASCADE)
     archivo = models.FileField(upload_to='documentos/', null=True)

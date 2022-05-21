@@ -940,6 +940,7 @@ def progresoEstudiante(request, pk):
                 suma += no_visto_nota[1].nota
                 # promedio = round(float(suma / len(dicc_salas)),1)
 
+    documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='plantilla_observacion')
     context = {'grupo': grupo,
             'mensajes_avisos':mensajes_avisos,
             'estudiante':estudiante,
@@ -955,6 +956,7 @@ def progresoEstudiante(request, pk):
             'is_nota_tribunal':is_nota_tribunal,
             'notas_tribunales':notas_tribunales,
             'suma': suma,
+            'documento':documento,
             }
     context = {**context_aux, **context}
     # marca los avisos como vistos
@@ -1783,6 +1785,7 @@ def confirmarPaso3(request):
 def paso4(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    equipo = estudiante.equipo
     tutor = estudiante.equipo.tutor
     docente = estudiante.grupo_doc
     registro_perfil_existe = RegistroPerfil.objects.filter(equipo=estudiante.equipo).exists()
@@ -1793,9 +1796,10 @@ def paso4(request):
     sala_doc = SalaDocumentoApp.objects.get(equipo=estudiante.equipo, revisor=estudiante.equipo.tutor.usuario, tipo='perfil')
     if sala_doc.visto_bueno:
         sala_doc = SalaDocumentoApp.objects.get(equipo=estudiante.equipo, revisor=docente.usuario, tipo='perfil')
+    documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='formulario_aprobacion')
     context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,
             'progreso': progreso,'perfil':perfil,'estudiante':estudiante,
-            'sala_doc': sala_doc,'imprimir':imprimir}
+            'sala_doc': sala_doc,'imprimir':imprimir,'documento':documento}
     return render(request, 'proyecto/estudiante_paso4.html', context)
 
 @permitir_con(pasos=[1,2,3])
@@ -2017,6 +2021,7 @@ def confirmarPaso4(request):
 def paso5(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    equipo = estudiante.equipo
     tutor = estudiante.equipo.tutor
     docente = estudiante.grupo_doc
     proyecto_grado = ProyectoDeGrado.objects.filter(equipo=estudiante.equipo).exists()
@@ -2031,10 +2036,13 @@ def paso5(request):
     if sala_doc.visto_bueno:
         sala_doc = SalaDocumentoApp.objects.get(equipo=estudiante.equipo, revisor=docente.usuario, tipo='proyecto')
     salas_doc = SalaDocumentoApp.objects.filter(equipo=estudiante.equipo, tipo='proyecto')
+    documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='plantilla_observacion')
     context = {'grupo': grupo, 'progreso': progreso,'proyecto_grado':proyecto_grado,
             'proyecto':proyecto,'estudiante':estudiante,
             'salas_doc': salas_doc,
-            'sala_doc':sala_doc}
+            'sala_doc':sala_doc,
+            'documento':documento,
+            }
     return render(request, 'proyecto/estudiante_paso5.html', context)
 
 @login_required(login_url='login')

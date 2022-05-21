@@ -91,12 +91,15 @@
     {%endif%}
     {% comment %}Calificacion{% endcomment %}
     {% comment %}{%if grupo == 'docente' and calificacion == None and not proyecto == None%}{% endcomment %}
-    {%if grupo == 'docente' and not estudiante.equipo.proyectodegrado.calificacion %}
+
+    {%if grupo == 'docente' and estudiante.equipo.proyectodegrado.calificacion and equipo.tribunales.count <= 1 %}
       <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
     {%endif%}
+
     {% if grupo == 'tribunal' and equipo.registroproyectotribunal and not is_nota_tribunal %}
       <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' equipo.id %}>Calificar Proyecto Final</a><br><br>
     {% endif %}
+
     {% comment %}****** ver nota ******{% endcomment %}
     {%if grupo == 'docente' or grupo == 'director' %}
       {%if calificacion != None %}

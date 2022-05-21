@@ -76,8 +76,23 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
       <td>
         {% if registro_perfil_existe %}
         {% if estudiante.equipo.registrocronograma%}
-        <a target='_blank' href={%url 'reportes:formulario-aceptacion' estudiante.id %}>Formulario 1 - Aprobación de Perfil</a>
-        <a target='_blank' href="/media/formularios/form1.pdf">Formulario en blanco</a>
+          <div class="d-flex justify-content-between">
+            <a target='_blank' href={%url 'reportes:formulario-aceptacion' estudiante.id %}>
+              Formulario 1 - Aprobación de Perfil
+            </a>
+            <a class="btn btn-primary" target='_blank' href="/media/formularios/form1.pdf">
+              Formulario en blanco
+            </a>
+            {% if documento.archivo %}
+              <a class="btn btn-success" href={% url 'documentos:subir_documento' "formulario_aprobacion" estudiante.id %}>
+                Cambiar el formulario escaneado
+              </a>
+            {% else %}
+              <a class="btn btn-danger" href={% url 'documentos:subir_documento' "formulario_aprobacion" estudiante.id %}>
+                Subir el formulario Escaneado
+              </a>
+            {% endif %}
+          </div>
         {% else %}
         <a class="btn disabled" href=#>Formulario de Aprobación</a>
         {%endif%}
@@ -104,7 +119,6 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
 
 {% if perfil and estudiante.equipo.registrocronograma %}
   {% if not imprimir %}
-    <a class="btn btn-warning" href={% url 'documentos:subir_documento' "formulario_aprobacion" %}>Subir el formulario Escaneado</a>
     <a class="btn btn-warning" href={%url 'confirmar_paso_4' %}>Ya imprimi el formulario</a>
   {% else %}
     <h5>Paso Completado</h5>

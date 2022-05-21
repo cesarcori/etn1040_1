@@ -6,6 +6,7 @@ from etn1040_1.settings import MEDIA_ROOT
 from proyecto.decorators import *
 from .forms import *
 from .models import *
+from proyecto.models import DatosEstudiante
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor','docente','tribunal','estudiante'])
@@ -14,12 +15,12 @@ def verDocumentoIndex(request):
     return render(request, 'mensaje/index.html', context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante'])
-def subirDocumento(request, tipo):
+@allowed_users(allowed_roles=['estudiante','tutor'])
+def subirDocumento(request, tipo, pk):
     grupo = request.user.groups.get().name
-    estudiante = request.user.datosestudiante
+    # estudiante = request.user.datosestudiante
+    estudiante = get_object_or_404(DatosEstudiante, id=pk)
     equipo = estudiante.equipo
-    # documento = Documento.objects.filter(equipo=equipo, tipo=tipo).last()
     documento, created = Documento.objects.get_or_create(equipo=equipo, tipo=tipo)
     form = SubirDocumentoForm(instance=documento)
     if request.method == 'POST':
@@ -28,7 +29,7 @@ def subirDocumento(request, tipo):
             form.instance.equipo = estudiante.equipo
             form.instance.tipo = tipo
             form.save()
-        return redirect('documentos:subir_documento', tipo=tipo)
+        return redirect('documentos:subir_documento', tipo=tipo, pk=pk)
     context = {'grupo': grupo,'form':form, 'documento':documento}
     return render(request, 'documentos/subir_documento.html', context)
 

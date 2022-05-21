@@ -62,7 +62,6 @@
 			box-shadow: none !important;
 			outline: 0px !important;
 		}
-
 	</style>
 
 </head>
@@ -76,40 +75,40 @@
 				<div class="d-flex justify-content-center form_container">
 
 					<form method="POST" action="">
-                        {% csrf_token %}
-{% for message in messages %}
-    <p id="messages">{{ message }}</p>
-{% endfor %}
-{{ form.errors }}
+            {% csrf_token %}
+            {% for message in messages %}
+                <p id="messages">{{ message }}</p>
+            {% endfor %}
+            {{ form.errors }}
 						<div class="input-group mb-3">
 							<div class="input-group-append">
 								<span class="input-group-text"><i class="fas fa-user"></i></span>
 							</div>
-                            {{ form.username}}
+              {{ form.username}}
 						</div>
 
 						<div class="input-group mb-2">
 							<div class="input-group-append">
 								<span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
 							</div>
-                            {{ form.email}}
+              {{ form.email}}
 						</div>
 						
-                        <div class="input-group mb-2">
+            <div class="input-group mb-2">
 							<div class="input-group-append">
 								<span class="input-group-text"><i class="fas fa-key"></i></span>
 							</div>
                             {{ form.password1 }}
 						</div>
 						
-                        <div class="input-group mb-2">
+            <div class="input-group mb-2">
 							<div class="input-group-append">
 								<span class="input-group-text"><i class="fas fa-key"></i></span>
 							</div>
                             {{ form.password2 }}
 						</div>
 						
-                        <div class="input-group mb-3">
+            <div class="input-group mb-3">
 							<div class="input-group-append">
 								<span class="input-group-text"><i class="fas
                                         fa-address-book"></i></span>

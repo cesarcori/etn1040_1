@@ -13,12 +13,14 @@
         {% if estudiante.equipo.tutor_acepto%}
           {% if grupo == 'tutor' %}
             <td class='bg-success text-white'>
-              <a target='_blank' href={% url 'reportes:carta-tutor-acepto' estudiante.id%} class='text-white text-underline-hover'>
-                Carta de Aceptación Tutoría
-              </a>
-              <a class='text-black text-underline-hover' href={% url 'reportes:agregar_titulo' estudiante.id%}>
-                Agregar Titulo
-              </a>
+              <div class="d-flex justify-content-between">
+                <a target='_blank' href={% url 'reportes:carta-tutor-acepto' estudiante.id%} class='text-white text-underline-hover'>
+                  Carta de Aceptación Tutoría
+                </a>
+                <a class='text-white text-underline-hover' href={% url 'reportes:agregar_titulo' estudiante.id%}>
+                  Agregar Título
+                </a>
+              </div>
             </td>
             <td class='bg-success text-white'>
               <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "carta_aceptacion"%} 
@@ -84,6 +86,48 @@
           <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
         {% endif %}
       </tr>
+      {% if grupo == 'tutor' or grupo == 'docente'%}
+        <tr>
+          {% if estudiante.equipo.registroperfil %}
+            {% if grupo == 'tutor'%}
+              <td class='bg-success text-white'>
+                <div class="d-flex justify-content-between">
+                  <a target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %} class='text-white text-underline-hover'>
+                    Plantilla de observaciones
+                  </a>
+                  <a href={% url 'documentos:subir_documento' "plantilla_observacion" estudiante.pk %} class='text-white text-underline-hover'>
+                    {% if documento.archivo %}
+                      Cambiar documento escaneado
+                    {% else %}
+                      Subir documento escaneado
+                    {% endif %}
+                  </a>
+                </div>
+              </td>
+              <td class='bg-success text-white'>
+                <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "plantilla_observacion" %} 
+                  class='text-white text-underline-hover'>
+                  Ver
+                </a>
+              </td>
+              <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+            {% else %}
+              <td class='bg-success text-white'>Plantilla de observaciones</td>
+              <td class='bg-success text-white'>
+                <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "plantilla_observacion" %} 
+                  class='text-white text-underline-hover'>
+                  Ver
+                </a>
+              </td>
+              <td class='bg-success text-white'><i class="fas fa-check"></i></td>
+            {% endif %}
+          {% else %}
+            <td class='bg-danger text-white'>Plantilla de observaciones</td>
+            <td class='bg-danger text-white'></td>
+            <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
+          {% endif %}
+        </tr>
+      {% endif %}
       <tr>
         {% if todo_salas_doc.2.visto_bueno %}
           {% if grupo == 'tutor'%}

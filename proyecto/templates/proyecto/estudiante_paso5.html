@@ -3,8 +3,19 @@
 <h4>Elaboración del Proyecto de Grado y Revisión</h4>
 
 {% if sala_doc.tipo == 'proyecto'%}
-  <div class="d-flex flex-row-reverse bd-highlight">
-    <a target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %}>Imprimir Plantilla Observación Tutor</a>
+  <div class="d-flex flex-row-reverse">
+    {% if documento.archivo %}
+      <a class="btn btn-success" href={% url 'documentos:subir_documento' "plantilla_observacion" estudiante.pk %} >
+        Cambiar documento escaneado
+      </a>
+    {% else %}
+      <a class="btn btn-danger" href={% url 'documentos:subir_documento' "plantilla_observacion" estudiante.pk %} >
+        Subir documento escaneado
+      </a>
+    {% endif %}
+    <a class="btn btn-primary" target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %}>
+      Imprimir Plantilla Observación Tutor
+    </a>
   </div>
   {% if salas_doc.0.visto_bueno %}
     <div class="d-flex flex-row-reverse bd-highlight">

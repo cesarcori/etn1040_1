@@ -62,7 +62,7 @@ def formularioAceptacion(request,pk):
     return FileResponse(buffer, as_attachment=True, filename='formulario_aceptacion.pdf')
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['estudiante',])
+@allowed_users(allowed_roles=['estudiante','tutor'])
 def firmaTutorCapitulos(request, pk):
     buffer = io.BytesIO()
     # estudiante = DatosEstudiante.objects.get(id=pk)

@@ -99,11 +99,11 @@
       </a>
       <i class="fas text-success fa-check"></i>
       {% if documento.archivo %}
-        <a class="btn btn-primary" href={% url 'documentos:subir_documento' "carta_aceptacion" %}>
+        <a class="btn btn-primary" href={% url 'documentos:subir_documento' "carta_aceptacion" estudiante.id %}>
           Cambiar carta acepatión escaneada
         </a>
       {% else %}
-        <a class="btn btn-danger" href={% url 'documentos:subir_documento' "carta_aceptacion" %}>
+        <a class="btn btn-danger" href={% url 'documentos:subir_documento' "carta_aceptacion" estudiante.id %}>
           Subir carta acepatión escaneada
         </a>
       {% endif %}
