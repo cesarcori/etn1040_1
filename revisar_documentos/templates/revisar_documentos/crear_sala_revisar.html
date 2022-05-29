@@ -1,19 +1,38 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
+<h3>La suma total es {{suma_max}}%</h3>
 <p>
-<div class="mb-3">
-    <form method="POST" action="" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
-        <button type="submit" name='enviar' class="btn btn-success"
-            value='enviar'>Crear</button>
+{% if not suma_max >= 22 %}
+  <div class="mb-3">
+    <form method="POST" enctype="multipart/form-data" name="myForm" onsubmit="return comprobar()">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
+      <button type="submit" name='enviar' class="btn btn-success" value='enviar'>
+        Crear
+      </button>
     </form>
-</div>
-{% for message in messages %}
-    <div class="alert alert-success text-center" role="alert">
-        {{ message }}
-    </div>
-{% endfor %}
-<p>
+  </div>
+{% else %}
+  <h3>Ya no se puede crear más salas</h3>
+  <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
+{% endif %}
+
+<script>
+
+  function comprobar() {
+    let suma = "{{suma_max}}";
+    suma = parseFloat(suma.replace(/,/g, '.'));
+    let x = parseFloat(document.forms["myForm"]["id_nota_max"].value);
+    suma_total = suma + x; 
+    if ( x == 0 ) {
+      alert(`No asignar nota cero.`);
+      return false;
+    } else if (suma_total > 22 ){
+      alert(`La suma {{suma_max}} con la nota asignada ${x} excede los 22 puntos.`);
+      return false;
+    }
+  };
+
+</script>
 {% endblock %}

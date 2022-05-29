@@ -1,6 +1,8 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-Modificar nota máxima
+<h3>Modificar nota máxima</h3>
+<h3>Suma tota: {{suma}}</h3>
+
 <form method="POST" enctype="multipart/form-data" name="myForm" onsubmit="return comprobar()">
   {% csrf_token %}
   {{ form.as_p }}
@@ -9,18 +11,24 @@ Modificar nota máxima
       value='enviar'>Guardar</button>
 </form>
 <script>
+
+  var y = parseFloat(document.forms["myForm"]["id_nota_max"].value);
+
   function comprobar() {
     let suma = "{{suma}}";
     suma = parseFloat(suma.replace(/,/g, '.'));
     let x = parseFloat(document.forms["myForm"]["id_nota_max"].value);
-    suma_total = x + suma
+    {% comment %}suma_total = x + suma{% endcomment %}
+    suma_total = suma + x - y
     if ( x == 0 ) {
       alert(`No asignar nota cero.`);
       return false;
-    } else if (suma_total > 22){
+    {% comment %}} else if (suma_total > 22 && x > y ){{% endcomment %}
+    } else if (suma_total > 22 ){
       alert(`La suma {{suma}} con la nota asignada ${x} excede los 22 puntos.`);
       return false;
     }
   };
+
 </script>
 {% endblock %}

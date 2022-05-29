@@ -7,7 +7,7 @@ from .funciones import *
 class SalaRevisarDocForm(forms.ModelForm):
     class Meta:
         model = SalaRevisarDoc
-        fields = ['asunto','detalle']
+        fields = ['asunto','detalle','nota_max']
         widgets = {
             'asunto': 
             forms.TextInput(attrs={'class':'input-group input-group-lg',
@@ -19,8 +19,7 @@ class SalaRevisarDocForm(forms.ModelForm):
         labels = {
                 'asunto': (''),
                 'detalle': (''),
-'archivo_corregir': 
-    ('Subir el docmento en pdf con los cambios resaltado en amarillo'),
+                'nota_max': 'Calificar sobre',
                 }
 
 class MensajeRevisarDocForm(forms.ModelForm):
@@ -37,16 +36,16 @@ class MensajeRevisarDocForm(forms.ModelForm):
 
 class NotaSalaRevisarDocForm(forms.ModelForm):
     class Meta:
-        model = NotaSalaRevisarDoc
-        fields = ['nota_max','nota']
+        model = SalaRevisarDoc
+        fields = ['nota']
         labels = {
-                'nota': 'Nota asignada',
-                'nota_max': 'Calificar sobre'
+                'nota': 'Calificar',
+                # 'nota_max': 'Calificar sobre'
                 }
 
 class NotaMaxForm(forms.ModelForm):
     class Meta:
-        model = NotaSalaRevisarDoc
+        model = SalaRevisarDoc
         fields = ['nota_max']
         labels = {
                 'nota_max': 'Calificar sobre'

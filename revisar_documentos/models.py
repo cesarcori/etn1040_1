@@ -25,6 +25,9 @@ class SalaRevisarDoc(models.Model):
     asunto = models.CharField(max_length=200, null=True)
     detalle = models.TextField(blank=True, null=True)
     archivo_corregir = models.FileField(upload_to='material_estudiante_perfil/', null=True, blank=True)
+    nota = models.DecimalField(null=True, blank=True, default=0, max_digits=3, decimal_places=1)
+    nota_max = models.DecimalField(null=True, blank=True, default=0, max_digits=3, decimal_places=1)
+    is_calificado = models.BooleanField(default=False)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return f'Sala Asunto: {self.asunto}'
@@ -49,6 +52,7 @@ class RevisarDocPredeterminado(models.Model):
     asunto = models.CharField(max_length=200, null=True)
     detalle = models.TextField(blank=True, null=True)
     tipo = models.CharField(max_length=50, choices=TIPO_DOCUMENTO, null=True)
+    nota_max = models.DecimalField(null=True, blank=True, default=0, max_digits=3, decimal_places=1)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
     class Meta:
@@ -63,6 +67,7 @@ class RevisarDocPersonalizado(models.Model):
     asunto = models.CharField(max_length=200, null=True)
     detalle = models.TextField(blank=True, null=True)
     tipo = models.CharField(max_length=50, choices=TIPO_DOCUMENTO, null=True)
+    nota_max = models.DecimalField(null=True, blank=True, default=0, max_digits=3, decimal_places=1)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
     class Meta:

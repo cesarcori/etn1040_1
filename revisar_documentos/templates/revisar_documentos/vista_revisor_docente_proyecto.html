@@ -75,11 +75,11 @@
         <td>
           <a class="btn btn-primary position-relative" href={% url 'revisar_documentos:mensajes' sala.id %} type="button" name="observacion">
               Observación
-          {% if no_visto_nota.0 == 0 %}
+          {% if no_visto_nota == 0 %}
               </a>
           {% else %}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {{no_visto_nota.0}}
+                  {{no_visto_nota}}
                   <span class="visually-hidden">unread messages</span>
               </span>
               </a>
@@ -87,26 +87,34 @@
         </td>      
         {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' %}
           <td>
-            {% if no_visto_nota.1.nota == 0 %}
-            <a class="btn btn-warning" href={% url "revisar_documentos:calificar_sala" no_visto_nota.1.pk %}>Calificar</a>
+            {% if sala.nota == 0 %}
+            <a class="btn btn-warning" href={% url "revisar_documentos:calificar_sala" sala.id %}>Calificar</a>
             {% else %}
               <div class="alert alert-success p-2 d-inline-flex ">
-                Nota: {{no_visto_nota.1.nota}} sobre {{no_visto_nota.1.nota_max}}                    
+                {{sala.nota}}% 
               </div>
             {% endif %}
           </td>      
         {% endif %}
         <td>
-          <!--<div class="alert alert-success p-2 d-inline-flex ">-->
-          <a class="btn btn-success" href={% url "revisar_documentos:modificar_nota_max" sala.id%}>
-            {{no_visto_nota.1.nota_max}}%
-          </a>
-          <!--</div>-->
+          {% if sala.is_calificado %}
+            <div class="alert alert-success p-2 d-inline-flex ">
+              {{sala.nota_max}}%
+            </div>
+          {% else %}
+            <a class="btn btn-success" href={% url "revisar_documentos:modificar_nota_max" sala.id%}>
+              {{sala.nota_max}}%
+            </a>
+          {% endif %}
         </td>      
         <td>
-          <a class="btn btn-danger" href={% url "revisar_documentos:eliminar_sala_revisar" sala.id %}>
-            Eliminar
-          </a>
+          {% if sala.is_calificado %}
+
+          {% else %}
+            <a class="btn btn-danger" href={% url "revisar_documentos:eliminar_sala_revisar" sala.id %}>
+              Eliminar
+            </a>
+          {% endif %}
         </td>      
       </tr>
     {%endfor%}

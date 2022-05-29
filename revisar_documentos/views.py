@@ -50,39 +50,31 @@ def revisarDocumentoEstudiante(request, documento, id_revisor):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['tutor','docente','tribunal'])
 def revisarDocumentoRevisor(request, documento, id_equipo):
-    usuario = request.user
-    grupo = usuario.groups.get().name
-    revisor = usuario
+    grupo = request.user.groups.get().name
+    revisor = request.user
     equipo = get_object_or_404(Equipo, id=id_equipo)
     grupo_revisor = revisor.groups.get()
     sala_doc, created = SalaDocumentoDoc.objects.get_or_create(revisor=revisor, grupo_revisor=grupo_revisor, equipo=equipo, tipo=documento)
     salas_revisar = SalaRevisarDoc.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
     dicc_salas = {}
     for sala in salas_revisar:
-        mensajes = MensajeRevisarDoc.objects.filter(sala=sala).exclude(usuario=usuario)
+        mensajes = MensajeRevisarDoc.objects.filter(sala=sala).exclude(usuario=request.user)
         no_visto = 0
         for mensaje in mensajes:
             if not mensaje.visto:
                 no_visto += 1
         dicc_salas[sala] = no_visto
     suma = 0
+    suma_max = 0
     if grupo_revisor.name == 'docente' and sala_doc.tipo == 'proyecto' and salas_revisar.count() > 0:
-        dicc_salas_no_visto_nota = {}
-        no_visto_nota = []
-        for sala, no_visto in dicc_salas.items():
-            nota_sala = NotaSalaRevisarDoc.objects.get(revisor=revisor, sala=sala)
-            no_visto_nota = [no_visto, nota_sala]
-            dicc_salas_no_visto_nota[sala] = no_visto_nota
-        dicc_salas = dicc_salas_no_visto_nota
-        # suma de notas
         suma = 0
-        for no_visto_nota in dicc_salas.values():
-            suma += no_visto_nota[1].nota
+        for sala in salas_revisar:
+            suma += sala.nota
 
         # suma de nota max
         suma_max = 0
-        for no_visto_nota in dicc_salas.values():
-            suma_max += no_visto_nota[1].nota_max
+        for sala in salas_revisar:
+            suma_max += sala.nota_max
 
     context = {
             'sala_doc':sala_doc,
@@ -100,25 +92,24 @@ def modificarNotaMax(request, id_sala):
     grupo = request.user.groups.get().name
     revisor = request.user
     sala_revisar = get_object_or_404(SalaRevisarDoc, id=id_sala)
-    nota_sala = NotaSalaRevisarDoc.objects.get(revisor=revisor, sala=sala_revisar)
-    documento = nota_sala.sala.sala_documento.tipo
-    equipo = nota_sala.sala.sala_documento.equipo
+    if sala_revisar.is_calificado:
+        return HttpResponse('error')
+    documento = sala_revisar.sala_documento.tipo
+    equipo = sala_revisar.sala_documento.equipo
 
     salas_revisar = sala_revisar.sala_documento.salarevisardoc_set.all()
-    notas_salas = [n.notasalarevisardoc_set.first() for n in salas_revisar]
     # suma de nota max
     suma_max = 0
-    for nota in notas_salas:
-        suma_max += nota.nota_max
+    for sala in salas_revisar:
+        suma_max += sala.nota_max
 
-    form = NotaMaxForm(instance=nota_sala)
+    form = NotaMaxForm(instance=sala_revisar)
     if request.method == 'POST':
-        form = NotaMaxForm(request.POST, instance=nota_sala)
+        form = NotaMaxForm(request.POST, instance=sala_revisar)
         if form.is_valid():
             form.save()
             return redirect('revisar_documentos:revisar_documento_revisor', documento=documento, id_equipo=equipo.id)
     context = {
-            'nota_sala': nota_sala,
             'form': form,
             'suma': suma_max,
             'grupo': grupo,}
@@ -132,6 +123,7 @@ def crearSalaRevisar(request, documento, id_sala_doc):
     equipo = sala_doc.equipo
     primer_estudiante = equipo.datosestudiante_set.first()
     grupo = request.user.groups.get().name
+    salas_revisar = sala_doc.salarevisardoc_set.all()
     if sala_doc.tipo=='perfil':
         if not actividadRealizadaEstudiante('revisar perfil', primer_estudiante):
             agregarActividadEquipo('revisar perfil', equipo)
@@ -146,10 +138,13 @@ def crearSalaRevisar(request, documento, id_sala_doc):
         form = SalaRevisarDocForm(request.POST, request.FILES)
         if form.is_valid():
             form.instance.sala_documento = sala_doc
-            # form.instance.creado_por = request.user.datosestudiante
             form.save()
             return redirect('revisar_documentos:revisar_documento_revisor', documento=sala_doc.tipo, id_equipo=equipo.id)
+    suma_max = 0
+    for sala in salas_revisar:
+        suma_max += sala.nota_max
     context = {'form':form,
+            'suma_max': suma_max,
             'grupo': grupo}
     return render(request, 'revisar_documentos/crear_sala_revisar.html', context)
 
@@ -158,6 +153,8 @@ def crearSalaRevisar(request, documento, id_sala_doc):
 def eliminarSalaRevisar(request, id_sala_rev):
     sala_rev = SalaRevisarDoc.objects.get(id=id_sala_rev)
     if not sala_rev.sala_documento.revisor == request.user:
+        return HttpResponse('error')
+    if sala_rev.is_calificado:
         return HttpResponse('error')
     documento = sala_rev.sala_documento.tipo
     id_equipo = sala_rev.sala_documento.equipo.id
@@ -174,31 +171,32 @@ def eliminarSalaRevisar(request, id_sala_rev):
 def calificarSalaRevision(request, pk):
     usuario = request.user
     grupo = usuario.groups.get().name
-    nota_sala = get_object_or_404(NotaSalaRevisarDoc, id=pk, revisor=usuario)
-    equipo = nota_sala.sala.sala_documento.equipo
-    form = NotaSalaRevisarDocForm(instance=nota_sala)
+    sala_revisar = get_object_or_404(SalaRevisarDoc, id=pk)
+    if sala_revisar.is_calificado:
+        return HttpResponse('error')
+    documento = sala_revisar.sala_documento
+    equipo = documento.equipo
+    equipo = sala_revisar.sala_documento.equipo
+    form = NotaSalaRevisarDocForm(instance=sala_revisar)
     if request.method == 'POST':
-        form = NotaSalaRevisarDocForm(request.POST, instance=nota_sala)
+        form = NotaSalaRevisarDocForm(request.POST, instance=sala_revisar)
         if form.is_valid():
+            form.instance.is_calificado = True
             form.save()
-            return redirect('progreso_estudiante',pk=equipo.pk)
+            # return redirect('progreso_estudiante',pk=equipo.pk)
+            return redirect('revisar_documentos:revisar_documento_revisor', documento=documento.tipo, id_equipo=equipo.id)
     sala_documento = SalaDocumentoDoc.objects.get(revisor=usuario, equipo=equipo, tipo='proyecto')
     numero_salas = sala_documento.salarevisardoc_set.count()
-    nota_limite = nota_max(numero_salas)
-    # suma de la nota
     salas_revisar = sala_documento.salarevisardoc_set.all()
     suma = 0
-    for sala_revisar in salas_revisar:
-        a = sala_revisar.notasalarevisardoc_set.first().nota
-        suma += a
-    # for no_visto_nota in dicc_salas.values():
-        # suma += no_visto_nota[1].nota
+    for sala in salas_revisar:
+        suma += sala.nota
+
     context = {
             'grupo':grupo,
-            'nota_sala': nota_sala,
+            'sala_revisar': sala_revisar,
             'equipo': equipo,
             'form': form,
-            'nota_limite': nota_limite,
             'suma': suma,
             }
     return render(request, 'revisar_documentos/calificar_sala_revision.html', context)

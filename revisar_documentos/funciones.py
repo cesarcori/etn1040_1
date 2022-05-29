@@ -22,8 +22,10 @@ def crearSalasPredeterminadas(query_set, sala_documento):
     for query in query_set:
         asunto = query.asunto
         detalle = query.detalle
+        nota_max = query.nota_max
         SalaRevisarDoc.objects.create(
             sala_documento = sala_documento,
             asunto = asunto, 
             detalle = detalle,
+            nota_max = nota_max,
         )
