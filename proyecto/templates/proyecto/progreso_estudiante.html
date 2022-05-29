@@ -3,7 +3,7 @@
 {% if mensajes_avisos %}
   {% for aviso in mensajes_avisos %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>!Noticias!</strong>
+      <strong>¡Noticias!</strong>
       Se realizó la siguiente actividad: <strong>{{aviso|title}}</strong>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -14,6 +14,7 @@
       <a href={% url "tiempos:resumen" equipo.id %}>Información tiempo</a>
   </div>
 {% endif %}
+
 {% if equipo.cantidad > 1%}
   <div class="d-flex flex-row-reverse bd-highlight">
       <a class="btn btn-primary" href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
@@ -34,15 +35,19 @@
 
 {% if not equipo.tribunales.count == 2 and grupo != 'director' %}
   {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.salarevisarapp_set.count >= 1 %}
-    {% include 'revisar/calificar.html'%}
-    {% include 'revisar/vista_revisor_docente_proyecto.html'%}
+    {% include 'revisar_documentos/calificar.html'%}
+    {% comment %}{% include 'revisar_documentos/vista_revisor_docente_proyecto.html'%}{% endcomment %}
+    <div class="d-grid gap-2 col-6 mx-auto">
+      <a class="btn btn-primary btn-lg" href={% url 'revisar_documentos:revisar_documento_revisor' sala_doc.tipo equipo.id %}>Revisión de Proyecto de Grado</a>
+      <br>
+    </div>
   {% else %}
-    {% include 'revisar/vista_revisor.html'%}
+    {% include 'revisar_documentos/vista_revisor.html'%}
   {% endif %}
 {% endif %}
 
 {% if grupo == 'tribunal'%}
-  {% include 'revisar/vista_revisor.html'%}
+  {% include 'revisar_documentos/vista_revisor.html'%}
 {% endif %}
 
 {% comment %}***** solicitar y ver tribunal *****{% endcomment %}

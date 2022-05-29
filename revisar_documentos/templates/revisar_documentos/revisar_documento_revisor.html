@@ -1,0 +1,18 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+
+<h4>
+  {% if sala_doc.equipo.cantidad > 1%}
+    Equipo: {{sala_doc.equipo|title}}
+  {% else %}
+    Estudiante: {{equipo.datosestudiante_set.first|title}}
+  {% endif %}                               
+</h4>
+
+<a class="btn btn-warning" href={% url "revisar_documentos:crear_sala_revisar" sala_doc.tipo sala_doc.id %}>Crear Sala de Revisión</a>
+
+{% include 'revisar_documentos/vista_revisor_docente_proyecto.html' %}
+
+<a class="btn btn-danger" href={% url "progreso_estudiante" sala_doc.equipo.id %} name="atras">Atras</a>
+
+{% endblock content%}

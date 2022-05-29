@@ -29,6 +29,7 @@ urlpatterns = [
     path('busquedas/', include('busquedas.urls')),
     path('tiempos/', include('tiempos.urls')),
     path('documentos/', include('documentos.urls')),
+    path('revisar-doc/', include('revisar_documentos.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

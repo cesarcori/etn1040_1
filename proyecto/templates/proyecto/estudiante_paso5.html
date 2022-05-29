@@ -22,7 +22,7 @@
       <a target=_blank href={%url 'reportes:carta_final' sala_doc.equipo.id %}>Carta de Conclusión</a>
     </div>
     <div class="d-flex flex-row-reverse bd-highlight">
-      <a href={% url 'documentos:subir_documento' "carta_conclusion" %}>Subir la carta escaneada</a>
+      <a href={% url 'documentos:subir_documento' "carta_conclusion" estudiante.pk %}>Subir la carta escaneada</a>
     </div>
   {% endif %}
 {% endif %}
@@ -49,7 +49,7 @@
     </tr>
     <tr>
       <td>
-        <a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>
+        <a href={%url 'revisar_documentos:revisar_documento_estudiante' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Proyecto de Grado</a>
       </td>
       <td>
         {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}

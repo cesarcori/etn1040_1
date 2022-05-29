@@ -1,0 +1,15 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+<h3>Seguro que desea dar el visto bueno al {{sala_doc.tipo|capfirst}} del estudiante: {{sala_doc.estudiante}} </h3>
+<form method="POST">
+    {% csrf_token %}
+    <div class="d-flex justify-content-evenly">
+    {% comment %}<a class="btn btn-danger" href={% url 'progreso_estudiante' sala_doc.equipo.id %}>Aún no</a>{% endcomment %}
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Confirmar</button>
+    </div>
+</form>
+
+<button class="btn btn-danger" onclick="history.back()">Cancelar</button>
+
+{% endblock content%}

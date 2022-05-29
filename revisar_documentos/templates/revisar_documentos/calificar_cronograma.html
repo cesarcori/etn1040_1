@@ -1,0 +1,21 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+  <div class="fs-4">
+    CUMPLIMIENTO DE SU CRONOGRAMA (Máximo 3.0 puntos)
+  </div>
+  <div class="fs-5">
+    Cumplimiento por semestre: 1.0 puntos<br>
+  </div>
+  <div class="fs-5 d-flex justify-content-evenly">
+    <div>Semestres: {{nota}}
+      <span id="participar"></span>
+    </div>
+    <div>Puntos acumulados: {{nota}}</div>
+  </div>
+  {% if nota < 3 %}
+    <p>
+      <a class="btn btn-primary" href={% url "revisar:registrar_cronograma" pk %}>Registrar Cumplimiento Cronograma</a>
+    </p>
+  {% endif %}
+  <a class="btn btn-danger" href={% url 'progreso_estudiante' pk %}>Atrás</a>
+{% endblock content %}            

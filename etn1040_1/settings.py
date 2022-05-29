@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'busquedas',
     'tiempos',
     'documentos',
+    'revisar_documentos',
 ]
 
 MIDDLEWARE = [

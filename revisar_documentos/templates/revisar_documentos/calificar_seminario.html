@@ -1,0 +1,29 @@
+{%  extends 'proyecto/main.html' %}
+{% block content %}            
+  <div class="fs-4">
+    PARTICIPACIÓN EN SERMINARIOS - TALLER (Máximo 6.0 puntos)
+  </div>
+  <div class="fs-5">
+    Por cada participación, 2.0 puntos<br>
+  </div>
+  <div class="fs-5 d-flex justify-content-evenly">
+    <div>Número de participaciones:
+      <span id="participar"></span>
+    </div>
+    <div>Puntos acumulados: {{nota}}</div>
+  </div>
+  {% if nota < 6 %}
+  <p>
+  <a class="btn btn-primary" href={% url "revisar:registrar_seminario" pk %}>Registrar Participación</a>
+  </p>
+  {% endif %}
+  <a class="btn btn-danger" href={% url 'progreso_estudiante' pk %}>Atrás</a>
+<script>
+  // Numero de participaciones
+  let nota = "{{nota}}";
+  nota = nota.replace(/,/g, '.'); 
+  participacion = Math.floor(nota/2);
+  document.getElementById("participar").innerHTML = participacion;
+  
+</script>
+{% endblock content %}            

@@ -1,0 +1,36 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+
+<h4>
+  Revisor: {{sala_doc.grupo_revisor|title}} Ing. {{sala_doc.revisor.first_name}} {{sala_doc.revisor.last_name}}
+</h4>
+
+{% if sala_doc.visto_bueno%}
+  {% comment %}<div class="d-inline p-2 bg-success text-white">{% endcomment %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    El {{sala_doc.grupo_revisor}} ya dió el visto bueno al {{sala_doc.tipo}}
+  </div><br><br>
+{% else %}
+    {% comment %}<a class="btn btn-warning" {% endcomment %}
+        {% comment %}href={% url 'revisar:crear_sala_revisar' 'perfil' sala_doc.revisor.id sala_doc.id%} name="crear_revision">{% endcomment %}
+        {% comment %}Crear Revisión</a>{% endcomment %}
+  {% comment %}<div class="d-inline p-2 bg-danger text-white">{% endcomment %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    El {{sala_doc.grupo_revisor.name.title}} aún no dió el visto bueno al {{sala_doc.tipo}}
+  </div>
+{% endif %}
+
+{% if grupo == 'estudiante' and sala_doc.tipo == 'proyecto' and sala_doc.grupo_revisor.name == 'docente'%}
+  {% include 'revisar_documentos/vista_estudiante_proyecto.html'%}
+{% endif %}
+
+{% comment %}**** analizar con el tiempo como se puede evitar esto para generalizar la app {% endcomment %}
+{% if sala_doc.tipo == 'perfil'%}
+    <a class="btn btn-danger" href={%url 'paso4'%} name="atras">Atras</a>
+{% elif sala_doc.tipo == 'proyecto'%}
+    <a class="btn btn-danger" href={%url 'paso5'%} name="atras">Atras</a>
+{% elif sala_doc.tipo == 'tribunal'%}
+    <a class="btn btn-danger" href={%url 'paso6'%} name="atras">Atras</a>
+{% endif %}
+<p>
+{% endblock content%}
