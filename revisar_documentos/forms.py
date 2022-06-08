@@ -22,6 +22,24 @@ class SalaRevisarDocForm(forms.ModelForm):
                 'nota_max': 'Calificar sobre',
                 }
 
+class SalaRevisarDocSinNotaForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisarDoc
+        fields = ['asunto','detalle']
+        widgets = {
+            'asunto': 
+            forms.TextInput(attrs={'class':'input-group input-group-lg',
+            'placeholder':'Escribe el asunto...'}),
+            'detalle': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+            'placeholder':'Escribe las modificaciones...',}),
+            'archivo_corregir': forms.FileInput(attrs={'class':'form-control',}),
+            }
+        labels = {
+                'asunto': (''),
+                'detalle': (''),
+                'nota_max': 'Calificar sobre',
+                }
+
 class MensajeRevisarDocForm(forms.ModelForm):
     class Meta:
         model = MensajeRevisarDoc
@@ -51,3 +69,45 @@ class NotaMaxForm(forms.ModelForm):
                 'nota_max': 'Calificar sobre'
                 }
 
+class SubirDocumentoForm(forms.ModelForm):
+    class Meta:
+        model = SalaRevisarDoc
+        fields = ['archivo_corregir']
+        widgets = {
+            'archivo_corregir': forms.FileInput(attrs={'class':'form-control',}),
+            }
+        labels = {
+                }
+
+class crearRevisarDocPersonalizadoForm(forms.ModelForm):
+    class Meta:
+        model = RevisarDocPersonalizado
+        fields = ['orden','asunto','detalle','nota_max']
+        widgets = {
+            'asunto': 
+            forms.TextInput(attrs={'class':'input-group input-group-lg',
+            'placeholder':'Escribe el asunto...'}),
+            'detalle': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+            'placeholder':'Escribe las modificaciones...',}),
+            }
+        labels = {
+                'asunto': (''),
+                'detalle': (''),
+                'nota_max': 'Calificar sobre',
+                }
+
+class crearRevisarDocPersonalizadoRevisorForm(forms.ModelForm):
+    class Meta:
+        model = RevisarDocPersonalizado
+        fields = ['orden','asunto','detalle']
+        widgets = {
+            'asunto': 
+            forms.TextInput(attrs={'class':'input-group input-group-lg',
+            'placeholder':'Escribe el asunto...'}),
+            'detalle': forms.Textarea(attrs={ 'rows': 3, 'class': 'form-control',
+            'placeholder':'Escribe las modificaciones...',}),
+            }
+        labels = {
+                'asunto': (''),
+                'detalle': (''),
+                }

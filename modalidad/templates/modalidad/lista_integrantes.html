@@ -13,37 +13,36 @@
       {% endif %}
     </tr>
   </thead>
+  {{estdudiante_isVisto}}
   <tbody>
     {% for estudiante, is_visto in estudiante_isVisto.items %}
     <tr>
+      <td>
+        {{estudiante}}
+      </td>
+      <td>
+        {{estudiante.celular}}
+      </td>
+      {% if grupo == 'docente' or grupo == 'tutor'%}
         <td>
-            {{estudiante}}
+          <a href="{% url 'mensaje:enviar_mensaje_par' estudiante.usuario.pk %}" class="btn btn-primary position-relative">
+            Mensajes
+            {% if not is_visto %}
+              <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                <span class="visually-hidden">New alerts</span>
+              </span>
+            {% endif %}
+          </a>
         </td>
-        <td>
-            {{estudiante.celular}}
-        </td>
-        {% if grupo == 'docente' or grupo == 'tutor'%}
-          <td>
-            <!--<a href="{% url 'mensaje_personal' estudiante.usuario.pk %}">Mensajes</a>-->
-            <!--<a href="{% url 'mensaje_personal' estudiante.usuario.pk %}" class="btn btn-primary position-relative">-->
-            <a href="{% url 'mensaje:enviar_mensaje_par' estudiante.usuario.pk %}" class="btn btn-primary position-relative">
-              Mensajes
-              {% if not is_visto %}
-                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
-                  <span class="visually-hidden">New alerts</span>
-                </span>
-              {% endif %}
-            </a>
-          </td>
-        {% endif %}
-        <td>
-            <a href="mailto:{{estudiante.correo}}?Subject=">{{estudiante.correo}}</a><br>
-        </td>
-        {% if grupo != "estudiante"%}
-        <td>
-          <a class="btn btn-primary" href="{% url 'enlace_estudiante' estudiante.id %}">Info</a>
-        </td>
-        {% endif %}
+      {% endif %}
+      <td>
+          <a href="mailto:{{estudiante.correo}}?Subject=">{{estudiante.correo}}</a><br>
+      </td>
+      {% if grupo != "estudiante"%}
+      <td>
+        <a class="btn btn-primary" href="{% url 'enlace_estudiante' estudiante.id %}">Info</a>
+      </td>
+      {% endif %}
     </tr>
     {%endfor%}
   </tbody>

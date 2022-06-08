@@ -1,18 +1,16 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h3>La suma total es {{suma_max}}%</h3>
-<p>
 {% if not suma_max >= 22 %}
-  <div class="mb-3">
-    <form method="POST" enctype="multipart/form-data" name="myForm" onsubmit="return comprobar()">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
-      <button type="submit" name='enviar' class="btn btn-success" value='enviar'>
-        Crear
-      </button>
-    </form>
-  </div>
+  <h3>La suma total es {{suma_max}}%</h3>
+  <h3>{{mensaje}}</h3>
+  <form method="POST" enctype="multipart/form-data" name="myForm" onsubmit="return comprobar()">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-flex justify-content-evenly">
+      <a class="btn btn-danger" href={% url "revisar_documentos:configurar" equipo.id %}>Cancelar</a>
+      <button type="submit" class="btn btn-success">Crear</button>
+    </div>
+  </form> 
 {% else %}
   <h3>Ya no se puede crear más salas</h3>
   <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
@@ -31,6 +29,8 @@
       alert(`La suma {{suma_max}} con la nota asignada ${x} excede los 22 puntos.`);
       return false;
     }
+
   };
 </script>
+
 {% endblock %}

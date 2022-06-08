@@ -11,13 +11,14 @@
 {% endif %}
 {% if grupo == 'director'%}
   <div class="d-flex flex-row-reverse bd-highlight">
-      <a href={% url "tiempos:resumen" equipo.id %}>Información tiempo</a>
+    <a class="btn btn-primary" href={% url "tiempos:resumen" equipo.id %}>Información tiempo</a>
   </div>
+  <br>
 {% endif %}
 
 {% if equipo.cantidad > 1%}
   <div class="d-flex flex-row-reverse bd-highlight">
-      <a class="btn btn-primary" href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
+    <a class="btn btn-primary" href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
   </div>
   <div class="d-flex justify-content-evenly">
     <h3><strong>MODALIDAD: {{estudiante.get_modalidad_display|upper}}</strong></h3>
@@ -33,26 +34,33 @@
   <br>
 {% endif %}
 
+{% if grupo == 'docente' or grupo == 'tutor' or grupo == 'tribunal'%}
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-primary btn-lg" href={% url 'revisar_documentos:revisiones' equipo.pk %}>
+      Revisiones
+    </a>
+    <br>
+  </div>
+{% endif %}
+
 {% if not equipo.tribunales.count == 2 and grupo != 'director' %}
-  {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.salarevisarapp_set.count >= 1 %}
+  {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.salarevisardoc_set.count >= 1 and not equipo.proyectodegrado.calificacion %}
     {% include 'revisar_documentos/calificar.html'%}
-    {% comment %}{% include 'revisar_documentos/vista_revisor_docente_proyecto.html'%}{% endcomment %}
-    <div class="d-grid gap-2 col-6 mx-auto">
-      <a class="btn btn-primary btn-lg" href={% url 'revisar_documentos:revisar_documento_revisor' sala_doc.tipo equipo.id %}>Revisión de Proyecto de Grado</a>
-      <br>
-    </div>
   {% else %}
-    {% include 'revisar_documentos/vista_revisor.html'%}
   {% endif %}
 {% endif %}
 
-{% if grupo == 'tribunal'%}
-  {% include 'revisar_documentos/vista_revisor.html'%}
-{% endif %}
+{% comment %}{% if grupo == 'tribunal'%}{% endcomment %}
+  {% comment %}{% include 'revisar_documentos/vista_revisor.html'%}{% endcomment %}
+{% comment %}{% endif %}{% endcomment %}
 
 {% comment %}***** solicitar y ver tribunal *****{% endcomment %}
 {%if grupo == 'docente' and not equipo.solicitud_tribunal_docente and equipo.proyectodegrado and calificacion != None%}
-  <a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' equipo.id %}>Solicitar Tribunal a Jefatura de Carrera</a><br><br>
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' equipo.id %}>
+      Solicitar Tribunal a Jefatura de Carrera
+    </a><br>
+  </div>
 {% elif grupo == 'docente' or grupo == 'tutor' %}
   {% if equipo.solicitud_tribunal_docente and equipo.tribunales.count < 2%}
     {% comment %}<div class="d-inline p-2 bg-primary text-white">{% endcomment %}
@@ -64,8 +72,8 @@
   {% endif %}
 {% elif grupo == 'director' and equipo.solicitud_tribunal_docente and equipo.tribunales.count < 2%}
   <p>
-  <div class="d-inline p-2 bg-danger text-white">El docente ETN 1040 Ing. 
-    {{equipo.docente}}, solicitó tribunales para 
+  <div class="alert alert-danger" role="alert">
+    El docente ETN 1040 Ing.  {{equipo.docente}}, solicitó tribunales para 
     {% if equipo.cantidad > 1 %}
       el equipo:
       {{equipo.alias}}</div>
@@ -73,7 +81,11 @@
       el estudiante:
       {{estudiante}}</div>
     {% endif %}
-  <a class="btn btn-warning" href={% url 'asignar_tribunal' equipo.id %}>Asignar Tribunal</a>
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-warning" href={% url 'asignar_tribunal' equipo.id %}>
+      Asignar Tribunal
+    </a>
+  </div>
   </p>
 {% elif grupo == 'director' or grupo == 'tutor' %}
   {% if equipo.tribunales.count == 2 %}
@@ -85,8 +97,10 @@
   <div class="col-md-7">
     {% comment %}***** aviso no se puso la nota{% endcomment %}
     {%if grupo != 'tribunal' and not equipo.registroproyectotribunal.nota and equipo.registroproyectotribunal %}
-      <h5 class='text-center'>El Tribunal aún no puso la nota</h5>
-      <h5 class='text-center'>Se espera la defensa de Proyecto de Grado</h5>
+      <div class="alert alert-warning" role="alert">
+        <h5 class='text-center'>El Tribunal aún no puso la nota</h5>
+        <h5 class='text-center'>Se espera la defensa de Proyecto de Grado</h5>
+      </div>
     {%endif%}
     {%if grupo == 'tutor' or grupo == 'director' %}
       {% if calificacion == None and not proyecto == None%}
@@ -97,12 +111,19 @@
     {% comment %}Calificacion{% endcomment %}
     {% comment %}{%if grupo == 'docente' and calificacion == None and not proyecto == None%}{% endcomment %}
 
-    {%if grupo == 'docente' and estudiante.equipo.proyectodegrado.calificacion and equipo.tribunales.count <= 1 %}
-      <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Calificar Proyecto</a>
+    {%if grupo == 'docente' and equipo.proyectodegrado.titulo and equipo.tribunales.count <= 1 and not equipo.proyectodegrado.calificacion %}
+      <div class="d-grid gap-2 col-6 mx-auto">
+        <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Confirmar calificación</a>
+      </div>
     {%endif%}
 
     {% if grupo == 'tribunal' and equipo.registroproyectotribunal and not is_nota_tribunal %}
-      <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' equipo.id %}>Calificar Proyecto Final</a><br><br>
+      <div class="d-grid gap-2 col-6 mx-auto">
+        <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' equipo.id %}>
+          Calificar Proyecto Final
+        </a>
+        <br>
+      </div>
     {% endif %}
 
     {% comment %}****** ver nota ******{% endcomment %}
@@ -113,21 +134,24 @@
     {%endif%}
 
     {%if grupo == 'tribunal' and not calificacion == None %}
-    {% include 'proyecto/ver_nota.html' %}
+      {% include 'proyecto/ver_nota.html' %}
     {% endif %}
     {%if grupo == 'tutor' and not calificacion == None%}
-    {% include 'proyecto/ver_nota.html' %}
+      {% include 'proyecto/ver_nota.html' %}
     {%endif%}
     {% comment %}******** visto bueno ********{% endcomment %}
     <p>
     {% for sala_doc_est in salas_doc_est %}
-    {% if sala_doc_est.visto_bueno %}
-    <p><div class="d-inline p-2 bg-success text-white">
-      El {{sala_doc_est.grupo_revisor|title}} ya dio visto bueno al {{sala_doc_est.tipo|title}}</div></p>
-    {% else %}
-    <p><div class="d-inline p-2 bg-danger text-white">
-      El {{sala_doc_est.grupo_revisor|title}} aún no dio el visto bueno al {{sala_doc_est.tipo|title}}</div></p>
-    {% endif %}
+      {% if sala_doc_est.visto_bueno %}
+      {% comment %}<p><div class="d-inline p-2 bg-success text-white">{% endcomment %}
+        <div class="alert alert-success" role="alert">
+          El {{sala_doc_est.grupo_revisor|title}} ya dió visto bueno al {{sala_doc_est.tipo|title}}
+        </div>
+      {% else %}
+        <div class="alert alert-danger" role="alert">
+          El {{sala_doc_est.grupo_revisor|title}} aún no dió el visto bueno al {{sala_doc_est.tipo|title}}
+        </div>
+      {% endif %}
     {% endfor %}
     </p>
 

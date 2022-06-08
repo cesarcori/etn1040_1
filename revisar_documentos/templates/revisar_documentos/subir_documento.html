@@ -1,0 +1,16 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+<h3>¿Subir archivo? </h3>
+<form method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form}}
+    <br>
+    <div class="d-flex justify-content-evenly">
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Confirmar</button>
+    </div>
+</form>
+
+<button class="btn btn-danger" onclick="history.back()">Atrás</button>
+
+{% endblock content%}

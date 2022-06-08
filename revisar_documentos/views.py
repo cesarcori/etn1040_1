@@ -10,6 +10,205 @@ from proyecto.models import RegistroPerfil, ProyectoDeGrado
 from .funciones import *
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','tribunal'])
+def revisiones(request, pk):
+    usuario = request.user
+    grupo = usuario.groups.get().name
+    equipo = get_object_or_404(Equipo, id=pk)
+    if grupo=='tutor':
+        tutor = usuario.datostutor
+        if not Equipo.objects.filter(tutor=tutor):
+            return HttpResponse('error')
+    elif grupo=='docente':
+        docente = usuario.datosdocente
+        if not Equipo.objects.filter(docente=docente):
+            return HttpResponse('error')
+    elif grupo=='tribunal':
+        tribunal = usuario.datostribunal
+        if not Equipo.objects.filter(tribunales=tribunal):
+            return HttpResponse('error')
+    salas_documentos = SalaDocumentoDoc.objects.filter(revisor=usuario, equipo=equipo)
+
+    
+    context = {
+        'grupo': grupo,
+        'equipo': equipo,
+        'salas_documentos': salas_documentos,
+    }
+    return render(request, 'revisar_documentos/revisiones.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor'])
+def configurar(request, pk):
+    revisor = request.user
+    grupo = revisor.groups.get().name
+    equipo = get_object_or_404(Equipo, id=pk)
+
+    if grupo=='docente':
+        docente = revisor.datosdocente
+        if not Equipo.objects.filter(docente=docente):
+            return HttpResponse('error')
+
+    configuracion, created = ConfiguracionSala.objects.get_or_create(usuario=revisor)
+    salas = RevisarDocPersonalizado.objects.filter(usuario=revisor).order_by('orden')
+    salas_pre = RevisarDocPredeterminado.objects.all().order_by('orden')
+    suma_max = 0
+    for sala in salas:
+        suma_max += sala.nota_max
+    
+    context = {
+        'grupo': grupo,
+        'revisor': revisor,
+        'equipo': equipo,
+        'salas': salas,
+        'salas_pre': salas_pre,
+        'configuracion': configuracion,
+        'suma_max': suma_max
+    }
+    if grupo == 'docente':
+        return render(request, 'revisar_documentos/configurar.html', context)
+    else:
+        return render(request, 'revisar_documentos/configurar_revisor.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente', 'tutor'])
+def cambiarPredeterminado(request, pk):
+    revisor = request.user
+    grupo = revisor.groups.get().name
+    equipo = get_object_or_404(Equipo, id=pk)
+    configuracion = ConfiguracionSala.objects.get(usuario=revisor)
+
+    if grupo=='docente':
+        docente = revisor.datosdocente
+        if not Equipo.objects.filter(docente=docente):
+            return HttpResponse('error')
+
+    if request.method == 'POST':
+        if configuracion.is_predeterminado == False:
+            configuracion.is_predeterminado = True
+            configuracion.save()
+        else:
+            configuracion.is_predeterminado = False
+            configuracion.save()
+        return redirect('revisar_documentos:configurar', pk=equipo.id)
+    
+    context = {
+        'grupo': grupo,
+        'revisor': revisor,
+        'equipo': equipo,
+    }
+
+    return render(request, 'revisar_documentos/cambiar_predeterminado.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','tribunal'])
+def crearSalaPersonal(request, pk):
+    revisor = request.user
+    grupo = revisor.groups.get().name
+    equipo = get_object_or_404(Equipo, id=pk)
+
+    if grupo=='docente':
+        docente = revisor.datosdocente
+        if not Equipo.objects.filter(docente=docente):
+            return HttpResponse('error')
+
+    if grupo=='tutor':
+        tutor = revisor.datostutor
+        if not Equipo.objects.filter(tutor=tutor):
+            return HttpResponse('error')
+
+    if grupo=='docente':
+        form = crearRevisarDocPersonalizadoForm()
+    else:
+        form = crearRevisarDocPersonalizadoRevisorForm()
+
+    if request.method == 'POST':
+        if grupo=='docente':
+            form = crearRevisarDocPersonalizadoForm(request.POST)
+        else:
+            form = crearRevisarDocPersonalizadoRevisorForm(request.POST)
+        if form.is_valid():
+            form.instance.usuario = revisor
+            form.instance.tipo = "proyecto"
+            form.save()
+            return redirect('revisar_documentos:configurar', pk=equipo.id)
+    
+    salas = RevisarDocPersonalizado.objects.filter(usuario=revisor, tipo='proyecto')
+    suma_max = 0
+    for sala in salas:
+        suma_max += sala.nota_max
+
+    context = {
+        'grupo': grupo,
+        'revisor': revisor,
+        'equipo': equipo,
+        'suma_max': suma_max,
+        'form': form,
+    }
+    return render(request, 'revisar_documentos/crear_sala_personalizado.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','tribunal'])
+def eliminarSalaPersonal(request, pk_equipo, pk):
+    revisor = request.user
+    grupo = revisor.groups.get().name
+    sala = get_object_or_404(RevisarDocPersonalizado, id=pk)
+    equipo = get_object_or_404(Equipo, id=pk_equipo)
+
+    if not RevisarDocPersonalizado.objects.filter(usuario=revisor):
+        return HttpResponse('error')
+
+    if request.method == 'POST':
+        sala.delete()
+        return redirect('revisar_documentos:configurar', pk=equipo.id)
+    
+    context = {
+        'grupo': grupo,
+        'revisor': revisor,
+        'equipo': equipo,
+    }
+    return render(request, 'revisar_documentos/eliminar_sala.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente','tutor','tribunal'])
+def modificarSalaPersonal(request, pk_equipo, pk):
+    revisor = request.user
+    grupo = revisor.groups.get().name
+    sala = get_object_or_404(RevisarDocPersonalizado, id=pk)
+    equipo = get_object_or_404(Equipo, id=pk_equipo)
+
+    if not RevisarDocPersonalizado.objects.filter(usuario=revisor):
+        return HttpResponse('error')
+
+    if grupo=='docente':
+        form = crearRevisarDocPersonalizadoForm(instance=sala)
+    else:
+        form = crearRevisarDocPersonalizadoRevisorForm(instance=sala)
+
+    if request.method == 'POST':
+        if grupo=='docente':
+            form = crearRevisarDocPersonalizadoForm(request.POST, instance=sala)
+        else:
+            form = crearRevisarDocPersonalizadoRevisorForm(request.POST, instance=sala)
+        if form.is_valid():
+            form.save()
+        return redirect('revisar_documentos:configurar', pk=equipo.id)
+
+    salas = RevisarDocPersonalizado.objects.filter(usuario=revisor, tipo='proyecto')
+    suma_max = 0
+    for sala in salas:
+        suma_max += sala.nota_max
+    
+    context = {
+        'grupo': grupo,
+        'revisor': revisor,
+        'equipo': equipo,
+        'suma_max': suma_max,
+        'form': form,
+    }
+    return render(request, 'revisar_documentos/modificar_sala_personal.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 def revisarDocumentoEstudiante(request, documento, id_revisor):
     usuario = request.user
@@ -29,17 +228,9 @@ def revisarDocumentoEstudiante(request, documento, id_revisor):
         dicc_salas[sala] = no_visto
     suma = 0
     if grupo_revisor.name == 'docente' and sala_doc.tipo == 'proyecto' and salas_revisar.count() > 0:
-        dicc_salas_no_visto_nota = {}
-        no_visto_nota = []
-        for sala, no_visto in dicc_salas.items():
-            nota_sala = NotaSalaRevisarDoc.objects.get(revisor=revisor, sala=sala)
-            no_visto_nota = [no_visto, nota_sala]
-            dicc_salas_no_visto_nota[sala] = no_visto_nota
-        dicc_salas = dicc_salas_no_visto_nota
-        # nota promediada
         suma = 0
-        for no_visto_nota in dicc_salas.values():
-            suma += no_visto_nota[1].nota
+        for sala in salas_revisar:
+            suma += sala.nota
     context = {
             'sala_doc':sala_doc,
             'dicc_salas':dicc_salas,
@@ -143,10 +334,40 @@ def crearSalaRevisar(request, documento, id_sala_doc):
     suma_max = 0
     for sala in salas_revisar:
         suma_max += sala.nota_max
+
     context = {'form':form,
             'suma_max': suma_max,
             'grupo': grupo}
     return render(request, 'revisar_documentos/crear_sala_revisar.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente', 'tutor', 'tribunal'])
+def crearSalaSinNota(request, documento, id_sala_doc):
+    sala_doc = SalaDocumentoDoc.objects.get(id=id_sala_doc)
+    equipo = sala_doc.equipo
+    primer_estudiante = equipo.datosestudiante_set.first()
+    grupo = request.user.groups.get().name
+    if sala_doc.tipo=='perfil':
+        if not actividadRealizadaEstudiante('revisar perfil', primer_estudiante):
+            agregarActividadEquipo('revisar perfil', equipo)
+    elif sala_doc.tipo=='proyecto':
+        if not actividadRealizadaEstudiante('revisar proyecto', primer_estudiante):
+            agregarActividadEquipo('revisar proyecto', equipo)
+    elif sala_doc.tipo=='tribunal':
+        if not actividadRealizadaEstudiante('revisar tribunal', primer_estudiante):
+            agregarActividadEquipo('revisar tribunal', equipo)
+    form = SalaRevisarDocSinNotaForm
+    if request.method == 'POST':
+        form = SalaRevisarDocSinNotaForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.instance.sala_documento = sala_doc
+            form.save()
+            return redirect('revisar_documentos:revisar_documento_revisor', documento=sala_doc.tipo, id_equipo=equipo.id)
+
+    context = {'form':form,
+            'grupo': grupo}
+
+    return render(request, 'revisar_documentos/crear_sala_sin_nota.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente', 'tutor', 'tribunal'])
@@ -165,6 +386,54 @@ def eliminarSalaRevisar(request, id_sala_rev):
     context = {
             'grupo': grupo}
     return render(request, 'revisar_documentos/eliminar_sala.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente', 'tutor', 'tribunal'])
+def cerrarSalaRevisar(request, id_sala_rev):
+    sala_rev = SalaRevisarDoc.objects.get(id=id_sala_rev)
+
+    if not sala_rev.sala_documento.revisor == request.user:
+        return HttpResponse('error')
+    if sala_rev.is_calificado:
+        return HttpResponse('error')
+
+    documento = sala_rev.sala_documento.tipo
+    id_equipo = sala_rev.sala_documento.equipo.id
+    grupo = request.user.groups.get().name
+
+    if request.method == 'POST':
+        sala_rev.is_calificado = True
+        sala_rev.save()
+        return redirect('revisar_documentos:revisar_documento_revisor', documento=documento, id_equipo=id_equipo)
+
+    context = {
+        'grupo': grupo,
+        'sala': sala_rev,
+    }
+
+    return render(request, 'revisar_documentos/cerrar_sala.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['estudiante'])
+def subirDocumento(request, pk):
+    sala_revisar = SalaRevisarDoc.objects.get(id=pk)
+    estudiante = request.user.datosestudiante
+    documento = sala_revisar.sala_documento.tipo
+    revisor = sala_revisar.sala_documento.revisor
+    equipo = estudiante.equipo
+    if sala_revisar.sala_documento.equipo != equipo:
+        return HttpResponse('error')
+    grupo = request.user.groups.get().name
+    form = SubirDocumentoForm(instance=sala_revisar)
+    if request.method == 'POST':
+        form = SubirDocumentoForm(request.POST, request.FILES, instance=sala_revisar)
+        if form.is_valid():
+            form.save()
+            agregarAviso('revisar '+ documento, equipo, revisor)
+            return redirect('revisar_documentos:revisar_documento_estudiante', documento=documento, id_revisor=revisor.id)
+    context = {'form':form,
+            'grupo': grupo}
+    return render(request, 'revisar_documentos/subir_documento.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente'])
@@ -240,6 +509,21 @@ def darVistoBueno(request, id_sala_doc):
     grupo_revisor = sala_doc.revisor.groups.get().name
     grupo = request.user.groups.get().name
     equipo = sala_doc.equipo
+    # suma de nota max
+    suma_max = 0
+    for sala in salas_revisar:
+        suma_max += sala.nota_max
+    # calificacion
+    for sala in salas_revisar:
+        if sala.nota == 0:
+            is_calificacion_todo = False
+        else:
+            is_calificacion_todo = True
+
+    # cerrados, utilizare el is_calificado para este fin.
+    vector_is_calificado = [v.is_calificado for v in salas_revisar]
+    is_cerrado = all(vector_is_calificado)
+
     if grupo_revisor == 'tribunal':
         if actividadRealizadaEstudiante("visto bueno tribunal 1", sala_doc.equipo.datosestudiante_set.first()):
             texto_actividad = f"visto bueno {sala_doc.tipo} 2"
@@ -256,25 +540,23 @@ def darVistoBueno(request, id_sala_doc):
                     perfil = sala_doc.salarevisardoc_set.last().archivo_corregir,    
                 )
             elif sala_doc.tipo == 'proyecto':
-                notas = [s.notasalarevisardoc_set.first().nota for s in salas_revisar]
                 suma = 0
-                for nota in notas:
-                    suma += nota
+                for sala in salas_revisar:
+                    suma += sala.nota
                 proyecto, created = ProyectoDeGrado.objects.get_or_create(equipo=equipo)
                 proyecto.nota_informes_trabajo = suma
                 proyecto.archivo = sala_doc.salarevisardoc_set.last().archivo_corregir    
                 proyecto.save()
-                # ProyectoDeGrado.objects.create(
-                    # equipo = sala_doc.equipo,
-                    # archivo = sala_doc.salarevisardoc_set.last().archivo_corregir,    
-                    # nota_informes_trabajo = suma
-                # )
         sala_doc.visto_bueno = True
         sala_doc.save()
         agregarActividadEquipo(texto_actividad, sala_doc.equipo)
         return redirect('progreso_estudiante', pk=sala_doc.equipo.id)
-    context = {'sala_doc':sala_doc,
-            'grupo':grupo}
+    
+    context = {'sala_doc': sala_doc,
+            'suma_max': suma_max,
+            'is_calificacion_todo': is_calificacion_todo,
+            'is_cerrado': is_cerrado,
+            'grupo': grupo,}
     return render(request, 'revisar_documentos/dar_visto_bueno.html', context)
 
 @login_required(login_url='login')

@@ -14,11 +14,15 @@
   <tbody>
     {% for tribunal in tribunales%}
     <tr>
-      <td><a class="text-underline-hover" 
-    href="{% url 'enlace_tribunal' tribunal.id%}">Ing. {{tribunal.apellido}} {{tribunal.nombre}}</a></td>
-
+      <td>
+        <div class="d-grid gap-2 col-8 mx-auto">
+          <a class="btn btn-primary" href="{% url 'enlace_tribunal' tribunal.id%}">
+            Ing. {{tribunal}}
+          </a>
+        </div>
+      </td>
     {% if grupo == 'administrador'%}
-      <td><a class="text-underline-hover" href="{% url 'eliminar_usuario' tribunal.usuario_id %}">Eliminar</a></td>
+      <td><a class="btn btn-danger" href="{% url 'eliminar_usuario' tribunal.usuario_id %}">Eliminar</a></td>
     {% endif %}
     </tr>
     {% endfor %}

@@ -9,7 +9,7 @@
       <th scope="col">Detalle</th>
       <th scope="col">Documento</th>
       <th scope="col">Revisar</th>
-      <th scope="col">Calificación {{suma}} sobre 22</th>
+      <th scope="col">Estado</th>
     </tr>
   </thead>
   <tbody>
@@ -60,13 +60,13 @@
           {% endif %}
         </td>      
         <td>
-          {% if sala.nota == 0 %}
-            <div class="alert alert-danger p-2 d-inline-flex ">
-              Sin Calificar/{{sala.nota_max}}
+          {% if sala.is_calificado %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              Sala Cerrada
             </div>
           {% else %}
-            <div class="alert alert-success p-2 d-inline-flex ">
-              {{sala.nota}} sobre {{sala.nota_max}}                    
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              Sala Abierta
             </div>
           {% endif %}
         </td>      

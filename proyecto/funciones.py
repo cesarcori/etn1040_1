@@ -9,7 +9,6 @@ from django.http import FileResponse
 from .models import ActividadesCronograma, Equipo, RegistroPerfil, DatosDocente, Sala
 from actividades.funciones import progress
 from random import choice
-from actividades.models import AvisoActividad
 from mensaje.funciones import isVisto
 
 
@@ -38,64 +37,6 @@ def isVistoUsuario(usuario_request, usuario):
     else:
         is_visto = True
     return is_visto
-
-def avisosEstudiantes(datos_est, usuario):
-    avisos = AvisoActividad.objects.filter(usuario=usuario)
-    grupo = usuario.groups.get().name
-    datos_estudiantes = {}
-    for dato_est in datos_est:
-        aviso_estudiante = avisos.filter(equipo=dato_est.equipo)
-        if aviso_estudiante.exists():
-            lista_actividades = aviso_estudiante[0].actividades.all()
-            if lista_actividades.count() != 0:
-                nombre_actividades = [f"{n}: {a.nombre}" for n, a in enumerate(lista_actividades, 1)]
-                mensaje = "\n".join(nombre_actividades)
-            else:
-                mensaje = "No realizó actividad nueva"
-            if grupo == 'tutor' or grupo == 'docente':
-                datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje,
-                    isVisto(dato_est.usuario, usuario)]
-            else:
-                datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje]
-        else:
-            if grupo == 'tutor' or grupo == 'docente':
-                datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad", isVisto(dato_est.usuario, usuario)]
-            else:
-                datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad"]
-    orden_datos_estudiantes = dict(sorted(datos_estudiantes.items(), key=lambda cantidad: cantidad[1][0], reverse=True))
-    return orden_datos_estudiantes
-
-def avisosEquipos(equipos_multiple, usuario):
-    avisos = AvisoActividad.objects.filter(usuario=usuario)
-    datos_equipos= {}
-    for equipo in equipos_multiple:
-        aviso_equipo = avisos.filter(equipo=equipo)
-        if aviso_equipo.exists():
-            lista_actividades = aviso_equipo[0].actividades.all()
-            if lista_actividades.count() != 0:
-                nombre_actividades = [f"{n}: {a.nombre}" for n, a in enumerate(lista_actividades, 1)]
-                mensaje = "\n".join(nombre_actividades)
-            else:
-                mensaje = "No realizó actividad nueva"
-            datos_equipos[equipo] = [aviso_equipo[0].actividades.all().count(), mensaje]
-        else:
-            datos_equipos[equipo] = [0, "No tiene ninguna actividad"]
-    orden_datos_equipos = dict(sorted(datos_equipos.items(), key=lambda cantidad: cantidad[1][0], reverse=True))
-    return orden_datos_equipos
-
-def marcarAvisosVistos(equipo, usuario):
-    aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=equipo)
-    if aviso.exists():
-        aviso[0].actividades.clear()
-
-def mensajesAvisosLista(equipo, usuario):
-    aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=equipo)
-    if aviso.exists():
-        lista_actividades = aviso[0].actividades.all()
-        mensajes = [f"{n.nombre}" for n in lista_actividades]
-    else:
-        mensajes = []
-    return mensajes
 
 def sorteoDocente(estudiante):
     ''' Lo que realiza el algoritmo es:

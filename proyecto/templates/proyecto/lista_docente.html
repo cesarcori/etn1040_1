@@ -7,7 +7,7 @@
   <thead>
     <tr>
       <th scope="col">Grupo</th>
-      <th scope="col">Docente</th>
+      <th scope="col" class="text-center">Docente</th>
       <th scope="col">Mención</th>
       {% if not grupo == 'director'%}
       <th scope="col">Eliminar</th>
@@ -17,12 +17,17 @@
   <tbody>
     {% for docente in docentes %}
     <tr>
-        <td>{{docente.grupo}}</td>
-      <td><a class="text-underline-hover" href="{% url 'enlace_docente' docente.id %}">{{docente.apellido}},
-              {{docente.nombre}}</a></td>
+      <td>{{docente.grupo}}</td>
+      <td>
+        <div class="d-grid gap-2 col-8 mx-auto">
+          <a class="btn btn-primary" href="{% url 'enlace_docente' docente.id %}">
+            {{docente}}
+          </a>
+        </div>
+      </td>
         <td>{{docente.mencion}}</td>
       {% if not grupo == 'director'%}
-        <td><a class="text-underline-hover" href="{% url 'eliminar_usuario' docente.usuario_id %}">Eliminar</a></td>
+        <td><a class="btn btn-danger" href="{% url 'eliminar_usuario' docente.usuario_id %}">Eliminar</a></td>
       {% endif %}
     </tr>
     {% endfor %}

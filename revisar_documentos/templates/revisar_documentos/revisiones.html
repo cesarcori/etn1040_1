@@ -1,0 +1,27 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+
+{% if grupo == 'tutor' or grupo == 'docente'%}
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "perfil" equipo.id %}>
+      Perfil
+    </a>
+    <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
+      Borrador de Proyecto de Grado
+    </a>
+  </div>
+{% endif %}
+
+{% if grupo == 'tribunal' %}
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "tribunal" equipo.id %}>
+      Proyecto de Grado
+    </a>
+  </div>
+{% endif %}
+
+<a class="btn btn-danger" href={% url "progreso_estudiante" equipo.id %}>
+  Atrás
+</a>
+
+{% endblock %} 

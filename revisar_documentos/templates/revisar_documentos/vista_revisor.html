@@ -5,6 +5,7 @@
       {% if sala_doc.equipo.cantidad > 1%}
         <th scope="col">Creador</th>
       {% endif %}
+      <th scope="col">Cerrar Sala</th>
       <th scope="col">Asunto</th>
       <th scope="col">Detalle</th>
       <th scope="col">
@@ -15,7 +16,7 @@
             <div class="d-inline p-2 bg-success text-white">Visto Bueno OK</div>
           {% else %}
             {% if dicc_salas %}
-              <a href="{% url 'revisar:dar_visto_bueno' sala_doc.id %}" type="button" class="btn btn-outline-danger btn-sm" 
+              <a href="{% url 'revisar_documentos:dar_visto_bueno' sala_doc.id %}" class="btn btn-outline-danger btn-sm" 
               data-bs-toggle="tooltip" data-bs-placement="right" title="Dar Visto Bueno">
               Dar Visto Bueno</a>
             {% else %}
@@ -31,11 +32,23 @@
       {% else %}
         <th scope="col">Revisar</th>
       {% endif %}
+      <th scope="col">Eliminar</th>
     </tr>
   </thead>
   <tbody>
     {%for sala, no_visto in dicc_salas.items %}
         <tr>
+          <td>
+          {% if sala.is_calificado %}
+            <div class="alert alert-success" role="alert">
+              Sala Cerrada
+            </div>
+          {% else %}
+            <a class="btn btn-warning" href={% url "revisar_documentos:cerrar_sala_revisar" sala.id %}>
+              Cerrar
+            </a>
+          {% endif %}
+          </td>
           {% if sala_doc.equipo.cantidad > 1%}
             <td>
               {{sala.creado_por}} 
@@ -59,10 +72,16 @@
             </div>
           </td>      
           <td>
-              <a class="btn btn-primary" target=_blank href="{{ sala.archivo_corregir.url }}">{{sala_doc.tipo|title}}</a>
+              {% if sala.archivo_corregir %}
+                <a class="btn btn-primary" target=_blank href="{{ sala.archivo_corregir.url }}">{{sala_doc.tipo|title}}</a>
+              {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                  El estudiante no subió aún el archivo
+                </div>
+              {% endif %}
           </td>      
           <td>
-            <a class="btn btn-primary position-relative" href={% url 'revisar:mensajes' sala.id %} type="button" name="observacion">
+            <a class="btn btn-primary position-relative" href={% url 'revisar_documentos:mensajes' sala.id %} type="button" name="observacion">
                 Observación
             {% if no_visto == 0 %}
                 </a>
@@ -74,6 +93,13 @@
                 </a>
             {% endif %}
           </td>      
+          <td>
+            {% if not sala.is_calificado %}
+              <a class="btn btn-danger" href={% url "revisar_documentos:eliminar_sala_revisar" sala.id %}>
+                Eliminar
+              </a>
+            {% endif %}
+          </td>
         </tr>
     {%endfor%}
   </tbody>

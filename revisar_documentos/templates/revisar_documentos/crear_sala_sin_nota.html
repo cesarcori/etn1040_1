@@ -1,0 +1,20 @@
+{% extends 'proyecto/main.html' %}
+{% block content %}
+<h3>Crear sala de revisión</h3>
+{% if not suma_max >= 22 %}
+  <div class="mb-3">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
+      <button type="submit" name='enviar' class="btn btn-success" value='enviar'>
+        Crear
+      </button>
+    </form>
+  </div>
+{% else %}
+  <h3>Ya no se puede crear más salas</h3>
+  <a class="btn btn-danger" href="{{ request.META.HTTP_REFERER }}">Atras</a>
+{% endif %}
+
+{% endblock %}

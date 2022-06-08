@@ -1,0 +1,18 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+{% if sala.archivo_corregir %}
+  <h3>¿Seguro que desea cerrar la sala? </h3>
+  <form method="POST">
+      {% csrf_token %}
+      <div class="d-flex justify-content-evenly">
+      <button type="submit" name='confirmar' class="btn btn-success" 
+      value='si'>Confirmar</button>
+      </div>
+  </form>
+{% else %}
+  <h3>El estudiante no cargó el archivo</h3>
+{% endif %}
+
+<button class="btn btn-danger" onclick="history.back()">Atrás</button>
+
+{% endblock content%}

@@ -1,11 +1,80 @@
 from datetime import date, timedelta
 from django.http import HttpResponse
 from django.http import FileResponse
-from .models import Actividad
+
+from .models import *
+
 from proyecto.models import ActividadesCronograma, Equipo, RegistroPerfil
+from mensaje.funciones import isVisto
+
+def mensajesAvisosLista(equipo, usuario):
+    aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=equipo)
+    if aviso.exists():
+        lista_actividades = aviso[0].actividades.all()
+        mensajes = [f"{n.nombre}" for n in lista_actividades]
+    else:
+        mensajes = []
+    return mensajes
+
+def avisosEstudiantes(datos_est, usuario):
+    avisos = AvisoActividad.objects.filter(usuario=usuario)
+    grupo = usuario.groups.get().name
+    datos_estudiantes = {}
+    for dato_est in datos_est:
+        aviso_estudiante = avisos.filter(equipo=dato_est.equipo)
+        if aviso_estudiante.exists():
+            lista_actividades = aviso_estudiante[0].actividades.all()
+            if lista_actividades.count() != 0:
+                nombre_actividades = [f"{n}: {a.nombre}" for n, a in enumerate(lista_actividades, 1)]
+                mensaje = "\n".join(nombre_actividades)
+            else:
+                mensaje = "No realizó actividad nueva"
+            if grupo == 'tutor' or grupo == 'docente':
+                datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje,
+                    isVisto(dato_est.usuario, usuario)]
+            else:
+                datos_estudiantes[dato_est] = [aviso_estudiante[0].actividades.all().count(), mensaje]
+        else:
+            if grupo == 'tutor' or grupo == 'docente':
+                datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad", isVisto(dato_est.usuario, usuario)]
+            else:
+                datos_estudiantes[dato_est] = [0, "No tiene ninguna actividad"]
+    orden_datos_estudiantes = dict(sorted(datos_estudiantes.items(), key=lambda cantidad: cantidad[1][0], reverse=True))
+    return orden_datos_estudiantes
+
+def avisosEquipos(equipos_multiple, usuario):
+    avisos = AvisoActividad.objects.filter(usuario=usuario)
+    datos_equipos= {}
+    for equipo in equipos_multiple:
+        aviso_equipo = avisos.filter(equipo=equipo)
+        if aviso_equipo.exists():
+            lista_actividades = aviso_equipo[0].actividades.all()
+            if lista_actividades.count() != 0:
+                nombre_actividades = [f"{n}: {a.nombre}" for n, a in enumerate(lista_actividades, 1)]
+                mensaje = "\n".join(nombre_actividades)
+            else:
+                mensaje = "No realizó actividad nueva"
+            datos_equipos[equipo] = [aviso_equipo[0].actividades.all().count(), mensaje]
+        else:
+            datos_equipos[equipo] = [0, "No tiene ninguna actividad"]
+    orden_datos_equipos = dict(sorted(datos_equipos.items(), key=lambda cantidad: cantidad[1][0], reverse=True))
+    return orden_datos_equipos
+
+def agregarAviso(texto_actividad, equipo, usuario):
+    aviso, created = AvisoActividad.objects.get_or_create(
+        usuario=usuario, 
+        equipo=equipo,
+    )
+    actividad = Actividad.objects.get(nombre=texto_actividad)
+    aviso.actividades.add(actividad) 
+    aviso.save()
+
+def marcarAvisosVistos(equipo, usuario):
+    aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=equipo)
+    if aviso.exists():
+        aviso[0].actividades.clear()
 
 def progress(estudiante):
-
     actividades = Actividad.objects.all()
     actividades_estudiante = estudiante.actividad.all()
     suma_valores = 0
@@ -19,13 +88,11 @@ def progress(estudiante):
     return progreso_sobre_100
 
 def agregarActividadEstudiante(texto_actividad, estudiante):
-
     actividad = Actividad.objects.get(nombre=texto_actividad)
     estudiante.actividad.add(actividad)
     estudiante.save()
 
 def agregarActividadEquipo(texto_actividad, equipo):
-
     estudiantes = equipo.datosestudiante_set.all()
     for estudiante in estudiantes:
         actividad = Actividad.objects.get(nombre=texto_actividad)
@@ -33,12 +100,10 @@ def agregarActividadEquipo(texto_actividad, equipo):
         estudiante.save()
 
 def actividadRealizadaEstudiante(texto_actividad, estudiante):
-
     hecho = estudiante.actividad.filter(nombre=texto_actividad).exists()
     return hecho
 
 def pasosRealizados(estudiante):
-
     pasos = {1:2, 2:3, 3:7, 4:13, 5:18, 6:26}
     cantidad_actividades = estudiante.actividad.all().count()
     pasos_realizados = []
@@ -52,7 +117,6 @@ def pasosRealizados(estudiante):
     return pasos_realizados
 
 def informarCronograma(pk):
-    
     equipo = Equipo.objects.get(id=pk)
     cronograma_existe = ActividadesCronograma.objects.filter(equipo=equipo).exists()
     estudiante = equipo.datosestudiante_set.first()
@@ -167,7 +231,6 @@ def informarCronograma(pk):
     return context
 
 def diasRestantes(pk):
-    
     equipo = Equipo.objects.get(id=pk)
     cronograma_existe = ActividadesCronograma.objects.filter(equipo=equipo).exists()
     estudiante = equipo.datosestudiante_set.first()

@@ -1,15 +1,18 @@
 {% extends 'proyecto/main.html'%}
 {% block content%}
-{% if is_ultima_sala and not sala.sala_documento.visto_bueno %}
+{% comment %}{% if is_ultima_sala and not sala.sala_documento.visto_bueno%}{% endcomment %}
+{% if not sala.is_calificado %}
   <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     {% if grupo == 'estudiante'%}
-      <a class="btn btn-danger" 
-      href={%url 'revisar_documentos:revisar_documento_estudiante' sala.sala_documento.tipo sala.sala_documento.revisor.id %} name='atras'> Atras</a>
+      <a class="btn btn-danger" href={%url 'revisar_documentos:revisar_documento_estudiante' sala.sala_documento.tipo sala.sala_documento.revisor.id %} name='atras'>
+        Atras
+      </a>
     {% else %}
-      <a class="btn btn-danger" 
-      href={%url 'revisar_documentos:revisar_documento_revisor' sala.sala_documento.tipo sala.sala_documento.equipo.id %}>Atras</a>
+      <a class="btn btn-danger" href={%url 'revisar_documentos:revisar_documento_revisor' sala.sala_documento.tipo sala.sala_documento.equipo.id %}>
+        Atras
+      </a>
     {% endif %}
     <button type="submit" name='enviar' class="btn btn-success"
     value='enviar'>Enviar</button>
@@ -37,10 +40,10 @@
                     aria-labelledby="headingDocente" 
                     data-bs-parent="#accordionExample">
       <div class="accordion-body">
-{%for mensaje in mensajes%}
-  <strong>{{mensaje.usuario.groups.get|title}} - {{mensaje.usuario.first_name}}: </strong>{{mensaje.mensaje}}
-  <div class="card-subtitle mb-2 text-muted">{{mensaje.fecha_creacion}}</div>
-{%endfor%}
+        {%for mensaje in mensajes%}
+          <strong>{{mensaje.usuario.groups.get|title}} - {{mensaje.usuario.first_name}}: </strong>{{mensaje.mensaje}}
+          <div class="card-subtitle mb-2 text-muted">{{mensaje.fecha_creacion}}</div>
+        {%endfor%}
       </div>
     </div>
   </div>

@@ -2,18 +2,18 @@ from django.shortcuts import render, get_object_or_404
 
 from datetime import date, timedelta
 
-from revisar.models import SalaDocumentoApp, SalaRevisarApp
+from revisar_documentos.models import SalaDocumentoDoc, SalaRevisarDoc
 from proyecto.models import Equipo
 
 def resumen(request, pk):
     grupo = request.user.groups.get().name
     equipo = get_object_or_404(Equipo, id=pk)
-    salas = SalaDocumentoApp.objects.filter(equipo=equipo).order_by('-fecha_creacion')
+    salas = SalaDocumentoDoc.objects.filter(equipo=equipo).order_by('-fecha_creacion')
     # el total de salas que se puede tener son 6 maximo.
     dicc_salaDoc_days = {}
     for sala in salas:
-        if sala.salarevisarapp_set.first():
-            fecha_presentacion = sala.salarevisarapp_set.first().fecha_creacion
+        if sala.salarevisardoc_set.first():
+            fecha_presentacion = sala.salarevisardoc_set.first().fecha_creacion
             fecha_visto_bueno = sala.updated
             if sala.visto_bueno:
                 duration = fecha_visto_bueno - fecha_presentacion

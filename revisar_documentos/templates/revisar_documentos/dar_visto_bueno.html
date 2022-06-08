@@ -1,14 +1,35 @@
 {% extends 'proyecto/main.html'%}
 {% block content%}
-<h3>Seguro que desea dar el visto bueno al {{sala_doc.tipo|capfirst}} del estudiante: {{sala_doc.estudiante}} </h3>
-<form method="POST">
-    {% csrf_token %}
-    <div class="d-flex justify-content-evenly">
-    {% comment %}<a class="btn btn-danger" href={% url 'progreso_estudiante' sala_doc.equipo.id %}>Aún no</a>{% endcomment %}
-    <button type="submit" name='confirmar' class="btn btn-success" 
-    value='si'>Confirmar</button>
-    </div>
-</form>
+{% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
+  {% if not suma_max == 22 %}
+    <h3>La suma Max. Nota, debe ser igual a 22 puntos</h3>
+  {% elif not is_calificacion_todo %}
+    <h3>No se calificó todas las salas</h3>
+  {% else%}
+    <h3>Seguro que desea dar el visto bueno al {{sala_doc.tipo|capfirst}} del estudiante: {{sala_doc.estudiante}} </h3>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="d-flex justify-content-evenly">
+        {% comment %}<a class="btn btn-danger" href={% url 'progreso_estudiante' sala_doc.equipo.id %}>Aún no</a>{% endcomment %}
+        <button type="submit" name='confirmar' class="btn btn-success" 
+        value='si'>Confirmar</button>
+        </div>
+    </form>
+  {% endif %}
+{% else%}
+  {% if not is_cerrado %}
+    <h3>No se cerraron todas las salas</h3>
+  {% else%}
+    <h3>Seguro que desea dar el visto bueno al {{sala_doc.tipo|capfirst}} del estudiante: {{sala_doc.estudiante}} </h3>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="d-flex justify-content-evenly">
+        <button type="submit" name='confirmar' class="btn btn-success" 
+        value='si'>Confirmar</button>
+        </div>
+    </form>
+  {% endif %}
+{% endif %}
 
 <button class="btn btn-danger" onclick="history.back()">Cancelar</button>
 

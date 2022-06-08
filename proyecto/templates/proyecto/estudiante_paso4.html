@@ -13,7 +13,7 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
   <tbody>
     <tr>
       <td>
-        <a href={%url 'revisar:revisar_documento' sala_doc.tipo sala_doc.revisor.id %} name='revisar_documento'>Revisión de Perfil</a>
+        <a href={%url 'revisar_documentos:revisar_documento_estudiante' sala_doc.tipo sala_doc.revisor.id %}>Revisión de Perfil</a>
       </td>
       <td>
         {% if sala_doc.grupo_revisor.name == 'docente' and sala_doc.visto_bueno%}

@@ -8,7 +8,7 @@
 <h3>La nota se promediará con la del otro tribunal</h3>
 <h3>Se debe calificar sobre el 60 %</h3>
 
-<form method='post' >
+<form method="POST" enctype="multipart/form-data" name="myForm" onsubmit="return comprobar()">
     {% csrf_token %}
     {{form.as_p}}
     <div class="d-flex justify-content-evenly">
@@ -16,5 +16,15 @@
       <button class="btn btn-success" type="submit">Calificar</button>
     </div>
 </form>
+
+<script>
+  function comprobar() {
+    let nota = parseFloat(document.forms["myForm"]["id_nota"].value);
+    if ( nota == 0 ) {
+      alert(`No asignar nota cero.`);
+      return false;
+    } 
+  };
+</script>
 
 {% endblock %}

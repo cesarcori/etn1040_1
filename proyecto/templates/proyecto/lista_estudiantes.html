@@ -24,49 +24,18 @@
       <tr>
         {%if grupo == 'administrador'%}
           <th scope="row">{{est.registro_uni}}</th>
-          <td><a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+          <td>
+            <div class="d-grid gap-2 col-8 mx-auto">
+              <a class="text-underline-hover" href="{% url 'enlace_estudiante' est.id %}">
+                {{est}}
+              </a>
+            </div>
+          </td>
         {%endif%}
 
         {%if grupo == 'docente' %}
           <td>
-            <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
-              type="button" class="btn btn-primary position-relative"
-              data-bs-toggle="tooltip" data-bs-placement="right" 
-              title="{{cantidad_aviso.1}}">
-              {{est}}
-              {% if cantidad_aviso.0 != 0 %}
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {{cantidad_aviso.0}}
-                  <span class="visually-hidden">unread messages</span>
-                </span>
-              {% endif %}
-            </a>
-          </td>
-        {%endif%}
-
-        {%if grupo == 'director' %}
-          <td>
-            <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
-              type="button" class="btn btn-primary position-relative"
-              data-bs-toggle="tooltip" data-bs-placement="right" 
-              title="{{cantidad_aviso.1}}">
-              {{est}}
-              {% if cantidad_aviso.0 != 0 %}
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {{cantidad_aviso.0}}
-                  <span class="visually-hidden">unread messages</span>
-                </span>
-              {% endif %}
-            </a>
-          </td>
-          <th scope="row">{{est.celular}}</th>
-          <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
-          <td scope="row"><a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
-        {%endif%}
-
-        {%if grupo == 'tutor' %}
-          {%if est.equipo.tutor_acepto%}
-            <td>
+            <div class="d-grid gap-2 col-8 mx-auto">
               <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
                 type="button" class="btn btn-primary position-relative"
                 data-bs-toggle="tooltip" data-bs-placement="right" 
@@ -79,6 +48,49 @@
                   </span>
                 {% endif %}
               </a>
+            </div>
+          </td>
+        {%endif%}
+
+        {%if grupo == 'director' %}
+          <td>
+            <div class="d-grid gap-2 col-8 mx-auto">
+              <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
+                type="button" class="btn btn-primary position-relative"
+                data-bs-toggle="tooltip" data-bs-placement="right" 
+                title="{{cantidad_aviso.1}}">
+                {{est}}
+                {% if cantidad_aviso.0 != 0 %}
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{cantidad_aviso.0}}
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+                {% endif %}
+              </a>
+            </div>
+          </td>
+          <th scope="row">{{est.celular}}</th>
+          <th scope="row"><a href="mailto:{{est.correo}}?Subject=">{{est.correo}}</a></th>
+          <td scope="row"><a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id%}">Info</a></td>
+        {%endif%}
+
+        {%if grupo == 'tutor' %}
+          {%if est.equipo.tutor_acepto%}
+            <td>
+              <div class="d-grid gap-2 col-8 mx-auto">
+                <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
+                  type="button" class="btn btn-primary position-relative"
+                  data-bs-toggle="tooltip" data-bs-placement="right" 
+                  title="{{cantidad_aviso.1}}">
+                  {{est}}
+                  {% if cantidad_aviso.0 != 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      {{cantidad_aviso.0}}
+                      <span class="visually-hidden">unread messages</span>
+                    </span>
+                  {% endif %}
+                </a>
+              </div>
             </td>
 
           {% else %}
@@ -95,25 +107,25 @@
 
         {%if grupo == 'tribunal' %}
           <td>
-            <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
-              type="button" class="btn btn-primary position-relative"
-              data-bs-toggle="tooltip" data-bs-placement="right" 
-              title="{{cantidad_aviso.1}}">
-              {{est}}
-              {% if cantidad_aviso.0 != 0 %}
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {{cantidad_aviso.0}}
-                  <span class="visually-hidden">unread messages</span>
-                </span>
-              {% endif %}
-            </a>
+            <div class="d-grid gap-2 col-8 mx-auto">
+              <a href="{% url 'progreso_estudiante' est.equipo.id %}" 
+                type="button" class="btn btn-primary position-relative"
+                data-bs-toggle="tooltip" data-bs-placement="right" 
+                title="{{cantidad_aviso.1}}">
+                {{est}}
+                {% if cantidad_aviso.0 != 0 %}
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{cantidad_aviso.0}}
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+                {% endif %}
+              </a>
+            </div>
           </td>
         {%endif%}
 
         {% if grupo == 'estudiante' or grupo == 'administrador' or grupo == 'docente' or grupo == 'tutor'%}
           <td>
-            <!--<a href="{% url 'mensaje_personal' est.usuario.pk %}">Mensajes</a>-->
-            <!--<a href="{% url 'mensaje_personal' est.usuario.pk %}" class="btn btn-primary position-relative">-->
             <a href="{% url 'mensaje:enviar_mensaje_par' est.usuario.pk %}" class="btn btn-primary position-relative">
               Mensajes
               {% if not cantidad_aviso.2 %}

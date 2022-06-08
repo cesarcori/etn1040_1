@@ -5,30 +5,32 @@
 {% else %}
   <h3>Asignar Tribunal a {{equipo.datosestudiante_set.get}}</h3>
 {% endif %}
-El estudiante tiene a tribunal:<br>
-{% for tribunal in equipo.tribunales.all %}
-{{tribunal}}<br>
-{% endfor %}
-<a class="btn btn-danger" href={%url 'progreso_estudiante' equipo.id %}>Atras</a>
+<h4>Se asignaron a los siguientes docentes como tribunales</h4>
+<div class="text-center">
+  {% for tribunal in equipo.tribunales.all %}
+    <h2>{{tribunal}}</h2>
+  {% endfor %}
+</div>
 {% if equipo.tribunales.count < 2%}
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Tribunal</th>
-      <th scope="col">Asignar</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for tribunal in tribunales%}
-    <tr>
-      <td><a class="text-underline-hover" 
-    href="{% url 'enlace_tribunal' tribunal.id%}">Ing. {{tribunal.apellido}} {{tribunal.nombre}}</a></td>
-      <td>
-      <a class="btn btn-warning" href={% url 'confirmar_asignar_tribunal' equipo.id tribunal.id%}>Asignar Tribunal</a></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Tribunal</th>
+        <th scope="col">Asignar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tribunal in tribunales%}
+      <tr>
+        <td><a class="text-underline-hover" 
+      href="{% url 'enlace_tribunal' tribunal.id%}">Ing. {{tribunal.apellido}} {{tribunal.nombre}}</a></td>
+        <td>
+        <a class="btn btn-warning" href={% url 'confirmar_asignar_tribunal' equipo.id tribunal.id%}>Asignar Tribunal</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endif %}
+<a class="btn btn-danger" href={%url 'progreso_estudiante' equipo.id %}>Atras</a>
 {% endblock %}
 

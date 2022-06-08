@@ -29,3 +29,18 @@ def crearSalasPredeterminadas(query_set, sala_documento):
             detalle = detalle,
             nota_max = nota_max,
         )
+
+def crearSalasPersonalizado(query_set, sala_documento):
+    """ Se crean las salas según consulta a base de datos RevisarDocPersonalizado;
+    en ahí se encuentra la lista con la cuál se creará las salas."""
+    for query in query_set:
+        asunto = query.asunto
+        detalle = query.detalle
+        nota_max = query.nota_max
+        SalaRevisarDoc.objects.create(
+            sala_documento = sala_documento,
+            asunto = asunto, 
+            detalle = detalle,
+            nota_max = nota_max,
+        )
+

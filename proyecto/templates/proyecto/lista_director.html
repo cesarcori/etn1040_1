@@ -14,9 +14,11 @@
     {% for director in directores %}
     <tr>
       <td>
-        <a class="text-underline-hover" href="{% url 'enlace_director' director.id %}">
-          {{director}}
-        </a>
+        <div class="d-grid gap-2 col-8 mx-auto">
+          <a class="btn btn-primary" href="{% url 'enlace_director' director.id %}">
+            {{director}}
+          </a>
+        </div>
       </td>
       <td>
         <strong>{{director.celular}}</strong>

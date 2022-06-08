@@ -5,7 +5,7 @@
 <table class="sortable table table-striped">
   <thead>
     <tr>
-      <th scope="col">Tutor</th>
+      <th scope="col" class="text-center">Tutor</th>
     {% if grupo == 'administrador'%}
       <th scope="col">Eliminar</th>
     {% endif %}
@@ -14,11 +14,15 @@
   <tbody>
     {% for tutor in tutores %}
     <tr>
-      <td><a class="text-underline-hover" 
-    href="{% url 'enlace_tutor' tutor.id%}">Ing. {{tutor.apellido}} {{tutor.nombre}}</a></td>
-
+      <td>
+        <div class="d-grid gap-2 col-8 mx-auto">
+          <a class="btn btn-primary" href="{% url 'enlace_tutor' tutor.id%}">
+            Ing. {{tutor}}
+          </a>
+        </div>
+      </td>
     {% if grupo == 'administrador'%}
-      <td><a class="text-underline-hover" href="{% url 'eliminar_usuario' tutor.usuario_id %}">Eliminar</a></td>
+      <td><a class="btn btn-danger" href="{% url 'eliminar_usuario' tutor.usuario_id %}">Eliminar</a></td>
     {% endif %}
     </tr>
     {% endfor %}

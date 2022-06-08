@@ -9,7 +9,7 @@
   Nota recomendada: {{nota_tiempo}}
 </p>
 
-<form method='post' >
+<form method="POST" enctype="multipart/form-data" name="myForm" onsubmit="return comprobar()">
   {% csrf_token %}
   {{form.as_p}}
   <div class="d-flex justify-content-evenly">
@@ -17,5 +17,19 @@
     <button class="btn btn-success" type="submit">Confirmar</button>
   </div>
 </form>
+
+<script>
+  function comprobar() {
+    let nota_crono = parseFloat(document.forms["myForm"]["id_nota_cumplimiento_cronograma"].value);
+    let nota_semina = parseFloat(document.forms["myForm"]["id_nota_expos_seminarios"].value);
+    if ( nota_crono == 0 ) {
+      alert(`No asignar nota Cumplimiento Cronograma cero.`);
+      return false;
+    } else if (nota_semina == 0) {
+      alert(`No asignar nota Exposiciones o Seminarios cero.`);
+      return false;
+    }
+  };
+</script>
 
 {% endblock %}

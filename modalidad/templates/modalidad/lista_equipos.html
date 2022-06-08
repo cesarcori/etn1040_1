@@ -13,7 +13,30 @@
         {% if grupo == 'tutor' %}
           {%if equipo.tutor_acepto%}
             <td>
-              <!--<a class="text-underline-hover" href="{% url 'progreso_estudiante' equipo.pk %}">{{equipo.alias}}</a>-->
+              <div class="d-grid gap-2 col-8 mx-auto">
+                <a href="{% url 'progreso_estudiante' equipo.pk %}" 
+                  type="button" class="btn btn-primary position-relative"
+                  data-bs-toggle="tooltip" data-bs-placement="right" 
+                  title="{{cantidad_aviso.1}}">
+                  {{equipo.alias}}
+                  {% if cantidad_aviso.0 != 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      {{cantidad_aviso.0}}
+                      <span class="visually-hidden">unread messages</span>
+                    </span>
+                  {% endif %}
+                </a>
+              </div>
+            </td>
+          {% else %}
+            <td>
+              <a class="text-underline-hover" href="{% url 'solicitud_tutoria' equipo.id %}" 
+                name='solicitud_tutoria'><strong>Solicitud</strong> {{equipo.alias}}</a>
+            </td>
+          {% endif %}
+        {% else %}
+          <td>
+            <div class="d-grid gap-2 col-8 mx-auto">
               <a href="{% url 'progreso_estudiante' equipo.pk %}" 
                 type="button" class="btn btn-primary position-relative"
                 data-bs-toggle="tooltip" data-bs-placement="right" 
@@ -26,28 +49,7 @@
                   </span>
                 {% endif %}
               </a>
-            </td>
-          {% else %}
-            <td>
-              <a class="text-underline-hover" href="{% url 'solicitud_tutoria' equipo.id %}" 
-                name='solicitud_tutoria'><strong>Solicitud</strong> {{equipo.alias}}</a>
-            </td>
-          {% endif %}
-        {% else %}
-          <td>
-            <!--<a class="text-underline-hover" href="{% url 'progreso_estudiante' equipo.pk %}">{{equipo.alias}}</a>-->
-            <a href="{% url 'progreso_estudiante' equipo.pk %}" 
-              type="button" class="btn btn-primary position-relative"
-              data-bs-toggle="tooltip" data-bs-placement="right" 
-              title="{{cantidad_aviso.1}}">
-              {{equipo.alias}}
-              {% if cantidad_aviso.0 != 0 %}
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {{cantidad_aviso.0}}
-                  <span class="visually-hidden">unread messages</span>
-                </span>
-              {% endif %}
-            </a>
+            </div>
           </td>
         {% endif %}
         <td>

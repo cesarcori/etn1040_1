@@ -21,7 +21,7 @@ from .decorators import unauthenticated_user, allowed_users, admin_only
 from .decorators import *
 from .forms import *
 from .models import *
-from revisar.models import *
+from revisar_documentos.models import *
 from actividades.models import *
 from actividades.funciones import *
 from .cartas import *
@@ -334,12 +334,12 @@ def confirmarAsignarTribunal(request, pk_equi, id_trib):
         if confirmar_estudio == 'si':
             if equipo.tribunales.count() < 2:
                 equipo.tribunales.add(tribunal)
-                SalaDocumentoApp.objects.create(
-                    revisor = tribunal.usuario,    
-                    grupo_revisor = tribunal.usuario.groups.get(),
-                    equipo = equipo,
-                    tipo = 'tribunal',
-                    )
+                # SalaDocumentoDoc.objects.create(
+                    # revisor = tribunal.usuario,    
+                    # grupo_revisor = tribunal.usuario.groups.get(),
+                    # equipo = equipo,
+                    # tipo = 'tribunal',
+                    # )
                 if equipo.tribunales.count() == 2:
                     agregarActividadEquipo("asignacion de tribunal", equipo)
             else:
@@ -459,19 +459,19 @@ def solicitudTutoria(request, pk):
             estudiante.actividad.add(actividad)
             estudiante.save()
         # crear sala de documento perfil tutor
-        SalaDocumentoApp.objects.create(
-            revisor = tutor.usuario,    
-            grupo_revisor = tutor.usuario.groups.get(),
-            equipo = equipo,
-            tipo = 'perfil',
-            )
+        # SalaDocumentoDoc.objects.create(
+            # revisor = tutor.usuario,    
+            # grupo_revisor = tutor.usuario.groups.get(),
+            # equipo = equipo,
+            # tipo = 'perfil',
+            # )
         # creacion sala documento perfil docente
-        SalaDocumentoApp.objects.create(
-            revisor = docente.usuario,    
-            grupo_revisor = docente.usuario.groups.get(),
-            equipo = equipo,
-            tipo = 'perfil',
-            )
+        # SalaDocumentoDoc.objects.create(
+            # revisor = docente.usuario,    
+            # grupo_revisor = docente.usuario.groups.get(),
+            # equipo = equipo,
+            # tipo = 'perfil',
+            # )
         return redirect('tutor')
     if rechazar == 'si':
         # estudiante.tutor = None
@@ -855,6 +855,11 @@ def progresoEstudiante(request, pk):
     # else: 
         # tribunales = equipo.tribunales.all()
     tribunales = equipo.tribunales.all()
+    tribunales_vb = {}
+    for tribunal in tribunales:
+        sala, create = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=tribunal.usuario.groups.get(), revisor=tribunal.usuario, tipo='tribunal')
+        tribunales_vb[tribunal] = sala.visto_bueno
+
     is_nota_tribunal = False
     if ProyectoDeGrado.objects.filter(equipo=equipo).exists():
         proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
@@ -897,22 +902,22 @@ def progresoEstudiante(request, pk):
     revisor = request.user
     usuario = request.user
     # documento = 'perfil'
-    # sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
+    # sala_doc = SalaDocumentoDoc.objects.get(revisor=revisor, 
         # grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
-    salas_doc_est = SalaDocumentoApp.objects.filter(equipo=equipo).exclude(revisor=revisor).order_by('-fecha_creacion')
-    sala_doc = SalaDocumentoApp.objects.filter(revisor=revisor, 
-        grupo_revisor=revisor.groups.get(), equipo=equipo).last()
-    salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
-    salas_doc = SalaDocumentoApp.objects.filter(equipo=equipo, tipo='tribunal')
+    salas_doc_est = SalaDocumentoDoc.objects.filter(equipo=equipo).exclude(revisor=revisor).order_by('-fecha_creacion')
+    sala_doc = SalaDocumentoDoc.objects.filter(revisor=revisor, grupo_revisor=revisor.groups.get(), equipo=equipo).last()
+    salas_revisar = SalaRevisarDoc.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+    # salas_doc = SalaDocumentoDoc.objects.filter(equipo=equipo, tipo='tribunal')
+    tribunales = equipo.tribunales.all()
     dicc_salas = {}
     for sala in salas_revisar:
-        mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
+        mensajes = MensajeRevisarDoc.objects.filter(sala=sala).exclude(usuario=usuario)
         no_visto = 0
         for mensaje in mensajes:
             if not mensaje.visto:
                 no_visto += 1
         dicc_salas[sala] = no_visto
-    todo_salas_doc = SalaDocumentoApp.objects.filter(equipo=equipo)
+    todo_salas_doc = SalaDocumentoDoc.objects.filter(equipo=equipo)
     notas_tribunales = NotaTribunal.objects.filter(equipo=equipo)
     # avisos 
     mensajes_avisos = mensajesAvisosLista(equipo, request.user) 
@@ -920,7 +925,7 @@ def progresoEstudiante(request, pk):
     # calificacion de la sala por docente, requisito Ing. Campero
     # if grupo == 'docente' and sala_doc.tipo == 'proyecto' and salas_revisar.count() > 0:
         # sala_revisar = salas_revisar.last()
-        # nota_sala = NotaSalaRevisarApp.objects.get(revisor=request.user, sala=sala_revisar)
+        # nota_sala = NotaSalaRevisarDoc.objects.get(revisor=request.user, sala=sala_revisar)
     # else:
         # nota_sala = 0
     suma = 0
@@ -929,7 +934,7 @@ def progresoEstudiante(request, pk):
             dicc_salas_no_visto_nota = {}
             no_visto_nota = []
             for sala, no_visto in dicc_salas.items():
-                nota_sala, created = NotaSalaRevisarApp.objects.get_or_create(revisor=request.user, sala=sala)
+                nota_sala, created = NotaSalaRevisarDoc.objects.get_or_create(revisor=request.user, sala=sala)
                 no_visto_nota = [no_visto, nota_sala]
                 dicc_salas_no_visto_nota[sala] = no_visto_nota
             dicc_salas = dicc_salas_no_visto_nota
@@ -951,7 +956,8 @@ def progresoEstudiante(request, pk):
             'sala_doc':sala_doc,
             'dicc_salas':dicc_salas,
             'salas_doc_est':salas_doc_est,
-            'salas_doc':salas_doc,
+            # 'salas_doc':salas_doc,
+            'tribunales_vb': tribunales_vb,
             'todo_salas_doc':todo_salas_doc,
             'is_nota_tribunal':is_nota_tribunal,
             'notas_tribunales':notas_tribunales,
@@ -1021,12 +1027,12 @@ def progresoEstudiante(request, pk):
             # revisor = request.user
             # documento = 'perfil'
             # usuario = request.user
-            # sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
+            # sala_doc = SalaDocumentoDoc.objects.get(revisor=revisor, 
                 # grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
-            # salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+            # salas_revisar = SalaRevisarDoc.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
             # dicc_salas = {}
             # for sala in salas_revisar:
-                # mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
+                # mensajes = MensajeRevisarDoc.objects.filter(sala=sala).exclude(usuario=usuario)
                 # no_visto = 0
                 # for mensaje in mensajes:
                     # if not mensaje.visto:
@@ -1078,12 +1084,12 @@ def progresoEstudiante(request, pk):
             # revisor = request.user
             # documento = 'perfil'
             # usuario = request.user
-            # sala_doc = SalaDocumentoApp.objects.get(revisor=revisor, 
+            # sala_doc = SalaDocumentoDoc.objects.get(revisor=revisor, 
                 # grupo_revisor=revisor.groups.get(), estudiante=estudiante, tipo=documento)
-            # salas_revisar = SalaRevisarApp.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+            # salas_revisar = SalaRevisarDoc.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
             # dicc_salas = {}
             # for sala in salas_revisar:
-                # mensajes = MensajeRevisarApp.objects.filter(sala=sala).exclude(usuario=usuario)
+                # mensajes = MensajeRevisarDoc.objects.filter(sala=sala).exclude(usuario=usuario)
                 # no_visto = 0
                 # for mensaje in mensajes:
                     # if not mensaje.visto:
@@ -1793,9 +1799,9 @@ def paso4(request):
     perfil = RegistroPerfil.objects.filter(equipo=estudiante.equipo)
     imprimir = actividadRealizadaEstudiante('imprimir formulario', estudiante)
     # nueva app revision
-    sala_doc = SalaDocumentoApp.objects.get(equipo=estudiante.equipo, revisor=estudiante.equipo.tutor.usuario, tipo='perfil')
+    sala_doc, created = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=estudiante.equipo.tutor.usuario.groups.get(), revisor=estudiante.equipo.tutor.usuario, tipo='perfil')
     if sala_doc.visto_bueno:
-        sala_doc = SalaDocumentoApp.objects.get(equipo=estudiante.equipo, revisor=docente.usuario, tipo='perfil')
+        sala_doc, created = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=docente.usuario.groups.get(), revisor=docente.usuario, tipo='perfil')
     documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='formulario_aprobacion')
     context = {'grupo': grupo,'registro_perfil_existe': registro_perfil_existe,
             'progreso': progreso,'perfil':perfil,'estudiante':estudiante,
@@ -1999,18 +2005,18 @@ def confirmarPaso4(request):
     if request.method == 'POST':
         agregarActividadEquipo('imprimir formulario', estudiante.equipo)
         # crear sala de revision perfil
-        SalaDocumentoApp.objects.create(
-            revisor = estudiante.equipo.tutor.usuario,    
-            grupo_revisor = estudiante.equipo.tutor.usuario.groups.get(),
-            equipo = estudiante.equipo,
-            tipo = 'proyecto',
-            )
-        SalaDocumentoApp.objects.create(
-            revisor = estudiante.grupo_doc.usuario,    
-            grupo_revisor = estudiante.grupo_doc.usuario.groups.get(),
-            equipo = estudiante.equipo,
-            tipo = 'proyecto',
-            )
+        # SalaDocumentoDoc.objects.create(
+            # revisor = estudiante.equipo.tutor.usuario,    
+            # grupo_revisor = estudiante.equipo.tutor.usuario.groups.get(),
+            # equipo = estudiante.equipo,
+            # tipo = 'proyecto',
+            # )
+        # SalaDocumentoDoc.objects.create(
+            # revisor = estudiante.grupo_doc.usuario,    
+            # grupo_revisor = estudiante.grupo_doc.usuario.groups.get(),
+            # equipo = estudiante.equipo,
+            # tipo = 'proyecto',
+            # )
         return redirect('estudiante')
     context = {'grupo': grupo,}
     return render(request, 'proyecto/confirmar_paso.html', context)
@@ -2032,16 +2038,18 @@ def paso5(request):
     progreso = progress(estudiante)
     perfil = RegistroPerfil.objects.filter(equipo=estudiante.equipo)
     # nueva app revision
-    sala_doc = SalaDocumentoApp.objects.get(equipo=estudiante.equipo, revisor=tutor.usuario, tipo='proyecto')
+    sala_doc, created = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=tutor.usuario.groups.get(), revisor=tutor.usuario, tipo='proyecto')
     if sala_doc.visto_bueno:
-        sala_doc = SalaDocumentoApp.objects.get(equipo=estudiante.equipo, revisor=docente.usuario, tipo='proyecto')
-    salas_doc = SalaDocumentoApp.objects.filter(equipo=estudiante.equipo, tipo='proyecto')
+        sala_doc, created = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=docente.usuario.groups.get(), revisor=docente.usuario, tipo='proyecto')
+    salas_doc = SalaDocumentoDoc.objects.filter(equipo=estudiante.equipo, tipo='proyecto')
     documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='plantilla_observacion')
+    carta_conclusion, created = Documento.objects.get_or_create(equipo=equipo, tipo='carta_conclusion')
     context = {'grupo': grupo, 'progreso': progreso,'proyecto_grado':proyecto_grado,
-            'proyecto':proyecto,'estudiante':estudiante,
+            'proyecto': proyecto,'estudiante':estudiante,
             'salas_doc': salas_doc,
-            'sala_doc':sala_doc,
-            'documento':documento,
+            'sala_doc': sala_doc,
+            'documento': documento,
+            'carta_conclusion': carta_conclusion,
             }
     return render(request, 'proyecto/estudiante_paso5.html', context)
 
@@ -2300,19 +2308,29 @@ def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     is_nota_tribunal_2 = NotaTribunal.objects.filter(equipo=estudiante.equipo).count() == 2
-    vector_sala_doc = SalaDocumentoApp.objects.filter(equipo=estudiante.equipo, tipo='tribunal')
+    salas_doc = SalaDocumentoDoc.objects.filter(equipo=estudiante.equipo, tipo='tribunal')
+    tribunales = estudiante.equipo.tribunales.all()
+    tribunales_vb = {}
+    for tribunal in tribunales:
+        sala, create = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=tribunal.usuario.groups.get(), revisor=tribunal.usuario, tipo='tribunal')
+        tribunales_vb[tribunal] = sala.visto_bueno
+
     is_conclusion = actividadRealizadaEstudiante('conclusion', estudiante)
-    vec_visto_bueno = [v.visto_bueno for v in vector_sala_doc]
+    vec_visto_bueno = [v.visto_bueno for v in salas_doc]
+
     if vec_visto_bueno == []:
         visto_bueno = False
     else:
         visto_bueno = all(vec_visto_bueno)
+
     context = {'grupo': grupo, 
             'estudiante': estudiante,
-            'salas_doc':vector_sala_doc,
+            'salas_doc': salas_doc,
+            'tribunales_vb': tribunales_vb,
             'is_nota_tribunal_2':is_nota_tribunal_2,
             'is_conclusion':is_conclusion,
             'visto_bueno':visto_bueno}
+
     return render(request, 'proyecto/estudiante_paso6.html', context)
 
 @login_required(login_url='login')
@@ -2743,13 +2761,13 @@ def eliminarMaterialParaEst(request, id_material):
         # if 35 <= confirmar < 64:
             # progreso.nivel = 64
             # # crear sala de revision perfil
-            # SalaDocumentoApp.objects.create(
+            # SalaDocumentoDoc.objects.create(
                 # revisor = estudiante.tutor.usuario,    
                 # grupo_revisor = estudiante.tutor.usuario.groups.get(),
                 # estudiante = estudiante,
                 # tipo = 'proyecto',
                 # )
-            # SalaDocumentoApp.objects.create(
+            # SalaDocumentoDoc.objects.create(
                 # revisor = estudiante.grupo_doc.usuario,    
                 # grupo_revisor = estudiante.grupo_doc.usuario.groups.get(),
                 # estudiante = estudiante,

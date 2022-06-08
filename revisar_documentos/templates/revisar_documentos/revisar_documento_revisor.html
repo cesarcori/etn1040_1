@@ -9,10 +9,48 @@
   {% endif %}                               
 </h4>
 
-<a class="btn btn-warning" href={% url "revisar_documentos:crear_sala_revisar" sala_doc.tipo sala_doc.id %}>Crear Sala de Revisión</a>
+{% if sala_doc.tipo == 'proyecto' %}
+  {% if grupo == 'docente' or grupo == 'tutor'%}
+    <div class="d-flex flex-row-reverse bd-highlight">
+      <a class="btn btn-secondary" href={% url "revisar_documentos:configurar" equipo.id %} %}>
+        Configurar
+      </a>
+    </div>
+    <br>
+  {% endif %}
+{% endif %}
 
-{% include 'revisar_documentos/vista_revisor_docente_proyecto.html' %}
+{% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.visto_bueno %}
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-warning" href=# %}>
+      Subir Documento Final
+    </a>
+  </div>
+  <br>
+{% endif %}
 
-<a class="btn btn-danger" href={% url "progreso_estudiante" sala_doc.equipo.id %} name="atras">Atras</a>
+{% if not sala_doc.visto_bueno %}
+  {% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
+    <a class="btn btn-warning" href={% url "revisar_documentos:crear_sala_revisar" sala_doc.tipo sala_doc.id %}>
+      Crear Sala de Revisión
+    </a>
+  {% else %}
+    <a class="btn btn-warning" href={% url "revisar_documentos:crear_sala_sin_nota" sala_doc.tipo sala_doc.id %}>
+      Crear Sala de Revisión
+    </a>
+  {% endif %}
+{% else %}
+  <div class="alert alert-success text-center" role="alert">
+    Ya se le dió visto bueno al documento.
+  </div>
+{% endif %}
+
+{% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
+  {% include 'revisar_documentos/vista_revisor_docente_proyecto.html' %}
+{% else %}
+  {% include 'revisar_documentos/vista_revisor.html' %}
+{% endif %}
+
+<a class="btn btn-danger" href={% url "revisar_documentos:revisiones" sala_doc.equipo.id %} name="atras">Atras</a>
 
 {% endblock content%}

@@ -6,22 +6,25 @@
 </h4>
 
 {% if sala_doc.visto_bueno%}
-  {% comment %}<div class="d-inline p-2 bg-success text-white">{% endcomment %}
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     El {{sala_doc.grupo_revisor}} ya dió el visto bueno al {{sala_doc.tipo}}
   </div><br><br>
 {% else %}
-    {% comment %}<a class="btn btn-warning" {% endcomment %}
-        {% comment %}href={% url 'revisar:crear_sala_revisar' 'perfil' sala_doc.revisor.id sala_doc.id%} name="crear_revision">{% endcomment %}
-        {% comment %}Crear Revisión</a>{% endcomment %}
-  {% comment %}<div class="d-inline p-2 bg-danger text-white">{% endcomment %}
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     El {{sala_doc.grupo_revisor.name.title}} aún no dió el visto bueno al {{sala_doc.tipo}}
   </div>
 {% endif %}
 
-{% if grupo == 'estudiante' and sala_doc.tipo == 'proyecto' and sala_doc.grupo_revisor.name == 'docente'%}
-  {% include 'revisar_documentos/vista_estudiante_proyecto.html'%}
+{% if sala_doc.salarevisardoc_set.count == 0 %}
+  <div class="alert alert-warning" role="alert">
+    El {{sala_doc.grupo_revisor}} aún no creó salas para la revisión.
+  </div>
+{% else %}
+  {% if grupo == 'estudiante' and sala_doc.tipo == 'proyecto' and sala_doc.grupo_revisor.name == 'docente'%}
+    {% include 'revisar_documentos/vista_estudiante_proyecto.html'%}
+  {% else %}
+    {% include 'revisar_documentos/vista_estudiante.html'%}
+  {% endif %}
 {% endif %}
 
 {% comment %}**** analizar con el tiempo como se puede evitar esto para generalizar la app {% endcomment %}

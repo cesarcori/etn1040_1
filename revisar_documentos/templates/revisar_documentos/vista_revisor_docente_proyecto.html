@@ -1,10 +1,8 @@
 <br>
 <br>
 <div class="alert alert-warning text-center" role="alert">
-  {% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
-    El proyecto debe ser calificado sobre el 22%, en necesario que <strong>Max. Nota</strong> 
-    sume un total de 22%.
-  {% endif %}
+  El proyecto debe ser calificado sobre el 22%, en necesario que <strong>Max. Nota</strong> 
+  sume un total de 22%.
 </div>
 <h4 class='text-center'><strong>REVISIÓN DE {{sala_doc.tipo|upper}}</strong></h4>
 <table class="table table-striped table-hover">
@@ -87,12 +85,18 @@
         </td>      
         {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' %}
           <td>
-            {% if sala.nota == 0 %}
-            <a class="btn btn-warning" href={% url "revisar_documentos:calificar_sala" sala.id %}>Calificar</a>
+            {% if sala.archivo_corregir %}
+              {% if sala.nota == 0 %}
+                <a class="btn btn-warning" href={% url "revisar_documentos:calificar_sala" sala.id %}>Calificar</a>
+              {% else %}
+                <div class="alert alert-success p-2 d-inline-flex ">
+                  {{sala.nota}}% 
+                </div>
+              {% endif %}
             {% else %}
-              <div class="alert alert-success p-2 d-inline-flex ">
-                {{sala.nota}}% 
-              </div>
+            <div class="alert alert-warning text-center" role="alert">
+              No se subió el archivo
+            </div>
             {% endif %}
           </td>      
         {% endif %}

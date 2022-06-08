@@ -1,0 +1,14 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+<h3>¿Seguro que desea cambiar de modo? </h3>
+<form method="POST">
+    {% csrf_token %}
+    <div class="d-flex justify-content-evenly">
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Confirmar</button>
+    </div>
+</form>
+
+<button class="btn btn-danger" onclick="history.back()">Atrás</button>
+
+{% endblock content%}

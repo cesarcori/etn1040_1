@@ -569,8 +569,8 @@ def generarFirmaTutorCapitulos(buffer, equipo):
     nombre_tutor = equipo.tutor.__str__()
     titulo_perfil = equipo.registroperfil.titulo.upper()
     # salas = estudiante.salarevisarproyecto_set.all()
-    sala_doc_tutor = equipo.saladocumentoapp_set.get(tipo='proyecto', revisor=equipo.tutor.usuario)
-    salas_revisar = sala_doc_tutor.salarevisarapp_set.all()
+    sala_doc_tutor = equipo.saladocumentodoc_set.get(tipo='proyecto', revisor=equipo.tutor.usuario)
+    salas_revisar = sala_doc_tutor.salarevisardoc_set.all()
     lista_estudiantes = f"<b>{valor}:</b> {nombres_estudiantes}"
     data1 = [
         [header,'','',''],                    
@@ -584,7 +584,7 @@ def generarFirmaTutorCapitulos(buffer, equipo):
     # generacion de las observaciones
     data2 = []
     for sala in salas_revisar:
-        mensajes_tut = sala.mensajerevisarapp_set.filter(usuario=equipo.tutor.usuario)
+        mensajes_tut = sala.mensajerevisardoc_set.filter(usuario=equipo.tutor.usuario)
         observaciones = []
         for mensaje in mensajes_tut:
             # observacion = mensaje.texto

@@ -321,7 +321,9 @@ def verEquipo(request, pk):
             is_visto = isVisto(estudiante.usuario, request.user)
             estudiante_isVisto[estudiante] = is_visto
             # estudiante_isVisto[estudiante] = True
-        print(estudiante_isVisto)
+    else:
+        for estudiante in estudiantes:
+            estudiante_isVisto[estudiante] = False
     context = {'grupo':grupo, 'equipo':equipo, 'estudiante_isVisto': estudiante_isVisto}
     return render(request, 'modalidad/ver_equipo.html', context)
     

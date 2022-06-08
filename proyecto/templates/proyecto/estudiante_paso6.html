@@ -32,7 +32,7 @@
         &nbsp; <a target=_blank href="/media/formularios/form4.pdf">En Blanco</a>
       </td>
       <td>
-        <a href={% url 'documentos:subir_documento' "formulario_solicitud_tribunal" %}>Subir formulario escaneado</a>
+        <a href={% url 'documentos:subir_documento' "formulario_solicitud_tribunal" estudiante.id %}>Subir formulario escaneado</a>
       </td>
     </tr>
     <tr>
@@ -45,7 +45,7 @@
         &nbsp; <a target=_blank href="/media/formularios/form_registro_seguimiento.pdf">En Blanco</a>
       </td>
       <td>
-        <a href={% url 'documentos:subir_documento' "formulario_registro_seguimiento" %}>Subir formulario escaneado</a>
+        <a href={% url 'documentos:subir_documento' "formulario_registro_seguimiento" estudiante.id %}>Subir formulario escaneado</a>
       </td>
     </tr>
     <tr>
@@ -56,7 +56,7 @@
         &nbsp; <a target=_blank href="/media/formularios/form_descripcion_tema_blanco.pdf">En Blanco</a>
       </td>
       <td>
-        <a href={% url 'documentos:subir_documento' "formulario_materia" %}>Subir formulario escaneado</a>
+        <a href={% url 'documentos:subir_documento' "formulario_materia" estudiante.id %}>Subir formulario escaneado</a>
       </td>
     </tr>
   </tbody>
