@@ -533,31 +533,80 @@ def darVistoBueno(request, id_sala_doc):
         texto_actividad = f"visto bueno {sala_doc.tipo} {sala_doc.revisor.groups.get()}"
 
     if request.method == 'POST':
-        if grupo_revisor == 'docente':
-            if sala_doc.tipo == 'perfil':
-                RegistroPerfil.objects.create(
-                    equipo = sala_doc.equipo,
-                    perfil = sala_doc.salarevisardoc_set.last().archivo_corregir,    
-                )
-            elif sala_doc.tipo == 'proyecto':
-                suma = 0
-                for sala in salas_revisar:
-                    suma += sala.nota
-                proyecto, created = ProyectoDeGrado.objects.get_or_create(equipo=equipo)
-                proyecto.nota_informes_trabajo = suma
-                proyecto.archivo = sala_doc.salarevisardoc_set.last().archivo_corregir    
-                proyecto.save()
+        # if grupo_revisor == 'docente':
+            # if sala_doc.tipo == 'perfil':
+                # RegistroPerfil.objects.create(
+                    # equipo = sala_doc.equipo,
+                    # perfil = sala_doc.salarevisardoc_set.last().archivo_corregir,    
+                # )
+            # elif sala_doc.tipo == 'proyecto':
+                # suma = 0
+                # for sala in salas_revisar:
+                    # suma += sala.nota
+                # proyecto, created = ProyectoDeGrado.objects.get_or_create(equipo=equipo)
+                # proyecto.nota_informes_trabajo = suma
+                # proyecto.archivo = sala_doc.salarevisardoc_set.last().archivo_corregir    
+                # proyecto.save()
+        agregarActividadEquipo('revisar proyecto', equipo)
+        if grupo_revisor == 'docente' and sala_doc.tipo == "proyecto":
+            suma = 0
+            for sala in salas_revisar:
+                suma += sala.nota
+            proyecto, created = ProyectoDeGrado.objects.get_or_create(equipo=equipo)
+            proyecto.nota_informes_trabajo = suma
+            proyecto.archivo = sala_doc.salarevisardoc_set.last().archivo_corregir    
+            proyecto.save()
         sala_doc.visto_bueno = True
         sala_doc.save()
         agregarActividadEquipo(texto_actividad, sala_doc.equipo)
         return redirect('progreso_estudiante', pk=sala_doc.equipo.id)
-    
+    registro_perfil, created = RegistroPerfil.objects.get_or_create(
+        equipo=sala_doc.equipo)
+    registro_proyecto, created = ProyectoDeGrado.objects.get_or_create(
+        equipo=sala_doc.equipo)
     context = {'sala_doc': sala_doc,
             'suma_max': suma_max,
             'is_calificacion_todo': is_calificacion_todo,
             'is_cerrado': is_cerrado,
-            'grupo': grupo,}
+            'registro_perfil': registro_perfil,
+            'registro_proyecto': registro_proyecto,
+            'grupo': grupo,
+            }
     return render(request, 'revisar_documentos/dar_visto_bueno.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tutor','docente','tribunal'])
+def registrarDocumento(request, id_sala_doc):
+    sala_doc = get_object_or_404(SalaDocumentoDoc, id=id_sala_doc)
+    grupo = request.user.groups.get().name
+    equipo = sala_doc.equipo
+    if sala_doc.tipo == "perfil":
+        perfil = RegistroPerfil.objects.get(equipo=equipo)
+        form = RegistroPerfilForm(instance=perfil)
+        if request.method == 'POST':
+            form = RegistroPerfilForm(request.POST, request.FILES, instance=perfil)
+            if form.is_valid():
+                form.save()
+                if grupo == 'docente':
+                    agregarActividadEquipo('registro perfil', equipo)
+                return redirect('revisar_documentos:dar_visto_bueno', id_sala_doc=sala_doc.id)
+    elif sala_doc.tipo == "proyecto":
+        proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
+        form = RegistroProyectoDeGradoForm(instance=proyecto)
+        if request.method == 'POST':
+            form = RegistroProyectoDeGradoForm(request.POST, request.FILES, instance=proyecto)
+            if form.is_valid():
+                form.save()
+                if grupo == 'docente':
+                    agregarActividadEquipo('registro proyecto', equipo)
+                return redirect('revisar_documentos:dar_visto_bueno', id_sala_doc=sala_doc.id)
+
+    context = {
+            'sala_doc': sala_doc,
+            'form': form,
+            'grupo': grupo,
+            }
+    return render(request, 'revisar_documentos/registrar_documento.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente',])

@@ -12,22 +12,25 @@
     </tr>
   </thead>
   <tbody>
-  <tr>
-{%for est in datos_est %}
-<th scope="row">{{est.registro_uni}}</th>
-  <td>
-    <div class="d-grid gap-2 col-8 mx-auto">
-      <a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id %}">
-        {{est}}
-      </a>
-    </div>
-  </td>
-<th scope="row">{{est.grupo_doc.grupo}}</th>
-<th scope="row">{{est.grupo_doc.apellido}}</th>
-{% comment %}<td><a class="text-underline-hover" href="{% url 'eliminar_usuario' est.usuario_id %}">Eliminar</a></td>{% endcomment %}
-<td><a class="btn btn-danger" href="{% url 'eliminar_usuario' est.usuario_id %}">Eliminar</a></td>
-  </tr>
-{% endfor %}
+
+  {%for est in datos_est %}
+  {% if not est.equipo.is_concluido %}
+    <tr>
+      <th scope="row">{{est.registro_uni}}</th>
+        <td>
+          <div class="d-grid gap-2 col-8 mx-auto">
+            <a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id %}">
+              {{est}}
+            </a>
+          </div>
+        </td>
+      <th scope="row">{{est.grupo_doc.grupo}}</th>
+      <th scope="row">{{est.grupo_doc.apellido}}</th>
+      <td><a class="btn btn-danger" href="{% url 'eliminar_usuario' est.usuario_id %}">Eliminar</a></td>
+    </tr>
+  {% endif %}
+  {% endfor %}
+
   </tbody>
 </table>
 {% endblock %}

@@ -7,11 +7,14 @@
 <p><a href="{{ proyecto.archivo.url }}">Proyecto de Grado Aprobado<a></p>
 
 {% comment %} calificacion{% endcomment %}
-{% if notas_tribunales %}
-    {% include 'proyecto/ver_nota.html' %}
-{% else %}
-    <h4 class="text-center">El Tribunal aún no calificó el Proyecto de Grado</h4>
+{% if grupo == "estudiante" %}
+  {% if notas_tribunales %}
+      {% include 'proyecto/ver_nota.html' %}
+  {% else %}
+      <h4 class="text-center">El Tribunal aún no calificó el Proyecto de Grado</h4>
+  {% endif %}
 {% endif %}
 
-<a class="btn btn-danger" href={%url 'paso6'%}>Atras</a>
+{% comment %}<a class="btn btn-danger" href={%url 'paso6'%}>Atras</a>{% endcomment %}
+<button class="btn btn-danger" onclick="history.back()">Atrás</button>
 {% endblock %}

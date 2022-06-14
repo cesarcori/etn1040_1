@@ -6,11 +6,14 @@
 {{proyecto.resumen}}<br>
 <p><a target=_blank href="{{ proyecto.archivo.url }}">Proyecto de Grado Aprobado<a></p>
 
-{% if proyecto.calificacion %}
-    {% include 'proyecto/ver_nota.html'%}
-{% else %}
-    <h4 class="text-center">El docente aún no calificó el Proyecto de Grado</h4>
+{% if grupo == "estudiante" %}
+  {% if proyecto.calificacion %}
+      {% include 'proyecto/ver_nota.html'%}
+  {% else %}
+      <h4 class="text-center">El docente aún no calificó el Proyecto de Grado</h4>
+  {% endif %}
 {% endif %}
-<a class="btn btn-danger" href={%url 'paso5'%}>Atras</a>
+{% comment %}<a class="btn btn-danger" href={%url 'paso5'%}>Atras</a>{% endcomment %}
+<button class="btn btn-danger" onclick="history.back()">Atrás</button>
 
 {% endblock %}

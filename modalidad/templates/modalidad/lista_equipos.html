@@ -9,6 +9,7 @@
   </thead>
   <tbody>
     {%for equipo, cantidad_aviso in datos_equipos.items%}
+    {% if not equipo.is_concluido %}
       <tr>
         {% if grupo == 'tutor' %}
           {%if equipo.tutor_acepto%}
@@ -59,6 +60,7 @@
           <a class="btn btn-primary" href={% url "modalidad:ver_equipo" equipo.pk %}>Ver Equipo</a>
         </td>
       </tr>
+    {% endif %}
     {% endfor %}
   </tbody>
 </table>

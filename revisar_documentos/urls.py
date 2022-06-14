@@ -20,6 +20,7 @@ urlpatterns = [
     path('subir/documento/<int:pk>/', views.subirDocumento, name='subir_documento'),
     path('mensajes/<int:id_sala_rev>/', views.mensajes, name='mensajes'),
     path('dar-vistoBueno/<int:id_sala_doc>', views.darVistoBueno, name='dar_visto_bueno'),
+    path('registrar-documento/<int:id_sala_doc>', views.registrarDocumento, name='registrar_documento'),
     path('calificar-sala/<int:pk>', views.calificarSalaRevision, name='calificar_sala'),
     path('modificar/nota_max/<int:id_sala>', views.modificarNotaMax, name='modificar_nota_max'),
     path('calificar-serminario/<int:pk>/', views.calificarSeminario, name='calificar_seminario'),

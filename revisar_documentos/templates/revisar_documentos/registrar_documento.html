@@ -1,0 +1,16 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+
+<h3>Registrar el {{sala_doc.tipo|capfirst}}</h3>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <div class="d-flex justify-content-evenly">
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Confirmar</button>
+    </div>
+</form>
+
+<button class="btn btn-danger" onclick="history.back()">Cancelar</button>
+
+{% endblock content%}

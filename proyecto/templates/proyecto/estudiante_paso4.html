@@ -102,13 +102,13 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
       </td>
       <td>
         {% if registro_perfil_existe %}
-        {% if estudiante.equipo.registrocronograma%}
-        <i class="fas text-success fa-check "></i> Cumplido
+          {% if estudiante.equipo.registrocronograma%}
+            <i class="fas text-success fa-check "></i> Cumplido
+          {% else %}
+            <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+          {%endif%}
         {% else %}
-        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
-        {%endif%}
-        {% else %}
-        <i class="fas text-danger fa-graduation-cap"></i> Pendiente
+          <i class="fas text-danger fa-graduation-cap"></i> Pendiente
         {% endif %}
       </td>
     </tr>

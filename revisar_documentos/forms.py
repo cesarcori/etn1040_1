@@ -1,6 +1,6 @@
 from django import forms
 from .models import *
-from proyecto.models import ProyectoDeGrado
+from proyecto.models import ProyectoDeGrado, RegistroPerfil
 
 from .funciones import *
 
@@ -111,3 +111,54 @@ class crearRevisarDocPersonalizadoRevisorForm(forms.ModelForm):
                 'asunto': (''),
                 'detalle': (''),
                 }
+
+class RegistroPerfilForm(forms.ModelForm):
+    class Meta:
+        model = RegistroPerfil
+        fields = '__all__'
+        exclude = ['equipo']
+        widgets = {
+                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        'placeholder':'Título del perfil...'}),
+                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Resumen del perfil...'}), 
+                'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Índice del perfil...'}), 
+                'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Bibliografía del perfil...'}), 
+                'perfil': forms.FileInput(attrs={'class':'form-control'}),
+                }
+        labels = {
+                'titulo': '',
+                'resumen': '',
+                'indice': '',
+                'bibliografia': '',
+                'perfil': 'Subir archivo del perfil',
+                }
+
+class RegistroProyectoDeGradoForm(forms.ModelForm):
+    class Meta:
+        model = ProyectoDeGrado
+        fields = '__all__'
+        exclude = ['equipo','calificacion','nota_tiempo_elaboracion',
+                'nota_expos_seminarios','nota_informes_trabajo',
+                'nota_cumplimiento_cronograma']
+        widgets = {
+                'titulo': forms.TextInput(attrs={'class':'input-group input-group-lg',
+                        'placeholder':'Título del Proyecto de Grado...'}),
+                'resumen': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Resumen del Proyecto de Grado...'}), 
+                'indice': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Índice del Proyecto de Grado...'}), 
+                'bibliografia': forms.Textarea(attrs={'rows':3, 'class':'form-control', 
+                    'placeholder':'Bibliografía del Proyecto de Grado...'}), 
+                'archivo': forms.FileInput(attrs={'class':'form-control',}),
+                }
+        labels = {
+                'titulo': '',
+                'resumen': '',
+                'indice': '',
+                'bibliografia': '',
+                'archivo': 'Subir archivo del Proyecto de Grado',
+                }
+

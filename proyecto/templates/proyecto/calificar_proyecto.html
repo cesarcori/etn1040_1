@@ -1,6 +1,7 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
 <h2>Se calificará al estudiante: {{estudiante}}</h2>
+<h2 id="nota_total"></h2>
 
 <p>
   Tiempo de elaboracion (Max. 9%):</br>
@@ -19,6 +20,13 @@
 </form>
 
 <script>
+  let nota_tiempo_elaboracion = parseFloat(document.getElementById("id_nota_tiempo_elaboracion").value);
+  let nota_cronograma = parseFloat(document.getElementById("id_nota_cumplimiento_cronograma").value);
+  let nota_seminarios = parseFloat(document.getElementById("id_nota_expos_seminarios").value);
+  let nota_informes = parseFloat(document.getElementById("id_nota_informes_trabajo").value);
+  suma_total = nota_tiempo_elaboracion + nota_cronograma + nota_seminarios + nota_informes;
+  document.getElementById("nota_total").innerHTML = "Nota Total: " + suma_total + "/40";
+
   function comprobar() {
     let nota_crono = parseFloat(document.forms["myForm"]["id_nota_cumplimiento_cronograma"].value);
     let nota_semina = parseFloat(document.forms["myForm"]["id_nota_expos_seminarios"].value);

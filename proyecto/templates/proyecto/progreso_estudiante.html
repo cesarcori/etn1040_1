@@ -46,7 +46,6 @@
 {% if not equipo.tribunales.count == 2 and grupo != 'director' %}
   {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.salarevisardoc_set.count >= 1 and not equipo.proyectodegrado.calificacion %}
     {% include 'revisar_documentos/calificar.html'%}
-  {% else %}
   {% endif %}
 {% endif %}
 

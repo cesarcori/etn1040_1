@@ -218,13 +218,22 @@ def home(request):
 @admin_only
 def eliminarUsuario(request, usuario_id):
     usuario = User.objects.get(pk=usuario_id)    
+    grupo = request.user.groups.get().name
     eliminar = 'no'
     if request.method == 'POST':
         eliminar = request.POST['eliminar']
     if eliminar == 'si':
-        usuario.delete()
-        return redirect('home')
-    context = {'usuario':usuario}
+        grupo_usuario = usuario.groups.get().name
+        usuario.delete()     
+        if grupo_usuario == 'estudiante':
+            return redirect('lista_estudiantes')
+        if grupo_usuario == 'docente':
+            return redirect('lista_docentes')
+        if grupo_usuario == 'tutor':
+            return redirect('lista_tutores')
+        if grupo_usuario == 'tribunal':
+            return redirect('lista_tribunales')
+    context = {'usuario':usuario, 'grupo': grupo}
     return render(request, 'proyecto/eliminar_usuario.html', context)
 
 @login_required(login_url='login')
@@ -944,7 +953,7 @@ def progresoEstudiante(request, pk):
             for no_visto_nota in dicc_salas.values():
                 suma += no_visto_nota[1].nota
                 # promedio = round(float(suma / len(dicc_salas)),1)
-
+    # sala_proyecto = SalaDocumentoDoc.objects.get(equipo=equipo, revisor=request.user, tipo='proyecto')
     documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='plantilla_observacion')
     context = {'grupo': grupo,
             'mensajes_avisos':mensajes_avisos,
@@ -1392,6 +1401,7 @@ def listaTutores(request):
 @admin_only
 def agregarDocente(request):
     form = FormDocente
+    grupo = request.user.groups.get().name
     if request.method == 'POST':
         form = FormDocente(request.POST)
         if form.is_valid():
@@ -1456,13 +1466,15 @@ def agregarDocente(request):
                         )
                 # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con exito!!!')
-    context = {'form':form}
+        return redirect('lista_docentes')
+    context = {'form':form,'grupo':grupo}
     return render(request, 'proyecto/agregar_docente.html', context)
 
 @login_required(login_url='login')
 @admin_only
 def agregarTutor(request):
     form = TutorForm
+    grupo = request.user.groups.get().name
     if request.method == 'POST':
         form = TutorForm(request.POST)
         if form.is_valid():
@@ -1502,13 +1514,15 @@ def agregarTutor(request):
                         )
                 # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')
-    context = {'form':form}
+        return redirect('lista_tutores')
+    context = {'form':form,'grupo':grupo}
     return render(request, 'proyecto/agregar_tutor.html', context)
 
 @login_required(login_url='login')
 @admin_only
 def agregarTribunal(request):
     form = TribunalForm
+    grupo = request.user.groups.get().name
     if request.method == 'POST':
         form = TribunalForm(request.POST)
         if form.is_valid():
@@ -1552,7 +1566,8 @@ def agregarTribunal(request):
                         )
                 # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')
-    context = {'form':form}
+        return redirect('lista_tribunales')
+    context = {'form':form,'grupo':grupo}
     return render(request, 'proyecto/agregar_tribunal.html', context)
 
 @login_required(login_url='login')
@@ -1866,6 +1881,18 @@ def ver_perfil_registrado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     perfil = RegistroPerfil.objects.get(equipo=estudiante.equipo)
+    context = {'grupo': grupo,'perfil':perfil}
+    return render(request, 'proyecto/ver_perfil_registrado.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente', 'tutor', 'tribunal', 'director'])
+def ver_perfil_registrado_otros(request, id_equipo):
+    grupo = request.user.groups.get().name
+    equipo = get_object_or_404(Equipo, id=id_equipo)
+    error = comprobar(grupo, equipo, request.user)
+    if error:
+        return HttpResponse("error")
+    perfil = RegistroPerfil.objects.get(equipo=equipo)
     context = {'grupo': grupo,'perfil':perfil}
     return render(request, 'proyecto/ver_perfil_registrado.html', context)
 
@@ -2490,6 +2517,20 @@ def ver_proyecto_tribunal(request):
     return render(request, 'proyecto/ver_proyecto_tribunal.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['docente', 'tutor', 'tribunal', 'director'])
+def ver_proyecto_tribunal_otros(request, id_equipo):
+    grupo = request.user.groups.get().name
+    equipo = get_object_or_404(Equipo, id=id_equipo)
+    error = comprobar(grupo, equipo, request.user)
+    proyecto = RegistroProyectoTribunal.objects.get(equipo=equipo)
+    if error:
+        return HttpResponse("error")
+    context = {'grupo': grupo,
+            'proyecto':proyecto,
+            'equipo':equipo}
+    return render(request, 'proyecto/ver_proyecto_tribunal.html', context)
+
+@login_required(login_url='login')
 @allowed_users(allowed_roles=['estudiante'])
 @permitir_con(pasos=[1,2,3,4])
 def registroProyecto(request):
@@ -2514,6 +2555,18 @@ def ver_proyecto_grado(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
     proyecto = ProyectoDeGrado.objects.get(equipo=estudiante.equipo)
+    context = {'grupo': grupo,'proyecto':proyecto}
+    return render(request, 'proyecto/ver_proyecto_grado.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['docente', 'tutor', 'tribunal', 'director'])
+def ver_proyecto_grado_otros(request, id_equipo):
+    grupo = request.user.groups.get().name
+    equipo = get_object_or_404(Equipo, id=id_equipo)
+    error = comprobar(grupo, equipo, request.user)
+    if error:
+        return HttpResponse("error")
+    proyecto = ProyectoDeGrado.objects.get(equipo=equipo)
     context = {'grupo': grupo,'proyecto':proyecto}
     return render(request, 'proyecto/ver_proyecto_grado.html', context)
 
@@ -2623,6 +2676,8 @@ def confirmarPaso6(request):
                 docente = estudiante.grupo_doc,
                 imagen_perfil =estudiante.imagen_perfil,
             )
+        estudiante.equipo.is_concluido = True 
+        estudiante.equipo.save()
         return redirect('estudiante')
     context = {'grupo': grupo,}
     return render(request, 'proyecto/confirmar_paso.html', context)

@@ -10,7 +10,7 @@ def validate_file_extension(value):
 
 class SolicitudInvitado(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    correo = models.CharField(max_length=50, null=True, unique=True)
+    correo = models.EmailField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     carnet = models.CharField(max_length=50, null=True, unique=True)
@@ -24,7 +24,7 @@ class SolicitudInvitado(models.Model):
 
 class DatosDocente(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    correo = models.CharField(max_length=50, null=True, unique=True)
+    correo = models.EmailField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     celular = models.CharField(max_length=50, null=True)
@@ -38,7 +38,7 @@ class DatosDocente(models.Model):
 
 class DatosDirector(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    correo = models.CharField(max_length=50, null=True, unique=True, blank=True)
+    correo = models.EmailField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True, blank=True)
     apellido = models.CharField(max_length=50, null=True, blank=True)
     celular = models.CharField(max_length=50, null=True, blank=True)
@@ -49,7 +49,7 @@ class DatosDirector(models.Model):
 
 class DatosTutor(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    correo = models.CharField(max_length=50, null=True, unique=True)
+    correo = models.EmailField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     celular = models.CharField(max_length=50, null=True)
@@ -61,7 +61,7 @@ class DatosTutor(models.Model):
 
 class DatosTribunal(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    correo = models.CharField(max_length=50, null=True, unique=True)
+    correo = models.EmailField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     celular = models.CharField(max_length=50, null=True)
@@ -78,7 +78,7 @@ class DatosEstudiante(models.Model):
             ('multiple','Múltiple'),
             ]
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    correo = models.CharField(max_length=50, null=True, unique=True)
+    correo = models.EmailField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     carnet = models.CharField(max_length=50, null=True, unique=True)
@@ -112,7 +112,8 @@ class Equipo(models.Model):
     solicitud_tribunal_docente = models.BooleanField(default=False)
     tribunales = models.ManyToManyField(DatosTribunal, blank=True)
     nota_final = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
-    fecha_conclusion = models.DateTimeField(null=True,blank=True)
+    is_concluido = models.BooleanField(default=False)
+    fecha_conclusion = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return f'Equipo: {self.nombre}'
 
@@ -131,7 +132,7 @@ class VistaMaterialDocente(models.Model):
         return self.identificador
 
 class DatosEstudianteTitulado(models.Model):
-    correo = models.CharField(max_length=50, null=True, unique=True)
+    correo = models.EmailField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     carnet = models.CharField(max_length=50, null=True, unique=True)
@@ -148,7 +149,7 @@ class DatosEstudianteTitulado(models.Model):
 
 class DatosAdministrador(models.Model):
     usuario = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    correo = models.CharField(max_length=50, null=True, unique=True)
+    correo = models.EmailField(max_length=50, null=True, unique=True)
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     celular = models.CharField(max_length=50, null=True)

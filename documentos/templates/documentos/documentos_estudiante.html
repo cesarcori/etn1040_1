@@ -45,11 +45,12 @@
         {% endif %}
       </tr>
 
-      {% if estudiante.equipo.registroperfil %}
+      {% if estudiante.equipo.registroperfil.perfil %}
         <td class='bg-success text-white'>
-          <a target='_blank' href="{{ estudiante.equipo.registroperfil.perfil.url }}" 
-                            class='text-white text-underline-hover'>
-            Perfil de Proyecto de Grado</a>
+          <!--<a target='_blank' href="{{ estudiante.equipo.registroperfil.perfil.url }}" class='text-white text-underline-hover'>-->
+          <a href={% url "ver_perfil_registrado_otros" equipo.id %} class='text-white text-underline-hover'>
+            Perfil de Proyecto de Grado
+          </a>
         </td>
         <td class='bg-success text-white'></td>
         <td class='bg-success text-white'><i class="fas fa-check"></i></td>
@@ -129,24 +130,27 @@
         </tr>
       {% endif %}
       <tr>
-        {% if todo_salas_doc.2.visto_bueno %}
+        {% if todo_salas_doc.1.visto_bueno %}
           {% if grupo == 'tutor'%}
             <td class='bg-success text-white'>
               <a target='_blank' href={%url 'reportes:carta_final' estudiante.equipo.id %} class='text-white text-underline-hover'>
-                Carta de Conclusión</a>
+                Carta de Conclusión
+              </a>
             </td>
             <td class='bg-success text-white'>
-              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "carta_conclusion" %} 
-                class='text-white text-underline-hover'>
-                Ver</a>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "carta_conclusion" %} class='text-white text-underline-hover'>
+                Ver
+              </a>
             </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% else %}
-            <td class='bg-success text-white'>Carta de Conclusión</td>
             <td class='bg-success text-white'>
-              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "carta_conclusion" %} 
-                class='text-white text-underline-hover'>
-                Ver</a>
+              Carta de Conclusión
+            </td>
+            <td class='bg-success text-white'>
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "carta_conclusion" %} class='text-white text-underline-hover'>
+                Ver
+              </a>
             </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% endif %}
@@ -157,11 +161,13 @@
         {% endif %}
       </tr>
       <tr>
-        {% if estudiante.equipo.proyectodegrado.archivo%}
+        {% if estudiante.equipo.proyectodegrado.archivo %}
           <td class='bg-success text-white'>
-            <a target='_blank' href="{{ estudiante.equipo.proyectodegrado.archivo.url }}"
-                              class='text-white text-underline-hover'>
-              Proyecto de Grado</a></td>
+            <!--<a target='_blank' href="{{ estudiante.equipo.proyectodegrado.archivo.url }}" class='text-white text-underline-hover'>-->
+            <a href={% url "ver_proyecto_grado_otros" equipo.id %} class='text-white text-underline-hover'>
+              Proyecto de Grado
+            </a>
+          </td>
           <td class='bg-success text-white'></td>
           <td class='bg-success text-white'><i class="fas fa-check"></i></td>
         {% else %}
@@ -254,8 +260,9 @@
       <tr>
         {% if estudiante.equipo.registroproyectotribunal%}
           <td class='bg-success text-white'>
-            <a target='_blank' href={{ estudiante.equipo.registroproyectotribunal.archivo.url }} 
-              class='text-white text-underline-hover'>
+            <!--<a target='_blank' href={{ estudiante.equipo.registroproyectotribunal.archivo.url }} -->
+              <!--class='text-white text-underline-hover'>-->
+            <a href={% url "ver_proyecto_tribunal_otros" equipo.id %} class='text-white text-underline-hover'>
               Proyecto de Grado<br>corregido por tribunal</a></td>
           <td class='bg-success text-white'></td>
           <td class='bg-success text-white'><i class="fas fa-check"></i></td>

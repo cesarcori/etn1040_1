@@ -11,6 +11,19 @@ from actividades.funciones import progress
 from random import choice
 from mensaje.funciones import isVisto
 
+def comprobar(grupo, equipo, usuario):
+    if grupo == "docente":
+        if not equipo.docente.usuario == usuario:
+            error = True
+            return error
+    elif grupo == "tutor":
+        if not equipo.tutor.usuario == usuario:
+            error = True
+            return error
+    elif grupo == "tribunal":
+        if not equipo.tribunales.filter(usuario=usuario):
+            error = True
+            return error
 
 def isVistoUsuarioEstudiante(usuario_request, usuario):
     # aviso del estudiante
