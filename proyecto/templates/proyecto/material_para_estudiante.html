@@ -20,14 +20,14 @@
   <tbody>
     {%for m in materiales%}
     <tr>
-        <td>
-        <a target=_blank href="{{ m.material_docente.url }}">{{m.material_docente.name}}</a>
-        </td>
-        <td>
-            {% if grupo == 'docente' %}
-                <a href={% url 'eliminar_material' m.id %}>Eliminar</a><br>
-            {% endif %}
-        </td>
+      <td>
+      <a target=_blank class="btn btn-primary" href="{{ m.material_docente.url }}">{{m.material_docente.name}}</a>
+      </td>
+      <td>
+        {% if grupo == 'docente' %}
+          <a class="btn btn-danger" href={% url 'eliminar_material' m.id %}>Eliminar</a><br>
+        {% endif %}
+      </td>
     </tr>
     {% endfor %}
   </tbody>

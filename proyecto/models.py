@@ -283,8 +283,8 @@ class Mencion(models.Model):
 class Documentos(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     firma_carta_aceptacion = models.BooleanField(default=False)
-    firma_formulario1= models.BooleanField(default=False)
     firma_carta_conclusion= models.BooleanField(default=False)
+    firma_formulario1= models.BooleanField(default=False)
     firma_formulario2 = models.BooleanField(default=False)
     firma_formulario3 = models.BooleanField(default=False)
     firma_formulario4 = models.BooleanField(default=False)

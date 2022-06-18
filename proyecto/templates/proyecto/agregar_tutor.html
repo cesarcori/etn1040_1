@@ -2,7 +2,13 @@
 {% block content %}
 <h3>Agregar Tutor</h3>
 {% for message in messages %}
-    <p id="messages">{{ message }}</p>
+  {% if created %}
+    <div class="alert alert-success" role="alert">
+  {% else %}
+    <div class="alert alert-danger" role="alert">
+  {% endif %}
+  <p id="messages">{{ message }}</p>
+    </div>
 {% endfor %}
 <form method="POST" action="">
     {% csrf_token %}

@@ -311,8 +311,21 @@ class DocumentosForm(forms.ModelForm):
         model = Documentos
         fields = '__all__'
         exclude = ['usuario','firma_formulario1_doc','firma_formulario2_doc','firma_formulario4_doc']
+        labels = {
+                'firma_carta_aceptacion': 'Carta de Aceptación',
+                'firma_carta_conclusion': 'Carta de Conclusión',
+                'firma_formulario1': 'Formulario Aprobación de Perfil',
+                'firma_formulario2': 'Formulario Solicitud de Tribunal',
+                'firma_formulario3': 'Formulario Registro y Seguimiento',
+                'firma_formulario4': 'Formulario Materia: Abstract',
+                }
 
 class DocumentosDocenteForm(forms.ModelForm):
     class Meta:
         model = Documentos
         fields = ['firma_formulario1_doc','firma_formulario2_doc','firma_formulario4_doc']
+        labels = {
+                'firma_formulario1_doc': 'Formulario Aprobación de Perfil',
+                'firma_formulario2_doc': 'Formulario Solicitud de Tribunal',
+                'firma_formulario4_doc': 'Formulario Materia: Abstract',
+                }

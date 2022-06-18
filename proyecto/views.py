@@ -1402,6 +1402,7 @@ def listaTutores(request):
 def agregarDocente(request):
     form = FormDocente
     grupo = request.user.groups.get().name
+    created = False
     if request.method == 'POST':
         form = FormDocente(request.POST)
         if form.is_valid():
@@ -1428,6 +1429,7 @@ def agregarDocente(request):
                 messages.info(request,
             'No se agregó al Docente. Un docente, estudiante, director, administrador o solicitante; usa este mismo correo electrónico.')
 
+                grupo = request.user.groups.get().name
 
             # if User.objects.filter(username=usuario).exists():
                 # messages.info(request, 
@@ -1436,9 +1438,12 @@ def agregarDocente(request):
                 # messages.info(request,
             # 'No se agregó al docente, un docente usa este mismo correo\
             # electrónico')
+                created = False
             elif DatosDocente.objects.filter(grupo=grupo).exists():
                 messages.info(request, 
             'No se agregó al docente, otro docente ya se asigno a este grupo')
+                created = False
+                grupo = request.user.groups.get().name
 
             else:                 
                 # creacion del usuario
@@ -1466,8 +1471,10 @@ def agregarDocente(request):
                         )
                 # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con exito!!!')
-        return redirect('lista_docentes')
-    context = {'form':form,'grupo':grupo}
+                created = True
+                grupo = request.user.groups.get().name
+        # return redirect('lista_docentes')
+    context = {'form':form, 'grupo':grupo, 'created':created}
     return render(request, 'proyecto/agregar_docente.html', context)
 
 @login_required(login_url='login')
@@ -1475,6 +1482,7 @@ def agregarDocente(request):
 def agregarTutor(request):
     form = TutorForm
     grupo = request.user.groups.get().name
+    created = False
     if request.method == 'POST':
         form = TutorForm(request.POST)
         if form.is_valid():
@@ -1489,7 +1497,10 @@ def agregarTutor(request):
 
             if est or sol or di or adm:
                 messages.info(request,
-            'No se agregó al tutor. Un estudiante, docente, administrador o solicitante; usa este mismo correo electrónico.')
+            """No se agregó al tutor. Un estudiante, 
+            administrador, solicitante o director; usa este mismo 
+            correo electrónico.""")
+                created = False
             else:                 
                 # creacion del usuario
                 User.objects.create_user(
@@ -1514,8 +1525,9 @@ def agregarTutor(request):
                         )
                 # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')
-        return redirect('lista_tutores')
-    context = {'form':form,'grupo':grupo}
+                created = True
+        # return redirect('lista_tutores')
+    context = {'form':form,'grupo':grupo, 'created':created}
     return render(request, 'proyecto/agregar_tutor.html', context)
 
 @login_required(login_url='login')
@@ -1523,6 +1535,7 @@ def agregarTutor(request):
 def agregarTribunal(request):
     form = TribunalForm
     grupo = request.user.groups.get().name
+    created = False
     if request.method == 'POST':
         form = TribunalForm(request.POST)
         if form.is_valid():
@@ -1541,7 +1554,9 @@ def agregarTribunal(request):
 
             if est or sol or di or adm:
                 messages.info(request,
-            'No se agregó al Tribunal. Un estudiante, docente, administrador o solicitante; usa este mismo correo electrónico.')
+            '''No se agregó al Tribunal. Un estudiante, director, administrador 
+            o solicitante; usa este mismo correo electrónico.''')
+                created = False
             else:                 
                 # creacion del usuario
                 User.objects.create_user(
@@ -1566,8 +1581,9 @@ def agregarTribunal(request):
                         )
                 # email_activacion(request, user, correo)
                 messages.success(request, 'La solicitud se envió con éxito!!!')
-        return redirect('lista_tribunales')
-    context = {'form':form,'grupo':grupo}
+                created = True
+        # return redirect('lista_tribunales')
+    context = {'form':form,'grupo':grupo, 'created':created}
     return render(request, 'proyecto/agregar_tribunal.html', context)
 
 @login_required(login_url='login')
