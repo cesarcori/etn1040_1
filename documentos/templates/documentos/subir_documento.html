@@ -5,7 +5,8 @@
     {% csrf_token %}
     {{ form.as_p }}
     {% if grupo == 'estudiante' %}
-      <button class="btn btn-danger" onclick="history.back()">Atras</button>
+      {% comment %}<button class="btn btn-danger" onclick="history.back()">Atras</button>{% endcomment %}
+      <a class="btn btn-danger" href="javascript: history.go(-1)">Cancelar</a>
     {% else %}
       <a class="btn btn-danger" href={% url "progreso_estudiante" documento.equipo.id %}>Atras</a>
     {% endif %}

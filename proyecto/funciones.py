@@ -13,11 +13,11 @@ from mensaje.funciones import isVisto
 
 def comprobar(grupo, equipo, usuario):
     if grupo == "docente":
-        if not equipo.docente.usuario == usuario:
+        if not equipo.docente == usuario.datosdocente:
             error = True
             return error
     elif grupo == "tutor":
-        if not equipo.tutor.usuario == usuario:
+        if not equipo.tutor == usuario.datostutor:
             error = True
             return error
     elif grupo == "tribunal":

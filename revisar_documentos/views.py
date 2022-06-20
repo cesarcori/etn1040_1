@@ -8,6 +8,7 @@ from .forms import *
 from actividades.funciones import *
 from proyecto.models import RegistroPerfil, ProyectoDeGrado
 from .funciones import *
+from proyecto.funciones import comprobar
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','tutor','tribunal'])
@@ -15,20 +16,11 @@ def revisiones(request, pk):
     usuario = request.user
     grupo = usuario.groups.get().name
     equipo = get_object_or_404(Equipo, id=pk)
-    if grupo=='tutor':
-        tutor = usuario.datostutor
-        if not Equipo.objects.filter(tutor=tutor):
-            return HttpResponse('error')
-    elif grupo=='docente':
-        docente = usuario.datosdocente
-        if not Equipo.objects.filter(docente=docente):
-            return HttpResponse('error')
-    elif grupo=='tribunal':
-        tribunal = usuario.datostribunal
-        if not Equipo.objects.filter(tribunales=tribunal):
-            return HttpResponse('error')
-    salas_documentos = SalaDocumentoDoc.objects.filter(revisor=usuario, equipo=equipo)
 
+    if comprobar(grupo, equipo, usuario):
+        return HttpResponse('error')
+
+    salas_documentos = SalaDocumentoDoc.objects.filter(revisor=usuario, equipo=equipo)
     
     context = {
         'grupo': grupo,

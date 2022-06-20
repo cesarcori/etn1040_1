@@ -2,10 +2,10 @@
 {% block content %}
 <h3>{{mensaje}}</h3>
 <form action='' method='POST'>
-    {% csrf_token %}
-    <div class="d-flex justify-content-evenly">
-        <a class="btn btn-danger" href={%url url_cancelar %}>Cancelar</a>
-        <button type="submit" class="btn btn-success">Si, Seguro</button>
-    </div>
+  {% csrf_token %}
+  <div class="d-flex justify-content-evenly">
+    <a class="btn btn-danger" href={%url url_cancelar %}>Cancelar</a>
+    <button type="submit" class="btn btn-success">Si, Seguro</button>
+  </div>
 </form> 
 {% endblock %}

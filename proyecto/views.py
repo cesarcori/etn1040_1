@@ -955,11 +955,13 @@ def progresoEstudiante(request, pk):
                 # promedio = round(float(suma / len(dicc_salas)),1)
     # sala_proyecto = SalaDocumentoDoc.objects.get(equipo=equipo, revisor=request.user, tipo='proyecto')
     documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='plantilla_observacion')
+
     # calificar avance
     is_calificar_avance = False
-    if grupo == 'docente' and sala_doc.tipo == 'proyecto':
+    if grupo == 'docente':
         if estudiante.actividad.filter(nombre="revisar proyecto") and not estudiante.actividad.filter(nombre="nota docente proyecto"):
             is_calificar_avance = True
+
     context = {'grupo': grupo,
             'mensajes_avisos':mensajes_avisos,
             'estudiante':estudiante,

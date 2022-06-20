@@ -4,7 +4,8 @@
 <form action='' method='POST'>
     {% csrf_token %}
     <div class="d-flex justify-content-evenly">
-    <a class="btn btn-danger" href={%url 'home' %}>Cancelar</a>
+    {% comment %}<a class="btn btn-danger" href={%url 'home' %}>Cancelar</a>{% endcomment %}
+    <a class="btn btn-danger" href="javascript: history.go(-1)">Cancelar</a>
     <button type="submit" name='confirmar' class="btn btn-success" value='si'>Confirmar</button>
     </div>
 </form> 

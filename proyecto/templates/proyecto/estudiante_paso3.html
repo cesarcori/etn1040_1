@@ -85,7 +85,9 @@
     {% endif %}
     Espere hasta que acepte su solicitud
     <i class="fas fa-user-clock text-primary"></i><br>
-    <a target=_blank href="{% url 'reportes:indicaciones_tutor' estudiante.id %}">Imprimir Indicaciones a Tutor</a><br>
+    <a class="btn btn-primary" target=_blank href="{% url 'reportes:indicaciones_tutor' estudiante.id %}">
+      Imprimir Indicaciones a Tutor
+    </a><br>
     </p>
 {% endif %}
 
@@ -94,7 +96,7 @@
     <i class="fas fa-user-check text-success"></i>
     </p>
     <p>
-      <a target=_blank href={%url 'reportes:carta-tutor-acepto' estudiante.id %}>
+      <a class="btn btn-primary" target=_blank href={%url 'reportes:carta-tutor-acepto' estudiante.id %}>
         Carta de Aceptación para Docente ETN-1040
       </a>
       <i class="fas text-success fa-check"></i>
