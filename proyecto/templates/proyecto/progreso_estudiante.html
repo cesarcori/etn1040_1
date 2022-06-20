@@ -46,8 +46,10 @@
   </div>
 {% endif %}
 
+{% comment %}calificar avance{% endcomment %}
 {% if not equipo.tribunales.count == 2 and grupo != 'director' %}
-  {% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.salarevisardoc_set.count >= 1 and not equipo.proyectodegrado.calificacion %}
+  {% comment %}{% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.salarevisardoc_set.count >= 1 and not equipo.proyectodegrado.calificacion %}{% endcomment %}
+  {% if is_calificar_avance %}
     {% include 'revisar_documentos/calificar.html'%}
   {% endif %}
 {% endif %}
