@@ -6,7 +6,6 @@ import csv
 # python manage.py shell -i python < load_db.py
 # otra forma de poblar datos es mediante dumpdata y fixtures
 if not Actividad.objects.all().count() > 25:
-
     with open('load_start_info/actividades.csv', 'r') as f:
         reader = csv.DictReader(f)
         items = list(reader)

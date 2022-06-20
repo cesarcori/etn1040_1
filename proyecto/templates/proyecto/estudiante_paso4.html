@@ -77,8 +77,8 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
         {% if registro_perfil_existe %}
         {% if estudiante.equipo.registrocronograma%}
           <div class="d-flex justify-content-between">
-            <a target='_blank' href={%url 'reportes:formulario-aceptacion' estudiante.id %}>
-              Formulario 1 - Aprobación de Perfil
+            <a class="btn btn-primary" target='_blank' href={%url 'reportes:formulario-aceptacion' estudiante.id %}>
+              Formulario Aprobación de Perfil
             </a>
             <a class="btn btn-primary" target='_blank' href="/media/formularios/form1.pdf">
               Formulario en blanco

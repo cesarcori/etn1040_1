@@ -854,6 +854,7 @@ def enlaceEstudianteTitulado(request, id_est_tit):
 @allowed_users(allowed_roles=['docente','tutor','administrador','director','tribunal'])
 def progresoEstudiante(request, pk):
     grupo = request.user.groups.get().name
+    grupo_obj = request.user.groups.get()
     equipo = Equipo.objects.get(id=pk)
     estudiante = equipo.datosestudiante_set.first()
     # estudiante = get_object_or_404(DatosEstudiante, id=pk)
@@ -962,6 +963,13 @@ def progresoEstudiante(request, pk):
         if isActividad(equipo, "revisar proyecto") and not isActividad(equipo, "nota docente proyecto"):
             is_calificar_avance = True
 
+    # visto bueno proyecto tutor
+    is_vb_proyecto_tutor = False
+    if grupo == "tutor":
+        sala_proy_tutor = SalaDocumentoDoc.objects.filter(revisor=revisor, grupo_revisor=grupo_obj, equipo=equipo, tipo="proyecto")
+        if sala_proy_tutor:
+            is_vb_proyecto_tutor = sala_proy_tutor.first().visto_bueno
+
     context = {'grupo': grupo,
             'mensajes_avisos':mensajes_avisos,
             'estudiante':estudiante,
@@ -980,6 +988,7 @@ def progresoEstudiante(request, pk):
             'suma': suma,
             'documento':documento,
             'is_calificar_avance': is_calificar_avance,
+            'is_vb_proyecto_tutor': is_vb_proyecto_tutor,
             }
     context = {**context_aux, **context}
     # marca los avisos como vistos
@@ -1913,10 +1922,12 @@ def ver_perfil_registrado(request):
 def ver_perfil_registrado_otros(request, id_equipo):
     grupo = request.user.groups.get().name
     equipo = get_object_or_404(Equipo, id=id_equipo)
-    error = comprobar(grupo, equipo, request.user)
-    if error:
+    
+    if comprobar(grupo, equipo, request.user):
         return HttpResponse("error")
+
     perfil = RegistroPerfil.objects.get(equipo=equipo)
+
     context = {'grupo': grupo,'perfil':perfil}
     return render(request, 'proyecto/ver_perfil_registrado.html', context)
 

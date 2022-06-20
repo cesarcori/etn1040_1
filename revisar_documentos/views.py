@@ -23,11 +23,12 @@ def revisiones(request, pk):
     salas_documentos = SalaDocumentoDoc.objects.filter(revisor=usuario, equipo=equipo)
 
     is_perfil_terminado = isActividad(equipo, "imprimir formulario")
-
+    print(is_perfil_terminado)
     context = {
         'grupo': grupo,
         'equipo': equipo,
         'salas_documentos': salas_documentos,
+        'is_perfil_terminado': is_perfil_terminado,
     }
     return render(request, 'revisar_documentos/revisiones.html', context)
 
@@ -545,7 +546,7 @@ def darVistoBueno(request, id_sala_doc):
                 # proyecto.nota_informes_trabajo = suma
                 # proyecto.archivo = sala_doc.salarevisardoc_set.last().archivo_corregir    
                 # proyecto.save()
-        agregarActividadEquipo('revisar proyecto', equipo)
+        # agregarActividadEquipo('revisar proyecto', equipo)
         if grupo_revisor == 'docente' and sala_doc.tipo == "proyecto":
             suma = 0
             for sala in salas_revisar:
