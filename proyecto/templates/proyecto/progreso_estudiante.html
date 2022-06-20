@@ -46,9 +46,16 @@
   </div>
 {% endif %}
 
+{% comment %}confirmar calificacion{% endcomment %}
+{%if grupo == 'docente' and equipo.proyectodegrado.titulo and equipo.tribunales.count <= 1 and not equipo.proyectodegrado.calificacion %}
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-danger btn-lg" href={% url 'calificar_proyecto' estudiante.id %}>Confirmar calificación</a>
+  </div>
+{%endif%}
+
+
 {% comment %}calificar avance{% endcomment %}
 {% if not equipo.tribunales.count == 2 and grupo != 'director' %}
-  {% comment %}{% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.salarevisardoc_set.count >= 1 and not equipo.proyectodegrado.calificacion %}{% endcomment %}
   {% if is_calificar_avance %}
     {% include 'revisar_documentos/calificar.html'%}
   {% endif %}
@@ -61,7 +68,7 @@
 {% comment %}***** solicitar y ver tribunal *****{% endcomment %}
 {%if grupo == 'docente' and not equipo.solicitud_tribunal_docente and equipo.proyectodegrado and calificacion != None%}
   <div class="d-grid gap-2 col-6 mx-auto">
-    <a class="btn btn-danger" href={% url 'solicitar_tribunal_docente' equipo.id %}>
+    <a class="btn btn-danger btn-lg" href={% url 'solicitar_tribunal_docente' equipo.id %}>
       Solicitar Tribunal a Jefatura de Carrera
     </a><br>
   </div>
@@ -86,7 +93,7 @@
       {{estudiante}}</div>
     {% endif %}
   <div class="d-grid gap-2 col-6 mx-auto">
-    <a class="btn btn-warning" href={% url 'asignar_tribunal' equipo.id %}>
+    <a class="btn btn-warning btn-lg" href={% url 'asignar_tribunal' equipo.id %}>
       Asignar Tribunal
     </a>
   </div>
@@ -111,14 +118,6 @@
         <h5 class='text-center'>El docente aún no puso la nota</h5>
         <h5 class='text-center'>Pero el estudiante ya registró el Proyecto de Grado </h5>
       {% endif %}
-    {%endif%}
-    {% comment %}Calificacion{% endcomment %}
-    {% comment %}{%if grupo == 'docente' and calificacion == None and not proyecto == None%}{% endcomment %}
-
-    {%if grupo == 'docente' and equipo.proyectodegrado.titulo and equipo.tribunales.count <= 1 and not equipo.proyectodegrado.calificacion %}
-      <div class="d-grid gap-2 col-6 mx-auto">
-        <a class="btn btn-danger" href={% url 'calificar_proyecto' estudiante.id %}>Confirmar calificación</a>
-      </div>
     {%endif%}
 
     {% if grupo == 'tribunal' and equipo.registroproyectotribunal and not is_nota_tribunal %}

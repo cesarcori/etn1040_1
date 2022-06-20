@@ -552,8 +552,12 @@ def perfilUsuarios(request):
         cantidad_estudiantes = 0
         for equipo in request.user.datostutor.equipo_set.all():
             cantidad_estudiantes += equipo.datosestudiante_set.count()    
+    menciones = []
+    if grupo == 'tribunal':
+        menciones = request.user.datostribunal.menciones.all()
     context = {'grupo': grupo,
             'cantidad_estudiantes': cantidad_estudiantes,
+            'menciones': menciones,
             }
     return render(request, 'proyecto/perfil.html', context)
 
@@ -965,10 +969,10 @@ def progresoEstudiante(request, pk):
 
     # visto bueno proyecto tutor
     is_vb_proyecto_tutor = False
-    if grupo == "tutor":
-        sala_proy_tutor = SalaDocumentoDoc.objects.filter(revisor=revisor, grupo_revisor=grupo_obj, equipo=equipo, tipo="proyecto")
-        if sala_proy_tutor:
-            is_vb_proyecto_tutor = sala_proy_tutor.first().visto_bueno
+    grupo_tutor = Group.objects.get(name="tutor")
+    sala_proy_tutor = SalaDocumentoDoc.objects.filter(revisor=equipo.tutor.usuario, grupo_revisor=grupo_tutor, equipo=equipo, tipo="proyecto")
+    if sala_proy_tutor:
+        is_vb_proyecto_tutor = sala_proy_tutor.first().visto_bueno
 
     context = {'grupo': grupo,
             'mensajes_avisos':mensajes_avisos,
@@ -2369,6 +2373,7 @@ def reporteCapitulos(request, id_est):
 def paso6(request):
     grupo = request.user.groups.get().name
     estudiante = request.user.datosestudiante
+    equipo=estudiante.equipo
     is_nota_tribunal_2 = NotaTribunal.objects.filter(equipo=estudiante.equipo).count() == 2
     salas_doc = SalaDocumentoDoc.objects.filter(equipo=estudiante.equipo, tipo='tribunal')
     tribunales = estudiante.equipo.tribunales.all()
@@ -2385,13 +2390,21 @@ def paso6(request):
     else:
         visto_bueno = all(vec_visto_bueno)
 
+    doc_solicitud_tribunal , created = Documento.objects.get_or_create(equipo=equipo, tipo='formulario_solicitud_tribunal')
+    doc_registro_seguimiento, created = Documento.objects.get_or_create(equipo=equipo, tipo='formulario_registro_seguimiento')
+    doc_materia, created = Documento.objects.get_or_create(equipo=equipo, tipo='formulario_materia')
+
     context = {'grupo': grupo, 
             'estudiante': estudiante,
             'salas_doc': salas_doc,
             'tribunales_vb': tribunales_vb,
             'is_nota_tribunal_2':is_nota_tribunal_2,
             'is_conclusion':is_conclusion,
-            'visto_bueno':visto_bueno}
+            'visto_bueno':visto_bueno,
+            'doc_solicitud_tribunal': doc_solicitud_tribunal,
+            'doc_registro_seguimiento': doc_registro_seguimiento,
+            'doc_materia': doc_materia,
+            }
 
     return render(request, 'proyecto/estudiante_paso6.html', context)
 

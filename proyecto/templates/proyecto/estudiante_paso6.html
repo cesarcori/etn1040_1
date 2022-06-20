@@ -4,7 +4,6 @@
 <h4>Revisión Tribunal</h4>
 
 {% if estudiante.equipo.solicitud_tribunal_docente and estudiante.equipo.tribunales.count < 2%}
-  {% comment %}<div class="d-inline p-2 bg-primary text-white">{% endcomment %}
   <div class="alert alert-primary" role="alert">
     El docente solicitó tribunales a Jefatura de carrera. Aún así debes de realizar
     los trámites necesarios para dirección.
@@ -26,37 +25,67 @@
   <tbody>
     <tr>
       <td>
-        <a target=_blank href={%url 'reportes:formulario_solicitud_tribunal' estudiante.id %}>Formulario - Solicitu Nombramiento Tribunal</a>
+        <a class="btn btn-primary" target=_blank href={%url 'reportes:formulario_solicitud_tribunal' estudiante.id %}>
+          Solicitud Nombramiento Tribunal
+        </a>
       </td>
       <td>
-        &nbsp; <a target=_blank href="/media/formularios/form4.pdf">En Blanco</a>
+        &nbsp; <a class="btn btn-secondary" target=_blank href="/media/formularios/form4.pdf">En Blanco</a>
       </td>
       <td>
-        <a href={% url 'documentos:subir_documento' "formulario_solicitud_tribunal" estudiante.id %}>Subir formulario escaneado</a>
+        <a class="btn
+          {% if doc_solicitud_tribunal.archivo %}
+            btn-success
+          {% else %}
+            btn-danger
+          {% endif %}
+          " href={% url 'documentos:subir_documento' "formulario_solicitud_tribunal" estudiante.id %}>
+          Subir formulario escaneado
+        </a>
       </td>
     </tr>
     <tr>
       <td>
-        <a target=_blank href={%url 'reportes:formulario_registro_seguimiento' estudiante.id %}>Formulario - Registro y Seguimiento </a>
+        <a class="btn btn-primary" target=_blank href={%url 'reportes:formulario_registro_seguimiento' estudiante.id %}>
+          Registro y Seguimiento
+        </a>
         &nbsp;
         <a class='btn btn-warning' href={%url 'reportes:auspicio_f3' estudiante.id %}>Si tienes auspicio</a>
       </td>
       <td>
-        &nbsp; <a target=_blank href="/media/formularios/form_registro_seguimiento.pdf">En Blanco</a>
+        &nbsp; <a class="btn btn-secondary" target=_blank href="/media/formularios/form_registro_seguimiento.pdf">En Blanco</a>
       </td>
       <td>
-        <a href={% url 'documentos:subir_documento' "formulario_registro_seguimiento" estudiante.id %}>Subir formulario escaneado</a>
+        <a class="btn
+          {% if doc_registro_seguimiento.archivo %}
+            btn-success
+          {% else %}
+            btn-danger
+          {% endif %}
+          " href={% url 'documentos:subir_documento' "formulario_registro_seguimiento" estudiante.id %}>
+          Subir formulario escaneado
+        </a>
       </td>
     </tr>
     <tr>
       <td>
-        <a target=_blank href={%url 'reportes:formulario_materia' estudiante.id %}>Formulario - Materia: Proyecto Abstract</a>
+        <a class="btn btn-primary" target=_blank href={%url 'reportes:formulario_materia' estudiante.id %}>
+          Materia: Proyecto Abstract
+        </a>
       </td>
       <td>
-        &nbsp; <a target=_blank href="/media/formularios/form_descripcion_tema_blanco.pdf">En Blanco</a>
+        &nbsp; <a class="btn btn-secondary" target=_blank href="/media/formularios/form_descripcion_tema_blanco.pdf">En Blanco</a>
       </td>
       <td>
-        <a href={% url 'documentos:subir_documento' "formulario_materia" estudiante.id %}>Subir formulario escaneado</a>
+        <a class="btn
+          {% if doc_materia.archivo %}
+            btn-success
+          {% else %}
+            btn-danger
+          {% endif %}
+          " href={% url 'documentos:subir_documento' "formulario_materia" estudiante.id %}>
+          Subir formulario escaneado
+        </a>
       </td>
     </tr>
   </tbody>

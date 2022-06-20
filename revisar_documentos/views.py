@@ -23,12 +23,13 @@ def revisiones(request, pk):
     salas_documentos = SalaDocumentoDoc.objects.filter(revisor=usuario, equipo=equipo)
 
     is_perfil_terminado = isActividad(equipo, "imprimir formulario")
-    print(is_perfil_terminado)
+    is_proyecto_terminado = isActividad(equipo, "nota docente proyecto")
     context = {
         'grupo': grupo,
         'equipo': equipo,
         'salas_documentos': salas_documentos,
         'is_perfil_terminado': is_perfil_terminado,
+        'is_proyecto_terminado': is_proyecto_terminado,
     }
     return render(request, 'revisar_documentos/revisiones.html', context)
 

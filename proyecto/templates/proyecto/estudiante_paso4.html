@@ -80,7 +80,7 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
             <a class="btn btn-primary" target='_blank' href={%url 'reportes:formulario-aceptacion' estudiante.id %}>
               Formulario Aprobación de Perfil
             </a>
-            <a class="btn btn-primary" target='_blank' href="/media/formularios/form1.pdf">
+            <a class="btn btn-secondary" target='_blank' href="/media/formularios/form1.pdf">
               Formulario en blanco
             </a>
             {% if documento.archivo %}
@@ -94,10 +94,10 @@ con lo que el estudiante ya podrá registrar del Perfil de Proyecto de Grado.</p
             {% endif %}
           </div>
         {% else %}
-        <a class="btn disabled" href=#>Formulario de Aprobación</a>
+        <a class="btn disabled" href=#>Formulario de Aprobación de Perfil</a>
         {%endif%}
         {% else %}
-        <a class="btn disabled" href=#>Formulario 1 - Aprobación de Perfil</a>
+        <a class="btn disabled" href=#>Formulario de Aprobación de Perfil</a>
         {% endif %}
       </td>
       <td>

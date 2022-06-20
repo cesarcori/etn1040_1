@@ -87,7 +87,7 @@
           <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
         {% endif %}
       </tr>
-      {% if grupo == 'tutor' or grupo == 'docente'%}
+      {% if grupo == 'tutor' or grupo == 'docente' or grupo == 'director' %}
         <tr>
           {% if grupo == 'tutor' and estudiante.equipo.registrocronograma %}
             <td class='bg-success text-white'>

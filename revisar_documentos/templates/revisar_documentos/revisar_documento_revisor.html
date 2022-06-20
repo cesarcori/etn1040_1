@@ -20,15 +20,6 @@
   {% endif %}
 {% endif %}
 
-{% if grupo == 'docente' and sala_doc.tipo == 'proyecto' and sala_doc.visto_bueno %}
-  <div class="d-grid gap-2 col-6 mx-auto">
-    <a class="btn btn-warning" href=# %}>
-      Subir Documento Final
-    </a>
-  </div>
-  <br>
-{% endif %}
-
 {% if not sala_doc.visto_bueno %}
   {% if grupo == 'docente' and sala_doc.tipo == 'proyecto'%}
     <a class="btn btn-warning" href={% url "revisar_documentos:crear_sala_revisar" sala_doc.tipo sala_doc.id %}>

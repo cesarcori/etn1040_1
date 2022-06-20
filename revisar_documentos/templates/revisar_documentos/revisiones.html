@@ -4,7 +4,7 @@
 {% if grupo == 'tutor' or grupo == 'docente'%}
   <div class="d-grid gap-2 col-6 mx-auto">
     {% if is_perfil_terminado %}
-      <a class="btn btn-secondary " href={% url "revisar_documentos:revisar_documento_revisor" "perfil" equipo.id %}>
+      <a class="btn btn-secondary" href={% url "revisar_documentos:revisar_documento_revisor" "perfil" equipo.id %}>
         Perfil
       </a>
     {% else %}
@@ -13,9 +13,15 @@
       </a>
     {% endif %}
     {% if is_perfil_terminado %}
-      <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
-        Borrador de Proyecto de Grado
-      </a>
+      {% if is_proyecto_terminado %}
+        <a class="btn btn-secondary " href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
+          Borrador de Proyecto de Grado
+        </a>
+      {% else %}
+        <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
+          Borrador de Proyecto de Grado
+        </a>
+      {% endif %}
     {% else %}
       <button type="button" class="btn btn-secondary" disabled>
         Borrador de Proyecto de Grado

@@ -65,6 +65,7 @@ class DatosTribunal(models.Model):
     nombre = models.CharField(max_length=50, null=True)
     apellido = models.CharField(max_length=50, null=True)
     celular = models.CharField(max_length=50, null=True)
+    menciones = models.ManyToManyField("Mencion", blank=True)
     firma = models.ImageField(default='firmas/firma_default.jpg', upload_to='firmas/', null=True)
     imagen_perfil = models.ImageField(default="imagenes/profile1.png", upload_to='imagenes/', null=True)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
