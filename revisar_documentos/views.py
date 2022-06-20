@@ -239,6 +239,10 @@ def revisarDocumentoRevisor(request, documento, id_equipo):
     revisor = request.user
     equipo = get_object_or_404(Equipo, id=id_equipo)
     grupo_revisor = revisor.groups.get()
+
+    if documento=='proyecto' and not isActividad(equipo, "imprimir formulario"):
+        return HttpResponse('error')
+
     sala_doc, created = SalaDocumentoDoc.objects.get_or_create(revisor=revisor, grupo_revisor=grupo_revisor, equipo=equipo, tipo=documento)
     salas_revisar = SalaRevisarDoc.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
     dicc_salas = {}
