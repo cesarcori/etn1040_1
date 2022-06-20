@@ -21,7 +21,9 @@ def revisiones(request, pk):
         return HttpResponse('error')
 
     salas_documentos = SalaDocumentoDoc.objects.filter(revisor=usuario, equipo=equipo)
-    
+
+    is_perfil_terminado = isActividad(equipo, "imprimir formulario")
+
     context = {
         'grupo': grupo,
         'equipo': equipo,

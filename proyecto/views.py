@@ -959,7 +959,7 @@ def progresoEstudiante(request, pk):
     # calificar avance
     is_calificar_avance = False
     if grupo == 'docente':
-        if estudiante.actividad.filter(nombre="revisar proyecto") and not estudiante.actividad.filter(nombre="nota docente proyecto"):
+        if isActividad(equipo, "revisar proyecto") and not isActividad(equipo, "nota docente proyecto"):
             is_calificar_avance = True
 
     context = {'grupo': grupo,

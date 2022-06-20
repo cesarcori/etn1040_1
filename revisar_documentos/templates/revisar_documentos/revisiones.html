@@ -6,9 +6,15 @@
     <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "perfil" equipo.id %}>
       Perfil
     </a>
-    <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
-      Borrador de Proyecto de Grado
-    </a>
+    {% if is_perfil_terminado %}
+      <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
+        Borrador de Proyecto de Grado
+      </a>
+    {% else %}
+      <button type="button" class="btn btn-secondary" disabled>
+        Borrador de Proyecto de Grado
+      </button>
+    {% endif %}
   </div>
 {% endif %}
 

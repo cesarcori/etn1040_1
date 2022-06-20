@@ -7,6 +7,13 @@ from .models import *
 from proyecto.models import ActividadesCronograma, Equipo, RegistroPerfil
 from mensaje.funciones import isVisto
 
+def isActividad(equipo, nombre):
+    estudiante = equipo.datosestudiante_set.first()
+    if estudiante.actividad.filter(nombre=nombre):
+        return True
+    else:
+        return False
+
 def mensajesAvisosLista(equipo, usuario):
     aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=equipo)
     if aviso.exists():
