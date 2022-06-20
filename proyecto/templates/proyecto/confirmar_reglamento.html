@@ -2,11 +2,11 @@
 {% block content %}                   
 <h2>Confirmo que estudie el reglamento:{{reglamento.archivo}}</h2>
 <form action='' method='POST'>
-    {% csrf_token %}
-    <div class="d-flex justify-content-evenly">
-      <a class="btn btn-danger" href={%url 'paso1' %}>No</a>
-      <button type="submit" name='confirmar' class="btn btn-success" 
-      value='si'>Si</button>
-    </div>
+  {% csrf_token %}
+  <div class="d-flex justify-content-evenly">
+    <a class="btn btn-danger" href={%url 'paso1' %}>Cancelar</a>
+    <button type="submit" name='confirmar' class="btn btn-success" 
+    value='si'>Confirmar</button>
+  </div>
 </form> 
 {% endblock %}

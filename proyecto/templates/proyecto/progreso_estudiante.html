@@ -25,6 +25,9 @@
   </div>
 {% else %}
   <h4 class='text-center'><strong>ESTUDIANTE: {{estudiante|upper}}</strong></h4>
+  <div class="d-flex flex-row-reverse">
+    <a class="btn btn-primary" href={% url 'enlace_estudiante' estudiante.id%}>Información</a>
+  </div>
 {% endif %}
 
 {% if estudiante.modalidad == "multiple" and estudiante.equipo.cantidad == 1%}

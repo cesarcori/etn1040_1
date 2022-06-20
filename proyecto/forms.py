@@ -228,23 +228,28 @@ class DatosTutorForm(forms.ModelForm):
         model = DatosTutor
         fields = '__all__'
         exclude = ['usuario','correo','firma']
+
 class DatosDocenteForm(forms.ModelForm):
     class Meta:
         model = DatosDocente
         fields = ['celular', 'imagen_perfil']
+
 class DatosEstudianteForm(forms.ModelForm):
     class Meta:
         model = DatosEstudiante
-        fields = ['celular','imagen_perfil','imagen_perfil_web']
+        fields = ['celular','imagen_perfil',]
+
 class DatosAdministradorForm(forms.ModelForm):
     class Meta:
         model = DatosAdministrador
         fields = ['nombre','apellido','celular','correo','imagen_perfil']
+
 class DatosDirectorForm(forms.ModelForm):
     class Meta:
         model = DatosDirector
         fields = '__all__'
         exclude =['usuario']
+
 class DatosTribunalForm(forms.ModelForm):
     class Meta:
         model = DatosTribunal

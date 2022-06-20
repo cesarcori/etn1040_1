@@ -43,6 +43,7 @@
 <p class="h6">
 Documentos compartidos por Docente ETN-1040:
 <strong>Ing. {{request.user.datosestudiante.grupo_doc}}</strong></p>
+
 <table class="table table-hover">
   <thead>
     <tr>
@@ -52,19 +53,19 @@ Documentos compartidos por Docente ETN-1040:
   </thead>
   <tbody>
     {%for material, visto in dicc_material.items %}
-    <tr>
+      <tr>
         <td>
-            <a target=_blank href="{{ material.material_docente.url }}">{{material.material_docente.name}}</a>
+          <a target=_blank href="{{ material.material_docente.url }}">{{material.material_docente.name}}</a>
         </td>
         <td>
-            {% if visto %}
-                <i class="fas text-success fa-check"></i> Estudiado
-            {% else %}
-                <i class="fas text-danger fa-graduation-cap"></i>
-                <a class="btn btn-warning" href={%url 'confirmar_material_docente' material.id%}>Sin estudiar</a>
-            {% endif %}
+          {% if visto %}
+            <i class="fas text-success fa-check"></i> Estudiado
+          {% else %}
+            <i class="fas text-danger fa-graduation-cap"></i>
+            <a class="btn btn-warning" href={%url 'confirmar_material_docente' material.id%}>Sin estudiar</a>
+          {% endif %}
         </td>
-    </tr>
+      </tr>
     {%endfor%}
   </tbody>
 </table>

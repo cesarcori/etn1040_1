@@ -28,24 +28,31 @@
     Celular: {{docente.celular}}<br>
     Correo Electrónico: <a target=_blank href="mailto:{{docente.correo}}?Subject=Asunto">{{docente.correo}}</a><br>
     Grupo: {{docente.grupo}}<br>
+    Mención: {{docente.mencion}}<br>
     Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>
             </div>
         </div>
     </div>
     {% if not grupo == 'director'%}
-        <div class='text-right'><a href={% url 'resetear_password' docente.usuario_id %}>Resetear Contraseña</a></div>
+      <div class="d-flex flex-row-reverse">
+        <a href={% url 'resetear_password' docente.usuario_id %}>Resetear Contraseña</a>
+      </div>
     {% endif %}
     <h3>Lista de Estudiantes</h3>
     <table class="table table-striped">
     <thead>
         <tr>
-        <th scope="col">Estudiante</th>
+        <th class="text-center" scope="col">Estudiantes</th>
         </tr>
     </thead>
     <tbody>
         <tr>
     {%for est in estudiantes %}
-        <td><a href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a></td>
+        <td>
+          <div class="d-grid gap-2 col-8 mx-auto">
+            <a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a>
+          </div>
+        </td>
         </tr>
     {% endfor %}
     </tbody>

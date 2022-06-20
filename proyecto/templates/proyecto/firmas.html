@@ -16,11 +16,11 @@
 		<div class="card card-body">
       {% if grupo == 'tutor'%}
         <img class="profile-pic" src="{{usuario.datostutor.firma.url}}" >
-        <a class="btn btn-primary" href={{ usuario.datostutor.firma.url }}>Ver Firma</a>
+        <a class="btn btn-primary" href={{ usuario.datostutor.firma.url }}>Ver Firma</a><br>
         <a class="btn btn-danger" href="{% url 'cargar_firma' %}">Cambiar Firma</a>
       {% elif grupo == 'docente'%}
         <img class="profile-pic" src="{{usuario.datosdocente.firma.url}}">
-        <a class="btn btn-primary" target=_blank href={{ usuario.datosdocente.firma.url }}>Ver Firma</a><br><br>
+        <a class="btn btn-primary" target=_blank href={{ usuario.datosdocente.firma.url }}>Ver Firma</a><br>
         <a class="btn btn-danger" href="{% url 'cargar_firma' %}">Cambiar Firma</a>
       {% endif %}
 		</div>
