@@ -25,6 +25,8 @@ def revisiones(request, pk):
     is_perfil_habilitado = isActividad(equipo, "imprimir carta tutoria")
     is_perfil_terminado = isActividad(equipo, "imprimir formulario")
     is_proyecto_terminado = isActividad(equipo, "nota docente proyecto")
+    is_vb_proyecto_tutor = isActividad(equipo, "visto bueno proyecto tutor")
+
     context = {
         'grupo': grupo,
         'equipo': equipo,
@@ -32,6 +34,7 @@ def revisiones(request, pk):
         'is_perfil_habilitado': is_perfil_habilitado,
         'is_perfil_terminado': is_perfil_terminado,
         'is_proyecto_terminado': is_proyecto_terminado,
+        'is_vb_proyecto_tutor': is_vb_proyecto_tutor,
     }
     return render(request, 'revisar_documentos/revisiones.html', context)
 
@@ -244,9 +247,11 @@ def revisarDocumentoRevisor(request, documento, id_equipo):
     equipo = get_object_or_404(Equipo, id=id_equipo)
     grupo_revisor = revisor.groups.get()
 
-    if documento=='proyecto' and not isActividad(equipo, "imprimir formulario"):
+    if documento=='proyecto' and not isActividad(equipo, "imprimir formulario"): 
         return HttpResponse('error')
     if documento=='perfil' and not isActividad(equipo, "imprimir carta tutoria"):
+        return HttpResponse('error')
+    if documento=='proyecto' and grupo=="docente" and not isActividad(equipo, "visto bueno proyecto tutor"): 
         return HttpResponse('error')
 
     sala_doc, created = SalaDocumentoDoc.objects.get_or_create(revisor=revisor, grupo_revisor=grupo_revisor, equipo=equipo, tipo=documento)

@@ -24,9 +24,19 @@
           Borrador de Proyecto de Grado
         </a>
       {% else %}
-        <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
-          Borrador de Proyecto de Grado
-        </a>
+        {% if grupo == "tutor" %}
+          <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
+            Borrador de Proyecto de Grado
+          </a>
+        {% elif is_vb_proyecto_tutor %}
+          <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "proyecto" equipo.id %}>
+            Borrador de Proyecto de Grado
+          </a>
+        {% else %}
+          <button type="button" class="btn btn-secondary" disabled>
+            Borrador de Proyecto de Grado
+          </button>
+        {% endif %}
       {% endif %}
     {% else %}
       <button type="button" class="btn btn-secondary" disabled>
