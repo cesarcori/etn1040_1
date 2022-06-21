@@ -323,12 +323,24 @@ def solicitud(request):
 @allowed_users(allowed_roles=['director'])
 def asignarTribunal(request, pk):
     grupo = 'director'
-    # estudiante = DatosEstudiante.objects.get(id=id_est)
     equipo = Equipo.objects.get(id=pk)
+
+    menciones = []
+    for estudiante in equipo.datosestudiante_set.all():
+        mencion = Mencion.objects.get(nombre = estudiante.mencion)
+        menciones.append(mencion)
+
     tribunal_estudiante = equipo.tribunales.all()
     tribunales_todos = DatosTribunal.objects.all()
-    tribunales = tribunales_todos.difference(tribunal_estudiante).order_by('apellido')
+    tribunales = tribunales_todos.difference(tribunal_estudiante)
+
+    tribunales_recomendados = tribunales_todos.filter(menciones__in=menciones)
+    tribunales_recomendados = tribunales_recomendados.difference(tribunal_estudiante)
+
+    tribunales = tribunales.difference(tribunales_recomendados)
+
     context = {'grupo':grupo, 'tribunales':tribunales,
+            'tribunales_recomendados': tribunales_recomendados,
             'equipo':equipo}
     return render(request, 'proyecto/asignar_tribunal.html', context)
 
@@ -969,10 +981,11 @@ def progresoEstudiante(request, pk):
 
     # visto bueno proyecto tutor
     is_vb_proyecto_tutor = False
-    grupo_tutor = Group.objects.get(name="tutor")
-    sala_proy_tutor = SalaDocumentoDoc.objects.filter(revisor=equipo.tutor.usuario, grupo_revisor=grupo_tutor, equipo=equipo, tipo="proyecto")
-    if sala_proy_tutor:
-        is_vb_proyecto_tutor = sala_proy_tutor.first().visto_bueno
+    if equipo.tutor:
+        grupo_tutor = Group.objects.get(name="tutor")
+        sala_proy_tutor = SalaDocumentoDoc.objects.filter(revisor=equipo.tutor.usuario, grupo_revisor=grupo_tutor, equipo=equipo, tipo="proyecto")
+        if sala_proy_tutor:
+            is_vb_proyecto_tutor = sala_proy_tutor.first().visto_bueno
 
     context = {'grupo': grupo,
             'mensajes_avisos':mensajes_avisos,
@@ -1334,37 +1347,26 @@ def enlaceTutor(request, pk_tutor):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','administrador','estudiante','director','tutor'])
 def enlaceTribunal(request, pk_tribunal):
-    grupo = str(request.user.groups.get())
+    grupo = request.user.groups.get().name
     tribunal = DatosTribunal.objects.get(id=pk_tribunal)
+    menciones = tribunal.menciones.all()
     if grupo == 'docente':
         docente = request.user.datosdocente
         existe_doc = tribunal.equipo_set.filter(docente=docente).exists()
-        if existe_doc:
-            context = {'grupo': grupo, 'tribunal':tribunal}
-            return render(request, 'proyecto/enlace_tribunal.html', context)
-        else:
+        if not existe_doc:
             return redirect('error_pagina')
     elif grupo == 'tutor':
         tutor = request.user.datostutor
         existe_doc = tribunal.equipo_set.filter(tutor=tutor).exists()
-        if existe_doc:
-            context = {'grupo': grupo, 'tribunal':tribunal}
-            return render(request, 'proyecto/enlace_tribunal.html', context)
-        else:
+        if not existe_doc:
             return redirect('error_pagina')
-    elif grupo == 'administrador':
-        context = {'grupo': grupo, 'tribunal':tribunal}
-        return render(request, 'proyecto/enlace_tribunal.html', context)
-    elif grupo == 'director':
-        context = {'grupo': grupo, 'tribunal':tribunal}
-        return render(request, 'proyecto/enlace_tribunal.html', context)
     elif grupo == 'estudiante':
         trib = request.user.datosestudiante.equipo.tribunales.all()
-        if pk_tribunal == trib[0].id or pk_tribunal == trib[1].id:
-            context = {'grupo': grupo, 'tribunal':tribunal}
-            return render(request, 'proyecto/enlace_tribunal.html', context)
-        else:
+        if not pk_tribunal == trib[0].id or pk_tribunal == trib[1].id:
             return redirect('error_pagina')
+
+    context = {'grupo': grupo, 'tribunal':tribunal,'menciones':menciones}
+    return render(request, 'proyecto/enlace_tribunal.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','administrador','estudiante','director','tutor'])

@@ -5,12 +5,49 @@
 {% else %}
   <h3>Asignar Tribunal a {{equipo.datosestudiante_set.get}}</h3>
 {% endif %}
+
 <h4>Se asignaron a los siguientes docentes como tribunales</h4>
 <div class="text-center">
   {% for tribunal in equipo.tribunales.all %}
     <h2>{{tribunal}}</h2>
   {% endfor %}
 </div>
+
+
+<h4>Tribunales recomendados</h4>
+{% if equipo.tribunales.count < 2%}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Tribunal</th>
+        <th scope="col">Asignar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tribunal in tribunales_recomendados %}
+      <tr>
+        <td>
+          <div class="d-grid gap-2 col-8 mx-auto">
+            <a class="btn btn-primary" href="{% url 'enlace_tribunal' tribunal.id%}">
+              {% comment %}Ing. {{tribunal.apellido}} {{tribunal.nombre}}{% endcomment %}
+              Ing. {{tribunal}}
+            </a>
+          </div>
+        </td>
+        <td>
+          <a class="btn btn-warning" href={% url 'confirmar_asignar_tribunal' equipo.id tribunal.id%}>
+            Asignar Tribunal
+          </a>
+        </td>
+        <td>
+          {{tribunal.datosestudiante_set}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
 {% if equipo.tribunales.count < 2%}
   <table class="table table-striped">
     <thead>
@@ -22,8 +59,14 @@
     <tbody>
       {% for tribunal in tribunales%}
       <tr>
-        <td><a class="text-underline-hover" 
-      href="{% url 'enlace_tribunal' tribunal.id%}">Ing. {{tribunal.apellido}} {{tribunal.nombre}}</a></td>
+        <td>
+          <div class="d-grid gap-2 col-8 mx-auto">
+            <a class="btn btn-primary" href="{% url 'enlace_tribunal' tribunal.id%}">
+              {% comment %}Ing. {{tribunal.apellido}} {{tribunal.nombre}}{% endcomment %}
+              Ing. {{tribunal}}
+            </a>
+          </div>
+        </td>
         <td>
         <a class="btn btn-warning" href={% url 'confirmar_asignar_tribunal' equipo.id tribunal.id%}>Asignar Tribunal</a></td>
       </tr>
@@ -31,6 +74,7 @@
     </tbody>
   </table>
 {% endif %}
+
 <a class="btn btn-danger" href={%url 'progreso_estudiante' equipo.id %}>Atras</a>
 {% endblock %}
 

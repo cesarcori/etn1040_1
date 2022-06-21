@@ -19,15 +19,22 @@
 	</div>
 	<div class="col-md-9">
 		<div class="card card-body">
-<p>
-{% if grupo == 'administrador'%}
-Usuario: {{tribunal.usuario}}<br>
-{% endif %}
-Nombre: {{tribunal.nombre}}<br>
-Apellido: {{tribunal.apellido}}<br>
-Correo Electrónico: <a href="mailto:{{tribunal.correo}}?Subject=Asunto">{{tribunal.correo}}</a><br>
-Número de Celular: {{tribunal.celular}}</p>
-{% endif %}
+      <p>
+        {% if grupo == 'administrador'%}
+          Usuario: {{tribunal.usuario}}<br>
+        {% endif %}
+        Nombre: {{tribunal.nombre}}<br>
+        Apellido: {{tribunal.apellido}}<br>
+        Correo Electrónico: <a href="mailto:{{tribunal.correo}}?Subject=Asunto">{{tribunal.correo}}</a><br>
+        Número de Celular: {{tribunal.celular}}
+      </p>
+        Menciones:
+        <ul>
+          {% for mencion in menciones %}
+            <li>{{mencion}}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
 		</div>
 	</div>
 </div>

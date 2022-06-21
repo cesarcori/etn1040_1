@@ -8,9 +8,15 @@
         Perfil
       </a>
     {% else %}
-      <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "perfil" equipo.id %}>
-        Perfil
-      </a>
+      {% if is_perfil_habilitado %}
+        <a class="btn btn-primary" href={% url "revisar_documentos:revisar_documento_revisor" "perfil" equipo.id %}>
+          Perfil
+        </a>
+      {% else %}
+        <button type="button" class="btn btn-secondary" disabled>
+          Perfil
+        </button>
+      {% endif %}
     {% endif %}
     {% if is_perfil_terminado %}
       {% if is_proyecto_terminado %}
