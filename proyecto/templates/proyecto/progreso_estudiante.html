@@ -114,7 +114,7 @@
       </div>
     {%endif%}
     {%if grupo == 'tutor' or grupo == 'director' %}
-      {% if calificacion == None and not proyecto == None%}
+      {% if calificacion == None and not proyecto.titulo == None %}
         <h5 class='text-center'>El docente aún no puso la nota</h5>
         <h5 class='text-center'>Pero el estudiante ya registró el Proyecto de Grado </h5>
       {% endif %}
