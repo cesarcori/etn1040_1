@@ -2737,6 +2737,8 @@ def confirmarPaso6(request):
             )
         estudiante.equipo.is_concluido = True 
         estudiante.equipo.save()
+        estudiante.is_concluido = True 
+        estudiante.save()
         return redirect('estudiante')
     context = {'grupo': grupo,}
     return render(request, 'proyecto/confirmar_paso.html', context)
