@@ -98,6 +98,7 @@ class DatosEstudiante(models.Model):
     is_modalidad_aprobada = models.BooleanField(default=False)
     equipo = models.ForeignKey('Equipo', null=True, blank=True, on_delete=models.SET_NULL)
     actividad = models.ManyToManyField(Actividad, blank=True)
+    is_concluido = models.BooleanField(default=False)
     fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):

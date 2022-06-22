@@ -14,17 +14,25 @@
 </div>
 
 
-<h4>Tribunales recomendados</h4>
+<h4>
+  Tribunales recomendados, mención:
+  {% for mencion in menciones %}
+  <ul>
+    <li>{{mencion}}</li>
+  </ul>
+  {% endfor %}
+</h4>
 {% if equipo.tribunales.count < 2%}
   <table class="table table-striped">
     <thead>
       <tr>
         <th scope="col">Tribunal</th>
         <th scope="col">Asignar</th>
+        <th scope="col">Cantidad de Estudiantes</th>
       </tr>
     </thead>
     <tbody>
-      {% for tribunal in tribunales_recomendados %}
+      {% for tribunal, cantidad_estudiantes in tribunales_recomendados_cantEst.items %}
       <tr>
         <td>
           <div class="d-grid gap-2 col-8 mx-auto">
@@ -40,7 +48,7 @@
           </a>
         </td>
         <td>
-          {{tribunal.datosestudiante_set}}
+          {{cantidad_estudiantes}}
         </td>
       </tr>
       {% endfor %}
@@ -48,27 +56,37 @@
   </table>
 {% endif %}
 
+
+<h4>
+  Tribunales Restantes:
+</h4>
 {% if equipo.tribunales.count < 2%}
   <table class="table table-striped">
     <thead>
       <tr>
         <th scope="col">Tribunal</th>
         <th scope="col">Asignar</th>
+        <th scope="col">Cantidad de Estudiantes</th>
       </tr>
     </thead>
     <tbody>
-      {% for tribunal in tribunales%}
+      {% for tribunal, cantidad_estudiantes in tribunales_cantEst.items %}
       <tr>
         <td>
           <div class="d-grid gap-2 col-8 mx-auto">
             <a class="btn btn-primary" href="{% url 'enlace_tribunal' tribunal.id%}">
-              {% comment %}Ing. {{tribunal.apellido}} {{tribunal.nombre}}{% endcomment %}
               Ing. {{tribunal}}
             </a>
           </div>
         </td>
         <td>
-        <a class="btn btn-warning" href={% url 'confirmar_asignar_tribunal' equipo.id tribunal.id%}>Asignar Tribunal</a></td>
+          <a class="btn btn-warning" href={% url 'confirmar_asignar_tribunal' equipo.id tribunal.id%}>
+            Asignar Tribunal
+          </a>
+        </td>
+        <td>
+          {{cantidad_estudiantes}}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

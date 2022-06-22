@@ -68,7 +68,8 @@
           Correo Electrónico: {{ request.user.datosdocente.correo}}<br>
           Mención: {{ request.user.datosdocente.mencion}}<br>
           Grupo : {{ request.user.datosdocente.grupo}}<br>
-          Cantidad de Estudiantes: {{ request.user.datosdocente.datosestudiante_set.count}}<br>
+          {% comment %}Cantidad de Estudiantes: {{ request.user.datosdocente.datosestudiante_set.count}}<br>{% endcomment %}
+          Cantidad de Estudiantes: {{ cantidad_estudiantes }}<br>
         {%elif grupo == 'tutor' %}
           Usuario: {{ request.user.datostutor.usuario }}<br> 
           Nombre: {{ request.user.datostutor.nombre }}<br>
@@ -88,6 +89,7 @@
           Apellido: {{ request.user.datostribunal.apellido }}<br>
           Celular: {{ request.user.datostribunal.celular }}<br>
           Correo Electrónico: {{ request.user.datostribunal.correo}}<br>
+          Cantidad de Estudiantes: {{ cantidad_estudiantes }}<br>
           Menciones:
           <ul>
             {% for mencion in menciones %}

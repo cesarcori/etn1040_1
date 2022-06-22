@@ -26,6 +26,7 @@ def revisiones(request, pk):
     is_perfil_terminado = isActividad(equipo, "imprimir formulario")
     is_proyecto_terminado = isActividad(equipo, "nota docente proyecto")
     is_vb_proyecto_tutor = isActividad(equipo, "visto bueno proyecto tutor")
+    is_vb_perfil_tutor = isActividad(equipo, "visto bueno perfil tutor")
 
     context = {
         'grupo': grupo,
@@ -35,6 +36,7 @@ def revisiones(request, pk):
         'is_perfil_terminado': is_perfil_terminado,
         'is_proyecto_terminado': is_proyecto_terminado,
         'is_vb_proyecto_tutor': is_vb_proyecto_tutor,
+        'is_vb_perfil_tutor': is_vb_perfil_tutor,
     }
     return render(request, 'revisar_documentos/revisiones.html', context)
 
@@ -439,6 +441,7 @@ def subirDocumento(request, pk):
         if form.is_valid():
             form.save()
             agregarAviso('revisar '+ documento, equipo, revisor)
+            agregarActividadEquipo('revisar ' + documento, equipo)
             return redirect('revisar_documentos:revisar_documento_estudiante', documento=documento, id_revisor=revisor.id)
     context = {'form':form,
             'grupo': grupo}

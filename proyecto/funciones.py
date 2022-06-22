@@ -11,6 +11,21 @@ from actividades.funciones import progress
 from random import choice
 from mensaje.funciones import isVisto
 
+def cantidadEstudiantes(usuario, grupo):
+    cantidad_estudiantes = 0
+    if grupo == 'tutor':
+        for equipo in usuario.datostutor.equipo_set.all():
+            cantidad_estudiantes += equipo.datosestudiante_set.count()    
+        return cantidad_estudiantes
+    if grupo == 'tribunal':
+        for equipo in usuario.datostribunal.equipo_set.all():
+            cantidad_estudiantes += equipo.datosestudiante_set.count()    
+        return cantidad_estudiantes
+    if grupo == 'docente':
+        for equipo in usuario.datosdocente.equipo_set.all():
+            cantidad_estudiantes += equipo.datosestudiante_set.count()    
+        return cantidad_estudiantes
+
 def comprobar(grupo, equipo, usuario):
     if grupo == "docente":
         if not equipo.docente == usuario.datosdocente:
