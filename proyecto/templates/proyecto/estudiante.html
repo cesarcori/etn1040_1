@@ -9,7 +9,7 @@
 {% if estudiante.modalidad %}
   {% if estudiante.modalidad == "multiple" %}
     <div class="d-flex flex-row-reverse bd-highlight">
-      <a href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
+      <a class="btn btn-primary" href={% url "modalidad:ver_equipo" estudiante.equipo.pk %}>Ver Equipo</a>
     </div>
   {% endif %}
   <div class="d-flex justify-content-evenly">

@@ -53,6 +53,15 @@
   </div>
 {%endif%}
 
+{% if grupo == 'tribunal' and equipo.registroproyectotribunal and not is_nota_tribunal %}
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-danger btn-lg" href={% url 'calificar_proyecto_tribunal' equipo.id %}>
+      Calificar Proyecto Final
+    </a>
+    <br>
+  </div>
+{% endif %}
+
 
 {% comment %}calificar avance{% endcomment %}
 {% if not equipo.tribunales.count == 2 and grupo != 'director' %}
@@ -120,14 +129,6 @@
       {% endif %}
     {%endif%}
 
-    {% if grupo == 'tribunal' and equipo.registroproyectotribunal and not is_nota_tribunal %}
-      <div class="d-grid gap-2 col-6 mx-auto">
-        <a class="btn btn-danger" href={% url 'calificar_proyecto_tribunal' equipo.id %}>
-          Calificar Proyecto Final
-        </a>
-        <br>
-      </div>
-    {% endif %}
 
     {% comment %}****** ver nota ******{% endcomment %}
     {%if grupo == 'docente' or grupo == 'director' %}

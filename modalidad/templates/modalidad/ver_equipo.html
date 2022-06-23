@@ -3,6 +3,8 @@
 <h4>Nombre de equipo: {{equipo.alias}}</h4>
 {% include "modalidad/lista_integrantes.html" %}
 {% if grupo == 'estudiante'%}
-  <a href={% url "modalidad:modificar_nombre_equipo" %}>Cambiar nombre del equipo</a>
+  <a class="btn btn-secondary" href={% url "modalidad:modificar_nombre_equipo" %}>
+    Cambiar nombre del equipo
+  </a>
 {% endif %}
 {% endblock content %}

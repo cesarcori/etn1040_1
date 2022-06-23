@@ -564,6 +564,7 @@ def generarFormularioMateria(buffer, estudiante):
     docente_etn1040 = estudiante.grupo_doc.__str__()
     titulo = estudiante.equipo.proyectodegrado.titulo
     mencion = estudiante.mencion
+    equipo = estudiante.equipo
     abstract = estudiante.equipo.proyectodegrado.resumen
     fecha = estudiante.equipo.proyectodegrado.fecha_creacion
     dia = fecha.day.__str__()
@@ -591,8 +592,13 @@ def generarFormularioMateria(buffer, estudiante):
     pdf.set_font("Times", size=12)
 
 # Postulante
-    pdf.set_xy(60,41)
-    pdf.cell(w=65, h=8, txt=postulante, ln=1, border=1, align='C')
+
+    if equipo.cantidad > 1: 
+        pdf.set_xy(60,41)
+        pdf.cell(w=65, h=8, txt='', ln=1, border=1, align='C')
+    else:
+        pdf.set_xy(60,41)
+        pdf.cell(w=65, h=8, txt=postulante, ln=1, border=1, align='C')
 
 # Fecha de aprobacion
     pdf.set_xy(167,41)

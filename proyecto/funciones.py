@@ -14,16 +14,16 @@ from mensaje.funciones import isVisto
 def cantidadEstudiantes(usuario, grupo):
     cantidad_estudiantes = 0
     if grupo == 'tutor':
-        for equipo in usuario.datostutor.equipo_set.all():
-            cantidad_estudiantes += equipo.datosestudiante_set.count()    
+        for equipo in usuario.datostutor.equipo_set.filter(is_concluido=False).all():
+            cantidad_estudiantes += equipo.datosestudiante_set.filter(is_concluido=False).count()    
         return cantidad_estudiantes
     if grupo == 'tribunal':
-        for equipo in usuario.datostribunal.equipo_set.all():
-            cantidad_estudiantes += equipo.datosestudiante_set.count()    
+        for equipo in usuario.datostribunal.equipo_set.filter(is_concluido=False).all():
+            cantidad_estudiantes += equipo.datosestudiante_set.filter(is_concluido=False).count()    
         return cantidad_estudiantes
     if grupo == 'docente':
-        for equipo in usuario.datosdocente.equipo_set.all():
-            cantidad_estudiantes += equipo.datosestudiante_set.count()    
+        for equipo in usuario.datosdocente.equipo_set.filter(is_concluido=False).all():
+            cantidad_estudiantes += equipo.datosestudiante_set.filter(is_concluido=False).count()    
         return cantidad_estudiantes
 
 def comprobar(grupo, equipo, usuario):

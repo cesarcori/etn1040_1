@@ -3,7 +3,7 @@
 
 <h4>
   {% if sala_doc.equipo.cantidad > 1%}
-    Equipo: {{sala_doc.equipo|title}}
+    Equipo: {{sala_doc.equipo.alias|title}}
   {% else %}
     Estudiante: {{equipo.datosestudiante_set.first|title}}
   {% endif %}                               

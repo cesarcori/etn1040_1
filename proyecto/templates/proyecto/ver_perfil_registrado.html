@@ -2,12 +2,19 @@
 {% block content %}
 {% comment %}<h2>Perfil de Proyecto de Grado</h2>{% endcomment %}
 <h4>Título</h4>
-{{perfil.titulo.upper}}
+<a target='_blank' href="{{ perfil.perfil.url }}">
+  {{perfil.titulo.upper}}
+</a>
+
 <h4>Resumen</h4>
 {{perfil.resumen}}<br>
-{{perfil.fecha_creacion}}
-<p>
-<a target='_blank' href="{{ perfil.perfil.url }}">Perfil Aprobado<a></p>
+
+<h4>Índice</h4>
+{{perfil.indice}}<br>
+
+<h4>Bibliografía</h4>
+{{perfil.bibliografia}}<br><br>
+Fecha de creación: {{perfil.fecha_creacion}}<br><br>
 {% comment %}<p><a class="btn btn-danger" href={%url 'paso4'%}>Atras</a></p>{% endcomment %}
 <button class="btn btn-danger" onclick="history.back()">Atrás</button>
 {% endblock %}

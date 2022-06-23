@@ -31,8 +31,11 @@
             </td>
           {% else %}
             <td>
-              <a class="text-underline-hover" href="{% url 'solicitud_tutoria' equipo.id %}" 
-                name='solicitud_tutoria'><strong>Solicitud</strong> {{equipo.alias}}</a>
+              <div class="d-grid gap-2 col-8 mx-auto">
+                <a class="btn btn-warning" href="{% url 'solicitud_tutoria' equipo.id %}" name='solicitud_tutoria'>
+                  <strong>Solicitud</strong> {{equipo.alias}}
+                </a>
+              </div>
             </td>
           {% endif %}
         {% else %}

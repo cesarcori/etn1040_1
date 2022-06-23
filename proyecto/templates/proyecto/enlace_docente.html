@@ -29,7 +29,7 @@
     Correo Electrónico: <a target=_blank href="mailto:{{docente.correo}}?Subject=Asunto">{{docente.correo}}</a><br>
     Grupo: {{docente.grupo}}<br>
     Mención: {{docente.mencion}}<br>
-    Cantidad de Estudiantes: {{docente.datosestudiante_set.count}}</p>
+    Cantidad de Estudiantes: {{ cantidad_estudiantes }}</p>
             </div>
         </div>
     </div>
@@ -46,15 +46,15 @@
         </tr>
     </thead>
     <tbody>
+      {%for est in estudiantes %}
         <tr>
-    {%for est in estudiantes %}
-        <td>
-          <div class="d-grid gap-2 col-8 mx-auto">
-            <a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id %}">{{est.apellido}}, {{est.nombre}}</a>
-          </div>
-        </td>
+          <td>
+            <div class="d-grid gap-2 col-8 mx-auto">
+              <a class="btn btn-primary" href="{% url 'enlace_estudiante' est.id %}">{{est}}</a>
+            </div>
+          </td>
         </tr>
-    {% endfor %}
+      {% endfor %}
     </tbody>
     </table>
 {%endif%}

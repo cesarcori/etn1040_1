@@ -9,7 +9,7 @@
       {% endif %}
       <th scope="col">Correo Electrónico</th>
       {% if grupo != "estudiante"%}
-        <th scope="col">Info</th>
+        <th scope="col">Información</th>
       {% endif %}
     </tr>
   </thead>
@@ -40,7 +40,7 @@
       </td>
       {% if grupo != "estudiante"%}
       <td>
-        <a class="btn btn-primary" href="{% url 'enlace_estudiante' estudiante.id %}">Info</a>
+        <a class="btn btn-primary" href="{% url 'enlace_estudiante' estudiante.id %}">Información</a>
       </td>
       {% endif %}
     </tr>

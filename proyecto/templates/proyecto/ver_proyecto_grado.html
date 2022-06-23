@@ -1,10 +1,20 @@
 {% extends 'proyecto/main.html' %}
 {% block content %}
-<h3>Título</h3>
-{{proyecto.titulo.upper}}
-<h3>Resumen</h3>
+<h4>Título</h4>
+<a target=_blank href="{{ proyecto.archivo.url }}">
+  {{proyecto.titulo.upper}}
+</a>
+
+<h4>Resumen</h4>
 {{proyecto.resumen}}<br>
-<p><a target=_blank href="{{ proyecto.archivo.url }}">Proyecto de Grado Aprobado<a></p>
+
+<h4>Índice</h4>
+{{proyecto.indice}}<br>
+
+<h4>Bibliografía</h4>
+{{proyecto.bibliografia}}<br><br>
+
+Fecha de creación: {{proyecto.fecha_creacion}}<br><br>
 
 {% if grupo == "estudiante" %}
   {% if proyecto.calificacion %}

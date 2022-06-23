@@ -349,6 +349,8 @@ def asignarTribunal(request, pk):
     for tribunal in tribunales:
         cantidad_estudiantes = cantidadEstudiantes(tribunal.usuario, 'tribunal')
         tribunales_cantEst[tribunal] = cantidad_estudiantes
+    y = tribunales_cantEst
+    tribunales_cantEst = dict(sorted(y.items(), key=lambda item: item[1]))
 
     context = {'grupo':grupo, 'tribunales':tribunales,
             'tribunales_recomendados': tribunales_recomendados,
@@ -1281,47 +1283,34 @@ def enlaceDocente(request, pk_doc):
     grupo = request.user.groups.get().name
     # docente = DatosDocente.objects.get(id=pk_doc)
     docente = get_object_or_404(DatosDocente, id=pk_doc)
-    if grupo == 'administrador':
-        estudiantes = docente.datosestudiante_set.all()
-        context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-        return render(request, 'proyecto/enlace_docente.html', context)
-    elif grupo == 'director':
-        estudiantes = docente.datosestudiante_set.all()
-        context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-        return render(request, 'proyecto/enlace_docente.html', context)
-    elif grupo == 'estudiante':
-        # user_request = request.user.datosestudiante.grupo_doc.id
-        # obj_pk = docente.id
-        # if user_request == obj_pk:
-            # estudiantes = {}
-            # context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-            # return render(request, 'proyecto/enlace_docente.html', context)
-        # else:
-            # # return redirect('error_pagina')
-            # raise PermissionDenied
+    # if grupo == 'administrador':
+        # estudiantes = docente.datosestudiante_set.all()
+        # context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+        # return render(request, 'proyecto/enlace_docente.html', context)
+    # elif grupo == 'director':
+        # estudiantes = docente.datosestudiante_set.all()
+        # context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
+        # return render(request, 'proyecto/enlace_docente.html', context)
+    if grupo == 'estudiante':
         docente = request.user.datosestudiante.grupo_doc
-        estudiantes = {}
-        context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-        return render(request, 'proyecto/enlace_docente.html', context)
     elif grupo == 'tutor':
         objeto_tutor_estu = request.user.datostutor.equipo_set.all()
         existe_doc = objeto_tutor_estu.filter(docente_id=pk_doc).exists()
-        # existe_doc = Equipo.objects.filter(id=pk_equ, docente_id=pk_doc, tutor_id=request.user.datostutor.id).exists()
-        if existe_doc:
-            estudiantes = {}
-            context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-            return render(request, 'proyecto/enlace_docente.html', context)
-        else:
+        if not existe_doc:
             return HttpResponse('error')
     elif grupo == 'tribunal':
         objeto_trib_est= request.user.datostribunal.equipo_set.all()
         existe_doc = objeto_trib_est.filter(docente_id=pk_doc).exists()
-        if existe_doc:
-            estudiantes = {}
-            context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente}
-            return render(request, 'proyecto/enlace_docente.html', context)
-        else:
+        if not existe_doc:
             return HttpResponse('error')
+
+    estudiantes = docente.datosestudiante_set.filter(is_concluido=False)
+
+    cantidad_estudiantes = cantidadEstudiantes(docente.usuario, 'docente')
+
+    context = {'grupo': grupo, 'estudiantes':estudiantes, 'docente':docente,
+            'cantidad_estudiantes': cantidad_estudiantes}
+    return render(request, 'proyecto/enlace_docente.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['docente','administrador','estudiante','director','tribunal'])
@@ -1360,16 +1349,16 @@ def enlaceTribunal(request, pk_tribunal):
         docente = request.user.datosdocente
         existe_doc = tribunal.equipo_set.filter(docente=docente).exists()
         if not existe_doc:
-            return redirect('error_pagina')
+            return HttpResponse('error')
     elif grupo == 'tutor':
         tutor = request.user.datostutor
         existe_doc = tribunal.equipo_set.filter(tutor=tutor).exists()
         if not existe_doc:
-            return redirect('error_pagina')
+            return HttpResponse('error')
     elif grupo == 'estudiante':
-        trib = request.user.datosestudiante.equipo.tribunales.all()
-        if not pk_tribunal == trib[0].id or pk_tribunal == trib[1].id:
-            return redirect('error_pagina')
+        trib = request.user.datosestudiante.equipo.tribunales.filter(usuario=tribunal.usuario)
+        if not trib:
+            return HttpResponse('error')
 
     cantidad_estudiantes = cantidadEstudiantes(tribunal.usuario, 'tribunal')
 
@@ -2556,8 +2545,6 @@ def registroProyectoTribunal(request):
             form.instance.equipo = estudiante.equipo
             form.save()
             agregarActividadEquipo("registro proyecto tribunal", estudiante.equipo)
-            # agregarActividadEquipo("fecha defensa", estudiante.equipo)
-            # agregarActividadEquipo("defensa realizada", estudiante.equipo)
         return redirect('paso6')
     context = {'grupo': grupo,'form':form,}
     return render(request, 'proyecto/registro_proyecto_tribunal.html', context)
@@ -2737,8 +2724,9 @@ def confirmarPaso6(request):
             )
         estudiante.equipo.is_concluido = True 
         estudiante.equipo.save()
-        estudiante.is_concluido = True 
-        estudiante.save()
+        for integrante in estudiante.equipo.datosestudiante_set.all():
+            integrante.is_concluido = True 
+            integrante.save()
         return redirect('estudiante')
     context = {'grupo': grupo,}
     return render(request, 'proyecto/confirmar_paso.html', context)
