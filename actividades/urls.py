@@ -11,6 +11,7 @@ urlpatterns = [
     # path('caramba/', views.mensajes, name='crear_mensaje'),
     # path('dar-vistoBueno/<int:id_sala_doc>', views.darVistoBueno, name='dar_visto_bueno'),
     path('lista/', views.lista, name='lista'),
+    path('historial/<int:id_equipo>/', views.historial, name='historial'),
 ]
 
 

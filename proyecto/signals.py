@@ -3,7 +3,7 @@ from django.db.models.signals import post_save, post_delete, pre_delete, pre_sav
 from django.dispatch import receiver
 
 from .models import DatosEstudiante, Equipo, DatosDirector
-from actividades.models import AvisoActividad
+from actividades.models import AvisoActividad, ActividadHistorial, Actividad
 
 @receiver(post_save, sender=DatosEstudiante)
 def crear_equipo(sender, instance, created, **kwargs):
@@ -42,7 +42,7 @@ def cambio_docente(sender, instance, created, **kwargs):
         instance.equipo.save()
 
 @receiver(m2m_changed, sender=DatosEstudiante.actividad.through)
-def cambio_actividad(sender, action, instance, **kwargs):
+def cambio_actividad(sender, action, instance, pk_set, **kwargs):
     """Cuando se aumenta un valor en actividades del estudiante enviará
     un aviso."""
     if action == "post_add":
@@ -66,17 +66,22 @@ def cambio_actividad(sender, action, instance, **kwargs):
                 instance.equipo.docente.usuario, 
                 DatosDirector.objects.all()[0].usuario,
             ]
-        actividad_agregada = instance.actividad.last()
+        # actividad_agregada = instance.actividad.last()
+        for pk in pk_set:
+            actividad_agregada = Actividad.objects.get(id=pk)
         # existe relacion en base de datos revisar en cada usuario
-        for usuario in lista_usuarios:
-            aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=instance.equipo)
-            if aviso.exists():
-                aviso[0].actividades.add(actividad_agregada)
-            else:
-                AvisoActividad.objects.create(
-                    usuario = usuario,
-                    equipo = instance.equipo,
-                )
+        if pk_set:
+            for usuario in lista_usuarios:
                 aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=instance.equipo)
-                aviso[0].actividades.add(actividad_agregada)
+                if aviso.exists():
+                    aviso[0].actividades.add(actividad_agregada)
+                else:
+                    AvisoActividad.objects.create(
+                        usuario = usuario,
+                        equipo = instance.equipo,
+                    )
+                    aviso = AvisoActividad.objects.filter(usuario=usuario, equipo=instance.equipo)
+                    aviso[0].actividades.add(actividad_agregada)
 
+            # agregar al historial.
+            actividad_historial, created = ActividadHistorial.objects.get_or_create(equipo=instance.equipo, actividad=actividad_agregada)

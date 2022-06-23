@@ -566,7 +566,6 @@ def darVistoBueno(request, id_sala_doc):
                 suma += sala.nota
             proyecto, created = ProyectoDeGrado.objects.get_or_create(equipo=equipo)
             proyecto.nota_informes_trabajo = suma
-            # proyecto.archivo = sala_doc.salarevisardoc_set.last().archivo_corregir    
             proyecto.save()
         sala_doc.visto_bueno = True
         sala_doc.save()

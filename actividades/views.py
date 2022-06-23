@@ -12,3 +12,13 @@ def lista(request):
     context = {'grupo':grupo,}
     return render(request, 'actividades/lista.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['tutor','docente','tribunal','estudiante','director','administrador'])
+def historial(request, id_equipo):
+    grupo = request.user.groups.get().name
+    equipo = get_object_or_404(Equipo, id=id_equipo)
+    actividades = ActividadHistorial.objects.filter(equipo=equipo).order_by('fecha_creacion')
+    context = {'grupo':grupo,
+            'actividades':actividades}
+    return render(request, 'actividades/historial.html', context)
+

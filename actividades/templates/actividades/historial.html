@@ -1,0 +1,25 @@
+{% extends 'proyecto/main.html'%}
+{% block content%}
+<h3>Actividades realizadas:</h3>
+<table class="sortable table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Actividad</th>
+      <th scope="col">Fecha realizada</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for actividad in actividades %}
+    <tr>
+      <td>
+        {{actividad.actividad.orden}}
+        {{actividad.actividad.nombre|capfirst}}
+      </td>
+       <td>
+        {{actividad.fecha_creacion}}
+      </td>  
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content%}

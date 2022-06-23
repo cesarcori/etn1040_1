@@ -21,3 +21,11 @@ class AvisoActividad(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return f'Aviso para: {self.usuario} - De: {self.equipo}'
+
+class ActividadHistorial(models.Model):
+    equipo = models.ForeignKey("proyecto.Equipo", null=True, blank=True, on_delete=models.CASCADE)
+    actividad = models.ForeignKey(Actividad, null=True, blank=True, on_delete=models.CASCADE)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+    def __str__(self):
+        return f'Actividad: {self.actividad.nombre} - Equipo: {self.equipo}'
+
