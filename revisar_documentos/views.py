@@ -219,7 +219,7 @@ def revisarDocumentoEstudiante(request, documento, id_revisor):
     revisor = User.objects.get(id=id_revisor)
     estudiante = request.user.datosestudiante
     grupo_revisor = revisor.groups.get()
-    sala_doc, created = SalaDocumentoDoc.objects.get_or_create(revisor=revisor, grupo_revisor=grupo_revisor, equipo=estudiante.equipo, tipo=documento)
+    sala_doc = SalaDocumentoDoc.objects.filter(revisor=revisor, grupo_revisor=grupo_revisor, equipo=estudiante.equipo, tipo=documento).first()
     salas_revisar = SalaRevisarDoc.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
     dicc_salas = {}
     for sala in salas_revisar:
@@ -258,6 +258,7 @@ def revisarDocumentoRevisor(request, documento, id_equipo):
 
     sala_doc, created = SalaDocumentoDoc.objects.get_or_create(revisor=revisor, grupo_revisor=grupo_revisor, equipo=equipo, tipo=documento)
     salas_revisar = SalaRevisarDoc.objects.filter(sala_documento=sala_doc).order_by('-fecha_creacion')
+
     dicc_salas = {}
     for sala in salas_revisar:
         mensajes = MensajeRevisarDoc.objects.filter(sala=sala).exclude(usuario=request.user)
@@ -326,15 +327,6 @@ def crearSalaRevisar(request, documento, id_sala_doc):
     primer_estudiante = equipo.datosestudiante_set.first()
     grupo = request.user.groups.get().name
     salas_revisar = sala_doc.salarevisardoc_set.all()
-    if sala_doc.tipo=='perfil':
-        if not actividadRealizadaEstudiante('revisar perfil', primer_estudiante):
-            agregarActividadEquipo('revisar perfil', equipo)
-    elif sala_doc.tipo=='proyecto':
-        if not actividadRealizadaEstudiante('revisar proyecto', primer_estudiante):
-            agregarActividadEquipo('revisar proyecto', equipo)
-    elif sala_doc.tipo=='tribunal':
-        if not actividadRealizadaEstudiante('revisar tribunal', primer_estudiante):
-            agregarActividadEquipo('revisar tribunal', equipo)
     form = SalaRevisarDocForm
     if request.method == 'POST':
         form = SalaRevisarDocForm(request.POST, request.FILES)
@@ -358,15 +350,6 @@ def crearSalaSinNota(request, documento, id_sala_doc):
     equipo = sala_doc.equipo
     primer_estudiante = equipo.datosestudiante_set.first()
     grupo = request.user.groups.get().name
-    if sala_doc.tipo=='perfil':
-        if not actividadRealizadaEstudiante('revisar perfil', primer_estudiante):
-            agregarActividadEquipo('revisar perfil', equipo)
-    elif sala_doc.tipo=='proyecto':
-        if not actividadRealizadaEstudiante('revisar proyecto', primer_estudiante):
-            agregarActividadEquipo('revisar proyecto', equipo)
-    elif sala_doc.tipo=='tribunal':
-        if not actividadRealizadaEstudiante('revisar tribunal', primer_estudiante):
-            agregarActividadEquipo('revisar tribunal', equipo)
     form = SalaRevisarDocSinNotaForm
     if request.method == 'POST':
         form = SalaRevisarDocSinNotaForm(request.POST, request.FILES)
@@ -431,6 +414,7 @@ def subirDocumento(request, pk):
     estudiante = request.user.datosestudiante
     documento = sala_revisar.sala_documento.tipo
     revisor = sala_revisar.sala_documento.revisor
+    grupo_revisor = sala_revisar.sala_documento.grupo_revisor.name
     equipo = estudiante.equipo
     if sala_revisar.sala_documento.equipo != equipo:
         return HttpResponse('error')
@@ -440,8 +424,17 @@ def subirDocumento(request, pk):
         form = SubirDocumentoForm(request.POST, request.FILES, instance=sala_revisar)
         if form.is_valid():
             form.save()
-            agregarAviso('revisar '+ documento, equipo, revisor)
-            agregarActividadEquipo('revisar ' + documento, equipo)
+            if grupo_revisor == "tribunal":
+                tribunales = equipo.tribunales.all()
+                if revisor.datostribunal == tribunales[0]:
+                    numero = '1'
+                else:
+                    numero = '2'
+                agregarAviso('revisar '+ documento + ' ' + numero, equipo, revisor)
+                agregarActividadEquipo('revisar ' + documento + ' ' + numero, equipo)
+            else:
+                agregarAviso('revisar '+ documento + ' ' + grupo_revisor, equipo, revisor)
+                agregarActividadEquipo('revisar ' + documento + ' ' + grupo_revisor, equipo)
             return redirect('revisar_documentos:revisar_documento_estudiante', documento=documento, id_revisor=revisor.id)
     context = {'form':form,
             'grupo': grupo}

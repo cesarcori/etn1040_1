@@ -54,6 +54,11 @@
             <a class="nav-link" href="{% url 'comunicados_tut_est' %}">
             Comunicados Tut</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'actividades:historial' request.user.datosestudiante.equipo.id %}">
+              Historial
+            </a>
+          </li>
         {% elif grupo == 'director'%}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'busquedas:buscar_datos' %}">Búsqueda PG</a>

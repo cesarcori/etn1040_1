@@ -85,3 +85,28 @@ def cambio_actividad(sender, action, instance, pk_set, **kwargs):
 
             # agregar al historial.
             actividad_historial, created = ActividadHistorial.objects.get_or_create(equipo=instance.equipo, actividad=actividad_agregada)
+
+@receiver(m2m_changed, sender=DatosEstudiante.actividad.through)
+def agregar_actividad(sender, action, instance, pk_set, **kwargs):
+    """Al agregar una actividad al estudiante se ejecutará"""
+    if action == "post_add":
+        for pk in pk_set:
+            actividad_agregada = Actividad.objects.get(id=pk)
+        # existe relacion en base de datos revisar en cada usuario
+        if pk_set:
+            actividad_historial, created = ActividadHistorial.objects.get_or_create(equipo=instance.equipo, actividad=actividad_agregada)
+
+@receiver(m2m_changed, sender=DatosEstudiante.actividad.through)
+def remover_actividad(sender, action, instance, pk_set, **kwargs):
+    """Se removera tambien todas sus dependencias"""
+    if action == "pre_remove":
+        # quitando del historial de actividades del estudiante
+        for pk in pk_set:
+            actividad = Actividad.objects.get(id=pk)
+            actividad_historial = ActividadHistorial.objects.get(equipo=instance.equipo, actividad=actividad)
+            actividad_historial.delete()
+
+
+
+
+

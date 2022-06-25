@@ -897,9 +897,11 @@ def progresoEstudiante(request, pk):
         # tribunales = equipo.tribunales.all()
     tribunales = equipo.tribunales.all()
     tribunales_vb = {}
+    n = 0
     for tribunal in tribunales:
+        n += 1
         sala, create = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=tribunal.usuario.groups.get(), revisor=tribunal.usuario, tipo='tribunal')
-        tribunales_vb[tribunal] = sala.visto_bueno
+        tribunales_vb[tribunal] = [sala.visto_bueno, n]
 
     is_nota_tribunal = False
     if ProyectoDeGrado.objects.filter(equipo=equipo).exists():
@@ -2378,9 +2380,11 @@ def paso6(request):
     salas_doc = SalaDocumentoDoc.objects.filter(equipo=estudiante.equipo, tipo='tribunal')
     tribunales = estudiante.equipo.tribunales.all()
     tribunales_vb = {}
+    n = 0
     for tribunal in tribunales:
+        n += 1
         sala, create = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=tribunal.usuario.groups.get(), revisor=tribunal.usuario, tipo='tribunal')
-        tribunales_vb[tribunal] = sala.visto_bueno
+        tribunales_vb[tribunal] = [sala.visto_bueno, n]
 
     is_conclusion = actividadRealizadaEstudiante('conclusion', estudiante)
     vec_visto_bueno = [v.visto_bueno for v in salas_doc]

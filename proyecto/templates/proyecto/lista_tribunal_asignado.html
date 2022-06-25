@@ -1,7 +1,8 @@
 <table class="sortable table table-striped">
   <thead>
     <tr>
-      <th scope="col">Tribunal asignado</th>
+      <th scope="col">Nº</th>
+      <th scope="col" class="text-center">Tribunal asignado</th>
       {% if grupo == 'estudiante'%}
         <th scope="col">Revisión</th>
       {% endif %}
@@ -9,8 +10,11 @@
     </tr>
   </thead>
   <tbody>
-    {% for tribunal, vb in tribunales_vb.items %}
+    {% for tribunal, vec_vb_n in tribunales_vb.items %}
     <tr>
+      <td>
+        {{vec_vb_n.1}}
+      </td>
       <td>
         <div class="d-grid gap-2 col-8 mx-auto">
           <a class="btn btn-primary" href={% url 'enlace_tribunal' tribunal.id %}>
@@ -25,7 +29,7 @@
           </a>
         </td>
       {% endif %}
-      {% if vb %}
+      {% if vec_vb_n.0 %}
         <td>
           <div class="alert alert-success" role="alert">
             Visto Bueno OK
