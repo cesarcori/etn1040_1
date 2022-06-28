@@ -4,6 +4,7 @@ from django.dispatch import receiver
 
 from .models import DatosEstudiante, Equipo, DatosDirector
 from actividades.models import AvisoActividad, ActividadHistorial, Actividad
+from actividades.funciones import distanciaEntreActividades 
 
 @receiver(post_save, sender=DatosEstudiante)
 def crear_equipo(sender, instance, created, **kwargs):
@@ -95,6 +96,10 @@ def agregar_actividad(sender, action, instance, pk_set, **kwargs):
         # existe relacion en base de datos revisar en cada usuario
         if pk_set:
             actividad_historial, created = ActividadHistorial.objects.get_or_create(equipo=instance.equipo, actividad=actividad_agregada)
+            # calcular el nivel_ie
+            actividades = ActividadHistorial.objects.filter(equipo=instance.equipo).order_by('fecha_creacion')
+            instance.nivel_ie = distanciaEntreActividades(actividades, instance.equipo)
+            instance.save()
 
 @receiver(m2m_changed, sender=DatosEstudiante.actividad.through)
 def remover_actividad(sender, action, instance, pk_set, **kwargs):
@@ -105,7 +110,18 @@ def remover_actividad(sender, action, instance, pk_set, **kwargs):
             actividad = Actividad.objects.get(id=pk)
             actividad_historial = ActividadHistorial.objects.get(equipo=instance.equipo, actividad=actividad)
             actividad_historial.delete()
+            # recalcular el nivel_ie
+            actividades = ActividadHistorial.objects.filter(equipo=instance.equipo).order_by('fecha_creacion')
+            instance.nivel_ie = distanciaEntreActividades(actividades, instance.equipo)
+            instance.save()
 
+@receiver(post_save, sender=DatosEstudiante)
+def cambio_nivel_ie(sender, instance, created, **kwargs):
+    """Cuando se cambia el docente del estudiante, el docente del grupo
+    tambien se actualizara."""
+    if not created:
+        instance.equipo.nivel_ie = instance.nivel_ie
+        instance.equipo.save()
 
 
 

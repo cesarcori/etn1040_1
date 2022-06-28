@@ -260,9 +260,10 @@ def tutor(request):
     grupo = request.user.groups.get().name
     tutor = request.user.datostutor
     # datos_est = tutor.datosestudiante_set.filter(modalidad='individual').order_by('apellido')
-    datos_est = [e.datosestudiante_set.get() for e in request.user.datostutor.equipo_set.filter(cantidad=1)]
+    # datos_est = [e.datosestudiante_set.get() for e in request.user.datostutor.equipo_set.filter(cantidad=1)]
     # equipos = Equipo.objects.filter(tutor=tutor).exclude(cantidad=1)
-    datos_est = [n.datosestudiante_set.get() for n in Equipo.objects.filter(tutor=tutor, cantidad=1)]
+    datos_est = [n.datosestudiante_set.get() for n in Equipo.objects.filter(tutor=tutor, cantidad=1, is_concluido=False)]
+    # datos_est = datos_est.order_by('nivel_ie')
     orden_datos_estudiantes = avisosEstudiantes(datos_est, request.user)
 
     equipos_multiple = request.user.datostutor.equipo_set.filter(cantidad__gt=1)

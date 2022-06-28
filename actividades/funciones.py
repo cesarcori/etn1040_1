@@ -7,6 +7,8 @@ from .models import *
 from proyecto.models import ActividadesCronograma, Equipo, RegistroPerfil
 from mensaje.funciones import isVisto
 
+from statistics import mean, pstdev
+
 def isActividad(equipo, nombre):
     estudiante = equipo.datosestudiante_set.first()
     if estudiante.actividad.filter(nombre=nombre):
@@ -273,4 +275,34 @@ def diasRestantes(pk):
         dias_transcurridos = ''
 
     return dias_restantes_cronograma, dias_restantes_sistema, dias_transcurridos
+
+def distanciaEntreActividades(lista_actividades, equipo):
+    """Extrae un numero que ayudará para ordenar por esfuerzo del estudiante. 
+    Se realiza un análisis entre las diferencias de tiempo entre cada 
+    actividad.
+    A menor el nivel, mas esfuerzo el estudiante tiene en completar las
+    actividades.
+    Se nombrea nivel_ie"""
+
+    actividades = lista_actividades.order_by('fecha_creacion')
+    fecha_inicio = equipo.fecha_creacion
+    fechas_actividades = [n.fecha_creacion for n in actividades]
+    fechas_actividades.insert(0, fecha_inicio)
+
+    # diff_tiempo = []
+    diff_tiempo_dias = []
+    for x, y in zip(fechas_actividades[0::], fechas_actividades[1::]):
+        diff = y- x
+        diff_dias = diff.total_seconds()/(3600*24)
+        # diff_dias = diff.days
+        diff_tiempo_dias.append(diff_dias)
+
+    # Por media y desviasion estandar, datos la diferencia de tiempos
+    # print(diff_tiempo_dias)
+    media = mean(diff_tiempo_dias)
+    desviacion = pstdev(diff_tiempo_dias)
+    nivel_ie = media + desviacion
+    return nivel_ie
+
+
 

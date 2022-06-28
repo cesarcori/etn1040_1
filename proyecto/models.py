@@ -99,10 +99,13 @@ class DatosEstudiante(models.Model):
     equipo = models.ForeignKey('Equipo', null=True, blank=True, on_delete=models.SET_NULL)
     actividad = models.ManyToManyField(Actividad, blank=True)
     is_concluido = models.BooleanField(default=False)
-    fecha_inscripcion= models.DateTimeField(auto_now_add=True, null=True)
+    nivel_ie = models.DecimalField(null=True, blank=True, default=0, max_digits=10, decimal_places=5)
+    fecha_inscripcion = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
+    class Meta:
+        ordering = ['nivel_ie']
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=150, null=True, unique=True)
@@ -115,9 +118,13 @@ class Equipo(models.Model):
     tribunales = models.ManyToManyField(DatosTribunal, blank=True)
     nota_final = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
     is_concluido = models.BooleanField(default=False)
+    nivel_ie = models.DecimalField(null=True, blank=True, default=0, max_digits=10, decimal_places=5)
     fecha_conclusion = models.DateTimeField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return f'Equipo: {self.nombre}'
+    class Meta:
+        ordering = ['nivel_ie']
 
 class MaterialDocente(models.Model):
     propietario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
