@@ -14,3 +14,4 @@ salida.csv
 media/*
 *.vim
 notas.md
+script_ver_views_models.sh
