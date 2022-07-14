@@ -15,3 +15,4 @@ media/*
 *.vim
 notas.md
 script_ver_views_models.sh
+script_ver_from_views_models.sh

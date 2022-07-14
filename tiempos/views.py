@@ -3,8 +3,10 @@ from django.shortcuts import render, get_object_or_404
 from datetime import date, timedelta
 
 from revisar_documentos.models import SalaDocumentoDoc, SalaRevisarDoc
+from proyecto.decorators import *
 from proyecto.models import Equipo
 
+@allowed_users(allowed_roles=['director'])
 def resumen(request, pk):
     grupo = request.user.groups.get().name
     equipo = get_object_or_404(Equipo, id=pk)

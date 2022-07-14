@@ -1,5 +1,6 @@
 from django.db import models
-from proyecto.models import *
+# from proyecto.models import *
+from proyecto.models import DatosEstudiante, DatosDocente, Equipo
 
 ESTADO = [
     ('aprobar','Aprobar'),
