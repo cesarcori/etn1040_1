@@ -6,7 +6,7 @@ from datetime import date, timedelta
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.http import FileResponse
-from .models import ActividadesCronograma, Equipo, RegistroPerfil, DatosDocente, Sala
+from .models import ActividadesCronograma, Equipo, RegistroPerfil, DatosDocente #, Sala
 from actividades.funciones import progress
 from random import choice
 from mensaje.funciones import isVisto
@@ -40,31 +40,31 @@ def comprobar(grupo, equipo, usuario):
             error = True
             return error
 
-def isVistoUsuarioEstudiante(usuario_request, usuario):
-    # aviso del estudiante
-    id_request = usuario_request.id.__str__()
-    id_usuario = usuario.id.__str__()
-    nombre_sala = id_usuario + id_request
-    sala = Sala.objects.get(nombre_sala=nombre_sala)
-    # print(sala)
-    sala = Sala.objects.get(nombre_sala=nombre_sala).mensajesala_set.filter(usuario=usuario).last()
-    if sala:
-        is_visto = sala.is_visto
-    else:
-        is_visto = True
-    return is_visto
+# def isVistoUsuarioEstudiante(usuario_request, usuario):
+    # # aviso del estudiante
+    # id_request = usuario_request.id.__str__()
+    # id_usuario = usuario.id.__str__()
+    # nombre_sala = id_usuario + id_request
+    # sala = Sala.objects.get(nombre_sala=nombre_sala)
+    # # print(sala)
+    # sala = Sala.objects.get(nombre_sala=nombre_sala).mensajesala_set.filter(usuario=usuario).last()
+    # if sala:
+        # is_visto = sala.is_visto
+    # else:
+        # is_visto = True
+    # return is_visto
 
-def isVistoUsuario(usuario_request, usuario):
-    # En caso que el usuario request sea el docente o tutor
-    id_request = usuario_request.id.__str__()
-    id_usuario = usuario.id.__str__()
-    nombre_sala = id_usuario + id_request
-    sala = Sala.objects.get(nombre_sala=nombre_sala).mensajesala_set.filter(usuario=usuario_request).last()
-    if sala:
-        is_visto = sala.is_visto
-    else:
-        is_visto = True
-    return is_visto
+# def isVistoUsuario(usuario_request, usuario):
+    # # En caso que el usuario request sea el docente o tutor
+    # id_request = usuario_request.id.__str__()
+    # id_usuario = usuario.id.__str__()
+    # nombre_sala = id_usuario + id_request
+    # sala = Sala.objects.get(nombre_sala=nombre_sala).mensajesala_set.filter(usuario=usuario_request).last()
+    # if sala:
+        # is_visto = sala.is_visto
+    # else:
+        # is_visto = True
+    # return is_visto
 
 def sorteoDocente(estudiante):
     ''' Lo que realiza el algoritmo es:

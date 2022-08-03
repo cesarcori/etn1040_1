@@ -177,19 +177,19 @@ class Comunicado(models.Model):
     def __str__(self):
         return self.tema
 
-class Sala(models.Model):
-    # el nombre se sala sera dado por id de username en view
-    nombre_sala = models.CharField(max_length=50, null=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-    def __str__(self):
-        return self.nombre_sala
+# class Sala(models.Model):
+    # # el nombre se sala sera dado por id de username en view
+    # nombre_sala = models.CharField(max_length=50, null=True)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+    # def __str__(self):
+        # return self.nombre_sala
 
-class MensajeSala(models.Model):
-    usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    texto = models.TextField(blank=True, null=True)
-    is_visto = models.BooleanField(default=False)
-    sala = models.ForeignKey(Sala, null=True, blank=True, on_delete=models.CASCADE)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+# class MensajeSala(models.Model):
+    # usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    # texto = models.TextField(blank=True, null=True)
+    # is_visto = models.BooleanField(default=False)
+    # sala = models.ForeignKey(Sala, null=True, blank=True, on_delete=models.CASCADE)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class Reglamento(models.Model):
     archivo = models.FileField(upload_to='reglamentos/', null=True,
