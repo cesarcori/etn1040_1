@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from .models import Progreso
+# from .models import Progreso
 from actividades.funciones import *
 
 def unauthenticated_user(view_func):

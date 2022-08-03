@@ -264,11 +264,11 @@ class Auspicio(models.Model):
     supervisor = models.CharField(max_length=200, default='', null=True,blank=True)
     cargo = models.CharField(max_length=200, default='', null=True,blank=True)
 
-class Progreso(models.Model):
-    # usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
-    equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
-    nivel = models.PositiveSmallIntegerField(null=True, blank=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+# class Progreso(models.Model):
+    # # usuario = models.OneToOneField(DatosEstudiante, null=True, blank=True, on_delete=models.CASCADE)
+    # equipo = models.OneToOneField(Equipo, null=True, blank=True, on_delete=models.CASCADE)
+    # nivel = models.PositiveSmallIntegerField(null=True, blank=True)
+    # fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 # class BusquedaProyecto(models.Model):
     # documento = [
