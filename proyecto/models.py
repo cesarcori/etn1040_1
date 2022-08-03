@@ -214,9 +214,9 @@ class RegistroPerfil(models.Model):
     perfil = models.FileField(upload_to='perfiles/', null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
-# class Formularios(models.Model):
-    # archivo = models.FileField(upload_to='formularios/', null=True,
-            # blank=True, validators=[validate_file_extension])
+class Formularios(models.Model):
+    archivo = models.FileField(upload_to='formularios/', null=True,
+            blank=True, validators=[validate_file_extension])
 
 class ActividadesCronograma(models.Model):
     equipo = models.ForeignKey(Equipo, null=True, blank=True, on_delete=models.CASCADE)
