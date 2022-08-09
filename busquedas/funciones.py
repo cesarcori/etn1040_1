@@ -92,6 +92,8 @@ def searchShowAll(buscado):
     return dicc_score
 
 def searchGeneralDb(buscado):
+    """Algoritmo de busqueda profunda"""
+
     c1 = contenido(ProyectosInscritos.objects.all())
     c2 = contenido(ProyectosExcel.objects.all())
 
