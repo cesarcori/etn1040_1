@@ -12,7 +12,7 @@
     {% for actividad in actividades %}
     <tr>
       <td>
-        {{actividad.actividad.orden}}
+        {% comment %}{{actividad.actividad.orden}}{% endcomment %}
         {{actividad.actividad.nombre_humano|capfirst}}
       </td>
        <td>
