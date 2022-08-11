@@ -114,8 +114,8 @@ def remover_actividad(sender, action, instance, pk_set, **kwargs):
 
 @receiver(post_save, sender=DatosEstudiante)
 def cambio_nivel_ie(sender, instance, created, **kwargs):
-    """Cuando se cambia el docente del estudiante, el docente del grupo
-    tambien se actualizara."""
+    """Cuando el ie del estudiante se modifica tambien lo hace el ie 
+    del equipo."""
     if not created:
         instance.equipo.nivel_ie = instance.nivel_ie
         instance.equipo.save()
