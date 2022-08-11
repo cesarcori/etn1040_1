@@ -10,7 +10,7 @@ from actividades.funciones import agregarActividadEquipo
 @receiver(post_save, sender=SalaDocumentoDoc)
 def CrearValoresIniciales(sender, instance, created, **kwargs):
     """Al momento de crear la SalaDocumentoDoc se creará valores 
-    predeterminados"""
+    predeterminados o personalizados"""
     tipo = instance.tipo
     usuario = instance.revisor
     grupo = instance.grupo_revisor.__str__()
@@ -61,8 +61,8 @@ def primeraSalaRevision(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=SalaDocumentoDoc)
 def cambioSalaDocumentoDoc(sender, instance, update_fields, **kwargs):
-    """Al momento de crear la SalaDocumentoDoc se creará valores 
-    predeterminados"""
+    """Al momento del cambio de la sala del documento se visualiza los cambios
+    del documento"""
     tipo = instance.tipo
     usuario = instance.revisor
     grupo = instance.grupo_revisor.__str__()
