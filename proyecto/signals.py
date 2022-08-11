@@ -25,8 +25,8 @@ def eliminar_equipo(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=DatosEstudiante)
 def eliminar_estudiante(sender, instance, **kwargs):
-    """Al eliminar un equipo se eliminaran a todos sus estudiantes 
-    relacionados con este"""
+    """Al eliminar un estudiante y el equipo es solo de uno 
+    se eliminaran al equipo que pertenece, caso contrario no se realiza nada"""
     equipo = instance.equipo
     if instance.equipo.datosestudiante_set.count() < 2:
         equipo.delete()
