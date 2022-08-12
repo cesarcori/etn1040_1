@@ -190,8 +190,8 @@ def home(request):
             # creacion de salas docente-estudiante
             id_docente = str(DatosEstudiante.objects.last().grupo_doc.usuario_id)
             id_estudiante = str(DatosEstudiante.objects.last().usuario_id)
-            nombre_sala = id_docente + id_estudiante
-            Sala.objects.create(nombre_sala = nombre_sala)
+            # nombre_sala = id_docente + id_estudiante
+            # Sala.objects.create(nombre_sala = nombre_sala)
             # cambiar de grupo
             group = Group.objects.get(name='estudiante')
             group2 = Group.objects.get(name='solicitud')
@@ -543,10 +543,10 @@ def estudiante(request):
             estudiante.grupo_doc = docente_asignado
             estudiante.save()
             # creacion de salas docente-estudiante
-            id_docente = estudiante.grupo_doc.usuario_id.__str__()
-            id_estudiante = estudiante.usuario_id.__str__()
-            nombre_sala = id_docente + id_estudiante
-            Sala.objects.create(nombre_sala = nombre_sala)
+            # id_docente = estudiante.grupo_doc.usuario_id.__str__()
+            # id_estudiante = estudiante.usuario_id.__str__()
+            # nombre_sala = id_docente + id_estudiante
+            # Sala.objects.create(nombre_sala = nombre_sala)
             return redirect('estudiante')
         return render(request, 'proyecto/sorteo_docente.html')
     # else:
@@ -1763,10 +1763,10 @@ def paso3(request):
                 equipo.save()
                 # creacion de salas tutor-estudiante
                 for integrante in integrantes:
-                    id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
-                    id_estudiante = str(integrante.usuario.id)
-                    nombre_sala = id_tutor + id_estudiante
-                    Sala.objects.create(nombre_sala = nombre_sala)
+                    # id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
+                    # id_estudiante = str(integrante.usuario.id)
+                    # nombre_sala = id_tutor + id_estudiante
+                    # Sala.objects.create(nombre_sala = nombre_sala)
                     actividad = Actividad.objects.get(nombre='solicitud tutoria')
                     integrante.actividad.add(actividad)
             else: 
@@ -1799,10 +1799,10 @@ def paso3(request):
                 equipo.save()
                 # creacion de salas tutor-estudiante
                 for integrante in integrantes:
-                    id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
-                    id_estudiante = str(integrante.usuario.id)
-                    nombre_sala = id_tutor + id_estudiante
-                    Sala.objects.create(nombre_sala = nombre_sala)
+                    # id_tutor = str(DatosTutor.objects.get(correo=correo).usuario_id)
+                    # id_estudiante = str(integrante.usuario.id)
+                    # nombre_sala = id_tutor + id_estudiante
+                    # Sala.objects.create(nombre_sala = nombre_sala)
                     actividad = Actividad.objects.get(nombre='solicitud tutoria')
                     integrante.actividad.add(actividad)
                 # activacion por email
