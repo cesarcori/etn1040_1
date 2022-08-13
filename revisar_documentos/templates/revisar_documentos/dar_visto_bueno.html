@@ -25,7 +25,9 @@
     </form>
   {% endif %}
 {% elif grupo == "docente" and sala_doc.tipo == "perfil" %}
-  {% if not registro_perfil.perfil %}
+  {% if not is_cerrado %}
+    <h3>No se cerraron todas las salas</h3>
+  {% elif not registro_perfil.perfil %}
     <h3>Antes de dar el visto bueno, debe registrar el documento final
     con todos sus datos</h3>
     <div class="d-flex justify-content-evenly">
