@@ -26,15 +26,17 @@ class DatosDocenteTest(TestCase):
             
     def test_solicitud_invitado(self):
         usuario = User.objects.create(first_name="Ricardo", last_name="Jordan Rodriguez")
-        w = SolicitudInvitado.objects.create(
+        w = DatosDocente.objects.create(
             usuario = usuario,
             correo = "test@gmail.com",
             nombre = "Ricardo",
             apellido = "Jordan Rodriguez",
             celular = "73675872",
-            grupo = "B"
             mencion = "Sistemas de Contol",
-            fecha_solicitud = timezone.now(),
+            grupo = "B",
+            firma = 'firmas/firma_default.jpg',
+            imagen_perfil = "imagenes/profile1.png",
+            fecha_inscripcion = timezone.now(),
         )
 
-        self.assertTrue(isinstance(w, SolicitudInvitado))
+        self.assertTrue(isinstance(w, DatosDocente))
