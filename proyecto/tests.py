@@ -24,7 +24,7 @@ class SolicitudInvitadoTest(TestCase):
 
 class DatosDocenteTest(TestCase):
             
-    def test_solicitud_invitado(self):
+    def test_datos_docente(self):
         usuario = User.objects.create(first_name="Ricardo", last_name="Jordan Rodriguez")
         w = DatosDocente.objects.create(
             usuario = usuario,
@@ -40,3 +40,19 @@ class DatosDocenteTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, DatosDocente))
+
+class DatosDirectorTest(TestCase):
+            
+    def test_datos_director(self):
+        usuario = User.objects.create(first_name="Ricardo", last_name="Jordan Rodriguez")
+        w = DatosDirector.objects.create(
+            usuario = usuario,
+            correo = "test@gmail.com",
+            nombre = "Ricardo",
+            apellido = "Jordan Rodriguez",
+            celular = "73675872",
+            imagen_perfil = "imagenes/profile1.png",
+            fecha_inscripcion = timezone.now(),
+        )
+
+        self.assertTrue(isinstance(w, DatosDirector))
