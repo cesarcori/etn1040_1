@@ -59,10 +59,14 @@ def cambio_actividad(sender, action, instance, pk_set, **kwargs):
                 DatosDirector.objects.all()[0].usuario,
                 instance.equipo.tutor.usuario, 
             ]
-        else : 
+        elif DatosDirector.objects.first(): 
             lista_usuarios = [
                 instance.equipo.docente.usuario, 
                 DatosDirector.objects.all()[0].usuario,
+            ]
+        else : 
+            lista_usuarios = [
+                instance.equipo.docente.usuario, 
             ]
         # actividad_agregada = instance.actividad.last()
         for pk in pk_set:
