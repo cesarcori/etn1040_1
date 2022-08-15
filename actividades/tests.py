@@ -33,3 +33,23 @@ class ActividadHistorialTest(TestCase):
                 fecha_creacion = timezone.now(),
                 )
         self.assertTrue(isinstance(w, ActividadHistorial))
+
+class AvisoActividadTest(TestCase):
+    def test_aviso_actividad(self):
+        usuario = User.objects.create(first_name="Ricardo", last_name="Jordan Rodriguez")
+        actividad = Actividad.objects.create(
+                nombre="estudiar reglamento", 
+                nombre_humano="Se debe estudiar el reglamento",
+                detalle="El estudiante debe estudiar el reglamento y confirmar su estudio",
+                valor=4,
+                orden=1,
+                )
+        w = AvisoActividad.objects.create(
+                usuario = usuario,
+                # equipo =
+                visto = False,
+                # actividades = many ot many
+                fecha_creacion = timezone.now(),
+                )
+        w.actividades.add(actividad)
+        self.assertTrue(isinstance(w, AvisoActividad))
