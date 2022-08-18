@@ -488,3 +488,12 @@ class RegistroPerfilTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, RegistroPerfil))
+
+class FormulariosTest(TestCase):
+            
+    def test_formularios(self):
+        w = Formularios.objects.create(
+            archivo = 'formularios/formulario_de_aprobacion.pdf',
+        )
+
+        self.assertTrue(isinstance(w, Formularios))
