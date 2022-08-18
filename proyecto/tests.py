@@ -252,3 +252,14 @@ class DatosAdministradorTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, DatosAdministrador))
+
+class ComunicadoTest(TestCase):
+            
+    def test_comunicado(self):
+        w = Comunicado.objects.create(
+            tema = "Reunión de emergencia",
+            texto = "El día de ayer recibí una noticia sobre los nuevos horarios",
+            fecha_creacion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, Comunicado))
