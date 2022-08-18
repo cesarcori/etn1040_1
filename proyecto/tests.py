@@ -497,3 +497,15 @@ class FormulariosTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, Formularios))
+
+class ActividadesCronogramaTest(TestCase):
+            
+    def test_actividades_cronograma(self):
+        w = ActividadesCronograma.objects.create(
+            actividad = "Diseño de la interfaz de usuario",
+            semana_inicial = 7,
+            semana_final= 10,
+            fecha_creacion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, ActividadesCronograma))
