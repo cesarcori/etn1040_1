@@ -179,3 +179,76 @@ class DatosEstudianteTest(TestCase):
         w.actividad.add(actividad1)
 
         self.assertTrue(isinstance(w, DatosEstudiante))
+
+
+class EquipoTest(TestCase):
+            
+    def test_equipo(self):
+        w = Equipo.objects.create(
+            nombre = "Equipo Marco",
+            alias = "Los Transistores",
+            cantidad = 2,
+            # docente = models.ForeignKey(DatosDocente,on_delete=models.SET_NULL, null=True, blank=True)
+            # tutor = models.ForeignKey(DatosTutor,on_delete=models.SET_NULL, null=True, blank=True)
+            tutor_acepto = False,
+            solicitud_tribunal_docente = False,
+            # tribunales = models.ManyToManyField(DatosTribunal, blank=True)
+            nota_final = 80,
+            is_concluido = False,
+            nivel_ie = 0.8879,
+            fecha_conclusion = timezone.now(),
+            fecha_creacion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, Equipo))
+
+class MaterialDocenteTest(TestCase):
+            
+    def test_material_docente(self):
+        w = MaterialDocente.objects.create(
+            material_docente = 'material_docente/',
+        )
+
+        self.assertTrue(isinstance(w, MaterialDocente))
+
+class VistaMaterialDocenteTest(TestCase):
+            
+    def test_vista_material_docente(self):
+        w = VistaMaterialDocente.objects.create(
+        )
+
+        self.assertTrue(isinstance(w, VistaMaterialDocente))
+
+class DatosEstudianteTituladoTest(TestCase):
+            
+    def test_datos_estudiante_titulado(self):
+        w = DatosEstudianteTitulado.objects.create(
+            correo = "ejemplo@gmail.com",
+            nombre = "Alfredo",
+            apellido = "Morales Alanoca",
+            carnet = "7009836",
+            extension = "L.P.",
+            registro_uni = "9876153",
+            celular = "75693457",
+            mencion = "Sistemas de Computación",
+            tutor = "Ramiro Mendieta Orellana",
+            docente = "Esteban Salazar Molina",
+            imagen_perfil = "imagenes/profile1.png",
+            fecha_conclusion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, DatosEstudianteTitulado))
+
+class DatosAdministradorTest(TestCase):
+            
+    def test_datos_administrador(self):
+        w = DatosAdministrador.objects.create(
+            correo = "ejemplo@gmail.com",
+            nombre = "Alfredo",
+            apellido = "Morales Alanoca",
+            celular = "75693457",
+            imagen_perfil = "imagenes/profile1.png",
+            fecha_inscripcion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, DatosAdministrador))
