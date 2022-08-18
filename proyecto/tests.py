@@ -509,3 +509,12 @@ class ActividadesCronogramaTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, ActividadesCronograma))
+
+class RegistroCronogramaTest(TestCase):
+            
+    def test_registro_cronograma(self):
+        w = RegistroCronograma.objects.create(
+            fecha_creacion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, RegistroCronograma))
