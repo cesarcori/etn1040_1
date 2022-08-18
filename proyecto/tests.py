@@ -272,3 +272,11 @@ class ReglamentoTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, Reglamento))
+
+class VistaReglamentoTest(TestCase):
+            
+    def test_vista_reglamento(self):
+        w = VistaReglamento.objects.create(
+        )
+
+        self.assertTrue(isinstance(w, VistaReglamento))
