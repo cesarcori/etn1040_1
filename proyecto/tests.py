@@ -263,3 +263,12 @@ class ComunicadoTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, Comunicado))
+
+class ReglamentoTest(TestCase):
+            
+    def test_reglamento(self):
+        w = Reglamento.objects.create(
+            archivo = 'reglamentos/Reglamento_de_proyecto_de_grado.pdf',
+        )
+
+        self.assertTrue(isinstance(w, Reglamento))
