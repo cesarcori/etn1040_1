@@ -966,3 +966,19 @@ class MencionTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, Mencion))
+
+class DocumentosTest(TestCase):
+    def test_documentos(self):
+        w = Documentos.objects.create(
+            firma_carta_aceptacion = False,
+            firma_carta_conclusion = True,
+            firma_formulario1 = True,
+            firma_formulario2 = False,
+            firma_formulario3 = False,
+            firma_formulario4 = False,
+            firma_formulario1_doc= False,
+            firma_formulario2_doc = False,
+            firma_formulario4_doc = True,
+        )
+
+        self.assertTrue(isinstance(w, Documentos))
