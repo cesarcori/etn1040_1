@@ -949,3 +949,13 @@ class NotaTribunalTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, NotaTribunal))
+
+class AuspicioTest(TestCase):
+    def test_auspicio(self):
+        w = Auspicio.objects.create(
+            empresa = "Coca Cola",
+            supervisor = "Ing. Jorge Vladimir Quispe",
+            cargo = "Supervisor de Area de Control",
+        )
+
+        self.assertTrue(isinstance(w, Auspicio))
