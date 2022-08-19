@@ -71,3 +71,12 @@ class MensajeRevisarDocTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, MensajeRevisarDoc))
+
+class NotaSalaRevisarDocTest(TestCase):
+    def test_nota_sala_revisar_doc(self):
+        w = NotaSalaRevisarDoc.objects.create(
+            nota = 15,
+            nota_max = 20,
+        )
+
+        self.assertTrue(isinstance(w, NotaSalaRevisarDoc))
