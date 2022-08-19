@@ -15,3 +15,11 @@ class SalaDocumentoDocTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, SalaDocumentoDoc))
+
+class ConfiguracionSalaTest(TestCase):
+    def test_configuracion_sala(self):
+        w = ConfiguracionSala.objects.create(
+            is_predeterminado = False,
+        )
+
+        self.assertTrue(isinstance(w, ConfiguracionSala))
