@@ -61,3 +61,13 @@ class SalaRevisarDocTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, SalaRevisarDoc))
+
+class MensajeRevisarDocTest(TestCase):
+    def test_mensaje_revisar_doc(self):
+        w = MensajeRevisarDoc.objects.create(
+            mensaje = "Falta mejorar las observaciones.",
+            visto = False,
+            fecha_creacion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, MensajeRevisarDoc))
