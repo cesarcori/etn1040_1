@@ -940,3 +940,12 @@ class RegistroProyectoTribunalTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, RegistroProyectoTribunal))
+
+class NotaTribunalTest(TestCase):
+            
+    def test_nota_tribunal(self):
+        w = NotaTribunal.objects.create(
+            nota = 50,
+        )
+
+        self.assertTrue(isinstance(w, NotaTribunal))
