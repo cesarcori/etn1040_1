@@ -733,7 +733,6 @@ class ProyectoDeGradoTest(TestCase):
         self.assertTrue(isinstance(w, ProyectoDeGrado))
 
 class RegistroProyectoTribunalTest(TestCase):
-            
     def test_registro_proyecto_tribunal(self):
         w = RegistroProyectoTribunal.objects.create(
             titulo = """
@@ -942,7 +941,6 @@ class RegistroProyectoTribunalTest(TestCase):
         self.assertTrue(isinstance(w, RegistroProyectoTribunal))
 
 class NotaTribunalTest(TestCase):
-            
     def test_nota_tribunal(self):
         w = NotaTribunal.objects.create(
             nota = 50,
@@ -959,3 +957,12 @@ class AuspicioTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, Auspicio))
+
+class MencionTest(TestCase):
+    def test_mencion(self):
+        w = Mencion.objects.create(
+            nombre = "Sistemas de Computación",
+            fecha_creacion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, Mencion))
