@@ -44,7 +44,7 @@ def cambio_actividad(sender, action, instance, pk_set, **kwargs):
     """Cuando se aumenta un valor en actividades del estudiante enviará
     un aviso."""
     if action == "post_add":
-        print(f"*********** aviso agregado *******")
+        # print(f"*********** aviso agregado *******")
         if instance.equipo.tribunales.all().count() == 2:
             lista_usuarios = [
                 instance.equipo.docente.usuario, 
