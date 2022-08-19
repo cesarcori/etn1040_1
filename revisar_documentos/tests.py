@@ -80,3 +80,16 @@ class NotaSalaRevisarDocTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, NotaSalaRevisarDoc))
+
+class RevisarDocPredeterminadoTest(TestCase):
+    def test_revisar_doc_predeterminado(self):
+        w = RevisarDocPredeterminado.objects.create(
+            orden = 1,
+            asunto = "Capitulo 1: INTRODUCCIÓN",
+            detalle = "Completar la introduccion del documento",
+            tipo = "proyecto",
+            nota_max = 14,
+            fecha_creacion = timezone.now()
+        )
+
+        self.assertTrue(isinstance(w, RevisarDocPredeterminado))
