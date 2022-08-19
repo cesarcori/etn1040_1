@@ -23,3 +23,41 @@ class ConfiguracionSalaTest(TestCase):
         )
 
         self.assertTrue(isinstance(w, ConfiguracionSala))
+
+class SalaRevisarDocTest(TestCase):
+    def test_sala_revisar_doc(self):
+        equipo = Equipo.objects.create(
+                nombre = "Equipo Transistores",
+                alias = "Equipo de transistores",
+                cantidad = 3,
+                # docente = docente, 
+                # tutor = tutor,
+                tutor_acepto = False,
+                solicitud_tribunal_docente = False,
+                nota_final = 60,
+                is_concluido = False,
+                nivel_ie = 0.789,
+                fecha_conclusion = timezone.now(),
+                fecha_creacion = timezone.now(),
+                )
+        grupo_revisor = Group.objects.create(name="tutor")
+        sala_documento = SalaDocumentoDoc.objects.create(
+            equipo = equipo,
+            grupo_revisor = grupo_revisor,
+            visto_bueno = False,
+            tipo = "perfil",
+            updated = timezone.now(),
+            fecha_creacion = timezone.now(),
+        )
+        w = SalaRevisarDoc.objects.create(
+            sala_documento = sala_documento,
+            asunto = "Primera revision",
+            detalle = "Mandar toda la informacion que recabaste",
+            archivo_corregir = 'material_estudiante_perfil/perfil_borrador.pdf',
+            nota = 14,
+            nota_max = 16,
+            is_calificado = True,
+            fecha_creacion = timezone.now(),
+        )
+
+        self.assertTrue(isinstance(w, SalaRevisarDoc))
