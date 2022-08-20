@@ -18,7 +18,7 @@ def contenido(db_proyectos):
     return contenido
 
 
-
+# Prueba, no implementa al sistema
 def search(buscado):
     tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
     lista_nombres = [item for item in tesis_df['NOMBRE']]
@@ -55,6 +55,7 @@ def search(buscado):
         dicc_score[score_titulo[0]] = score_titulo[1]
     return dicc_score
 
+# Prueba, no implementa al sistema
 def searchShowAll(buscado):
     tesis_df = pd.read_csv("~/csv_json_files/proyectos_carrera_etn/proy_titulo_autor.csv")
     lista_nombres = [item for item in tesis_df['NOMBRE']]
