@@ -5,16 +5,16 @@
 {% if sala_doc.tipo == 'proyecto'%}
   <div class="d-flex flex-row-reverse">
     {% if documento.archivo %}
-      <a class="btn btn-success" href={% url 'documentos:subir_documento' "plantilla_observacion" estudiante.pk %} >
-        Cambiar plantilla escaneado
+      <a class="btn btn-success" href={% url 'documentos:subir_documento' "planilla_avance" estudiante.pk %} >
+        Cambiar planilla escaneado
       </a>
     {% else %}
-      <a class="btn btn-danger" href={% url 'documentos:subir_documento' "plantilla_observacion" estudiante.pk %} >
-        Subir plantilla escaneada
+      <a class="btn btn-danger" href={% url 'documentos:subir_documento' "planilla_avance" estudiante.pk %} >
+        Subir planilla escaneada
       </a>
     {% endif %}
     <a class="btn btn-primary" target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %}>
-      Plantilla Observación Tutor
+      Planilla Avance Tutor
     </a>
   </div>
   <br>

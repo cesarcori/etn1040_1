@@ -93,9 +93,9 @@
             <td class='bg-success text-white'>
               <div class="d-flex justify-content-between">
                 <a target=_blank href={% url 'reportes:capitulos-tutor' sala_doc.equipo.id %} class='text-white text-underline-hover'>
-                  Plantilla de observaciones
+                  Planilla de avance
                 </a>
-                <a href={% url 'documentos:subir_documento' "plantilla_observacion" estudiante.pk %} class='text-white text-underline-hover'>
+                <a href={% url 'documentos:subir_documento' "planilla_avance" estudiante.pk %} class='text-white text-underline-hover'>
                   {% if documento.archivo %}
                     Cambiar documento escaneado
                   {% else %}
@@ -105,23 +105,23 @@
               </div>
             </td>
             <td class='bg-success text-white'>
-              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "plantilla_observacion" %} 
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "planilla_avance" %} 
                 class='text-white text-underline-hover'>
                 Ver
               </a>
             </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% elif grupo != 'tutor' and is_vb_proyecto_tutor %}
-            <td class='bg-success text-white'>Plantilla de observaciones</td>
+            <td class='bg-success text-white'>Planilla de avance</td>
             <td class='bg-success text-white'>
-              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "plantilla_observacion" %} 
+              <a target='_blank' href={% url "documentos:ver_documento" estudiante.equipo.pk "planilla_avance" %} 
                 class='text-white text-underline-hover'>
                 Ver
               </a>
             </td>
             <td class='bg-success text-white'><i class="fas fa-check"></i></td>
           {% else %}
-            <td class='bg-danger text-white'>Plantilla de observaciones</td>
+            <td class='bg-danger text-white'>Planilla de avance</td>
             <td class='bg-danger text-white'></td>
             <td class='bg-danger text-white'><i class="fas fa-times"></i></td>
           {% endif %}

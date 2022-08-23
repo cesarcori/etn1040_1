@@ -990,7 +990,7 @@ def progresoEstudiante(request, pk):
                 suma += no_visto_nota[1].nota
                 # promedio = round(float(suma / len(dicc_salas)),1)
     # sala_proyecto = SalaDocumentoDoc.objects.get(equipo=equipo, revisor=request.user, tipo='proyecto')
-    documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='plantilla_observacion')
+    documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='planilla_avance')
 
     # calificar avance
     is_calificar_avance = False
@@ -2112,7 +2112,7 @@ def paso5(request):
     if sala_doc.visto_bueno:
         sala_doc, created = SalaDocumentoDoc.objects.get_or_create(equipo=estudiante.equipo, grupo_revisor=docente.usuario.groups.get(), revisor=docente.usuario, tipo='proyecto')
     salas_doc = SalaDocumentoDoc.objects.filter(equipo=estudiante.equipo, tipo='proyecto')
-    documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='plantilla_observacion')
+    documento, created = Documento.objects.get_or_create(equipo=equipo, tipo='planilla_avance')
     carta_conclusion, created = Documento.objects.get_or_create(equipo=equipo, tipo='carta_conclusion')
     context = {'grupo': grupo, 'progreso': progreso,'proyecto_grado':proyecto_grado,
             'proyecto': proyecto,'estudiante':estudiante,

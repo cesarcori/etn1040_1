@@ -553,7 +553,7 @@ def generarFirmaTutorCapitulos(buffer, equipo):
     story = []
     style = styleSheet['BodyText']
 
-    header = Paragraph("<para align=center><b><font size=12>Plantilla de Avance</font></b></para>", style)
+    header = Paragraph("<para align=center><b><font size=12>Planilla de Avance</font></b></para>", style)
 
     # p = Paragraph('* ' +'''La referencia bibliografica debe estar de acuerdo con 
     # las nomas apa ademas se seguir escribiendo. trabajando \n mas'''+'* '+ '''otro parrafo

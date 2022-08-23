@@ -2,7 +2,7 @@
 {% block content %}
 <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-replace-svg="nest"></script>
 
-<div class='text-right'><a href={% url 'reporte_capitulos' estudiante.id %}>Imprimir Plantilla Observación</a></div>
+<div class='text-right'><a href={% url 'reporte_capitulos' estudiante.id %}>Imprimir Planilla de Avance</a></div>
 {% if estudiante.vb_proyecto_tutor %}
     <div class='text-right'><a href={%url 'carta_final' estudiante.id %}>Carta de Conclusión</a></div>
 {% else %}
