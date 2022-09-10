@@ -1,0 +1,151 @@
+# Sistema etn1040
+
+Sistema que realiza la administración y búsqueda de proyectos de grado de 
+la asignatura **Proyecto de Grado ETN-1040**.
+
+# Sitio de alojamiento implementado
+
+El sistema se encuentra implementado el alojamiento web gratuito:
+pythoanywhere, bajo la URL: https://etn1040.pythonanywhere.com/ 
+
+Soporte hasta el 3 de diciembre de 2022.
+
+Nombres de usuario y contraseñas de ingreso: 
+
+Administrador: 
+    
+    usuario: kardex
+    contraseña: kardex
+
+Director:
+
+    usuario: bush_director
+    contraseña: bush_director 
+
+Docentes: 
+```
+usuario: pedro123_docente 
+contraseña: pedro123_docente 
+
+usuario: alberto123_docente 
+contraseña: alberto123_docente
+
+usuario: esteban123_docente 
+contraseña: esteban123_docente 
+
+usuario: orlando123_docente
+contraseña: orlando123_docente
+
+usuario: ricardo123_docente 
+contraseña: ricardo123_docente
+```
+
+Estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
+```
+usuario: bethy
+usuario: arnol
+usuario: wilson
+usuario: camila
+usuario: mara
+usuario: milenka
+usuario: alejandra
+usuario: esteban
+usuario: israel
+```
+
+Tutores: 
+
+```
+usuario: arturo2000_tutor
+contraseña: arturo2000_tutor
+
+usuario: umsa_romeo_tutor
+contraseña: umsa_romeo_tutor
+
+usuario: ingeniero_lozano_tutor
+contraseña: ingeniero_lozano_tutor
+
+usuario: miranda123_tutor
+contraseña: miranda123_tutor
+
+usuario: ing_nina_tutor
+contraseña: ing_nina_tutor
+
+usuario: freddy12345_tutor 
+contraseña: freddy12345_tutor
+
+```
+Tribunales: 
+```
+usuario: arturo2000_tribunal
+contraseña: arturo2000_tribunal
+
+usuario: enriquecontreras_tribunal
+contraseña: enriquecontreras_tribunal
+
+usuario: pedrolazo_tribunal
+contraseña: pedrolazo_tribunal
+
+usuario: freddy12345_tribunal
+contraseña: freddy12345_tribunal
+
+usuario: ricardo_tribunal
+contraseña: ricardo_tribunal
+
+usuario: ricardo_tribunal
+contraseña: ricardo_tribunal
+
+```
+
+
+# Uso
+
+Los siguientes videos muestran el modo de uso del sistema.
+
+# Instalación
+
+Requisitos para la instalación en un entorno local:
+
+* Sistema operativo con distribunación Linux (Para la ejecución del script de inicio).
+* Python 3.8 o superior.
+
+Clonar el repositorio y acceder en la carpeta etn1040_1/ para ejecutar el script de inicio.
+
+    clone https://github.com/cesarcori/etn1040_1
+    cd etn1040_1
+    ./iniciar_configuracion.sh
+
+Activar el entorno virtual
+
+    source ../virtual-django/bin/activate 
+
+Crear super usuario:
+
+    python3 manage.py createsuperuser
+
+Agregar docentes:
+
+A través del inicio del sistema ingresar al URL: http://localhost:8000 con los datos: 
+
+    Usuario: kardex
+    Contraseña: kardex
+
+En la pestaña **Docentes** Agregar mínimo un docente por mención. Por ejemplo:
+
+    Nombre: Alberto
+    Apellido: Ticona Callisaya
+    Correo: albertoticona@gmail.com
+    Grupo: A
+    Mención: (Elegir opción)
+
+El nombre del usuario y contraseña de los docentes, es generado por el sistema.
+Toma como patrón la palabra antes del símbolo “@” del correo electrónico, 
+seguido de la palabra “_docente”. 
+
+Ejemplo 1: Correo: albertoticona@gmail.com
+
+    Usuario: albertoticona_docente
+    Contraseña: albertoticona_docente
+
+
+
