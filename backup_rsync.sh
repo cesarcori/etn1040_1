@@ -1,8 +1,14 @@
 #!/bin/bash 
-#source_path="$HOME/prueba/directorio_prueba/"
+out_path="../backup_etn1040/"
+if [ ! -d "$out_path" ]; then
+  # Tomar acción si el directorio no existe
+    echo "Creando directorio ${out_path}..."
+    mkdir $out_path
+else
+    echo ""
+fi
 source_path="../etn1040_1/"
 foldername=$(basename $source_path)
-out_path="../backup_etn1040/"
 backup_date=$(date +"%Y-%b-%d_%H:%M:%S")
 output_nodate="${out_path}${foldername}-backup"
 output_date="${output_nodate}_${backup_date}"
