@@ -175,6 +175,7 @@ def home(request):
             # sin_tutor = User.objects.get(username='sin_tutor')
             if DatosEstudiante.objects.filter(correo=info_usuario.correo):
                 return HttpResponse('Ocurrio un error')
+                DatosEstudiante.objects.get(correo=info_usuario.correo).delete()
             else:
                 DatosEstudiante.objects.create(
                         usuario = User.objects.get(username=info_usuario.usuario),
