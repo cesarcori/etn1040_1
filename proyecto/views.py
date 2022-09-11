@@ -184,14 +184,8 @@ def home(request):
                     celular = info_usuario.celular,
                     mencion = info_usuario.mencion,
                     grupo_doc = docente_asignado,
-                    # tutor = DatosTutor.objects.get(nombre='sin_tutor')
                     )
             estudiante = DatosEstudiante.objects.get(correo=info_usuario.correo)
-            # creacion de salas docente-estudiante
-            id_docente = str(DatosEstudiante.objects.last().grupo_doc.usuario_id)
-            id_estudiante = str(DatosEstudiante.objects.last().usuario_id)
-            # nombre_sala = id_docente + id_estudiante
-            # Sala.objects.create(nombre_sala = nombre_sala)
             # cambiar de grupo
             group = Group.objects.get(name='estudiante')
             group2 = Group.objects.get(name='solicitud')

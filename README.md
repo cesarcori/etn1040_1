@@ -22,6 +22,53 @@ Director:
     usuario: bush_director
     contraseña: bush_director 
 
+Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
+
+**Paso 1:** Estudio de reglamentos y material del docente.
+
+Ing. Campero
+
+    usuario: bethy
+
+Ing. Duchen
+    
+    usuario: arnol
+
+**Paso 2:** Búsqueda de proyectos de grado.
+
+Nota: La búsqueda profunda se encuentra rota. El almacenamiento en el 
+servidor gratuito es de 500MB y las librerías Python requieren de 600MB aproximadamente. 
+
+Ing. Campero
+
+    usuario: wilson
+
+Ing. Duchen
+
+    usuario: camila
+
+**Paso 3:** Elección de modalidad y registro de tutoría.
+
+Ing. Campero
+
+    usuario: mara
+
+Ing. Duchen
+
+    usuario: milenka
+
+**Paso 4:** 
+
+Ing. Campero
+
+    usuario: alejandra
+
+Ing. Duchen
+
+    usuario: esteban
+
+usuario: israel
+
 Docentes: 
 ```
 usuario: pedro123_docente 
@@ -38,19 +85,6 @@ contraseña: orlando123_docente
 
 usuario: ricardo123_docente 
 contraseña: ricardo123_docente
-```
-
-Estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
-```
-usuario: bethy
-usuario: arnol
-usuario: wilson
-usuario: camila
-usuario: mara
-usuario: milenka
-usuario: alejandra
-usuario: esteban
-usuario: israel
 ```
 
 Tutores: 
