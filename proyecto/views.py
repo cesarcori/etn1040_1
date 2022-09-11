@@ -172,9 +172,7 @@ def home(request):
             # sorteo de grupo_docente
             docente_asignado = sorteoDocente(info_usuario)
             # creacion de datos del usuario
-            # sin_tutor = User.objects.get(username='sin_tutor')
             if DatosEstudiante.objects.filter(correo=info_usuario.correo):
-                return HttpResponse('Ocurrio un error')
                 DatosEstudiante.objects.get(correo=info_usuario.correo).delete()
             else:
                 DatosEstudiante.objects.create(
