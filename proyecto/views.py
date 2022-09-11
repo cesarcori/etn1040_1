@@ -173,27 +173,31 @@ def home(request):
             docente_asignado = sorteoDocente(info_usuario)
             # creacion de datos del usuario
             # sin_tutor = User.objects.get(username='sin_tutor')
-            DatosEstudiante.objects.create(
-                    usuario = User.objects.get(username=info_usuario.usuario),
-                    correo = info_usuario.correo,
-                    nombre = info_usuario.nombre,
-                    apellido = info_usuario.apellido,
-                    carnet = info_usuario.carnet,
-                    extension = info_usuario.extension,
-                    registro_uni = info_usuario.registro_uni,
-                    celular = info_usuario.celular,
-                    mencion = info_usuario.mencion,
-                    grupo_doc = docente_asignado,
-                    )
-            estudiante = DatosEstudiante.objects.get(correo=info_usuario.correo)
-            # cambiar de grupo
-            group = Group.objects.get(name='estudiante')
-            group2 = Group.objects.get(name='solicitud')
-            user = User.objects.get(username=info_usuario.usuario)
-            user.groups.add(group)
-            user.groups.remove(group2)
-            
-            SolicitudInvitado.objects.get(pk=usuario_habi).delete()
+            try:
+                DatosEstudiante.objects.create(
+                        usuario = User.objects.get(username=info_usuario.usuario),
+                        correo = info_usuario.correo,
+                        nombre = info_usuario.nombre,
+                        apellido = info_usuario.apellido,
+                        carnet = info_usuario.carnet,
+                        extension = info_usuario.extension,
+                        registro_uni = info_usuario.registro_uni,
+                        celular = info_usuario.celular,
+                        mencion = info_usuario.mencion,
+                        grupo_doc = docente_asignado,
+                        )
+
+                estudiante = DatosEstudiante.objects.get(correo=info_usuario.correo)
+                # cambiar de grupo
+                group = Group.objects.get(name='estudiante')
+                group2 = Group.objects.get(name='solicitud')
+                user = User.objects.get(username=info_usuario.usuario)
+                user.groups.add(group)
+                user.groups.remove(group2)
+                SolicitudInvitado.objects.get(pk=usuario_habi).delete()
+
+            except IntegrityError:
+                DatosEstudiante.objects.get(correo=info_usuario.correo).delete()
 
         elif usuario_elim != None:
             info_usuario = SolicitudInvitado.objects.get(pk=usuario_elim)
