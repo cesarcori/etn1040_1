@@ -25,6 +25,8 @@ Director:
     usuario: bush_director
     contraseña: bush_director 
 
+## Ejemplo del proceso del estudiante.
+
 Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
 
 **Paso 1:** Estudio de reglamentos y material del docente.
@@ -75,11 +77,11 @@ Ing. Duchen
 
 Ing. Campero
 
-    usuario: israel
+    usuario: pablo
 
 Ing. Duchen
 
-    usuario: pablo
+    usuario: israel
 
 **Paso 6:** Revisión y evaluación del proyecto final
 
