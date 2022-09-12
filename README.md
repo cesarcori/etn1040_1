@@ -57,7 +57,7 @@ Ing. Duchen
 
     usuario: milenka
 
-**Paso 4:** 
+**Paso 4:** Revisión y aprobación del perfil de proyecto de grado
 
 Ing. Campero
 
@@ -65,9 +65,27 @@ Ing. Campero
 
 Ing. Duchen
 
-    usuario: esteban
+    usuario: ernesto
 
-usuario: israel
+**Paso 5:** Revisión y evaluación del borrador de proyecto de grado
+
+Ing. Campero
+
+    usuario: israel
+
+Ing. Duchen
+
+    usuario: pablo
+
+**Paso 6:** Revisión y evaluación del proyecto final
+
+Ing. Campero
+
+    usuario: ricardo
+
+Ing. Duchen
+
+    usuario: florencia
 
 Docentes: 
 ```
