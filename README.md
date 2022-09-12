@@ -51,7 +51,7 @@ Ing. Duchen
 
     usuario: camila
 
-**Paso 3:** Elección de modalidad y registro de tutoría.
+**Paso 3:** Elección de modalidad y registro de tutoría. [Video demo](https://youtu.be/EDzH-kTm71A)
 
 Ing. Campero
 
