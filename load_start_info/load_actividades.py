@@ -16,6 +16,7 @@ if not Actividad.objects.all().count() > 25:
         detalle = item.get('detalle'),
         valor = item.get('valor'),
         orden = item.get('orden')
+        nombre_humano = item.get('nombre_humano')
         print(f"Cargando actividad: {nombre[0]}")
         # print(nombre[0], detalle[0], valor[0], orden)
         Actividad.objects.create(
@@ -23,6 +24,7 @@ if not Actividad.objects.all().count() > 25:
             detalle=detalle[0],
             valor=valor[0],
             orden=orden,
+            nombre_humano=nombre_humano[0],
             )
 else:
     print("*** Ya se cargo las actividades")
