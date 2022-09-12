@@ -7,6 +7,8 @@ la asignatura **Proyecto de Grado ETN-1040**.
 
 El sistema se encuentra implementado el alojamiento web gratuito:
 pythoanywhere, bajo la URL: https://etn1040.pythonanywhere.com/ 
+Nota: Todas las pruebas y creaciones de usuario son restablecidad al punto de
+del ejemplo cada día a hrs. 12:00 del medio día.
 
 Soporte hasta el 3 de diciembre de 2022.
 
