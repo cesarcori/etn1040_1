@@ -23,7 +23,7 @@ tar cfz $compress_file $output_nodate
 echo "********** Compresión hecha! *************"
 
 # mantener la cantidad de archivos .tgz a un numero maximo
-maxFiles=7
+maxFiles=20
 tarFiles=$(ls $out_path/$foldername*.tgz | wc -l)
 if [[ $tarFiles -gt $maxFiles ]]
 then
