@@ -83,7 +83,7 @@ Ing. Duchen
 
     usuario: israel
 
-**Paso 6:** Revisión y evaluación del proyecto final
+**Paso 6:** Revisión y evaluación del proyecto final [Video demo](https://youtu.be/f7nqji2vUwA)
 
 Ing. Campero
 
@@ -156,9 +156,6 @@ contraseña: ricardooropeza_tribunal
 ```
 
 
-# Uso
-
-Los siguientes videos muestran el modo de uso del sistema.
 
 # Instalación
 
