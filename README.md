@@ -28,7 +28,7 @@ Director:
 Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
 
 **Paso 1:** Estudio de reglamentos y material del docente.
-Video demo: https://youtu.be/6tp7_CmEVBA 
+[Video demo](https://youtu.be/6tp7_CmEVBA) 
 
 Ing. Campero
 
@@ -38,7 +38,7 @@ Ing. Duchen
     
     usuario: arnol
 
-**Paso 2:** Búsqueda de proyectos de grado.
+**Paso 2:** Búsqueda de proyectos de grado.[Video demo](https://youtu.be/KTPyEa9N39A)
 
 Nota: La búsqueda profunda se encuentra rota. El almacenamiento en el 
 servidor gratuito es de 500MB y las librerías Python requieren de 600MB aproximadamente. 
