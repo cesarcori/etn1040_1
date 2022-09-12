@@ -150,8 +150,8 @@ contraseña: freddy12345_tribunal
 usuario: ricardo_tribunal
 contraseña: ricardo_tribunal
 
-usuario: ricardo_tribunal
-contraseña: ricardo_tribunal
+usuario: ricardooropeza_tribunal 
+contraseña: ricardooropeza_tribunal 
 
 ```
 
