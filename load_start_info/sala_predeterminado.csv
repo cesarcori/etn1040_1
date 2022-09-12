@@ -1,0 +1,7 @@
+id,orden,asunto,detalle,fecha_creacion,tipo,nota_max
+1,1,"Capítulo 1 - Carátula e Introducción","Presentar la carátula según el formato planteado y el capítulo 1 correspondiente","2022-05-25 15:02:22.256595",proyecto,7
+2,2,"Capítulo 2 - Marco Teórico","Presentar el marco teórico correspondiente.","2022-05-25 15:03:35.376288",proyecto,7.5
+3,3,"Capítulo 3 - Desarrollo del proyecto","Presentar el diseño, modelado, e implementación del proyecto.","2022-05-25 15:06:35.693520",proyecto,7.5
+4,4,"Capítulo 4 - Conclusión y Recomendaciones","Presentar las conclusiones y recomendaciones del proyecto de grado.","2022-05-25 15:08:29.221868",proyecto,0
+5,5,"Capítulo 5 - Bibliografía","Presentar la lista bibliográfica con el formato correspondiente.","2022-05-25 15:09:00.445419",proyecto,0
+6,6,"Capítulo Anéxos","Presentar los anexos correspondientes en este apartado.","2022-05-25 15:09:42.607723",proyecto,0
