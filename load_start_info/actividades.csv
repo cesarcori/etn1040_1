@@ -1,28 +1,31 @@
-,id,nombre,detalle,valor,orden,fecha_creacion
-0,2,estudiar reglamentos,El estudiante debe estudiar todos los reglamentos que tiene la carrera.,1,1,2022-02-13 02:29:55.402616+00:00
-1,3,material docente,El estudiante debe de estudiar todo el material que el docente suba por este medio,1,2,2022-02-18 23:32:11.019038+00:00
-2,4,busqueda proyecto,"Se realiza la busqueda del proyecto de grado propuesto por el estudiante en la base de datos, para que no se realize un trabajo similar que ya lo presentaron",1,3,2022-02-18 23:45:30.058875+00:00
-3,1,elegir modalidad,El estudiante es elige la modalidad a la cual va a trabajar.,1,4,2022-02-13 02:19:50.094427+00:00
-4,5,solicitud tutoria,,1,5,2022-02-18 23:46:42.965336+00:00
-5,6,tutor acepto,,1,6,2022-02-18 23:48:17.163307+00:00
-6,8,imprimir carta tutoria,,1,7,2022-02-18 23:54:48.721577+00:00
-7,9,revisar perfil,,1,8,2022-02-18 23:56:03.677521+00:00
-8,10,visto bueno perfil tutor,,1,9,2022-02-18 23:56:35.729652+00:00
-9,11,visto bueno perfil docente,,1,10,2022-02-18 23:56:53.495518+00:00
-11,13,registro perfil,,1,11,2022-02-18 23:57:40.244788+00:00
-10,12,registro cronograma,,1,12,2022-02-18 23:57:05.984958+00:00
-12,14,imprimir formulario,,1,13,2022-02-18 23:58:02.070737+00:00
-13,15,revisar proyecto,,1,14,2022-02-19 01:19:57.654038+00:00
-14,16,visto bueno proyecto tutor,,1,15,2022-02-19 01:20:16.369871+00:00
-15,17,visto bueno proyecto docente,,1,16,2022-02-19 01:20:39.345166+00:00
-16,18,registro proyecto,,1,17,2022-02-19 01:21:15.557719+00:00
-17,19,nota docente proyecto,,1,18,2022-02-19 01:22:09.699727+00:00
-18,20,solicitud de tribunal,,1,19,2022-02-19 01:22:30.653646+00:00
-19,21,asignacion de tribunal,,1,20,2022-02-19 01:22:42.472302+00:00
-20,22,revisar tribunal,,1,21,2022-02-19 01:24:27.713120+00:00
-21,23,visto bueno tribunal 1,,1,22,2022-02-19 01:24:59.826324+00:00
-22,24,visto bueno tribunal 2,,1,23,2022-02-19 01:25:13.743224+00:00
-23,31,registro proyecto tribunal,,1,24,2022-02-28 15:40:51.887908+00:00
-24,27,nota tribunal 1,,1,25,2022-02-19 01:26:08.371895+00:00
-25,28,nota tribunal 2,,1,26,2022-02-19 01:26:21.301895+00:00
-26,30,conclusion,,1,27,2022-02-19 01:27:35.462446+00:00
+id,nombre,valor,fecha_creacion,detalle,orden,nombre_humano
+1,"elegir modalidad",1,"2022-02-13 02:19:50.094427","El estudiante es elige la modalidad a la cual va a trabajar.",4,"Elegir modalidad de trabajo"
+2,"estudiar reglamentos",1,"2022-02-13 02:29:55.402616","El estudiante debe estudiar todos los reglamentos que tiene la carrera.",1,"Estudiar reglamentos de la asignatura"
+3,"material docente",1,"2022-02-18 23:32:11.019038","El estudiante debe de estudiar todo el material que el docente suba por este medio",2,"Estudiar documentos compartidos por el docente de la asignatura"
+4,"busqueda proyecto",1,"2022-02-18 23:45:30.058875","Se realiza la busqueda del proyecto de grado propuesto por el estudiante en la base de datos, para que no se realize un trabajo similar que ya lo presentaron",3,"Comprobar que el tema propuesto no se encuentra realizado o en propuesta de algún estudiante"
+5,"solicitud tutoria",1,"2022-02-18 23:46:42.965336","",5,"Solicitar tutoría"
+6,"tutor acepto",1,"2022-02-18 23:48:17.163307","",6,"El tutor aceptó la solicitud de tutoría"
+8,"imprimir carta tutoria",1,"2022-02-18 23:54:48.721577","",7,"Imprimir carta aceptación de tutoría"
+9,"revisar perfil tutor",1,"2022-02-18 23:56:03.677521","",8,"Inicio de la revisión del perfil de proyecto de grado por el tutor"
+10,"visto bueno perfil tutor",1,"2022-02-18 23:56:35.729652","",9,"Visto bueno del perfil de proyecto de grado por parte del tutor"
+11,"visto bueno perfil docente",1,"2022-02-18 23:56:53.495518","",11,"Visto bueno del perfil de proyecto de grado por parte del docente"
+12,"registro cronograma",1,"2022-02-18 23:57:05.984958","",13,"Registro del cronograma de trabajo"
+13,"registro perfil",1,"2022-02-18 23:57:40.244788","",12,"Registro del perfil de proyecto de grado"
+14,"imprimir formulario",1,"2022-02-18 23:58:02.070737","",14,"Imprimir el formulario de aprobación de perfil"
+15,"revisar proyecto tutor",1,"2022-02-19 01:19:57.654038","",15,"Inicio de la revisión del borrador de proyecto de grado"
+16,"visto bueno proyecto tutor",1,"2022-02-19 01:20:16.369871","",16,"Visto bueno del borrador de proyecto de grado por parte del tutor"
+17,"visto bueno proyecto docente",1,"2022-02-19 01:20:39.345166","",18,"Visto bueno del borrador de proyecto de grado por parte del docente"
+18,"registro proyecto",1,"2022-02-19 01:21:15.557719","",19,"Registro del borrador de proyecto de grado"
+19,"nota docente proyecto",1,"2022-02-19 01:22:09.699727","",20,"Asignación de la nota sobre el 40% por parte del docente"
+20,"solicitud de tribunal",1,"2022-02-19 01:22:30.653646","",21,"Solicitud de tribunales a la jefatura de carrera por el docente"
+21,"asignacion de tribunal",1,"2022-02-19 01:22:42.472302","",22,"Asignación de 2 tribunales por parte de jefatura de carrera"
+22,"revisar tribunal 1",1,"2022-02-19 01:24:27.713120","",23,"Inicio revisión del proyecto de grado por parte del tribunal 1"
+23,"visto bueno tribunal 1",1,"2022-02-19 01:24:59.826324","",24,"Visto bueno del proyecto de grado por parte del tribunal 1"
+24,"visto bueno tribunal 2",1,"2022-02-19 01:25:13.743224","",26,"Visto bueno del proyecto de grado por parte del tribunal 2"
+27,"nota tribunal 1",1,"2022-02-19 01:26:08.371895","",28,"Asignación de la nota sobre el 60% del tribunal 1"
+28,"nota tribunal 2",1,"2022-02-19 01:26:21.301895","",29,"Asignación de la nota sobre el 60% del tribunal 2"
+30,conclusion,1,"2022-02-19 01:27:35.462446","",30,"Conclusión de todas las actividades."
+31,"registro proyecto tribunal",1,"2022-02-28 15:40:51.887908","",27,"Registro del proyecto de grado final"
+32,"revisar perfil docente",1,"2022-06-24 14:30:54.461359","",10,"Inicio de la revisión del perfil de proyecto de grado por el docente"
+33,"revisar proyecto docente",1,"2022-06-24 15:01:12.075009","",17,"Inicio revisión del borrador de proyecto de grado por parte del docente"
+34,"revisar tribunal 2",1,"2022-06-24 20:27:27.932488","",25,"Inicio revisión del proyecto de grado por parte del tribunal 2"
