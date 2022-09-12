@@ -7,6 +7,7 @@ la asignatura **Proyecto de Grado ETN-1040**.
 
 El sistema se encuentra implementado el alojamiento web gratuito:
 pythoanywhere, bajo la URL: https://etn1040.pythonanywhere.com/ 
+
 Nota: Todas las pruebas y creaciones de usuario son restablecidad al punto de
 del ejemplo cada día a hrs. 12:00 del medio día.
 
@@ -27,6 +28,7 @@ Director:
 Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
 
 **Paso 1:** Estudio de reglamentos y material del docente.
+Video demo: https://youtu.be/6tp7_CmEVBA 
 
 Ing. Campero
 
