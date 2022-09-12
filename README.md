@@ -73,7 +73,7 @@ Ing. Duchen
 
     usuario: ernesto
 
-**Paso 5:** Revisión y evaluación del borrador de proyecto de grado
+**Paso 5:** Revisión y evaluación del borrador de proyecto de grado [Video demo](https://youtu.be/y3VgGyQCEeE)
 
 Ing. Campero
 
