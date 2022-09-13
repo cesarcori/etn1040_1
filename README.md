@@ -36,7 +36,7 @@ Ing. Campero
 
     usuario: bethy
 
-Ing. Duchen
+Ing. Nava
     
     usuario: arnol
 
@@ -49,7 +49,7 @@ Ing. Campero
 
     usuario: wilson
 
-Ing. Duchen
+Ing. Nava
 
     usuario: camila
 
@@ -59,7 +59,7 @@ Ing. Campero
 
     usuario: mara
 
-Ing. Duchen
+Ing. Nava
 
     usuario: milenka
 
@@ -69,7 +69,7 @@ Ing. Campero
 
     usuario: alejandra
 
-Ing. Duchen
+Ing. Nava
 
     usuario: ernesto
 
@@ -79,7 +79,7 @@ Ing. Campero
 
     usuario: pablo
 
-Ing. Duchen
+Ing. Nava
 
     usuario: israel
 
@@ -89,7 +89,7 @@ Ing. Campero
 
     usuario: ricardo
 
-Ing. Duchen
+Ing. Nava
 
     usuario: florencia
 
@@ -152,6 +152,18 @@ contraseña: ricardo_tribunal
 
 usuario: ricardooropeza_tribunal 
 contraseña: ricardooropeza_tribunal 
+
+usuario: maria_tribunal
+contraseña: maria_tribunal
+
+usuario: antenas_fer123_tribunal
+contraseña: antenas_fer123_tribunal
+
+usuario: andresmujia_tribunal
+contraseña: andresmujia_tribunal
+
+usuario: romulo_roma_tribunal
+contraseña: romulo_roma_tribunal 
 
 ```
 
