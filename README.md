@@ -11,8 +11,6 @@ pythoanywhere, bajo la URL: https://etn1040.pythonanywhere.com/
 Nota: Todas las pruebas y creaciones de usuario son restablecidad al punto de
 del ejemplo cada día a hrs. 12:00 del medio día.
 
-Soporte hasta el 3 de diciembre de 2022.
-
 Nombres de usuario y contraseñas de ingreso: 
 
 Administrador: 
@@ -32,11 +30,7 @@ Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: m
 **Paso 1:** Estudio de reglamentos y material del docente.
 [Video demo](https://youtu.be/6tp7_CmEVBA) 
 
-Ing. Campero
-
     usuario: bethy
-
-Ing. Nava
     
     usuario: arnol
 
@@ -45,51 +39,31 @@ Ing. Nava
 Nota: La búsqueda profunda se encuentra rota. El almacenamiento en el 
 servidor gratuito es de 500MB y las librerías Python requieren de 600MB aproximadamente. 
 
-Ing. Campero
-
     usuario: wilson
-
-Ing. Nava
 
     usuario: camila
 
 **Paso 3:** Elección de modalidad y registro de tutoría. [Video demo](https://youtu.be/EDzH-kTm71A)
 
-Ing. Campero
-
     usuario: mara
-
-Ing. Nava
 
     usuario: milenka
 
 **Paso 4:** Revisión y aprobación del perfil de proyecto de grado [Video demo](https://youtu.be/U7NG-pw7sZw)
 
-Ing. Campero
-
     usuario: alejandra
-
-Ing. Nava
 
     usuario: ernesto
 
 **Paso 5:** Revisión y evaluación del borrador de proyecto de grado [Video demo](https://youtu.be/y3VgGyQCEeE)
 
-Ing. Campero
-
     usuario: pablo
-
-Ing. Nava
 
     usuario: israel
 
 **Paso 6:** Revisión y evaluación del proyecto final [Video demo](https://youtu.be/f7nqji2vUwA)
 
-Ing. Campero
-
     usuario: ricardo
-
-Ing. Nava
 
     usuario: florencia
 
