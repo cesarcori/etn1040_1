@@ -32,7 +32,7 @@ Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: m
 
 <div align="center">
   <a href="https://youtu.be/6tp7_CmEVBA">
-    <img src="https://img.youtube.com/vi/6tp7_CmEVBA/maxresdefault.jpg" alt="Video Title" style="width:100%; max-width:600px;">
+    <img src="https://img.youtube.com/vi/6tp7_CmEVBA/hqdefault.jpg" alt="Video Title" style="width:100%; max-width:600px;">
   </a>
 </div>
 
