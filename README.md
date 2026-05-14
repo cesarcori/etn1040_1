@@ -41,7 +41,7 @@ usuario: arnol -->
 
 usuario: camila -->
 
-**Paso 3:** Elección de modalidad y registro de tutoría. 
+**Paso 3:** Elección de modalidad y registro de tutoría.
 [![Video paso 3](https://img.youtube.com/vi/EDzH-kTm71A/hqdefault.jpg)](https://youtu.be/EDzH-kTm71A)
 
 <!-- usuario: mara
@@ -55,14 +55,14 @@ usuario: milenka -->
 
 usuario: ernesto -->
 
-**Paso 5:** Revisión y evaluación del borrador de proyecto de grado 
+**Paso 5:** Revisión y evaluación del borrador de proyecto de grado.
 [![Video paso 5](https://img.youtube.com/vi/y3VgGyQCEeE/hqdefault.jpg)](https://youtu.be/y3VgGyQCEeE)
 
 <!-- usuario: pablo
 
 usuario: israel -->
 
-**Paso 6:** Revisión y evaluación del proyecto final 
+**Paso 6:** Revisión y evaluación del proyecto final.
 [![Video paso 6](https://img.youtube.com/vi/f7nqji2vUwA/hqdefault.jpg)](https://youtu.be/f7nqji2vUwA)
 
 <!-- usuario: ricardo
