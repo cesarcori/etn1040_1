@@ -3,7 +3,7 @@
 Sistema que realiza la administración y búsqueda de proyectos de grado de 
 la asignatura **Proyecto de Grado ETN-1040**.
 
-# Sitio de alojamiento implementado
+<!-- # Sitio de alojamiento implementado
 
 El sistema se encuentra implementado el alojamiento web gratuito:
 pythoanywhere, bajo la URL: https://etn1040.pythonanywhere.com/ 
@@ -21,7 +21,7 @@ Administrador:
 Director:
 
     usuario: bush_director
-    contraseña: bush_director 
+    contraseña: bush_director  -->
 
 ## Ejemplo del proceso del estudiante.
 
