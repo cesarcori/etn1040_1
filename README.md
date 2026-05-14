@@ -28,7 +28,8 @@ Director:
 Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
 
 **Paso 1:** Estudio de reglamentos y material del docente.
-[Video demo](https://youtu.be/6tp7_CmEVBA) 
+[![Video Title](https://img.youtube.com/vi/6tp7_CmEVBA/hqdefault.jpg)](https://youtu.be/6tp7_CmEVBA)
+<!-- [Video demo](https://youtu.be/6tp7_CmEVBA)  -->
 
     usuario: bethy
     
