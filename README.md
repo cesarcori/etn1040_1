@@ -28,6 +28,7 @@ Director:
 Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
 
 **Paso 1:** Estudio de reglamentos y material del docente.
+
 [![Video paso 1](https://img.youtube.com/vi/6tp7_CmEVBA/hqdefault.jpg)](https://youtu.be/6tp7_CmEVBA)
 
 <!-- usuario: bethy
@@ -35,6 +36,7 @@ Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: m
 usuario: arnol -->
 
 **Paso 2:** Búsqueda de proyectos de grado.
+
 [![Video paso 2](https://img.youtube.com/vi/KTPyEa9N39A/hqdefault.jpg)](https://youtu.be/KTPyEa9N39A)
 
 <!-- usuario: wilson
@@ -42,6 +44,7 @@ usuario: arnol -->
 usuario: camila -->
 
 **Paso 3:** Elección de modalidad y registro de tutoría.
+
 [![Video paso 3](https://img.youtube.com/vi/EDzH-kTm71A/hqdefault.jpg)](https://youtu.be/EDzH-kTm71A)
 
 <!-- usuario: mara
@@ -49,6 +52,7 @@ usuario: camila -->
 usuario: milenka -->
 
 **Paso 4:** Revisión y aprobación del perfil de proyecto de grado.
+
 [![Video paso 4](https://img.youtube.com/vi/U7NG-pw7sZw/hqdefault.jpg)](https://youtu.be/U7NG-pw7sZw)
 
 <!-- usuario: alejandra
@@ -56,6 +60,7 @@ usuario: milenka -->
 usuario: ernesto -->
 
 **Paso 5:** Revisión y evaluación del borrador de proyecto de grado.
+
 [![Video paso 5](https://img.youtube.com/vi/y3VgGyQCEeE/hqdefault.jpg)](https://youtu.be/y3VgGyQCEeE)
 
 <!-- usuario: pablo
@@ -63,6 +68,7 @@ usuario: ernesto -->
 usuario: israel -->
 
 **Paso 6:** Revisión y evaluación del proyecto final.
+
 [![Video paso 6](https://img.youtube.com/vi/f7nqji2vUwA/hqdefault.jpg)](https://youtu.be/f7nqji2vUwA)
 
 <!-- usuario: ricardo
