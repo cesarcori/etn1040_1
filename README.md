@@ -29,7 +29,12 @@ Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: m
 
 **Paso 1:** Estudio de reglamentos y material del docente.
 [![Video Title](https://img.youtube.com/vi/6tp7_CmEVBA/hqdefault.jpg)](https://youtu.be/6tp7_CmEVBA)
-<!-- [Video demo](https://youtu.be/6tp7_CmEVBA)  -->
+
+<div align="center">
+  <a href="https://youtu.be/6tp7_CmEVBA">
+    <img src="https://img.youtube.com/vi/6tp7_CmEVBA/maxresdefault.jpg" alt="Video Title" style="width:100%; max-width:600px;">
+  </a>
+</div>
 
     usuario: bethy
     
