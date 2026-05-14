@@ -28,45 +28,48 @@ Director:
 Ejemplo de actividad estudiantes: Todos los estudiantes tienen la contraseña: masseguro2000
 
 **Paso 1:** Estudio de reglamentos y material del docente.
-[![Video Title](https://img.youtube.com/vi/6tp7_CmEVBA/hqdefault.jpg)](https://youtu.be/6tp7_CmEVBA)
+[![Video paso 1](https://img.youtube.com/vi/6tp7_CmEVBA/hqdefault.jpg)](https://youtu.be/6tp7_CmEVBA)
 
-    <!-- usuario: bethy
-    usuario: arnol -->
+<!-- usuario: bethy
 
-**Paso 2:** Búsqueda de proyectos de grado.[Video demo](https://youtu.be/KTPyEa9N39A)
+usuario: arnol -->
 
-Nota: La búsqueda profunda se encuentra rota. El almacenamiento en el 
-servidor gratuito es de 500MB y las librerías Python requieren de 600MB aproximadamente. 
+**Paso 2:** Búsqueda de proyectos de grado.
+[![Video paso 2](https://img.youtube.com/vi/KTPyEa9N39A/hqdefault.jpg)](https://youtu.be/KTPyEa9N39A)
 
-    usuario: wilson
+<!-- usuario: wilson
 
-    usuario: camila
+usuario: camila -->
 
-**Paso 3:** Elección de modalidad y registro de tutoría. [Video demo](https://youtu.be/EDzH-kTm71A)
+**Paso 3:** Elección de modalidad y registro de tutoría. 
+[![Video paso 3](https://img.youtube.com/vi/EDzH-kTm71A/hqdefault.jpg)](https://youtu.be/EDzH-kTm71A)
 
-    usuario: mara
+<!-- usuario: mara
 
-    usuario: milenka
+usuario: milenka -->
 
-**Paso 4:** Revisión y aprobación del perfil de proyecto de grado [Video demo](https://youtu.be/U7NG-pw7sZw)
+**Paso 4:** Revisión y aprobación del perfil de proyecto de grado.
+[![Video paso 4](https://img.youtube.com/vi/U7NG-pw7sZw/hqdefault.jpg)](https://youtu.be/U7NG-pw7sZw)
 
-    usuario: alejandra
+<!-- usuario: alejandra
 
-    usuario: ernesto
+usuario: ernesto -->
 
-**Paso 5:** Revisión y evaluación del borrador de proyecto de grado [Video demo](https://youtu.be/y3VgGyQCEeE)
+**Paso 5:** Revisión y evaluación del borrador de proyecto de grado 
+[![Video paso 5](https://img.youtube.com/vi/y3VgGyQCEeE/hqdefault.jpg)](https://youtu.be/y3VgGyQCEeE)
 
-    usuario: pablo
+<!-- usuario: pablo
 
-    usuario: israel
+usuario: israel -->
 
-**Paso 6:** Revisión y evaluación del proyecto final [Video demo](https://youtu.be/f7nqji2vUwA)
+**Paso 6:** Revisión y evaluación del proyecto final 
+[![Video paso 6](https://img.youtube.com/vi/f7nqji2vUwA/hqdefault.jpg)](https://youtu.be/f7nqji2vUwA)
 
-    usuario: ricardo
+<!-- usuario: ricardo
 
-    usuario: florencia
+usuario: florencia -->
 
-Docentes: 
+<!-- Docentes: 
 ```
 usuario: pedro123_docente 
 contraseña: pedro123_docente 
@@ -138,9 +141,7 @@ contraseña: andresmujia_tribunal
 usuario: romulo_roma_tribunal
 contraseña: romulo_roma_tribunal 
 
-```
-
-
+``` -->
 
 # Instalación
 
